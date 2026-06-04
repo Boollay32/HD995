@@ -1,0 +1,214 @@
+// =====================  Composer.js  ===================== //
+//
+// Reusable message/note composer. Owns the input box (char-count, auto-grow,
+// enter-to-send), the pending-attachment list (chips, add/remove, drag-drop),
+// and base64 encoding/download of attachments. Rendering of the thread itself
+// stays with each consumer (note cards vs chat bubbles).
+//
+// Usage:
+//   const composer = Composer.create({
+//       textarea: 'note-textarea', sendBtn: 'note-send-btn',
+//       charcount: 'note-charcount', fileInput: 'note-file-input',
+//       attachList: 'note-attachment-list', composerDock: 'Notes-Compose',
+//       attachBtn: '#Notes-Compose .td-attach-btn',
+//       charLimit: 2000, enableAttachments: true,
+//       onSend: async ({ text, files }) => { ... return true; },  // boolean = success
+//   });
+//
+// onSend owns its own optimistic render / save / error handling and returns
+// true on success (composer clears) or false (composer keeps the text).
+
+'use strict';
+
+const Composer = (() => {
+
+    const DEFAULT_CHAR_LIMIT = 2000;
+    const MAX_FILE_SIZE_MB = 10;
+    const MAX_FILE_SIZE_B = MAX_FILE_SIZE_MB * 1024 * 1024;
+    const MAX_ATTACHMENTS = 5;
+
+    const byId = id => (typeof id === 'string' ? document.getElementById(id) : id);
+
+    // ---- static helpers (usable without an instance) ---- //
+
+    // Encode File objects to the SaveNote attachment shape.
+    async function encode(files) {
+        if (!files || !files.length) return [];
+        return Promise.all(Array.from(files).map(file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve({
+                AttachmentName: file.name,
+                AttachmentByteArray: reader.result.split(',')[1], // base64 only
+                AttachmentImageType: file.type,
+            });
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        })));
+    }
+
+    // ---- instance ---- //
+
+    function create(cfg) {
+        const textarea = byId(cfg.textarea);
+        const sendBtn = byId(cfg.sendBtn);
+        if (!textarea || !sendBtn) return { clear() {}, files: () => [] };
+
+        const charLimit = cfg.charLimit ?? DEFAULT_CHAR_LIMIT;
+        const enableAttachments = cfg.enableAttachments !== false;
+        const onSend = typeof cfg.onSend === 'function' ? cfg.onSend : async () => false;
+
+        const charcount = byId(cfg.charcount);
+        const fileInput = byId(cfg.fileInput);
+        const attachList = byId(cfg.attachList);
+        const composerDock = byId(cfg.composerDock);
+        const attachBtn = cfg.attachBtn
+            ? (typeof cfg.attachBtn === 'string' ? document.querySelector(cfg.attachBtn) : cfg.attachBtn)
+            : null;
+
+        let pendingFiles = [];
+        let sending = false;
+
+        // ---- input UX ---- //
+
+        textarea.addEventListener('input', () => {
+            const len = textarea.value.length;
+            if (charcount) {
+                charcount.textContent = `${len} / ${charLimit}`;
+                charcount.classList.toggle('is-near-limit', len >= charLimit * 0.85);
+                charcount.classList.toggle('is-at-limit', len >= charLimit);
+            }
+            sendBtn.disabled = textarea.value.trim().length === 0;
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        });
+
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendBtn.disabled) sendBtn.click();
+            }
+        });
+
+        sendBtn.addEventListener('click', _doSend);
+
+        // ---- attachments ---- //
+
+        if (!enableAttachments) {
+            attachBtn?.setAttribute('hidden', '');
+        } else {
+            fileInput?.addEventListener('change', (e) => _add(e.target.files));
+
+            composerDock?.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                composerDock.classList.add('is-dragover');
+            });
+            composerDock?.addEventListener('dragleave', () => composerDock.classList.remove('is-dragover'));
+            composerDock?.addEventListener('drop', (e) => {
+                e.preventDefault();
+                composerDock.classList.remove('is-dragover');
+                _add(e.dataTransfer.files);
+            });
+        }
+
+        function _add(files) {
+            const remaining = MAX_ATTACHMENTS - pendingFiles.length;
+            if (remaining <= 0) {
+                UI.toast?.(`Maximum ${MAX_ATTACHMENTS} attachments allowed`, 'warning');
+                return;
+            }
+            const toAdd = Array.from(files).slice(0, remaining);
+            const rejected = [];
+            toAdd.forEach(file => {
+                if (file.size > MAX_FILE_SIZE_B) { rejected.push(file.name); return; }
+                pendingFiles.push(file);
+            });
+            if (rejected.length > 0) {
+                UI.toast?.(`${rejected.join(', ')} exceeded ${MAX_FILE_SIZE_MB}MB limit`, 'warning');
+            }
+            _renderChips();
+            if (fileInput) fileInput.value = ''; // allow re-adding same file after removal
+        }
+
+        function _remove(index) {
+            pendingFiles.splice(index, 1);
+            _renderChips();
+        }
+
+        function _renderChips() {
+            if (!attachList) return;
+            attachList.innerHTML = '';
+            pendingFiles.forEach((file, i) => attachList.appendChild(_buildChip(file, i)));
+        }
+
+        function _buildChip(file, index) {
+            const chip = document.createElement('div');
+            chip.className = 'td-attach-chip';
+            chip.dataset.index = index;
+            chip.innerHTML = `
+                <span aria-hidden="true">${Format.fileIcon(file.name)}</span>
+                <span title="${Format.escapeHtml(file.name)}">${Format.escapeHtml(file.name)}</span>
+                <span class="mono">${Format.fileSizeLabel(file.size)}</span>
+                <button type="button" aria-label="Remove ${Format.escapeHtml(file.name)}" data-index="${index}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>`;
+            chip.querySelector('button')?.addEventListener('click', () => _remove(index));
+            return chip;
+        }
+
+        function _clearFiles() {
+            pendingFiles = [];
+            _renderChips();
+        }
+
+        function _clearText() {
+            textarea.value = '';
+            textarea.style.height = 'auto';
+            sendBtn.disabled = true;
+            if (charcount) {
+                charcount.textContent = `0 / ${charLimit}`;
+                charcount.classList.remove('is-near-limit', 'is-at-limit');
+            }
+        }
+
+        // ---- send ---- //
+
+        async function _doSend() {
+            if (sending) return;
+            const text = textarea.value.trim();
+            if (!text) return; // send button is text-gated, matching prior behaviour
+
+            sending = true;
+            sendBtn.disabled = true;
+
+            const files = enableAttachments ? pendingFiles.slice() : [];
+            let ok = false;
+            try {
+                ok = await onSend({ text, files });
+            } catch (err) {
+                console.error('Composer.onSend:', err);
+                ok = false;
+            } finally {
+                sending = false;
+                if (ok) {
+                    _clearText();
+                    _clearFiles();
+                } else {
+                    sendBtn.disabled = textarea.value.trim().length === 0;
+                }
+            }
+        }
+
+        return {
+            clear() { _clearText(); _clearFiles(); },
+            files: () => pendingFiles.slice(),
+        };
+    }
+
+    return { create, encode };
+
+})();
