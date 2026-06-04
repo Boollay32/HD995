@@ -2,11 +2,6 @@
 
 namespace HelpDeskNet8.Requests
 {
-    public class GetRequestIdRequest : AuthenticatedRequest
-    {
-        public int TicketId { get; set; }
-    }
-
     public class GetFilterItemsRequest : AuthenticatedRequest
     {
         public string Group { get; set; }
@@ -26,11 +21,4 @@ namespace HelpDeskNet8.Requests
         public string Body { get; set; }
     }
 
-    public class OrderListRequest : AuthenticatedRequest
-    {
-        public string ColumnToOrderBy { get; set; }
-        public string OrderType { get; set; }
-        public List<string> Columns { get; set; }
-        public List<Dictionary<string, string>> Rows { get; set; }
-    }
 }

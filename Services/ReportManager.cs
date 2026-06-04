@@ -14,43 +14,6 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
-        public object DownloadReport()
-        {
-            using (IDbCommand command = _connection.CreateCommand())
-            {
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "[dbo].[usp_Helpdesk_RptWebCaptures]";
-
-                _connection.Open();
-                try
-                {
-                    using (IDataReader reader = command.ExecuteReader())
-                    {
-                        this.Clear();
-
-                        while (reader.Read())
-                        {
-                            var newitem = ReportListItem.FromReader(reader);
-                            if (newitem != null)
-                            {
-                                this.Add(newitem);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.Error.WriteLine($"[{GetType().Name}] {ex.Message}");
-                }
-                finally
-                {
-                    _connection.Close();
-                }
-            }
-
-            return this;
-        }
-
         public DataTable GetStats(Int32 StatsID)
         {
             try

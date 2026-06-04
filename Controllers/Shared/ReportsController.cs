@@ -14,15 +14,6 @@ namespace HelpDeskNet8.Controllers.Shared
         private readonly IAuthenticator _authenticator = auth;
 
         [HttpPost]
-        public IActionResult DownloadReport([FromBody] AuthenticatedRequest request)
-        {
-    IUser user = this.GetAuthenticatedUser();
-            if (user == null) return Unauthorized();
-
-            return Ok(_reportsManager.DownloadReport());
-        }
-
-        [HttpPost]
         public IActionResult GetStats([FromBody] GetStatsRequest request)
         {
     IUser user = this.GetAuthenticatedUser();

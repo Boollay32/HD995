@@ -77,26 +77,6 @@ namespace HelpDeskNet8.Services
             return TicketList;
         }
 
-        public int GetRequestID(int ID, IUser user)
-        {
-            using (IDbCommand command = _connection.CreateCommand())
-            {
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "[dbo].[usp_Helpdesk_GetRequestID]";
-
-                command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ID });
-                command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.NVarChar) { Value = user.UserID });
-
-                _connection.Open();
-
-                var RequestID = command.ExecuteScalar();
-
-                _connection.Close();
-
-                return Convert.ToInt32(RequestID);
-            }
-        }
-
         public ITicket GetTicketDetail(int ID, IUser user)
         {
             try
