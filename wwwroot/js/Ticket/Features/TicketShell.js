@@ -290,6 +290,10 @@ const NotifyBanner = {
     },
 
     dismiss() {
+        // Persist as a false reply so the server clears Notify/NotifyTech;
+        // otherwise the banner returns on the next load. UI clears regardless.
+        if (typeof Save !== 'undefined') Save.markFalseReply?.();
+
         NotifyBanner._remove();
         Dom.falseReplyBtn()?.classList.add('hidden');
 
