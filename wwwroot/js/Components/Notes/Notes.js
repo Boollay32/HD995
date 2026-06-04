@@ -128,6 +128,12 @@ const Notes = (() => {
         _bindFileInput();
         _applyScopeBanner();
 
+        // Notes tab is internal-only; client-visible notes are composed in the
+        // Messages pane. Pin internal and hide the client/internal toggle.
+        State.visibility = VISIBILITY.INTERNAL;
+        Dom.visibilityBtn()?.setAttribute('hidden', '');
+        Dom.scopeNote()?.setAttribute('hidden', '');
+
         _getNotes();
     }
 
@@ -263,6 +269,31 @@ const Notes = (() => {
         }
     }
 
+    // -------------------------  Normalise + filter  ------------------------- //
+    // Server notes arrive camelCase (NoteStub); map to the card shape. Notes
+    // visible to the client are "messages" and live in the Messages pane, so
+    // they are filtered out of this (internal-only) tab.
+
+    function _normNote(n) {
+        if (n && n.noteID !== undefined) {
+            return {
+                NoteID: n.noteID,
+                AuthorName: n.notesAddedBy,
+                Body: n.noteDescription,
+                CreatedDate: n.noteDate,
+                IsVisibleToClient: n.visibleToClient === true,
+                Attachments: n.attachments ?? [],
+            };
+        }
+        return n; // already card-shaped (optimistic)
+    }
+
+    function _internalOnly(notes) {
+        return (Array.isArray(notes) ? notes : [])
+            .map(_normNote)
+            .filter(n => !n.IsVisibleToClient);
+    }
+
     // -------------------------  Render notes  ------------------------- //
 
     function _renderNotes(notes) {
@@ -271,13 +302,15 @@ const Notes = (() => {
 
         thread.innerHTML = '';
 
-        if (notes.length === 0) {
+        const internal = _internalOnly(notes);
+
+        if (internal.length === 0) {
             thread.appendChild(_buildEmptyState());
             return;
         }
 
         const fragment = document.createDocumentFragment();
-        notes.forEach(note => fragment.appendChild(_buildNoteCard(note)));
+        internal.forEach(note => fragment.appendChild(_buildNoteCard(note)));
         thread.appendChild(fragment);
 
         _scrollToBottom(false);
@@ -289,10 +322,13 @@ const Notes = (() => {
         const thread = Dom.noteThread();
         if (!thread) return;
 
+        const n = _normNote(note);
+        if (n.IsVisibleToClient) return; // client-visible notes appear in Messages
+
         const empty = thread.querySelector('.td-thread-empty');
         empty?.remove();
 
-        thread.appendChild(_buildNoteCard(note));
+        thread.appendChild(_buildNoteCard(n));
         _scrollToBottom(true);
     }
 
@@ -343,7 +379,7 @@ const Notes = (() => {
 
     function _updatePip() {
         if (typeof Tabs !== 'undefined') {
-            Tabs.setPip('notes', State.notes.length);
+            Tabs.setPip('notes', _internalOnly(State.notes).length);
         }
     }
 
