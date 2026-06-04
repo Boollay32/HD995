@@ -75,40 +75,6 @@ namespace HelpDeskNet8.Services
             return null;
         }
 
-        public bool SubmitFAQ(int UserID, String Question, int UTC)
-        {
-            try
-            {
-                using (IDbCommand command = _connection.CreateCommand())
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.CommandText = "[dbo].[usp_Helpdesk_CollectFAQs]";
-                    command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
-                    command.Parameters.Add(new SqlParameter("@Question", SqlDbType.NVarChar) { Value = Question });
-                    command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
-
-                    _connection.Open();
-
-                    int rowsupdated = command.ExecuteNonQuery();
-
-                    _connection.Close();
-
-                    return (rowsupdated == 1);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"[{GetType().Name}] {ex.Message}");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-
-            return false;
-        }
-
         public List<Object> SendMailMessage(string from, string[] recepients, string subject, string body)
         {
             // Instantiate a new instance of MailMessage
@@ -167,35 +133,6 @@ namespace HelpDeskNet8.Services
             }
 
             return Result;
-        }
-
-        public void UpdateLoginMessage(int UserID, string Message, int UTC)
-        {
-            try
-            {
-                using (IDbCommand command = _connection.CreateCommand())
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.CommandText = "[dbo].[usp_Helpdesk_AddSystemMessage]";
-                    command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
-                    command.Parameters.Add(new SqlParameter("@messageText", SqlDbType.NVarChar) { Value = Message });
-                    command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
-
-                    _connection.Open();
-                    command.ExecuteNonQuery();
-                    _connection.Close();
-
-                    return;
-                }
-            }
-            catch (Exception EX)
-            {
-
-                Console.WriteLine(EX);
-                _connection.Close();
-                return;
-            }
         }
 
     }

@@ -290,35 +290,6 @@ namespace HelpDeskNet8.Services
             return value.HasValue && value.Value != DateTime.MinValue ? (object)value.Value : DBNull.Value;
         }
 
-        public void UpdateLoginMessage(int UserID, string Message, int UTC)
-        {
-            try
-            {
-                using (IDbCommand command = _connection.CreateCommand())
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.CommandText = "[dbo].[usp_Helpdesk_AddSystemMessage]";
-                    command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
-                    command.Parameters.Add(new SqlParameter("@messageText", SqlDbType.NVarChar) { Value = Message });
-                    command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
-
-                    _connection.Open();
-                    command.ExecuteNonQuery();
-                    _connection.Close();
-
-                    return;
-                }
-            }
-            catch (Exception EX)
-            {
-
-                Console.WriteLine(EX);
-                _connection.Close();
-                return;
-            }
-        }
-
         public DataTable GetStats(int ID, IUser user)
         {
             try

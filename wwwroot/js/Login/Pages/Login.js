@@ -188,7 +188,10 @@ async function SecondWallAuth() {
         // Fix: named AuthResult properties — not data[0], data[1]
         if (data.isSuccess) {
             sessionStorage.setItem("Token", data.token);
-            await LoadMessage();
+            // Post-login redirect (login message feature removed):
+            // RFC-only users (level 4) -> RFC, everyone else -> TicketPage.
+            const destination = sessionStorage.getItem("Admin") === "4" ? "RFC" : "TicketPage";
+            OkayButtonPress(destination);
         } else if (data.returnCode === LOGIN_STATUS.ACCOUNT_LOCKED) {
             BuildMessageBox("Incorrect Pin", "Index");
         } else {
@@ -281,40 +284,3 @@ function IgnoreAlpha(e) {
     event.preventDefault();
 }
 
-async function LoadMessage() {
-    try {
-        const response = await fetch("/api/Login/LoginMessage", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (response.status === 401) {
-            BuildMessageBox("Your session has timed out.", "Index");
-            return;
-        }
-
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-        const data = await response.json();
-
-        let encodedStr = data.replace(/[\u00A0-\u9999<>&]/gim,
-            i => `&#${i.charCodeAt(0)};`);
-
-        if (encodedStr.charAt(0) === '"') {
-            encodedStr = encodedStr.slice(1, -1);
-        }
-
-        if (encodedStr !== "EMPTY") {
-            const destination = sessionStorage.getItem("Admin") === "4" ? "RFC" : "TicketPage";
-            BuildMessageBox(encodedStr, destination);
-        } else {
-            OkayButtonPress("TicketPage");
-        }
-
-    } catch (error) {
-        console.error('LoadMessage error:', error);
-    } finally {
-        const sendButton = document.getElementById("SendButton");
-        if (sendButton) sendButton.disabled = false;
-    }
-}

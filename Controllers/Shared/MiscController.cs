@@ -100,18 +100,6 @@ namespace HelpDeskNet8.Controllers.Shared
         }
 
         [HttpPost]
-        public IActionResult UpdateLoginMessage([FromBody] UpdateLoginMessageRequest request)
-        {
-            // Auth check was missing in original — added
-    IUser user = this.GetAuthenticatedUser();
-            if (user == null) return Unauthorized();
-
-            var message = request.Message?.Replace("\\n", Environment.NewLine);
-            _miscManager.UpdateLoginMessage(request.UserId, message, request.UTC);
-            return Ok();
-        }
-
-        [HttpPost]
         public IActionResult SendMailMessage([FromBody] SendMailMessageRequest request)
         {
     IUser user = this.GetAuthenticatedUser();

@@ -29,9 +29,6 @@ namespace HelpDeskNet8.Controllers.Login
         }
 
         [HttpPost]
-        public IActionResult LoginMessage() => Ok(_authenticator.GetMessage());
-
-        [HttpPost]
         public IActionResult SecondWallAuth([FromBody] SecondWallAuthRequest request)
         {
             AuthResult result = _authenticator.SecondWallAuth(

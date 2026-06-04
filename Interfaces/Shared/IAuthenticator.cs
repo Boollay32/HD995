@@ -17,7 +17,6 @@ namespace HelpDeskNet8.Interfaces.Shared
 
         void Logout(int userID);
 
-        string GetMessage();
 
         // Fix: AuthResult — strongly typed — replaces List<object>
         AuthResult SecondWallAuth(string email, int pin, int UTC);
