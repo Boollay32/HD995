@@ -172,7 +172,7 @@ class TablePage extends PageBase {
 
     // -------------------------  Notifications  ------------------------- //
 
-    _addNotification(row, data) {
+    async _addNotification(row, data) {
         const notifyValue = String(data.notifyValue ?? data.notify ?? '2');
         const ticketId = data.ticketID ?? data.id ?? '';
 

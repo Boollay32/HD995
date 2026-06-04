@@ -10,8 +10,6 @@ class UserManager extends PageBase {
     // -------------------------  Init  ------------------------- //
 
     async init() {
-        const adminId = await AdminContext.resolve();
-
         const [data, adminId] = await Promise.all([
             UserDetails._fetch(),
             API.post('Authenticator/CheckAdmin', {
