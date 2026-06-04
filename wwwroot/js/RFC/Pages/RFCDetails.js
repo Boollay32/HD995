@@ -44,9 +44,7 @@ class RFCDetails extends PageBase {
     }
 
     async _getRFCDetails() {
-        const data = await API.post('ChangeRequest/GetChangeRequestDetail',
-            API.authPayload({ rfcId: this.rfcId })
-        );
+        const data = await RFCLoader.getDetails(this.rfcId);
         if (data) {
             FillRFCDetails(data);
             this._saveAssignedTech();
@@ -98,6 +96,9 @@ class RFCDetails extends PageBase {
         document.getElementById('status')?.addEventListener('change', e => {
             this._handleStatusChange(e.target);
         });
+
+        // Save (RFCSave was previously unwired)
+        document.getElementById('Save-Button')?.addEventListener('click', () => rfcSave.saveRFC());
 
         // Fix: single resize listener — removed duplicate at bottom of file
         window.addEventListener('resize', () => PaneLayout.setDetailContainerHeight());
