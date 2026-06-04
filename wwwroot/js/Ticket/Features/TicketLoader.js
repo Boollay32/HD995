@@ -60,6 +60,7 @@ const TicketLoader = {
         }
 
         if (typeof Notes !== 'undefined') Notes.init(ticketId);
+        if (typeof MessagesPanel !== 'undefined') MessagesPanel.init(ticketId);
         if (typeof Tasks !== 'undefined') Tasks.init(ticketId);
         if (typeof Activity !== 'undefined') Activity.init(ticketId);
 
