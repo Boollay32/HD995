@@ -1,26 +1,29 @@
 // =============================  UserDetails.js  ============================= //
+// Orchestrator for the user detail page. Population lives in UserFields.js,
+// the data fetch in UserLoader.js, and the write operations in UserSave.js.
+//
+// Phase 6 fixes:
+//   * init() no longer calls the undefined UserDetails._fetch(); the admin level
+//     comes from AdminContext.resolve() (memoized CheckAdmin), stored as
+//     this.adminId, and auth is checked before any setup.
+//   * _setupExtraControls() reads this.adminId instead of an undefined `adminId`.
+//   * The Update / Delete / Reset buttons (rendered by _DetailsHeader with no
+//     handler) are now wired to UserSave.
 
 class UserManager extends PageBase {
 
     constructor() {
         super();
-        this.userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);  // Fix: STORAGE_KEYS
+        this.userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+        this.adminId = 0;
     }
 
     // -------------------------  Init  ------------------------- //
 
     async init() {
-        const [data, adminId] = await Promise.all([
-            UserDetails._fetch(),
-            API.post('Authenticator/CheckAdmin', {
-                userName: sessionStorage.getItem(STORAGE_KEYS.USER_NAME),
-                token: sessionStorage.getItem(STORAGE_KEYS.TOKEN),
-                utc: UTCWorkAround()
-            })
-        ]);
-        this._setupExtraControls(parseInt(adminId ?? '0', 10));
-
         if (!await this.checkAuth()) return;
+
+        this.adminId = await AdminContext.resolve();
 
         try {
             this._setupPageUI();
@@ -38,76 +41,42 @@ class UserManager extends PageBase {
 
     _setupPageUI() {
         SetActivePage('UserMenu');
-        PaneLayout.setDetailContainerHeight();  // Fix: Layout module
-        Auth.checkPermissions();            // Fix: Auth module
-        PaneLayout.chooseSeason();              // Fix: Layout module
-        PaneLayout.displayScreen();             // Fix: Layout module
+        PaneLayout.setDetailContainerHeight();
+        Auth.checkPermissions();
+        PaneLayout.chooseSeason();
+        PaneLayout.displayScreen();
     }
 
     // -------------------------  Event Listeners  ------------------------- //
 
     _setupEventListeners() {
-        // Fix: consolidated — removed duplicate at bottom of file
         window.addEventListener('resize', () => PaneLayout.setDetailContainerHeight());
+
+        // Action buttons (rendered by _DetailsHeader without handlers) -> UserSave
+        document.getElementById('UpdateUser-Button')?.addEventListener('click', () => userSave.manageUser());
+        document.getElementById('ResetUser-Button')?.addEventListener('click', () => userSave.confirmReset());
+        document.getElementById('DeleteUser-Button')?.addEventListener('click', () => userSave.confirmDelete());
     }
 
     // -------------------------  Load Data  ------------------------- //
 
     async _loadUserData() {
-        const data = await API.post('User/GetUserDetail',
-            API.authPayload({ userId: this.userLogin })
-        );
-        if (data) this._fillUserDetail(data);
-    }
-
-    // -------------------------  Populate  ------------------------- //
-
-    _fillUserDetail(details) {
-        const userNameEl = document.getElementById(STORAGE_KEYS.USER_NAME);
-        if (userNameEl) userNameEl.innerText = details.userName ?? '';
-
-        for (const [key, value] of Object.entries(details)) {
-            if (!value && value !== 0) continue;
-
-            const elementId = key.charAt(0).toUpperCase() + key.slice(1);
-            const el = document.getElementById(elementId);
-            if (!el) continue;
-
-            this._fillElement(el, value);
-        }
-    }
-
-    _fillElement(el, value) {
-        const strValue = String(value);
-
-        switch (el.nodeName) {
-            case 'INPUT':
-                el.value = strValue;
-                break;
-            case 'SELECT':
-                Form.setSelectedByName(el, strValue);  // Fix: Form module
-                break;
-            case 'LABEL':
-                el.innerText = strValue;
-                break;
-            default:
-                el.innerText = strValue;
-                break;
-        }
+        const data = await UserLoader.getDetail(this.userLogin);
+        if (data) FillUserDetail(data);
     }
 
     // -------------------------  Admin Controls  ------------------------- //
 
     _setupExtraControls() {
-        const isAdmin = adminId === 2;
+        const isAdmin = this.adminId === 2;
 
         if (isAdmin) {
-            UI.showById('ResetUser-Button,DeleteUser-Button');    // Fix: UI module
-            UI.enableById('UserPhone,AdminLevel,Locked');         // Fix: UI module
+            UI.showById('ResetUser-Button,DeleteUser-Button');
+            UI.enableById('UserPhone,AdminLevel,Locked');
             this._setDeleteButtonLabel();
         } else {
-            UI.hideById('ResetUser-Button,DeleteUser-Button,UpdateUser-Button');  // Fix: UI module
-            UI.disableById('UserPhone,AdminLevel,Locked');        // Fix: UI module
+            UI.hideById('ResetUser-Button,DeleteUser-Button,UpdateUser-Button');
+            UI.disableById('UserPhone,AdminLevel,Locked');
         }
     }
 
@@ -119,107 +88,6 @@ class UserManager extends PageBase {
         deleteBtn.innerText = lockedEl.value === 'No'
             ? 'Disable User'
             : 'Activate User';
-    }
-
-    // -------------------------  Update  ------------------------- //
-
-    async updateUser() {
-        try {
-            const phone = document.getElementById('UserPhone')?.value;
-
-            await API.post('User/UpdateUser', API.authPayload({
-                userLogin: this.userLogin,
-                phone
-            }));
-
-            MessageBox.show('User has been updated', 'UserPage');  // Fix: MessageBox module
-
-        } catch (error) {
-            if (error.message !== 'Unauthorized') {
-                this.handleError("Error: Couldn't update user.");
-            }
-        }
-    }
-
-    async manageUser() {
-        try {
-            const phone = document.getElementById('UserPhone')?.value;
-            const userLogin = document.getElementById('UserEmail')?.innerText;
-            const unlockUser = parseInt(document.getElementById('Locked')?.value) || 0;
-            const adminLevelId = parseInt(document.getElementById('AdminLevel')?.value) || 0;
-
-            await API.post('User/ManageUser', API.authPayload({
-                userLogin,
-                unlockUser,
-                adminLevelId,
-                phone
-            }));
-
-            MessageBox.show('User has been updated', 'UserPage');  // Fix: MessageBox module
-
-        } catch (error) {
-            if (error.message !== 'Unauthorized') {
-                this.handleError("Error: Couldn't manage user.");
-            }
-        }
-    }
-
-    // -------------------------  Reset  ------------------------- //
-
-    confirmReset() {
-        MessageBox.confirm(                                        // Fix: MessageBox module
-            'Are you sure you want to reset the password and pin for this user?',
-            'userManager.resetUser()'
-        );
-    }
-
-    async resetUser() {
-        UI.toggleWaiting();                                        // Fix: UI module
-        try {
-            const userLogin = document.getElementById('UserEmail')?.innerText;
-
-            const data = await API.post('User/ResetUser',
-                API.authPayload({ userLogin })
-            );
-
-            MessageBox.show(`Reset ${data}`, 'UserPage');         // Fix: MessageBox module
-
-        } catch (error) {
-            if (error.message !== 'Unauthorized') {
-                this.handleError("Error: Couldn't reset user.");
-            }
-        } finally {
-            UI.toggleWaiting();
-        }
-    }
-
-    // -------------------------  Delete  ------------------------- //
-
-    confirmDelete() {
-        MessageBox.confirm(                                        // Fix: MessageBox module
-            'Are you sure you want to delete this user?',
-            'userManager.deleteUser()'
-        );
-    }
-
-    async deleteUser() {
-        UI.toggleWaiting();                                        // Fix: UI module
-        try {
-            const userLogin = document.getElementById('UserEmail')?.innerText;
-
-            const data = await API.post('User/DeleteUser',
-                API.authPayload({ userLogin })
-            );
-
-            MessageBox.show(data, 'UserPage');                    // Fix: MessageBox module
-
-        } catch (error) {
-            if (error.message !== 'Unauthorized') {
-                this.handleError("Error: Couldn't delete user.");
-            }
-        } finally {
-            UI.toggleWaiting();
-        }
     }
 }
 
@@ -238,10 +106,11 @@ if (typeof window !== 'undefined') {
 }
 
 // -------------------------  Legacy Wrappers  ------------------------- //
+// Kept for any external callers; write operations now live on UserSave.
 
-function UpdateUser() { userManager.updateUser(); }
-function ManageUser() { userManager.manageUser(); }
-function ResetUserQuestion() { userManager.confirmReset(); }
-function ResetUser() { userManager.resetUser(); }
-function DeleteUserQuestion() { userManager.confirmDelete(); }
-function DeleteUser() { userManager.deleteUser(); }
+function UpdateUser() { userSave.updateUser(); }
+function ManageUser() { userSave.manageUser(); }
+function ResetUserQuestion() { userSave.confirmReset(); }
+function ResetUser() { userSave.resetUser(); }
+function DeleteUserQuestion() { userSave.confirmDelete(); }
+function DeleteUser() { userSave.deleteUser(); }
