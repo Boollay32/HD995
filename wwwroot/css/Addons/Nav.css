@@ -1,0 +1,160 @@
+﻿/*=============== Navbar & Footer ===================*/
+
+/* ============= Body Setup ============= */
+body {
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding-top: 56px;
+    padding-bottom: 40px;
+    font-family: Calibri, Arial, sans-serif;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* ============= Navbar ============= */
+nav.Nav-Bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+    nav.Nav-Bar #navbar-menu {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        height: 56px;
+        gap: 2px;
+    }
+
+        nav.Nav-Bar #navbar-menu a {
+            display: flex;
+            align-items: center;
+            height: 56px;
+            padding: 0 14px;
+            color: var(--muted) !important;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: Calibri, Arial, sans-serif;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            text-decoration: none;
+            transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+            nav.Nav-Bar #navbar-menu a:hover {
+                color: var(--text) !important;
+                background: var(--row-hover);
+            }
+
+            nav.Nav-Bar #navbar-menu a.active {
+                color: var(--accent-strong) !important;
+                border-bottom-color: var(--accent);
+            }
+
+    /* ============= Logout ============= */
+    nav.Nav-Bar #navbar-logout {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+        nav.Nav-Bar #navbar-logout #Account-Name {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: Calibri, Arial, sans-serif;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-decoration: none;
+        }
+
+            nav.Nav-Bar #navbar-logout #Account-Name.hidden {
+                display: none;
+            }
+
+        nav.Nav-Bar #navbar-logout #Logout-button {
+            padding: 6px 16px;
+            background: var(--accent);
+            color: #ffffff !important;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: Calibri, Arial, sans-serif;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s ease;
+        }
+
+            nav.Nav-Bar #navbar-logout #Logout-button:hover {
+                background: var(--accent-strong);
+            }
+
+/* ============= Footer ============= */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+    footer a {
+        font-family: Calibri, Arial, sans-serif;
+        color: var(--muted);
+        font-size: 12px;
+        text-decoration: none;
+    }
+
+/* ============= Responsive ============= */
+@media screen and (max-width: 1240px) {
+    nav.Nav-Bar {
+        height: 50px;
+        padding: 0 12px;
+    }
+
+        nav.Nav-Bar #navbar-menu a {
+            font-size: 12px;
+            padding: 0 10px;
+            height: 50px;
+        }
+
+    body {
+        padding-top: 50px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    footer {
+        display: none;
+    }
+
+    body {
+        padding-bottom: 0;
+    }
+}
