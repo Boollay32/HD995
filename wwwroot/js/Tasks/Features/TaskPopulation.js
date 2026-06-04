@@ -1,1 +1,107 @@
-﻿
+// =====================  TaskPopulation.js  ===================== //
+// Stateless presentation + formatting for the in-ticket task list.
+// Split out of Tasks.js (Phase 4a). Tasks.js folds these into its private
+// H helper, so existing H.esc / H.formatDate / H.statusOf call sites are
+// unchanged. MUST load BEFORE Tasks.js — the Tasks IIFE reads this at load.
+
+'use strict';
+
+const TaskPopulation = {
+
+    // -------------------------  Status display  ------------------------- //
+
+    STATUS: [
+        { v: 1, label: 'New' },
+        { v: 2, label: 'In Progress' },
+        { v: 3, label: 'Complete' },
+        { v: 4, label: 'Withdrawn' },
+        { v: 5, label: 'Draft' },
+    ],
+    STATUS_CLASS: {
+        1: 'st-new', 2: 'st-progress', 3: 'st-done', 4: 'st-withdrawn', 5: 'st-draft',
+    },
+
+    // -------------------------  Formatting  ------------------------- //
+
+    esc(str) {
+        return String(str ?? '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    },
+    formatDate(raw) {
+        if (!raw) return '\u2014';
+        const d = new Date(raw);
+        if (isNaN(d)) return '\u2014';
+        return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    },
+    toInputDate(raw) {
+        if (!raw) return '';
+        const d = new Date(raw);
+        if (isNaN(d)) return '';
+        const off = d.getTimezoneOffset();
+        const local = new Date(d.getTime() - off * 60000);
+        return local.toISOString().split('T')[0];
+    },
+    statusOf(t) { return Number(t.status ?? 1); },
+
+    // -------------------------  HTML  ------------------------- //
+
+    attListHtml(atts) {
+        return atts.length
+            ? atts.map((a, i) => `
+                <li class="td-att" data-att="${i}">
+                    <span class="td-att-name">${TaskPopulation.esc(a.attachmentName || ('Attachment ' + (i + 1)))}</span>
+                    <button type="button" class="td-att-remove" data-att-remove="${i}" aria-label="Remove attachment">&times;</button>
+                </li>`).join('')
+            : '<li class="td-att-empty">No attachments</li>';
+    },
+
+    emptyState() {
+        const div = document.createElement('div');
+        div.className = 'td-thread-empty';
+        div.innerHTML = `
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 11 12 14 22 4"/>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+            <p>No tasks yet.<br>Add a task below.</p>`;
+        return div;
+    },
+
+    itemSummaryHtml(task, ctx) {
+        const { done, status, dueLabel } = ctx;
+        return `
+            <div class="td-task-summary">
+                <div class="td-task-check">
+                    <input type="checkbox" id="task-check-${task.taskID}"
+                           aria-label="Mark task complete" ${done ? 'checked' : ''}>
+                    <label for="task-check-${task.taskID}" aria-hidden="true"></label>
+                </div>
+                <button type="button" class="td-task-open" aria-expanded="false">
+                    <span class="td-task-title">
+                        ${task.important ? '<span class="td-task-star" title="Important" aria-label="Important">\u2605</span>' : ''}
+                        ${TaskPopulation.esc(task.title || '(untitled task)')}
+                    </span>
+                    <span class="td-task-meta">
+                        <span class="td-task-status ${TaskPopulation.STATUS_CLASS[status] ?? ''}">${TaskPopulation.esc(TaskPopulation.STATUS_LABEL[status] ?? 'New')}</span>
+                        <span class="td-task-due">${dueLabel}</span>
+                        ${task.assignedTech ? `<span class="td-task-assignee">${TaskPopulation.esc(task.assignedTech)}</span>` : ''}
+                    </span>
+                </button>
+                <div class="td-task-actions">
+                    <button type="button" class="td-task-delete-btn" aria-label="Delete task">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                            <path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>`;
+    },
+};
+
+// STATUS_LABEL is derived once from STATUS (kept identical to the original).
+TaskPopulation.STATUS_LABEL = TaskPopulation.STATUS.reduce((m, s) => (m[s.v] = s.label, m), {});
