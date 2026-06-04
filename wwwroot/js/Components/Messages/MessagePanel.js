@@ -8,8 +8,7 @@
 // == Session.userId) sit on the right, everyone else on the left.
 //
 // Shared concerns delegated: display helpers -> Format.js, composer -> Composer.js.
-// Text-only for now (attachments are a follow-up), so the composer is created
-// with attachments disabled.
+// Attachments are loaded separately (GetNotes returns none) and merged by noteID.
 
 'use strict';
 
@@ -40,6 +39,10 @@ const MessagesPanel = (() => {
             SenderName:  note.notesAddedBy,
             Body:        note.noteDescription,
             CreatedDate: note.noteDate,
+            Attachments: (note.attachments ?? []).map(a => ({
+                name: a.attachmentName,
+                base64: a.attachmentByteArray,
+            })),
         };
     }
 
@@ -57,10 +60,13 @@ const MessagesPanel = (() => {
 
     async function load() {
         try {
-            const data = await API.post(
-                'TicketDetails/GetNotes',
-                API.authPayload({ ticketId: State.ticketId })
-            );
+            const [data, attMap] = await Promise.all([
+                API.post('TicketDetails/GetNotes', API.authPayload({ ticketId: State.ticketId })),
+                Composer.fetchNoteAttachments(State.ticketId, 0),
+            ]);
+            (Array.isArray(data) ? data : []).forEach(n => {
+                n.attachments = attMap.get(n.noteID) ?? n.attachments ?? [];
+            });
             State.messages = _visibleNotes(data);
             _renderThread(State.messages);
             _scrollToBottom(false);
@@ -153,7 +159,33 @@ const MessagesPanel = (() => {
             body.textContent = msg.Body; // textContent -- no XSS risk
             bubble.appendChild(body);
         }
+        if (Array.isArray(msg.Attachments) && msg.Attachments.length > 0) {
+            bubble.appendChild(_buildBubbleAttachments(msg.Attachments));
+        }
         return bubble;
+    }
+
+    function _buildBubbleAttachments(attachments) {
+        const wrap = document.createElement('div');
+        wrap.className = 'td-bubble-attachments';
+        attachments.forEach(att => {
+            const downloadable = !!att.base64;
+            const el = document.createElement(downloadable ? 'a' : 'span');
+            el.className = 'td-bubble-file';
+            if (downloadable) {
+                el.href = '#';
+                el.setAttribute('aria-label', `Download ${att.name}`);
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    Composer.download(att.name, att.base64);
+                });
+            }
+            el.innerHTML = `
+                <span aria-hidden="true">${Format.fileIcon(att.name)}</span>
+                <span>${Format.escapeHtml(att.name)}</span>`;
+            wrap.appendChild(el);
+        });
+        return wrap;
     }
 
     function _buildBubbleMeta(msg) {
@@ -174,14 +206,15 @@ const MessagesPanel = (() => {
 
     // -------------------------  Send (onSend callback)  ------------------------- //
 
-    async function _onSend({ text }) {
-        // Optimistic bubble (no id; reconciled by the authoritative re-render)
+    async function _onSend({ text, files }) {
+        // Optimistic bubble (no id; reconciled by the authoritative reload)
         State.messages.push({
             MessageID: null,
             SenderID: Session.userId,
             SenderName: null,
             Body: text,
             CreatedDate: new Date().toISOString(),
+            Attachments: (files ?? []).map(f => ({ name: f.name, base64: null })),
         });
         _renderThread(State.messages);
         _scrollToBottom(true);
@@ -193,15 +226,17 @@ const MessagesPanel = (() => {
                 'visibleToClient`1',
             ].join('|');
 
+            const attachments = await Composer.encode(files);
+
             const data = await API.post(
                 'TicketDetails/SaveNote',
-                API.authPayload({ objectInfo, attachments: [], rfc: false })
+                API.authPayload({ objectInfo, attachments, rfc: false })
             );
 
             if (!data) throw new Error('SaveNote returned null');
 
-            State.messages = _visibleNotes(data);
-            _renderThread(State.messages);
+            // Reload so the saved message's attachments (loaded separately) appear.
+            await load();
             _scrollToBottom(true);
             return true;
 
@@ -224,10 +259,12 @@ const MessagesPanel = (() => {
             textarea: 'msg-textarea',
             sendBtn: 'msg-send-btn',
             charcount: 'msg-charcount',
+            fileInput: 'msg-file-input',
+            attachList: 'msg-attachment-list',
             composerDock: 'Messages-Compose',
             attachBtn: '#Messages-Compose .td-attach-btn',
             charLimit: CHAR_LIMIT,
-            enableAttachments: false, // text-only for now; attachments are a follow-up
+            enableAttachments: true,
             onSend: _onSend,
         });
 

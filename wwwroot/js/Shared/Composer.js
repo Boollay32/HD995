@@ -29,6 +29,31 @@ const Composer = (() => {
 
     const byId = id => (typeof id === 'string' ? document.getElementById(id) : id);
 
+    const MIME_BY_EXT = {
+        pdf: 'application/pdf', txt: 'text/plain', csv: 'text/csv',
+        png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif',
+        webp: 'image/webp', bmp: 'image/bmp', tiff: 'image/tiff',
+        doc: 'application/msword',
+        docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        xls: 'application/vnd.ms-excel',
+        xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        zip: 'application/zip',
+    };
+
+    function _mimeFromName(name) {
+        const ext = name?.split('.').pop()?.toLowerCase() ?? '';
+        return MIME_BY_EXT[ext] ?? 'application/octet-stream';
+    }
+
+    // Server stores AttachmentImageType as an int (see setImageTypeId):
+    // 1 = image, 2 = pdf, 3 = other.
+    function _imageTypeId(mime) {
+        const m = (mime || '').toLowerCase();
+        if (m.startsWith('image/')) return 1;
+        if (m === 'application/pdf') return 2;
+        return 3;
+    }
+
     // ---- static helpers (usable without an instance) ---- //
 
     // Encode File objects to the SaveNote attachment shape.
@@ -39,11 +64,55 @@ const Composer = (() => {
             reader.onload = () => resolve({
                 AttachmentName: file.name,
                 AttachmentByteArray: reader.result.split(',')[1], // base64 only
-                AttachmentImageType: file.type,
+                AttachmentImageType: _imageTypeId(file.type),
             });
             reader.onerror = reject;
             reader.readAsDataURL(file);
         })));
+    }
+
+    // Trigger a download of a base64 attachment (reconstructs a Blob locally;
+    // note/message attachments come back as base64, not URLs).
+    function download(name, base64) {
+        if (!base64) return;
+        try {
+            const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+            const blob = new Blob([bytes], { type: _mimeFromName(name) });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = name || 'attachment';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } catch (err) {
+            console.error('Composer.download:', err);
+            UI.toast?.('Could not open attachment', 'error');
+        }
+    }
+
+    // Fetch all note attachments for a ticket/RFC and group them by noteID.
+    // GetNotes does not return attachments, so they are loaded separately and
+    // merged client-side. Returns a Map(noteID -> [attachment, ...]).
+    async function fetchNoteAttachments(id, rfc = 0) {
+        try {
+            const data = await API.post(
+                'Attachment/GetAttachmentsNotes',
+                API.authPayload({ ticketId: id, rfc })
+            );
+            const map = new Map();
+            (Array.isArray(data) ? data : []).forEach(a => {
+                const nid = a.noteID;
+                if (nid == null) return;
+                if (!map.has(nid)) map.set(nid, []);
+                map.get(nid).push(a);
+            });
+            return map;
+        } catch (err) {
+            console.error('Composer.fetchNoteAttachments:', err);
+            return new Map();
+        }
     }
 
     // ---- instance ---- //
@@ -209,6 +278,6 @@ const Composer = (() => {
         };
     }
 
-    return { create, encode };
+    return { create, encode, download, fetchNoteAttachments };
 
 })();
