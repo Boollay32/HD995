@@ -5,8 +5,29 @@
 document.addEventListener('change', e => {
     const input = e.target.closest('input[type="file"].FileUP');
     if (!input) return;
-    const index = input.dataset.index;
-    Attachments.getByteArray(index, input);
+    // Index is the trailing number of the input id (fileupload3 / rfc-fileupload3)
+    const match = input.id.match(/(\d+)$/);
+    const index = match ? parseInt(match[1], 10) : 1;
+    getByteArray(index, input);
+});
+
+// Remove an attachment via its X button (replaces the old drag-to-bin)
+document.addEventListener('click', e => {
+    const btn = e.target.closest('.attachment-remove');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const icon = btn.closest('.Attachment-Icon');
+    if (!icon) return;
+
+    const number = parseInt(icon.id.match(/(\d+)$/)?.[1] ?? '0', 10);
+    if (!number) return;
+
+    // Global create-form icons use ids like "Attachment-Icon3"; note/slot lists
+    // use prefixed ids, so pass their container as the noteDiv.
+    const isGlobal = /^Attachment-Icon\d+$/.test(icon.id);
+    clearAttachment(number, isGlobal ? null : icon.parentElement);
 });
 
 // -------------------------  API Calls  ------------------------- //
@@ -152,6 +173,7 @@ function createTemplateForAttachment(index) {
                 value="fileupload${index}" id="fileupload${index}"
                 class="FileUP" onclick="DownloadAttachment(this)"
                  >
+            <button type="button" class="attachment-remove" aria-label="Remove attachment" tabindex="-1"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>`;
 }
 
@@ -168,6 +190,7 @@ function createBlankAttachment(index, prefix = '') {
                 value="${index}" id="fileupload${id}" class="FileUP"                 
                 onchange="GetByteArray(${index}, this)">
             <label id="Attach-Label" style="padding-left:20px !important;"></label>
+            <button type="button" class="attachment-remove" aria-label="Remove attachment" tabindex="-1"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>`;
 }
 

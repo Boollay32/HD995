@@ -117,7 +117,8 @@ function clearAttachment(number, noteDiv) {
             <input type="${fileNodeType}" name="${fileNodeName}" value="${i}"
                 id="fileupload${i}" class="FileUP"
                  
-                ${onChange} ${attachmentType}="${fileData}">`;
+                ${onChange} ${attachmentType}="${fileData}">
+            <button type="button" class="attachment-remove" aria-label="Remove attachment" tabindex="-1"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
     }
 }
 
