@@ -96,14 +96,8 @@ const Notes = (() => {
 
             if (!data) throw new Error('SaveNote returned null');
 
-            if (Array.isArray(data)) {
-                State.notes = data;
-                _renderNotes(data);
-            } else {
-                _replaceOptimisticNote(tempId, data);
-                State.notes.push(data);
-            }
-            _updatePip();
+            // Re-fetch so the saved note's attachments (loaded separately) appear.
+            await _getNotes();
 
             // Reset visibility to internal after send
             State.visibility = VISIBILITY.INTERNAL;
@@ -127,7 +121,7 @@ const Notes = (() => {
             Body: body,
             CreatedDate: new Date().toISOString(),
             IsVisibleToClient: State.visibility === VISIBILITY.CLIENT,
-            Attachments: (files ?? []).map(f => ({ FileName: f.name, FileSize: f.size, FileURL: null })),
+            Attachments: (files ?? []).map(f => ({ name: f.name, size: f.size, base64: null })),
             _optimistic: true,
         };
     }
@@ -136,11 +130,14 @@ const Notes = (() => {
 
     async function _getNotes() {
         try {
-            const data = await API.post(
-                'TicketDetails/GetNotes',
-                API.authPayload({ ticketId: State.ticketId })
-            );
+            const [data, attMap] = await Promise.all([
+                API.post('TicketDetails/GetNotes', API.authPayload({ ticketId: State.ticketId })),
+                Composer.fetchNoteAttachments(State.ticketId, 0),
+            ]);
             if (!Array.isArray(data)) return;
+
+            // GetNotes does not return attachments; merge them in by noteID.
+            data.forEach(n => { n.attachments = attMap.get(n.noteID) ?? n.attachments ?? []; });
 
             State.notes = data;
             _renderNotes(data);
@@ -165,7 +162,11 @@ const Notes = (() => {
                 Body: n.noteDescription,
                 CreatedDate: n.noteDate,
                 IsVisibleToClient: n.visibleToClient === true,
-                Attachments: n.attachments ?? [],
+                Attachments: (n.attachments ?? []).map(a => ({
+                    name: a.attachmentName,
+                    base64: a.attachmentByteArray,
+                    size: null,
+                })),
             };
         }
         return n; // already card-shaped (optimistic)
@@ -211,13 +212,6 @@ const Notes = (() => {
 
         thread.appendChild(_buildNoteCard(n));
         _scrollToBottom(true);
-    }
-
-    function _replaceOptimisticNote(tempId, savedNote) {
-        const thread = Dom.noteThread();
-        const tempCard = thread?.querySelector(`[data-nid="${tempId}"]`);
-        if (!tempCard) return;
-        tempCard.replaceWith(_buildNoteCard(_normNote(savedNote)));
     }
 
     function _removeOptimisticNote(tempId) {
@@ -327,18 +321,23 @@ const Notes = (() => {
         wrap.className = 'td-note-attachments';
 
         attachments.forEach(att => {
-            const link = document.createElement('a');
-            link.className = 'td-note-file';
-            link.href = att.FileURL ?? '#';
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.setAttribute('aria-label', `Download ${att.FileName}`);
-            link.innerHTML = `
-                <span aria-hidden="true">${Format.fileIcon(att.FileName)}</span>
-                <span>${Format.escapeHtml(att.FileName)}</span>
-                <span class="mono">${Format.fileSizeLabel(att.FileSize ?? 0)}</span>
+            const downloadable = !!att.base64;
+            const el = document.createElement(downloadable ? 'a' : 'span');
+            el.className = 'td-note-file';
+            if (downloadable) {
+                el.href = '#';
+                el.setAttribute('aria-label', `Download ${att.name}`);
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    Composer.download(att.name, att.base64);
+                });
+            }
+            el.innerHTML = `
+                <span aria-hidden="true">${Format.fileIcon(att.name)}</span>
+                <span>${Format.escapeHtml(att.name)}</span>
+                ${att.size != null ? `<span class="mono">${Format.fileSizeLabel(att.size)}</span>` : ''}
             `;
-            wrap.appendChild(link);
+            wrap.appendChild(el);
         });
 
         return wrap;
