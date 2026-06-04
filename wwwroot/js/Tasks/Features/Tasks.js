@@ -453,12 +453,48 @@ const Tasks = (() => {
             State.tasks = Array.isArray(data) ? data : State.tasks;
             _render();
             UI.toast?.(successMsg, 'success');
+            _notifyTask(data);
         } catch (err) {
             console.error('Tasks._commit:', err);
             UI.toast?.('Failed to save task', 'error');
             if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = origLabel || 'Save'; }
         } finally {
             State.isSaving = false;
+        }
+    }
+
+    // Email the ticket's watchers after a task save. Ported from the retired
+    // TaskOperations; the mail is sent directly because the old modal + page
+    // reload is not part of the new inline-toast flow.
+    // NOTE: the new editor does not track NEW/OLD assigned-tech session keys, so
+    // the 'Assigned' (re-assignment) type is not detected the way the old form
+    // did — the server's base type is used instead. Verify recipients against
+    // the live mail flow; can't be exercised from here.
+    async function _notifyTask(saveResult) {
+        if (typeof BuildEmailAddressList !== 'function') return;
+
+        const newTech = sessionStorage.getItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);
+        const oldTech = sessionStorage.getItem(STORAGE_KEYS.OLD_ASSIGNED_TECH);
+
+        const serverType = Array.isArray(saveResult) ? saveResult[0] : saveResult;
+        const notifyType = serverType === 'Update' && newTech !== oldTech
+            ? 'Assigned'
+            : serverType;
+        if (!notifyType) return;
+
+        const id = State.ticketId ?? (Array.isArray(saveResult) ? saveResult[1] : null);
+        const username = sessionStorage.getItem(STORAGE_KEYS.USER_NAME);
+
+        try {
+            const address = await BuildEmailAddressList(notifyType, 'Task', newTech, username, getItemOwner());
+            if (!address) return;
+            await SendMailMessage(
+                address,
+                CreateMessageSubject(notifyType, 'Task', id),
+                BuildEmailBody(notifyType, 'Task', id)
+            );
+        } catch (err) {
+            console.error('Tasks._notifyTask:', err);
         }
     }
 
