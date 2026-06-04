@@ -31,32 +31,6 @@ class RFCDetails extends PageBase {
         if (rfcIdEl) rfcIdEl.innerText = this.rfcId;
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-
-    // Header
-    document.getElementById('Save-Button')
-        ?.addEventListener('click', () => this.saveRFC(false));
-    document.getElementById('Back-Button')
-        ?.addEventListener('click', () => RFCButtonController());
-
-    // Notes
-    document.getElementById('NewNote-Button')
-        ?.addEventListener('click', () => this.displayNotePanel());
-
-    // Note panel — wired via _NotePanel partial
-    document.getElementById('SaveNote-Button')
-        ?.addEventListener('click', () => this.saveNewNote());
-    document.getElementById('CancelNote-Button')
-        ?.addEventListener('click', () => this.hideNotePanel());
-    document.getElementById('Visible-Button')
-        ?.addEventListener('click', () => this.setNoteExternalVisibility(
-            document.getElementById('Visible-Button')
-        ));
-
-    // Status change
-    document.getElementById('rfcStatus')
-        ?.addEventListener('change', e => this.statusChange(e.target));
-});
 
 
     // -------------------------  Load Data  ------------------------- //
