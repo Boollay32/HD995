@@ -12,7 +12,7 @@ document.addEventListener('change', e => {
 });
 
 // Remove an attachment via its X button (replaces the old drag-to-bin)
-document.addEventListener('click', e => {
+document.addEventListener('click', async e => {
     const btn = e.target.closest('.attachment-remove');
     if (!btn) return;
     e.preventDefault();
@@ -23,6 +23,15 @@ document.addEventListener('click', e => {
 
     const number = parseInt(icon.id.match(/(\d+)$/)?.[1] ?? '0', 10);
     if (!number) return;
+
+    const confirmed = await Confirm.ask({
+        title: 'Remove attachment',
+        message: 'Are you sure you want to remove this attachment?',
+        confirmText: 'Remove',
+        cancelText: 'Cancel',
+        danger: true
+    });
+    if (!confirmed) return;
 
     // Global create-form icons use ids like "Attachment-Icon3"; note/slot lists
     // use prefixed ids, so pass their container as the noteDiv.
@@ -187,8 +196,7 @@ function createBlankAttachment(index, prefix = '') {
                 <img src="images/PlusIcon.png">
             </div>
             <input title=" " type="file" style="opacity:0;" name="Value"
-                value="${index}" id="fileupload${id}" class="FileUP"                 
-                onchange="GetByteArray(${index}, this)">
+                value="${index}" id="fileupload${id}" class="FileUP">
             <label id="Attach-Label" style="padding-left:20px !important;"></label>
             <button type="button" class="attachment-remove" aria-label="Remove attachment" tabindex="-1"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>`;

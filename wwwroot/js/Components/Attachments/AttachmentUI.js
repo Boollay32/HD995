@@ -107,7 +107,7 @@ function clearAttachment(number, noteDiv) {
         const attachmentType = isExisting ? 'bytearray' : 'filedata';
         const onChange = isExisting
             ? 'onclick="DownloadAttachment(this)"'
-            : `onchange="GetByteArray(${i}, this)"`;
+            : '';
 
         attachIcon.id = `Attachment-Icon${i}`;
         attachIcon.innerHTML = `
