@@ -1,0 +1,115 @@
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Govtech HelpDesk</title>
+
+    @* -------------------------  CSS  ------------------------- *@
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/PopupWindows.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Cookie.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Snow.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Nav.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/Layout/Template.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/Fonts/Font.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Confirm.css" asp-append-version="true" />
+
+    @if (IsSectionDefined("AddCSSToHead"))
+    {
+        @RenderSection("AddCSSToHead", required: false)
+    }
+
+    @* -------------------------  External Libraries  ------------------------- *@
+
+    @* -------------------------  Core JS  ------------------------- *@
+    <script src="~/js/Core/STORAGE_KEYS.js" asp-append-version="true"></script>
+    <script src="~/js/Core/API.js" asp-append-version="true"></script>
+    <script src="~/js/Core/UI.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Auth.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Layout.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Navigation.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Form.js" asp-append-version="true"></script>
+    <script src="~/js/Core/MessageBox.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Cookie.js" asp-append-version="true"></script>
+    <script src="~/js/Core/CSRF.js" asp-append-version="true"></script>
+    <script src="~/js/Core/DragManager.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Dropdowns.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Confirm.js" asp-append-version="true"></script>
+    <script src="~/js/Core/NavBar.js" asp-append-version="true"></script>
+
+    @* -------------------------  Components  ------------------------- *@
+    <script src="~/js/Components/Table/TableManager.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Table/QueueView.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Filters/FilterManager.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Filters/FilterUI.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Attachments/Attachments.js" asp-append-version="true"></script>
+    <script src="~/js/Components/History/History.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Emails/Emails.js" asp-append-version="true"></script>
+
+    @* -------------------------  Pages  ------------------------- *@
+    <script src="~/js/Shared/PageBase.js" asp-append-version="true"></script>
+
+    @* -------------------------  Head JS (runs before body — use sparingly)  ------------------------- *@
+    @if (IsSectionDefined("AddJSToHead"))
+    {
+        @RenderSection("AddJSToHead", required: false)
+    }
+
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+
+<body id="Main-Body">
+
+    @Html.AntiForgeryToken()
+
+    @* -------------------------  Nav Bar  ------------------------- *@
+  <nav class="Nav-Bar" id="nav">
+    <div id="navbar-menu">
+        <a id="TicketsMenu">Tickets</a>
+        <a id="TasksMenu">Tasks</a>
+        <a id="UsersMenu">Users</a>
+        <a id="RFCMenu">RFC</a>
+        <a id="AdminMenu">Admin</a>
+    </div>
+
+    <div id="navbar-logout">
+        <a id="Account-Name" class="hidden"></a>
+        <a id="Logout-button">Logout</a>
+    </div>
+</nav>
+
+
+    @* -------------------------  Body  ------------------------- *@
+    @RenderBody()
+
+    @* -------------------------  Overlays  ------------------------- *@
+    <div id="Toggle-BlackBackground" class="BackgroundTint"></div>
+
+    <div id="MessageBox-ScreenCover-Div">
+        <div id="MessageBox-Outer-Div">
+            <div id="MessageBox-Div"></div>
+            <div id="Button-Div"></div>
+        </div>
+    </div>
+
+    <div id="PopupBox"></div>
+
+    @* -------------------------  Footer  ------------------------- *@
+    <footer class="footer">
+        <a>&copy; Govtech Solutions Ltd</a>
+    </footer>
+
+ @* -------------------------  Body JS  ------------------------- *@
+@if (IsSectionDefined("AddJSToBody"))
+{
+    @RenderSection("AddJSToBody", required: false)
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => NavBar.init());
+</script>
+
+</body>
+</html>
