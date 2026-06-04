@@ -3,8 +3,6 @@
 <div class="Detail-Div">
     <div class="left">
         <div id="@(Model)AttachBin"
-             ondrop="dropIt(event)"
-             
              draggable="false">
             <img src="images/Bin.png" class="bin-icon" />
         </div>
@@ -27,8 +25,9 @@
                    id="@(Model.ToLower())-fileupload1"
                    
                    
-                   onchange="GetByteArray('1',this)" />
+                    />
             <label id="@(Model)-Attach-Label" class="attach-label"></label>
+            <button type="button" class="attachment-remove" aria-label="Remove attachment" tabindex="-1"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
     </div>
 </div>

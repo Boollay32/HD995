@@ -10,10 +10,6 @@ const DragManager = (() => {
             e.preventDefault();
             DragManager.onNoteBoxDragOver(e);
         }
-
-        // Fix: replaces ondragover="event.preventDefault()" on AttachBin
-        const attachBin = e.target.closest('#AttachBin');
-        if (attachBin) e.preventDefault();
     });
 
     document.addEventListener('drop', e => {
@@ -22,13 +18,6 @@ const DragManager = (() => {
         if (mainDiv) {
             e.preventDefault();
             DragManager.onNoteBoxDrop(e);
-        }
-
-        // Fix: replaces ondrop="dropIt(event)" on AttachBin
-        const attachBin = e.target.closest('#AttachBin');
-        if (attachBin) {
-            e.preventDefault();
-            DragManager.onAttachBinDrop(e);
         }
     });
 
@@ -46,12 +35,6 @@ const DragManager = (() => {
 
             const data = e.dataTransfer.getData('text/plain');
             if (data) Notes.drop(data, e);
-        },
-
-        onAttachBinDrop(e) {
-            // Fix: was dropIt() — handle dropped attachment
-            const files = e.dataTransfer.files;
-            if (files?.length) Attachments.drop(files);
         },
 
         // Fix: dragleave — remove visual feedback — was missing entirely
