@@ -67,16 +67,6 @@ namespace HelpDeskNet8.Controllers.Tickets
         }
 
         [HttpPost]
-        public IActionResult GetRequestId([FromBody] GetRequestIdRequest request)
-        {
-            IUser user = this.GetAuthenticatedUser();
-            if (user == null) return Unauthorized();
-
-            var requestId = _ticketManager.GetRequestID(request.TicketId, user);
-            return Ok(requestId);
-        }
-
-        [HttpPost]
         public IActionResult ChangeCustomFields([FromBody] ChangeCustomFieldsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();

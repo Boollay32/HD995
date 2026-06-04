@@ -39,16 +39,6 @@ namespace HelpDeskNet8.Controllers.Shared
         }
 
         [HttpPost]
-        public IActionResult GetRequestId([FromBody] GetRequestIdRequest request)
-        {
-            IUser user = this.GetAuthenticatedUser();
-            if (user == null) return Unauthorized();
-
-            var requestId = _miscManager.GetRequestID(request.TicketId, user);
-            return Ok(requestId);
-        }
-
-        [HttpPost]
         public IActionResult GetFilterItems([FromBody] GetFilterItemsRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
@@ -114,53 +104,5 @@ namespace HelpDeskNet8.Controllers.Shared
             return Ok(result);
         }
 
-        [HttpPost]
-        public IActionResult OrderList([FromBody] OrderListRequest request)
-        {
-    IUser user = this.GetAuthenticatedUser();
-            if (user == null) return Unauthorized();
-
-            // Build DataTable from JSON rows — replaces pipe-delimited string parsing
-            var columns = request.Columns;
-            var table = new DataTable();
-
-            foreach (var col in columns)
-            {
-                if (col.Contains(" ID"))
-                    table.Columns.Add(col, typeof(int));
-                else if (col.Contains("Date") || col == "Created")
-                    table.Columns.Add(col, typeof(DateTime));
-                else
-                    table.Columns.Add(col, typeof(string));
-            }
-
-            foreach (var row in request.Rows)
-            {
-                var dataRow = table.NewRow();
-                foreach (var col in columns)
-                {
-                    if (!row.TryGetValue(col, out var value)) continue;
-
-                    try
-                    {
-                        if (string.IsNullOrEmpty(value) && col.Contains("Completed"))
-                            dataRow[col] = "1900-01-01T00:00:00";
-                        else
-                            dataRow[col] = value;
-                    }
-                    catch { /* skip invalid values */ }
-                }
-                table.Rows.Add(dataRow);
-            }
-
-            var sortExpression = request.OrderType == "0"
-                ? $"{request.ColumnToOrderBy} DESC"
-                : $"{request.ColumnToOrderBy} ASC";
-
-            var dataView = table.DefaultView;
-            dataView.Sort = sortExpression;
-
-            return Ok(dataView.ToTable());
-        }
     }
 }
