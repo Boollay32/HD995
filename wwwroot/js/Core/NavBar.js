@@ -13,7 +13,7 @@ const NavBar = {
             'TasksMenu': () => NavBar.tasks(),
             'UsersMenu': () => Nav.toUserPage(),
             'RFCMenu': () => Nav.toRFC(),
-            'AdminMenu': () => NavBar.adminPage('LoginMsg'),
+            'StatsMenu': () => NavBar.stats(),
             'Logout-button': () => NavBar.startLogout(),
         };
 
@@ -30,10 +30,8 @@ const NavBar = {
 
     // -------------------------  Button Controllers  ------------------------- //
 
-    adminPage(subPage) {
-        UI.toggleWaiting();
-        Auth.checkLimitedGovtechUserPerms();
-        Nav.toAdminPage();
+    stats() {
+        Nav.toStatsPage();
     },
 
     tickets() {
@@ -53,7 +51,7 @@ const NavBar = {
             'TaskPage': 'TasksMenu',
             'UserPage': 'UsersMenu',
             'RFC': 'RFCMenu',
-            'AdminPage': 'AdminMenu',
+            'StatsPage': 'StatsMenu',
         };
         const id = map[pageName] ?? pageName;
         document.getElementById(id)?.classList.add('active');
@@ -101,7 +99,6 @@ const NavBar = {
 
 // -------------------------  Legacy Wrappers  ------------------------- //
 
-function AdminButtonController(subPage) { NavBar.adminPage(subPage); }
 function TicketsButtonController() { NavBar.tickets(); }
 function TasksButtonController() { NavBar.tasks(); }
 function SetActivePage(pageName) { NavBar.setActivePage(pageName); }

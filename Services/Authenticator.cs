@@ -157,38 +157,6 @@ namespace HelpDeskNet8.Services
             }
         }
 
-        public string GetMessage()
-        {
-            string message = string.Empty;
-
-            using (IDbCommand command = _connection.CreateCommand())
-            {
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "[usp_Helpdesk_ShowSystemMessage]";
-
-                _connection.Open();
-                try
-                {
-                    using (IDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                            message = (string)reader["messagetext"];
-                    }
-                }
-                catch (Exception ex)
-                {
-                    AppLogger.Error(nameof(Authenticator), ex);
-                }
-                finally
-                {
-                    if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
-                }
-            }
-
-            return message;
-        }
-
         public AuthResult SecondWallAuth(string email, int pin, int UTC)
         {
             using (IDbCommand command = _connection.CreateCommand())

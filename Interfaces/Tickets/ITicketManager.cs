@@ -11,7 +11,6 @@ namespace HelpDeskNet8.Interfaces.Tickets
         ITicket GetTicketDetail(int ID, IUser user);
         int GetRequestID(int ID, IUser user);
         SaveResult SaveTicket(ITicket ticket, IUser user, int UTC, bool FalseReply, int emailSent, int visibleToClient = 1, DateTime? closeDate = null);
-        void UpdateLoginMessage(int userIDInt, string message, int UTC);
         DataTable GetStats(int ID, IUser user);
     }
 }

@@ -7,17 +7,11 @@ namespace HelpDeskNet8.Controllers.Shared
         [Route("StatsPage")]
         public IActionResult StatsPage() => View("~/Views/Page/StatsPage.cshtml");
 
-        [Route("AdminPage")]
-        public IActionResult AdminPage() => View("~/Views/Page/AdminPage.cshtml");
-
         [Route("CreateRFC")]
         public IActionResult CreateRFC() => View("~/Views/Page/RFC/CreateRFC.cshtml");
 
         [Route("CreateTicket")]
         public IActionResult CreateTicket() => View("~/Views/Page/Ticket/CreateTicket.cshtml");
-
-        [Route("FAQPage")]
-        public IActionResult FAQPage() => View("~/Views/Page/FAQPage.cshtml");
 
         [Route("RFC")]
         public IActionResult RFC() => View("~/Views/Page/RFC/RFCPage.cshtml");

@@ -7,7 +7,6 @@ const Nav = {
         window.location.href = path;
     },
 
-    toAdminPage() { Nav._navigate('/AdminPage'); },
     toTicketPage() { Nav._navigate('/TicketPage'); },
     toTasksPage() { Nav._navigate('/Tasks'); },
     toCreateRFC() { Nav._navigate('/CreateRFC'); },
@@ -29,7 +28,6 @@ const Nav = {
 
 // -------------------------  Legacy Wrappers  ------------------------- //
 
-function AdminPageView() { Nav.toAdminPage(); }
 function TicketPageView() { Nav.toTicketPage(); }
 function TasksPageView() { Nav.toTasksPage(); }
 function CreateRFCView() { Nav.toCreateRFC(); }

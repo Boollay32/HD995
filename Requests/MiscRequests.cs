@@ -18,13 +18,6 @@ namespace HelpDeskNet8.Requests
         public string Group { get; set; }
     }
 
-
-    public class UpdateLoginMessageRequest : AuthenticatedRequest
-    {
-        public int UserId { get; set; }
-        public string Message { get; set; }
-    }
-
     public class SendMailMessageRequest : AuthenticatedRequest
     {
         public string To { get; set; }

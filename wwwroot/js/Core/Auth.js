@@ -98,6 +98,11 @@ const Auth = {
             UI.hideAll(config.restrict);
         }
 
+        // Stats is admin-level-2 only
+        if (parseInt(adminId, 10) !== 2) {
+            UI.hideById('StatsMenu');
+        }
+
         if (config.extra) {
             this._applyExtraFunctionality();
             MakeDropDownsEditable();
@@ -127,7 +132,7 @@ const Auth = {
         const loginPage = sessionStorage.getItem('LoginPage');
         const page = window.location.pathname;
 
-        const rfcOnlyPages = ['/RFC', '/RFCDetails', '/CreateRFC', '/AdminPage'];
+        const rfcOnlyPages = ['/RFC', '/RFCDetails', '/CreateRFC'];
         const authorityPages = ['/TicketDetails', '/Tickets'];
 
         if (admin === 4 && !rfcOnlyPages.includes(page)) {

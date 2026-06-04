@@ -22,7 +22,7 @@ class StatsPage extends PageBase {
     // -------------------------  Page UI  ------------------------- //
 
     _setupPageUI() {
-        SetActivePage('AdminMenu');
+        SetActivePage('StatsMenu');
         SetTableDimensionsAuto();  // Fix: typo — Dimentions ? Dimensions
         UserPermissions();
         ChooseSeason();
