@@ -72,6 +72,7 @@ class TicketPage extends PageBase {
         const me = this.username;   // compared to assignedTech for the "My open" view
         return {
             title: 'Tickets',
+            action: { label: '+ New Ticket', onClick: () => Nav.toCreateTicket() },
             fetch: () => this._fetch(),
             rowKey: r => r.ticketID,
             search: ['subject', 'userName', 'ticketID'],

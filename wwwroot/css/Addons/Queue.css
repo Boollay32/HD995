@@ -69,6 +69,24 @@
   color: #6A655C;
   font-weight: 500;
 }
+.qv-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.qv-action:hover {
+  background: var(--accent-strong);
+}
 .qv-views {
   display: flex;
   gap: 7px;

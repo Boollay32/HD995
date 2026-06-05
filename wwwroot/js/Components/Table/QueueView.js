@@ -63,6 +63,7 @@ class QueueView {
               <input type="search" class="qv-search-input" placeholder="Search…" aria-label="Search ${this._esc(c.title ?? '')}">
             </div>
             <div class="qv-spacer"></div>
+            ${c.action ? `<button type="button" class="qv-action">${this._esc(c.action.label)}</button>` : ''}
             <span class="qv-count" aria-live="polite"></span>
           </header>
           ${c.views?.length ? `<div class="qv-views" role="group" aria-label="Saved views"></div>` : ''}
@@ -77,6 +78,7 @@ class QueueView {
         this.$ = {
             search:   this.root.querySelector('.qv-search-input'),
             count:    this.root.querySelector('.qv-count'),
+            action:   this.root.querySelector('.qv-action'),
             views:    this.root.querySelector('.qv-views'),
             filters:  this.root.querySelector('.qv-filters'),
             bulkbar:  this.root.querySelector('.qv-bulkbar'),
@@ -119,6 +121,7 @@ class QueueView {
 
     _bindStaticEvents() {
         this.$.search?.addEventListener('input', e => { this.search = e.target.value.trim().toLowerCase(); this.render(); });
+        this.$.action?.addEventListener('click', () => this.cfg.action?.onClick?.());
 
         this.$.views?.addEventListener('click', e => {
             const btn = e.target.closest('.qv-view'); if (!btn) return;
