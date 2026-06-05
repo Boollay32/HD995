@@ -1,13 +1,137 @@
-#Table-Div-Outer #Table-Div-Inner table thead tr th {
-  padding-left: 20px;
-  cursor: default;
-  text-align: left !important;
+/* =============================================================
+   Stats page — branded restyle (orange / white / gray, Spline Sans).
+   Page-scoped; loads after the shared sheets so it owns the layout.
+   Styles the real markup: #Filter-Box / #Filter-Box-Body / .FilterButton-Large
+   and #Table-Div-Outer > #Table-Div-Inner > #Table (thead/tbody filled by
+   CreateDynamicTable). The filter is kept open via `display:flex !important`,
+   which overrides the inline display the hover handler toggles.
+   ============================================================= */
+
+#Main-Div.main-section {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 22px;
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+    background: #F4F2EE;
 }
-#Table-Div-Outer #Table-Div-Inner table tbody tr td {
-  padding-left: 20px;
-  cursor: default;
-  text-align: left !important;
+
+/* the old hover "Filter" tab is redundant now the panel is always shown */
+#FilterTab { display: none; }
+
+/* ---- Filter panel ---- */
+#Filter-Box {
+    flex: 0 0 286px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
 }
-#Table-Div-Outer #Table-Div-Inner table tbody tr td:hover {
-  color: black !important;
+#Filter-Box-Header {
+    padding: 14px 18px;
+    background: linear-gradient(150deg, var(--brand-strong) 0%, var(--brand-deep) 100%);
+}
+#Filter-Box-Header span {
+    color: #fff;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: .02em;
+}
+#Filter-Box-Body {
+    display: flex !important;   /* keep open regardless of the hover handler */
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+}
+.Filter-Div { display: block; }
+
+/* stat report buttons — override the large global .accept for a tidy list */
+.FilterButton-Large {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    padding: 11px 13px;
+    border: 1px solid var(--brand-line);
+    border-radius: 10px;
+    background: var(--brand-pale);
+    color: var(--brand-deep);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .05s;
+}
+.FilterButton-Large:hover {
+    background: #F6DCC2;
+    border-color: var(--brand);
+    color: var(--brand-deep);
+}
+.FilterButton-Large:active { transform: translateY(1px); }
+
+#Download-Table-Button {
+    margin-top: 6px;
+    background: var(--paper-2);
+    color: var(--ink-soft);
+    border-color: var(--line-2);
+}
+#Download-Table-Button:hover {
+    background: #EFECE7;
+    border-color: var(--muted);
+    color: var(--ink);
+}
+
+/* ---- Table ---- */
+#Table-Div-Outer {
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: stretch;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+#Table-Div-Inner {
+    overflow: auto;
+    max-height: calc(100vh - 80px - 44px);
+}
+#Table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: var(--ink);
+}
+#Table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--brand-pale);
+    color: var(--brand-deep);
+    text-align: left;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 12px 18px;
+    border-bottom: 2px solid var(--brand-line);
+    white-space: nowrap;
+    cursor: default;
+}
+#Table tbody td {
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    white-space: nowrap;
+}
+#Table tbody tr:nth-child(even) { background: var(--paper-2); }
+#Table tbody tr:hover { background: var(--brand-pale); }
+#Table tbody tr:hover td { color: var(--ink); }
+
+@media (max-width: 760px) {
+    #Main-Div.main-section { flex-direction: column; }
+    #Filter-Box { flex: 1 1 auto; width: 100%; }
 }
