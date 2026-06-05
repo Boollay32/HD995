@@ -151,6 +151,6 @@ const Events = {
         Tabs.init();
         Collapse.init();
         NotifyBanner.bind();
-        Composer.init();
+        TicketComposer.init();
     },
 };

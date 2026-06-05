@@ -41,3 +41,22 @@
     --shadow-sm: 0 1px 2px rgba(20, 16, 12, .07);
     --shadow-lg: 0 10px 30px rgba(30, 20, 10, .18);
 }
+
+/* Nav/footer theme vars (lifted from Queue.css so the chrome themes
+   app-wide, not only on the list pages -- fixes the unthemed/white footer). */
+:root {
+    --panel: #FFFFFF;
+    --text: #1A1A19;
+    --border: #E4E3DF;
+    --row-hover: #FAFAF8;
+    --accent: #E8722A;
+    --accent-strong: #C85F1E;
+}
+html[data-theme="dark"] {
+    --panel: #2D333B;
+    --text: #DBE2EA;
+    --border: #444C56;
+    --row-hover: #323941;
+    --accent: #F0843A;
+    --accent-strong: #FF9A55;
+}

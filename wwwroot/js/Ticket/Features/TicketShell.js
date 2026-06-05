@@ -328,7 +328,7 @@ const NotifyBanner = {
 
 // -------------------------  Composer helpers  ------------------------- //
 
-const Composer = {
+const TicketComposer = {
 
     _bindTextarea(textareaEl, charcountEl, sendBtnEl, limit = 2000) {
         if (!textareaEl) return;
@@ -365,13 +365,13 @@ const Composer = {
     },
 
     init() {
-        Composer._bindTextarea(
+        TicketComposer._bindTextarea(
             Dom.msgTextarea(),
             Dom.msgCharcount(),
             Dom.msgSendBtn(),
         );
 
-        Composer._bindTextarea(
+        TicketComposer._bindTextarea(
             Dom.noteTextarea(),
             Dom.noteCharcount(),
             Dom.noteSendBtn(),

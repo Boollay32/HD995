@@ -54,7 +54,7 @@ class RFCPage extends PageBase {
     }
 
     async _fetch() {
-        const data = await API.post('ChangeRequest/GetChangeRequests', API.authPayload({ filters: {} }));
+        const data = await API.post('RFC/GetChangeRequests', API.authPayload({ filters: {} }));
         return Array.isArray(data) ? data : [];
     }
 
