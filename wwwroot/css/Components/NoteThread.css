@@ -1,0 +1,281 @@
+/* =====================  NoteThread.css  =====================
+ *
+ * Shared styling for a modern note thread + inline composer: note cards,
+ * the composer box, char-count, attachment chips and download links.
+ *
+ * Mirrors the ticket-detail Notes tab so the RFC notes thread looks
+ * consistent. All rules are scoped under #Notes to keep them contained to
+ * the notes section. Loaded on the RFC detail page; the ticket detail page
+ * keeps its equivalents in TicketDetails.css (a future tidy-up could unify
+ * both pages onto this file).
+ * ========================================================== */
+
+/* ---- utilities (used by the composer markup) ---- */
+#Notes .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+#Notes .mono {
+  font-family: "Spline Sans Mono", ui-monospace, monospace;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- thread ---- */
+#Notes .td-note-thread {
+  flex: 1;
+  min-height: 0;
+  max-height: 460px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #D8D3C8 transparent;
+}
+#Notes .td-note-thread::-webkit-scrollbar { width: 5px; }
+#Notes .td-note-thread::-webkit-scrollbar-track { background: transparent; }
+#Notes .td-note-thread::-webkit-scrollbar-thumb { background: #D8D3C8; border-radius: 99px; }
+
+/* ---- empty state ---- */
+#Notes .td-thread-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #6A655C;
+  padding: 24px;
+}
+#Notes .td-thread-empty svg { opacity: 0.35; }
+#Notes .td-thread-empty p { font-size: 13px; font-weight: 600; text-align: center; }
+
+/* ---- note card ---- */
+#Notes .td-note-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1px solid #E6E2D9;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 2px rgba(20, 18, 15, 0.04), 0 6px 18px rgba(20, 18, 15, 0.05);
+  animation: rise 0.25s ease both;
+}
+#Notes .td-note-card.is-optimistic { opacity: 0.6; }
+#Notes .td-note-head { display: flex; align-items: center; gap: 8px; }
+#Notes .td-note-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #E1EFEA;
+  color: #0E4A3F;
+  font-size: 10.5px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+#Notes .td-note-author { font-size: 11.5px; font-weight: 700; color: #1D1C1A; flex: 1; }
+#Notes .td-note-time {
+  font-family: "Spline Sans Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  color: #6A655C;
+}
+#Notes .td-note-body {
+  font-size: 13px;
+  color: #1D1C1A;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ---- note attachments (download links) ---- */
+#Notes .td-note-attachments { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+#Notes .td-note-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: #FBFAF7;
+  border: 1px solid #D8D3C8;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #56524B;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+#Notes .td-note-file:hover { background: #E6E2D9; }
+
+/* ---- composer ---- */
+#Notes .td-note-compose {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1px solid #D8D3C8;
+  border-radius: 14px;
+  padding: 8px 8px 8px 14px;
+  flex-shrink: 0;
+  margin-top: 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+#Notes .td-note-compose:focus-within { border-color: #15695A; box-shadow: 0 0 0 3px #E1EFEA; }
+#Notes .td-note-compose.is-dragover { background: #E1EFEA; border-color: #15695A; outline: 2px dashed #15695A; }
+#Notes .td-note-input {
+  flex: 1;
+  font-family: "Spline Sans", system-ui, sans-serif;
+  font-size: 13px;
+  color: #1D1C1A;
+  background: none;
+  border: none;
+  outline: none;
+  resize: none;
+  line-height: 1.5;
+  max-height: 140px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #D8D3C8 transparent;
+}
+#Notes .td-note-input::placeholder { color: #6A655C; }
+#Notes .td-note-add-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #15695A;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+#Notes .td-note-add-btn:hover { background: #0E4A3F; }
+#Notes .td-note-add-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ---- composer footer (char count, attachment chips, attach button) ---- */
+#Notes .td-composer-footer { display: flex; align-items: center; gap: 8px; padding: 6px 2px 0; }
+#Notes .td-charcount {
+  font-family: "Spline Sans Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  color: #6A655C;
+  flex: 1;
+}
+#Notes .td-charcount.is-near-limit { color: #A25A06; }
+#Notes .td-charcount.is-at-limit { color: #C0392B; font-weight: 700; }
+#Notes .td-composer-attachments { display: flex; flex-wrap: wrap; gap: 4px; }
+#Notes .td-attach-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #FBFAF7;
+  border: 1px solid #D8D3C8;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #56524B;
+  max-width: 160px;
+}
+#Notes .td-attach-chip span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#Notes .td-attach-chip button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6A655C;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+#Notes .td-attach-chip button:hover { color: #C0392B; }
+#Notes .td-attach-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: #6A655C;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
+#Notes .td-attach-btn:hover { background: #E6E2D9; color: #1D1C1A; }
+
+/* ---- edit own note ---- */
+#Notes .td-note-edit {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  color: #6A655C;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+#Notes .td-note-edit:hover { background: #E6E2D9; color: #15695A; }
+#Notes .td-note-edit:focus-visible { outline: 2px solid #15695A; outline-offset: 1px; }
+#Notes .td-note-editor { display: flex; flex-direction: column; gap: 8px; }
+#Notes .td-note-edit-input {
+  font-family: "Spline Sans", system-ui, sans-serif;
+  font-size: 13px;
+  color: #1D1C1A;
+  line-height: 1.55;
+  background: #FBFAF7;
+  border: 1px solid #D8D3C8;
+  border-radius: 8px;
+  padding: 8px 10px;
+  resize: vertical;
+  min-height: 64px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+#Notes .td-note-edit-input:focus { border-color: #15695A; box-shadow: 0 0 0 3px #E1EFEA; }
+#Notes .td-note-edit-actions { display: flex; justify-content: flex-end; gap: 8px; }
+#Notes .td-note-edit-cancel,
+#Notes .td-note-edit-save {
+  font-family: "Spline Sans", system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+#Notes .td-note-edit-cancel {
+  background: none;
+  border: 1px solid #D8D3C8;
+  color: #56524B;
+}
+#Notes .td-note-edit-cancel:hover { background: #E6E2D9; color: #1D1C1A; }
+#Notes .td-note-edit-save {
+  background: #15695A;
+  border: 1px solid #15695A;
+  color: #FFFFFF;
+}
+#Notes .td-note-edit-save:hover { background: #0E4A3F; border-color: #0E4A3F; }
+#Notes .td-note-edit-cancel:disabled,
+#Notes .td-note-edit-save:disabled { opacity: 0.5; cursor: not-allowed; }
+#Notes .td-note-edit-attachments { display: flex; flex-wrap: wrap; gap: 4px; }
+#Notes .td-note-edit-attachments:empty { display: none; }
+#Notes .td-note-edit-bar { display: flex; align-items: center; gap: 8px; }
+#Notes .td-note-edit-bar .td-note-edit-actions { margin-left: auto; }
