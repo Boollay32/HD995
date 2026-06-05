@@ -1,96 +1,100 @@
-﻿@section AddJSToHead {
+@section AddJSToHead {
     <script src="~/js/Login/Pages/Login.js" asp-append-version="true"></script>
 }
 
 @section AddCSSToHead {
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="~/css/Pages/Login.css" asp-append-version="true">
 }
 
 <div id="Main-Div" class="main-section">
+    <div class="stage-wrap">
 
-    @*-- -------------------------  Login  ------------------------- --*@
-    <div id="Login-Container" class="auth-container active">
-        <div id="login-title" data-text="Govtech Helpdesk"></div>
-
-        <form name="loginform" id="login">
-            <div class="form-section">
-                <input id="UserName"
-                       placeholder="User Name"
-                       class="login-input"
-                       type="text"
-                       name="uname"
-                       required
-                       autocomplete="off" />
-            </div>
-            <div class="form-section">
-                <input id="pass"
-                       placeholder="Password"
-                       class="login-input"
-                       type="password"
-                       name="psw"
-                       required
-                       autocomplete="off" />  @*-- Fix: onkeypress removed — handled in Login.js --*@
-            </div>
-            <div class="form-section">
-                <button id="Login-Button"
-                        type="button"
-                        class="accept">
-                    Sign In
-                </button>              @*-- Fix: onclick removed — handled in Login.js --*@
-            </div>
-        </form>
-    </div>
-
-    @*-- -------------------------  PIN / Second Wall  ------------------------- --*@
-    <div id="SecondWall-Container" class="auth-container">
-        <div id="PINMessage">
-            <p>Please enter your 6 digit PIN in the fields below.</p>
-        </div>
-        <div id="SecondWall-div">
-            <div id="Pin-Boxes"></div>
-            <button id="SecondWall-Submit"
-                    class="accept"
-                    type="button">
-                Submit
-            </button>              @*-- Fix: onclick removed — handled in Login.js --*@
-        </div>
-    </div>
-
-    @*-- -------------------------  Reset Password  ------------------------- --*@
-    <div id="ResetPassword-Container" class="auth-container">
-        <div id="Reset-Password">
-            <div id="Pass-Info">
-                <p id="initialListTitle">Password must contain:</p>
-                <p>- One upper and lower case character</p>
-                <p>- A number</p>
-                <p>- And be at least 12 characters long</p>
-            </div>
-
-            <form id="NewPass">
-                <div class="new-pass-row">
-                    @*-- Fix: class not id — was duplicated 3x --*@
-                    <label for="pass1">Please create a new password</label>
-                    <input id="pass1"
-                           type="password"
-                           name="passretype1"
-                           autocomplete="off" />
+        @*-- -------------------------  Login  ------------------------- --*@
+        <div id="Login-Container" class="auth-container active">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3l8 4v5c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V7l8-4z" /><path d="M9 12l2 2 4-4" />
+                    </svg>
                 </div>
-                <div class="new-pass-row">
-                    <label for="pass2">Retype new password</label>
-                    <input id="pass2"
-                           type="password"
-                           name="passretype2"
-                           autocomplete="off" />
+                <div class="brand-name"><b>Govtech</b> Helpdesk</div>
+            </div>
+
+            <h1 class="stage-title">Sign in</h1>
+            <p class="stage-sub">Welcome back. Enter your details to continue.</p>
+
+            <form name="loginform" id="login" autocomplete="off">
+                <div class="field">
+                    <label for="UserName">Username</label>
+                    <input id="UserName" class="login-input" type="text" name="uname" placeholder="Your username" required autocomplete="off" />
                 </div>
-                <div class="new-pass-row">
-                    <button id="NewPass-Submit"
-                            type="button"
-                            class="accept">
-                        Submit
-                    </button>      @*-- Fix: onclick removed — handled in Login.js --*@
+                <div class="field">
+                    <label for="pass">Password</label>
+                    <input id="pass" class="login-input" type="password" name="psw" placeholder="Your password" required autocomplete="off" />
                 </div>
+                <button id="Login-Button" type="button" class="accept">Sign In</button>
             </form>
         </div>
-    </div>
 
+        @*-- -------------------------  PIN / Second Wall  ------------------------- --*@
+        <div id="SecondWall-Container" class="auth-container">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 018 0v3" />
+                    </svg>
+                </div>
+                <div class="brand-name"><b>Govtech</b> Helpdesk</div>
+            </div>
+
+            <h1 class="stage-title">Verify it's you</h1>
+            <div id="PINMessage"><p class="stage-sub">Enter your 6 digit PIN in the fields below.</p></div>
+
+            <div id="SecondWall-div">
+                <div id="Pin-Boxes"></div>
+                <div class="pin-caption"><span class="dot" aria-hidden="true"></span> Two shaded positions use dropdowns for added security.</div>
+                <button id="SecondWall-Submit" class="accept" type="button">Submit</button>
+            </div>
+        </div>
+
+        @*-- -------------------------  Reset Password  ------------------------- --*@
+        <div id="ResetPassword-Container" class="auth-container">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3l8 4v5c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V7l8-4z" /><circle cx="12" cy="11" r="2.2" /><path d="M12 13.2V16" />
+                    </svg>
+                </div>
+                <div class="brand-name"><b>Govtech</b> Helpdesk</div>
+            </div>
+
+            <h1 class="stage-title">Create a new password</h1>
+            <p class="stage-sub">Your account is using a default password. Choose a new one to continue.</p>
+
+            <div id="Reset-Password">
+                <ul class="req-list" id="Pass-Info">
+                    <li class="req-title" id="initialListTitle">Password must contain:</li>
+                    <li class="req"><span class="req-dot" aria-hidden="true"></span> At least 12 characters</li>
+                    <li class="req"><span class="req-dot" aria-hidden="true"></span> An upper &amp; lower-case letter</li>
+                    <li class="req"><span class="req-dot" aria-hidden="true"></span> A number</li>
+                </ul>
+
+                <form id="NewPass" autocomplete="off">
+                    <div class="field">
+                        <label for="pass1">New password</label>
+                        <input id="pass1" class="login-input" type="password" name="passretype1" autocomplete="off" />
+                    </div>
+                    <div class="field">
+                        <label for="pass2">Confirm new password</label>
+                        <input id="pass2" class="login-input" type="password" name="passretype2" autocomplete="off" />
+                    </div>
+                    <button id="NewPass-Submit" type="button" class="accept">Submit</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
 </div>
