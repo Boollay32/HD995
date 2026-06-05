@@ -1,0 +1,43 @@
+/* =============================================================
+   Design tokens — canonical brand palette (orange / white / gray).
+   Loaded globally (first) from _Layout so every stylesheet can use
+   var(--token). Establishes the source of truth that replaces the
+   deleted Variables.less. Defining tokens here has no visual effect
+   on its own; existing hardcoded colours are migrated in a later pass.
+   ============================================================= */
+
+:root {
+    /* Brand — orange */
+    --brand:        #D9741F;
+    --brand-strong: #C2640F;
+    --brand-deep:   #9C4A08;
+    --brand-pale:   #FBE9D6;
+    --brand-line:   #ECCBA8;
+
+    /* Ink / text */
+    --ink:      #211F1D;
+    --ink-soft: #514D49;
+    --muted:    #6E6962;
+
+    /* Surfaces / lines */
+    --paper:   #FFFFFF;
+    --paper-2: #FAF9F6;
+    --line:    #E7E3DE;
+    --line-2:  #D7D2CB;
+
+    /* Status (kept neutral/brand-aligned) */
+    --ok:    #2E7D46;
+    --warn:  #B5760A;
+    --danger:#B4392B;
+
+    /* Type */
+    --font-sans: "Spline Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* Radii / shadow */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 2px rgba(20, 16, 12, .07);
+    --shadow-lg: 0 10px 30px rgba(30, 20, 10, .18);
+}

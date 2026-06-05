@@ -1,0 +1,51 @@
+/* =============================================================
+   Buttons — canonical .accept / .cancel (brand orange / gray).
+   Loaded globally from _Layout; single source of truth. Previously
+   these lived (and diverged) in Template.css and Details.css — the
+   detail pages had a separate flat-blue accept. Unified to the
+   existing orange so every page matches.
+   ============================================================= */
+
+#accept,
+.accept {
+  font-family: Calibri;
+  transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 0 0;
+  padding: 5px;
+  border: 0;
+  border-bottom: 3px solid #bf7c00;
+  border-radius: 3px;
+  background-color: orange;
+  color: black;
+  font-size: 20px;
+  min-width: 100px;
+  margin: 0;
+}
+
+#accept:hover,
+.accept:hover {
+  background-color: #ffbd44;
+  color: white;
+  background-color: #FFCF7A;
+}
+
+button#cancel,
+button.cancel {
+  transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  font-family: Calibri;
+  box-shadow: 0 0 0 0;
+  padding: 5px;
+  border: 0;
+  border-radius: 3px;
+  border-bottom: 3px solid #696969;
+  background-color: #d4d4d4;
+  color: black;
+  font-size: 20px;
+  min-width: 100px;
+}

@@ -260,47 +260,6 @@ input {
   top: 0 !important;
   width: 150px;
 }
-#accept,
-.accept {
-  font-family: Calibri;
-  transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -webkit-transition: all 0.3s ease-in-out;
-  box-shadow: 0 0 0 0;
-  padding: 5px;
-  border: 0;
-  border-bottom: 3px solid #bf7c00;
-  border-radius: 3px;
-  background-color: orange;
-  color: black;
-  font-size: 20px;
-  min-width: 100px;
-  margin: 0;
-}
-#accept:hover,
-.accept:hover {
-  background-color: #ffbd44;
-  color: white;
-  background-color: #FFCF7A;
-}
-button#cancel,
-button.cancel {
-  transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -webkit-transition: all 0.3s ease-in-out;
-  font-family: Calibri;
-  box-shadow: 0 0 0 0;
-  padding: 5px;
-  border: 0;
-  border-radius: 3px;
-  border-bottom: 3px solid #696969;
-  background-color: #d4d4d4;
-  color: black;
-  font-size: 20px;
-  min-width: 100px;
-}
 .dark-bar-grad {
   background: #848484;
   background: -moz-linear-gradient(top, #848484 0%, #424141 3%, #424141 48%, #424141 97%, #212121 100%);
