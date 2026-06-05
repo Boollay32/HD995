@@ -140,12 +140,8 @@ const BackButton = {
             sessionStorage.removeItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);
             sessionStorage.removeItem(STORAGE_KEYS.OLD_ASSIGNED_TECH);
 
-            // Return to correct list
-            const dest = sessionStorage.getItem(STORAGE_KEYS.MY_TICKETS) === 'true'
-                ? '/Ticket/MyTickets'
-                : '/Ticket/AllTickets';
-
-            window.location.href = dest;
+            // Return to the tickets list (My-open vs All is a client-side view there)
+            Nav.toTicketPage();
         });
     },
 };
