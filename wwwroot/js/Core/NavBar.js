@@ -105,3 +105,8 @@ function SetActivePage(pageName) { NavBar.setActivePage(pageName); }
 function StartLogout() { NavBar.startLogout(); }
 function BringForwardNav() { NavBar.bringForward(); }
 function PushBackNav() { NavBar.pushBack(); }
+
+// Reveal the nav menu for users allowed on the current page (perm-restricted
+// items stay hidden - toggled separately in Auth.setAdminAbilities). Was an
+// undefined global that threw inside Auth.checkLimitedUserPerms.
+function DisplayMenu() { UI.show('nav'); }
