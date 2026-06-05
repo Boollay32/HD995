@@ -141,3 +141,9 @@ const Form = {
 if (typeof window !== 'undefined') {
     window.Form = Form;
 }
+
+// -------------------------  Legacy Wrappers  ------------------------- //
+
+function validateForm(formId) { return Form.validate(formId); }
+function ClearAllFormInputs(formId) { Form.clear(formId); }
+function SetTargetDateMinToday() { Form.setTargetDateMin(); }
