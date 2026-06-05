@@ -38,7 +38,7 @@ class RFCDetails extends PageBase {
     async _loadRFCData() {
         await Promise.all([
             Dropdowns.load('RFC'),
-            GetNotes(this.rfcId),
+            RFCNotes.init(this.rfcId),
             this._getRFCDetails()
         ]);
     }
