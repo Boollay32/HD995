@@ -337,3 +337,22 @@ input {
   flex-direction: column;
 }
 /*=============== Main Section End ===================*/
+
+/*=============== Footer ===================*/
+.footer {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 12px 24px;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font-sans, "Spline Sans", system-ui, sans-serif);
+  font-size: 12px;
+  text-align: center;
+}
+.footer a {
+  color: var(--muted);
+  text-decoration: none;
+}
+/*=============== Footer End ===================*/
