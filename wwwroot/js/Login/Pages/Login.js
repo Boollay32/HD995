@@ -40,22 +40,16 @@ async function Login(form, e) {
     let newpass = "";
     let name = "";
 
-    if (window.location.hostname === 'localhost') {
-        // DEV ONLY — remove before commit
-        name = 'alex.bull@govtech.co.uk';
-        pass = '(Qundai214620!)';
+    if (NewPassForm[0].value !== "") {
+        newpass = NewPassForm.pass1.value;
+        pass = "Helpdesk";
     } else {
-        if (NewPassForm[0].value !== "") {
-            newpass = NewPassForm.pass1.value;
-            pass = "Helpdesk";
-        } else {
-            pass = LoginForm.psw.value;
-        }
-        name = LoginForm.uname.value;
-        if (!name || !pass) {
-            ToggleWaiting();
-            return;
-        }
+        pass = LoginForm.psw.value;
+    }
+    name = LoginForm.uname.value;
+    if (!name || !pass) {
+        ToggleWaiting();
+        return;
     }
 
     const UTC = UTCWorkAround();
@@ -153,23 +147,17 @@ async function SecondWallAuth() {
     let pin = '';
     let email = '';
 
-    if (window.location.hostname === 'localhost') {
-        email = 'alex.bull@govtech.co.uk';
-        pin = '526826';
+    if (status === "1") {
+        BuildMessageBox("Incorrect Credentials", "Index");
+        return;
     }
-    else{
-        if (status === "1") {
-            BuildMessageBox("Incorrect Credentials", "Index");
-            return;
-        }
 
-        ToggleWaiting();
+    ToggleWaiting();
 
-        email = sessionStorage.getItem("UserName");
-        const pinBoxes = document.querySelectorAll("#Pin-Boxes input, #Pin-Boxes select");
-        pin = Array.from(pinBoxes).map(b => b.value).join("");
-    }
-    
+    email = sessionStorage.getItem("UserName");
+    const pinBoxes = document.querySelectorAll("#Pin-Boxes input, #Pin-Boxes select");
+    pin = Array.from(pinBoxes).map(b => b.value).join("");
+
     const UTC = UTCWorkAround();
 
     try {

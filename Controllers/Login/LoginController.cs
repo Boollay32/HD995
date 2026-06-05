@@ -22,7 +22,6 @@ namespace HelpDeskNet8.Controllers.Login
             return Ok(new TransferObject
             {
                 Status = _authenticator.StatusCode,
-                Token = user?.AuthenticationToken,
                 UserID = user?.UserID,
                 AuthorityID = user?.AuthorityID
             });

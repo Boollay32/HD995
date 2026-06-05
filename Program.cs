@@ -72,10 +72,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    var headers = context.Response.Headers;
+    headers["X-Content-Type-Options"] = "nosniff";
+    headers["X-Frame-Options"] = "SAMEORIGIN";
+    headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    await next();
+});
 
 var provider = new FileExtensionContentTypeProvider();
-provider.Mappings[".less"] = "text/css";
 provider.Mappings[".js"] = "application/javascript";
 provider.Mappings[".mjs"] = "application/javascript";
 
