@@ -169,6 +169,7 @@ async function SecondWallAuth() {
             body: JSON.stringify({ email, pin: parseInt(pin), UTC })
         });
 
+        if (response.status === 401) { BuildMessageBox("Incorrect PIN. Please try again.", "Index"); return; }
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();

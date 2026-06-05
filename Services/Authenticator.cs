@@ -175,11 +175,14 @@ namespace HelpDeskNet8.Services
                         if (reader.Read())
                         {
                             int returnCode = (int)reader["ReturnCode"];
-                            string token = (string)reader["ResponseToken"];
+                            string token = reader["ResponseToken"] as string ?? string.Empty;
                             DateTime? expiry = reader["ResponseExpiryTime"] as DateTime?
                                                   ?? DateTime.MinValue;
 
                             // Fix: typed AuthResult — not List<object>
+                            if (returnCode != 0)
+                                return AuthResult.Failed("Incorrect PIN.");
+
                             return AuthResult.Success(returnCode, token, expiry);
                         }
                     }
