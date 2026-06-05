@@ -115,6 +115,7 @@ const MessageBox = {
             'RFC': () => Nav.toRFCPage(),
             'RFCDetails': () => Nav.toRFCDetails(),
             'UserDetails': () => Nav.toUserDetails(),
+            'Users': () => Nav.toUserPage(),
             'Index': () => { sessionStorage.clear(); window.open('.', '_self', false); }
         };
 

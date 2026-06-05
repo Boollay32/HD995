@@ -1,0 +1,97 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet" type="text/css" href="/css/Pages/CreateForm.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Pages/Details.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Addons/Snow.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Addons/FormLayout.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Addons/PopupWindows.css" asp-append-version="true">
+}
+
+@section AddJSToHead {
+    <script src="~/js/User/Pages/CreateUser.js" asp-append-version="true"></script>
+}
+
+<div id="Main-Div" class="main-section">
+    <div id="Detail-Container">
+        <div id="Detail-Header">
+            <div id="header-buttons">
+                <button type="button" id="SubmitCreatedUser" class="accept">Submit</button>
+            </div>
+        </div>
+
+        <div id="Detail-Body">
+            <form id="create-user">
+                <div id="Detail-Inner">
+                    <div id="Details">
+
+                        <div id="Group-Header">
+                            <div class="left">
+                                <label class="Name">Create User</label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left">
+                                <label class="Name" for="LoginName">Login Email</label>
+                            </div>
+                            <div class="right">
+                                <input required type="email" maxlength="250" id="LoginName" class="Value" autocomplete="off" />
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left">
+                                <label class="Name" for="FirstName">First Name</label>
+                            </div>
+                            <div class="right">
+                                <input required maxlength="100" id="FirstName" class="Value" />
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left">
+                                <label class="Name" for="SecondName">Last Name</label>
+                            </div>
+                            <div class="right">
+                                <input required maxlength="100" id="SecondName" class="Value" />
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left">
+                                <label class="Name" for="PhoneNumber">Phone</label>
+                            </div>
+                            <div class="right">
+                                <input maxlength="50" id="PhoneNumber" class="Value" />
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left">
+                                <label class="Name" for="Authority">Authority</label>
+                            </div>
+                            <div class="right">
+                                <select required id="Authority" class="Value"></select>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left">
+                                <label class="Name" for="Department">Department</label>
+                            </div>
+                            <div class="right">
+                                <select required id="Department" class="Value"></select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="Display-Div"></div>

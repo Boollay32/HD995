@@ -13,6 +13,9 @@ namespace HelpDeskNet8.Controllers.Shared
         [Route("CreateTicket")]
         public IActionResult CreateTicket() => View("~/Views/Page/Ticket/CreateTicket.cshtml");
 
+        [Route("CreateUser")]
+        public IActionResult CreateUser() => View("~/Views/Page/User/CreateUser.cshtml");
+
         [Route("RFC")]
         public IActionResult RFC() => View("~/Views/Page/RFC/RFCPage.cshtml");
 

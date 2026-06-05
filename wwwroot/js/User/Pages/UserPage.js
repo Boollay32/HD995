@@ -46,7 +46,13 @@ class UserPage extends PageBase {
             return;
         }
 
-        this.queue = new QueueView('#queue-mount', this._config());
+        // Govtech admins (level 2) can create users; the server also enforces this.
+        const adminId = await API.post('Authenticator/CheckAdmin', API.authPayload());
+        const cfg = this._config();
+        if (parseInt(adminId, 10) === 2) {
+            cfg.action = { label: '+ New User', onClick: () => Nav.toCreateUser() };
+        }
+        this.queue = new QueueView('#queue-mount', cfg);
         await this.queue.load();
     }
 
