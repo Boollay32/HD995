@@ -40,6 +40,11 @@ namespace HelpDeskNet8.Controllers.Users
                 }
             }
 
+            // usp_Helpdesk_GetUsers resolves the caller's authority/access from
+            // @UserID; without it the access gate matches no row and every user is
+            // filtered out. Set it after the request loop so a caller cannot spoof it.
+            dict["UserID"] = (user.UserID ?? 0).ToString();
+
             if (!isAdmin)
                 dict["Authority"] = (user.AuthorityID ?? 0).ToString();
 
