@@ -99,7 +99,7 @@ class CreateRFC extends PageBase {
     }
 
     async _submitRFC(formData) {
-        return API.post('ChangeRequest/SaveChangeRequest',
+        return API.post('RFC/SaveRFC',
             API.authPayload({
                 ...formData,
                 emailSent: 0

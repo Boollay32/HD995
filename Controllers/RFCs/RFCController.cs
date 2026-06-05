@@ -18,7 +18,7 @@ namespace HelpDeskNet8.Controllers
         private readonly IAuthenticator _authenticator = auth;
 
         [HttpPost]
-        public IActionResult GetChangeRequests([FromBody] GetChangeRequestsRequest request)
+        public IActionResult GetRFCs([FromBody] GetRFCsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -34,22 +34,22 @@ namespace HelpDeskNet8.Controllers
             }
 
             Filter filter = TypeCreator.Setup<Filter>(filterDict);
-            var result = _changeRequestManager.GetChangeRequest(user.UserID, filter);
+            var result = _changeRequestManager.GetRFCs(user.UserID, filter);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult GetChangeRequestDetail([FromBody] GetChangeRequestDetailRequest request)
+        public IActionResult GetRFCDetail([FromBody] GetRFCDetailRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = _changeRequestManager.GetChangeRequestDetail(request.RFCId);
+            var result = _changeRequestManager.GetRFCDetail(request.RFCId);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult SaveChangeRequest([FromBody] SaveChangeRequestRequest request)
+        public IActionResult SaveRFC([FromBody] SaveRFCRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -71,8 +71,8 @@ namespace HelpDeskNet8.Controllers
             PopulateObject(rfc, rfcBuild);
 
             List<object> result = rfc.ChangeRequestID != 0
-                ? _changeRequestManager.SaveChangeRequest((int)user.UserID, rfc.GetChanges(), request.UTC)
-                : _changeRequestManager.SaveChangeRequest((int)user.UserID, rfc, request.UTC);
+                ? _changeRequestManager.SaveRFC((int)user.UserID, rfc.GetChanges(), request.UTC)
+                : _changeRequestManager.SaveRFC((int)user.UserID, rfc, request.UTC);
 
             if (result[0]?.ToString() == "Error") return BadRequest(result);
             return Ok(result);
