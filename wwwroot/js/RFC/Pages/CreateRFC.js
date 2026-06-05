@@ -20,7 +20,7 @@ class CreateRFC extends PageBase {
             this._setupEventListeners();
 
         } catch (error) {
-            this.handleError('Error initializing create RFC', 'Index');
+            this.handleError('Error initializing create RFC');
         }
     }
 
@@ -80,7 +80,7 @@ class CreateRFC extends PageBase {
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
-                this.handleError("Error: Couldn't create RFC", 'Index');
+                this.handleError("Error: Couldn't create RFC");
             }
         } finally {
             ToggleWaiting();

@@ -32,7 +32,7 @@ class UserManager extends PageBase {
             this._setupExtraControls();
         } catch (error) {
             if (error.message !== 'Unauthorized') {
-                this.handleError('Error initializing user details', 'Index');
+                this.handleError('Error initializing user details');
             }
         }
     }
