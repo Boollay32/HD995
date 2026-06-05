@@ -416,16 +416,16 @@
 }
 .qv-preview {
   position: fixed;
-  top: 0;
+  top: 56px;
   right: 0;
-  height: 100vh;
+  bottom: 0;
   width: 460px;
   max-width: 94vw;
   background: #FFFFFF;
   box-shadow: -18px 0 50px rgba(20, 18, 15, 0.16);
   transform: translateX(100%);
   transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1000; /* above fixed nav (101) + footer (999) */
+  z-index: 1000; /* docked below the 56px fixed nav; above content + footer */
   display: flex;
   flex-direction: column;
 }
