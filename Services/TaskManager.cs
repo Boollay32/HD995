@@ -33,7 +33,7 @@ namespace HelpDeskNet8.Services
             var parameters = new Dictionary<string, (SqlDbType Type, object Value)>
             {
                 { "@UserID",        (SqlDbType.Int,      user.UserID) },
-                { "@MyTasks",       (SqlDbType.Int,      filter.MySearch) },
+                { "@MyTasks",       (SqlDbType.Int,      filter.MySearch ?? 0) },
                 { "@TicketID",      (SqlDbType.Int,      filter.TicketID) },
                 { "@TaskID",        (SqlDbType.Int,      filter.TaskID) },
                 { "@Title",         (SqlDbType.NVarChar, filter.Title) },
