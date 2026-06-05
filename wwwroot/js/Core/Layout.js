@@ -147,3 +147,27 @@ function MakeDropDownsEditable() { Layout.makeDropdownsEditable(); }
 function SetCurrentAssignedTech(fieldId) { Layout.setCurrentAssignedTech(fieldId); }
 function SetTableDimentionsAuto() { Layout.setTableDimensions(); }
 function SetHeaderWidths(tableId = 'Table') { Layout.setHeaderWidths(tableId); }
+
+
+// ----- Stats page helpers (define previously-missing globals) ----- //
+function SetTableDimensionsAuto() { Layout.setTableDimensions(); }
+
+// Expand / collapse the stats filter panel (also used by TablePage hover handlers).
+function ExpandFilter(expand) {
+    const box = document.getElementById('Filter-Box');
+    if (box) { box.classList.toggle('expanded', !!expand); box.classList.toggle('collapsed', !expand); }
+    const body = document.getElementById('Filter-Box-Body');
+    if (body) body.style.display = expand ? '' : 'none';
+}
+
+// Render an array of uniform row objects into #Table (dynamic columns from the row keys).
+function CreateDynamicTable(data) {
+    if (!Array.isArray(data) || data.length === 0) return;
+    const headRow = document.querySelector('#Table-Header tr') || document.querySelector('#Table thead tr');
+    const body = document.getElementById('Table-Body') || document.querySelector('#Table tbody');
+    if (!headRow || !body) return;
+    const esc = v => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const cols = Object.keys(data[0]);
+    headRow.innerHTML = cols.map(c => `<th>${esc(c)}</th>`).join('');
+    body.innerHTML = data.map(r => `<tr>${cols.map(c => `<td>${esc(r[c])}</td>`).join('')}</tr>`).join('');
+}
