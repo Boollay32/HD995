@@ -134,9 +134,11 @@ class PageBase {
 
     // -------------------------  Error Handling  ------------------------- //
 
+    // Page load/render/save errors show a message but DO NOT disconnect the user.
+    // Only genuine auth failures log out (API.post 401 / handleSessionTimeout).
     handleError(message, redirectTo = null) {
         console.error(message);
-        BuildMessageBox(message, redirectTo ?? 'Index');
+        BuildMessageBox(message, redirectTo ?? '');
     }
 
     // -------------------------  Filter Building  ------------------------- //

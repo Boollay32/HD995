@@ -14,7 +14,7 @@ class StatsPage extends PageBase {
             this._setupEventListeners();
         } catch (error) {
             if (error.message !== 'Unauthorized') {
-                this.handleError('Error initializing stats page', 'Index');
+                this.handleError('Error initializing stats page');
             }
         }
     }

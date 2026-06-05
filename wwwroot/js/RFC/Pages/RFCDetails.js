@@ -20,7 +20,7 @@ class RFCDetails extends PageBase {
             this._setupPageUI();           // UI last — DOM fully ready
         } catch (error) {
             console.error('RFC init failed:', error);
-            this.handleError('Error initializing RFC details', 'Index');
+            this.handleError('Error initializing RFC details');
         }
     }
 
