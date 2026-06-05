@@ -44,9 +44,11 @@ body {
     margin: 0 !important;
     padding: 24px !important;
     width: 100% !important;
+    min-width: 0 !important;
     min-height: 100vh;
-    display: grid;
-    place-items: center;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     position: relative;
     box-sizing: border-box;
 }
