@@ -11,7 +11,7 @@ namespace HelpDeskNet8.Services
     {
         private readonly IDbConnection _connection = connection;
 
-        public IEnumerable<IRFCStub> GetChangeRequest(int? CRUserID, IFilter filter)
+        public IEnumerable<IRFCStub> GetRFCs(int? CRUserID, IFilter filter)
         {
             if (filter == null)
                 filter = new Filter();
@@ -57,7 +57,7 @@ namespace HelpDeskNet8.Services
             }
         }
 
-        public IRFC GetChangeRequestDetail(int? RFCID)
+        public IRFC GetRFCDetail(int? RFCID)
         {
             using (IDbCommand command = _connection.CreateCommand())
             {
@@ -88,7 +88,7 @@ namespace HelpDeskNet8.Services
             }
         }
 
-        public List<object> SaveChangeRequest(int UserID, IRFC rfc, int UTC)
+        public List<object> SaveRFC(int UserID, IRFC rfc, int UTC)
         {
             using (IDbCommand command = _connection.CreateCommand())
             {

@@ -70,7 +70,7 @@ class RFCSave extends PageBase {
     }
 
     async _submitRFC({ rfcId, formData }) {
-        return API.post('ChangeRequest/SaveChangeRequest',
+        return API.post('RFC/SaveRFC',
             API.authPayload({
                 ...formData,
                 rfcId,

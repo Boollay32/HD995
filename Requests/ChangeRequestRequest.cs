@@ -1,16 +1,16 @@
 ﻿namespace HelpDeskNet8.Requests
 {
-    public class GetChangeRequestsRequest : AuthenticatedRequest
+    public class GetRFCsRequest : AuthenticatedRequest
     {
         public Dictionary<string, string> Filters { get; set; }
     }
 
-    public class GetChangeRequestDetailRequest : AuthenticatedRequest
+    public class GetRFCDetailRequest : AuthenticatedRequest
     {
         public int RFCId { get; set; }
     }
 
-    public class SaveChangeRequestRequest : AuthenticatedRequest
+    public class SaveRFCRequest : AuthenticatedRequest
     {
         public int RFCId { get; set; }
         public string ObjectInfo { get; set; }

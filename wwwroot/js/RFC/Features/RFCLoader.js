@@ -6,7 +6,7 @@
 const RFCLoader = {
     async getDetails(rfcId) {
         return API.post(
-            'ChangeRequest/GetChangeRequestDetail',
+            'RFC/GetRFCDetail',
             API.authPayload({ rfcId })
         );
     },
