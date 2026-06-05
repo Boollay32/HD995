@@ -4,7 +4,7 @@ namespace HelpDeskNet8.Interfaces.Shared
 {
     public interface IReports
     {
-        DataTable GetStats(Int32 StatsID);
+        List<Dictionary<string, object>> GetStats(Int32 StatsID);
 
     }
 }
