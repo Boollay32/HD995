@@ -498,36 +498,6 @@
   background: #f9fafb;
   justify-content: flex-end;
 }
-button.accept {
-  background: #1e40af;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 7px 18px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-}
-button.accept:hover {
-  background: #18338c;
-}
-button.accept:disabled {
-  background: #9ca3af;
-  cursor: default;
-}
-button.cancel {
-  background: #fff;
-  color: #374151;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 7px 18px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-}
-button.cancel:hover {
-  background: #f3f4f6;
-}
 button.hidden,
 .hidden {
   display: none !important;
