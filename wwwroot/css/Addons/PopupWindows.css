@@ -1,9 +1,4 @@
 /* Font sizes*/
-.shadow-box {
-  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
-}
 .fade {
   -o-transition: 0.3s;
   -moz-transition: 0.3s;

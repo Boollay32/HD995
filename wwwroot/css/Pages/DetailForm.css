@@ -91,6 +91,7 @@
 .dform #create-rfc,
 .dform #create-user,
 .dform #User-Form,
+.dform #UpdateTask,
 .dform #UpdateRFC {
   flex: 1;
   display: flex;

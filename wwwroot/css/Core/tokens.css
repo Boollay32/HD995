@@ -51,6 +51,11 @@
     --row-hover: #FAFAF8;
     --accent: #E8722A;
     --accent-strong: #C85F1E;
+    --info: #1E51C0;
+    --ok-bg: #E4F2E8;
+    --warn-bg: #FAEFDB;
+    --danger-bg: #FAE7E4;
+    --info-bg: #E8EFFD;
 }
 html[data-theme="dark"] {
     --panel: #2D333B;
@@ -59,4 +64,13 @@ html[data-theme="dark"] {
     --row-hover: #323941;
     --accent: #F0843A;
     --accent-strong: #FF9A55;
+    --muted: #9AA4AE;
+    --ok: #5FD08A;
+    --warn: #E2A24F;
+    --danger: #F0867A;
+    --info: #88A7F2;
+    --ok-bg: #16301F;
+    --warn-bg: #352B16;
+    --danger-bg: #3A2220;
+    --info-bg: #1E2A44;
 }

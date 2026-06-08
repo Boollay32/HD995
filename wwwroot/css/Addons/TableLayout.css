@@ -1,13 +1,8 @@
 /* Variables */
 /* Mixins */
-.shadow-box {
-  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
-}
 /* Body */
 body {
-  background-color: white;
+  background-color: var(--panel);
   font-family: Calibri;
   font-size: 18px;
   font-weight: 400;
@@ -21,8 +16,8 @@ body {
   position: fixed;
   width: 400px;
   height: auto;
-  border: solid grey 1px;
-  background-color: white;
+  border: solid var(--border) 1px;
+  background-color: var(--panel);
   -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
@@ -59,12 +54,12 @@ body {
   overflow-y: auto;
   border-radius: 5px;
   box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
-  background: white;
+  background: var(--panel);
 }
 #Table table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: var(--panel);
   /* ============= Sticky Header ============= */
   /* ============= Table Body ============= */
 }
@@ -104,24 +99,24 @@ body {
   text-align: center;
 }
 #Table table tbody {
-  background: white;
+  background: var(--panel);
 }
 #Table table tbody tr {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--border);
   height: 40px !important;
   /* ✅ Force fixed row height */
   max-height: 40px !important;
   /* ✅ Prevent expansion */
 }
 #Table table tbody tr:nth-child(odd) {
-  background: #EBEBEB;
+  background: var(--row-hover);
 }
 #Table table tbody tr:hover {
-  background: #FFCF7A;
+  background: var(--accent);
   cursor: pointer;
 }
 #Table table tbody tr:hover td {
-  color: black;
+  color: var(--ink, #211F1D);
 }
 #Table table tbody tr td {
   font-family: Calibri;
@@ -130,7 +125,7 @@ body {
   vertical-align: middle;
   font-weight: 400;
   font-size: 18px;
-  border-right: 1px solid #C1C3D1;
+  border-right: 1px solid var(--border);
   padding: 6px 12px;
   /* ✅ Reduced vertical padding */
   height: 40px !important;
