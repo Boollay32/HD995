@@ -1,7 +1,7 @@
 // =============================  Theme.js  ============================= //
-// Light/dark theming for the queue pages. Sets data-theme on <html>, persists
+// Light/dark theming, applied app-wide. Sets data-theme on <html>, persists
 // the choice, respects the OS preference on first visit, and injects a toggle
-// into the QueueView top bar. Status/priority pills recolour live because their
+// into the nav header. Status/priority pills recolour live because their
 // inline colours are CSS variables.
 
 const Theme = {
@@ -32,13 +32,13 @@ const Theme = {
     },
 
     mount() {
-        const bar = document.querySelector('.qv-topbar');
+        const bar = document.querySelector('nav.Nav-Bar #navbar-logout');
         if (!bar || bar.querySelector('.qv-theme')) return !!bar;   // done (or nothing to mount into)
         const wrap = document.createElement('label');
         wrap.className = 'qv-theme';
         wrap.innerHTML = '<span class="qv-theme-lbl"></span>' +
             '<button type="button" class="qv-sw" role="switch" aria-label="Toggle dark mode"><span class="qv-knob"></span></button>';
-        bar.appendChild(wrap);
+        bar.insertBefore(wrap, bar.firstChild);
         wrap.querySelector('.qv-sw').addEventListener('click', () => Theme.toggle());
         this.apply(document.documentElement.getAttribute('data-theme') || this.initial());
         return true;

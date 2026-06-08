@@ -595,13 +595,3 @@ html[data-theme="dark"]{
 .qv-table tbody tr:first-child td{ border-top:none; }
 
 /* light/dark toggle (injected into .qv-topbar by Theme.js) */
-.qv-theme{ display:inline-flex; align-items:center; gap:8px; margin-left:14px;
-  color:var(--muted); font-size:12px; font-weight:600; }
-.qv-theme .qv-sw{ position:relative; width:48px; height:26px; border-radius:20px;
-  border:1px solid var(--border); background:var(--row-hover); cursor:pointer;
-  transition:.18s ease; flex-shrink:0; padding:0; }
-.qv-theme .qv-knob{ position:absolute; top:2px; left:2px; width:20px; height:20px;
-  border-radius:50%; background:var(--accent); display:grid; place-items:center;
-  transition:.18s cubic-bezier(.4,0,.2,1); }
-html[data-theme="dark"] .qv-theme .qv-knob{ transform:translateX(22px); }
-.qv-theme .qv-knob svg{ width:12px; height:12px; color:var(--on-accent); }
