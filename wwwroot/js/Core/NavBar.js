@@ -109,4 +109,4 @@ function PushBackNav() { NavBar.pushBack(); }
 // Reveal the nav menu for users allowed on the current page (perm-restricted
 // items stay hidden - toggled separately in Auth.setAdminAbilities). Was an
 // undefined global that threw inside Auth.checkLimitedUserPerms.
-function DisplayMenu() { UI.show('nav'); }
+function DisplayMenu() { const nav = document.getElementById('nav'); if (nav) nav.style.display = ''; }
