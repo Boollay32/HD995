@@ -10,7 +10,6 @@ class UserSave extends PageBase {
 
     constructor() {
         super();
-        this.userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
     }
 
     // -------------------------  Update  ------------------------- //
@@ -18,9 +17,10 @@ class UserSave extends PageBase {
     async updateUser() {
         try {
             const phone = document.getElementById('UserPhone')?.value;
+            const userLogin = document.getElementById('UserEmail')?.innerText;
 
             await API.post('User/UpdateUser', API.authPayload({
-                userLogin: this.userLogin,
+                userLogin,
                 phone
             }));
 
