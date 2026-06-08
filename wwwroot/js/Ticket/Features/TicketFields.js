@@ -141,14 +141,25 @@ const Fields = {
             targetEl.value = data.targetDate.split('T')[0];
         }
 
-        // Selects — populated by existing helpers
-        // assignedtech, category, subcategory, priority
-        // these are already handled by existing JS — no change needed
+        // Selects: options are loaded by Dropdowns.load('Ticket') in
+        // TicketLoader. Pre-select the ticket's current values (best-effort:
+        // only applies when the value matches a loaded option; TicketSave
+        // falls back to data.* on save, so a mismatch is harmless).
+        Fields._setSelect('assignedtech', data.assignedTechID);
+        Fields._setSelect('category', data.category);
+        Fields._setSelect('priority', data.priority);
     },
 
     _setText(id, value) {
         const el = document.getElementById(id);
         if (el) el.textContent = value ?? '—';
+    },
+
+    _setSelect(id, value) {
+        const el = document.getElementById(id);
+        if (el && value !== null && value !== undefined && value !== '') {
+            el.value = String(value);
+        }
     },
 
     _formatDate(raw) {

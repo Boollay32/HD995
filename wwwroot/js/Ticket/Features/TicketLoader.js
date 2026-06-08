@@ -27,6 +27,11 @@ const TicketLoader = {
 
             sessionStorage.setItem(STORAGE_KEYS.REQUEST_TYPE, data.requestID ?? 0);
 
+            // Populate the Details-tab selects (assignedtech / category /
+            // subcategory / priority). REQUEST_TYPE is set above so the
+            // status CR-filter in Dropdowns can use it.
+            await Dropdowns.load('Ticket');
+
             PaneLayout.init(adminLevel);
             Tabs.restore();
             Topbar.populate(data);
