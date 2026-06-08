@@ -1,0 +1,188 @@
+/* ============================================================================
+   CreateTicket — modern, themed create form.
+
+   Scoped under .ct-modern (added to #Main-Div on the Create Ticket page) so it
+   only affects this page and cleanly overrides the shared Details.css /
+   CreateForm.css that leave the legacy .Detail-Div / .left / .right / label.Name
+   layout unstyled. Built on the themed tokens (--panel/--text/--border/--accent)
+   so it renders correctly in light and dark.
+
+   Covers both the static fields (<div class="Detail-Div full">) and the dynamic
+   custom fields the CustomFieldBuilder injects (<div id="Detail-Div" class="full">),
+   which all stack as a single column inside one card.
+   ============================================================================ */
+
+.ct-modern#Main-Div {
+  background: var(--paper-2);
+}
+
+/* ---- Shell ---- */
+.ct-modern #Detail-Container {
+  height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* ---- Header bar: clean panel header with a generated title + Submit right ---- */
+.ct-modern #Detail-Header {
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  background: var(--panel);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+.ct-modern #Detail-Header::before {
+  content: "New Ticket";
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+.ct-modern #Detail-Header #header-buttons {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+/* ---- Body: single centred, scrollable column ---- */
+.ct-modern #Detail-Body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+.ct-modern #create-ticket {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+.ct-modern #Detail-Inner {
+  display: block;
+  padding: 0;
+}
+
+/* ---- Section card ---- */
+.ct-modern #Details {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 22px;
+}
+
+/* ---- Section header (#Group-Header on this page) ---- */
+.ct-modern #Group-Header,
+.ct-modern .Group-Header {
+  margin: 0 0 14px;
+}
+.ct-modern #Group-Header .left,
+.ct-modern .Group-Header .left {
+  display: block;
+}
+.ct-modern #Group-Header label.Name,
+.ct-modern .Group-Header label.Name {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ---- Field rows: static (.Detail-Div) + custom (#Detail-Div), all stacked ---- */
+.ct-modern .Detail-Div,
+.ct-modern #Detail-Div {
+  display: block;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+.ct-modern #Details > .Detail-Div:last-of-type {
+  border-bottom: none;
+}
+.ct-modern .Detail-Div .left,
+.ct-modern .Detail-Div .right,
+.ct-modern #Detail-Div .left,
+.ct-modern #Detail-Div .right {
+  display: block;
+  min-width: 0;
+}
+
+/* ---- Labels ---- */
+.ct-modern label.Name {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+/* ---- Values: inputs / selects / textareas ---- */
+.ct-modern .Value {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--text);
+}
+.ct-modern input.Value,
+.ct-modern select.Value,
+.ct-modern textarea.Value {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--paper-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+  color: var(--text);
+  line-height: 1.5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.ct-modern textarea.Value {
+  min-height: 110px;
+  resize: vertical;
+}
+.ct-modern input.Value:focus,
+.ct-modern select.Value:focus,
+.ct-modern textarea.Value:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--panel);
+  box-shadow: 0 0 0 3px rgba(217, 116, 31, 0.18);
+}
+.ct-modern .Value[disabled],
+.ct-modern input.Value[disabled],
+.ct-modern select.Value[disabled],
+.ct-modern textarea.Value[disabled] {
+  background: var(--row-hover);
+  color: var(--muted);
+  cursor: default;
+}
+
+/* ---- Attachments ---- */
+.ct-modern .attachment-row .left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.ct-modern #CreateNoteAttachmentList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---- Custom fields container ---- */
+.ct-modern #Custom-fields:empty {
+  display: none;
+}
