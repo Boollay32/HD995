@@ -121,23 +121,14 @@ class TableManager {
     getColumns(dataItem, columnOrder = null) {
         let columns = columnOrder || Object.keys(dataItem);
 
-        // ✅ Debug: See all columns before filtering
-        console.log('📊 All columns from data:', columns);
-        console.log('🚫 Blacklist:', this.options.blacklist);
-
         // Convert blacklist to lowercase for comparison
         const blacklistLower = this.options.blacklist.map(col => col.toLowerCase());
 
         // Filter out blacklisted columns
         const filteredColumns = columns.filter(col => {
             const isBlacklisted = blacklistLower.includes(col.toLowerCase());
-            if (isBlacklisted) {
-                console.log(`   ❌ Filtering out: ${col}`);
-            }
             return !isBlacklisted;
         });
-
-        console.log('✅ Columns after filtering:', filteredColumns);
 
         return filteredColumns;
     }
