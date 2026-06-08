@@ -57,8 +57,6 @@ const TicketLoader = {
     _delegateModules(data) {
         const ticketId = parseInt(data.ticketID, 10);
 
-        console.log('delegating with ticketId:', ticketId);
-
         if (isNaN(ticketId)) {
             console.error('ticketId is NaN — check API response');
             return;
