@@ -135,3 +135,26 @@
     #Main-Div.main-section { flex-direction: column; }
     #Filter-Box { flex: 1 1 auto; width: 100%; }
 }
+
+/* ---- Dark mode ----------------------------------------------------------
+   StatsPage uses the light-only brand palette (--paper/--ink/--line/--brand-*),
+   which has no dark values, so the page rendered light inside the dark shell.
+   This sheet only loads on the Stats page, so we remap those tokens to the
+   app's themed tokens for the page subtree (they cascade to every rule via
+   var()). Existing rules are untouched, so light mode is unchanged. */
+html[data-theme="dark"] #Main-Div.main-section {
+    --paper:        var(--panel);
+    --paper-2:      var(--row-hover);
+    --ink:          var(--text);
+    --ink-soft:     var(--muted);
+    --line:         var(--border);
+    --line-2:       var(--border);
+    --brand:        var(--accent);
+    --brand-pale:   #3A2E20;            /* warm dark surface; no themed equivalent */
+    --brand-line:   var(--border);
+    --brand-deep:   var(--accent);
+    --brand-strong: var(--accent-strong);
+    background: #22272E;                /* page canvas, darker than the panels */
+}
+html[data-theme="dark"] .FilterButton-Large:hover { background: var(--border); }
+html[data-theme="dark"] #Download-Table-Button:hover { background: var(--border); }
