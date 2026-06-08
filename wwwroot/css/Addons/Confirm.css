@@ -22,13 +22,13 @@
 .cf-dialog {
     width: 100%;
     max-width: 420px;
-    background: #FFFFFF;
-    border: 1px solid #D8D3C8;
+    background: var(--panel);
+    border: 1px solid var(--border);
     border-radius: 14px;
     box-shadow: 0 18px 48px rgba(29, 28, 26, 0.22);
     padding: 22px 22px 18px;
     font-family: "Spline Sans", system-ui, sans-serif;
-    color: #1D1C1A;
+    color: var(--text);
     transform: translateY(8px) scale(0.98);
     opacity: 0;
     transition: transform 0.16s ease, opacity 0.16s ease;
@@ -75,7 +75,7 @@
     padding-left: 49px;
     font-size: 0.9rem;
     line-height: 1.5;
-    color: #56524B;
+    color: var(--muted);
 }
 
 .cf-actions {
@@ -108,23 +108,23 @@
 
 .cf-btn-ghost {
     background: transparent;
-    border-color: #D8D3C8;
-    color: #56524B;
+    border-color: var(--border);
+    color: var(--muted);
 }
 
 .cf-btn-ghost:hover {
-    background: #FBFAF7;
-    color: #1D1C1A;
+    background: var(--row-hover);
+    color: var(--text);
 }
 
 .cf-btn-quiet {
-    background: #F1EEE7;
-    color: #56524B;
+    background: var(--row-hover);
+    color: var(--muted);
 }
 
 .cf-btn-quiet:hover {
-    background: #E6E2D9;
-    color: #1D1C1A;
+    background: var(--border);
+    color: var(--text);
 }
 
 .cf-btn-primary {
