@@ -13,9 +13,10 @@
 @section AddCSSToHead {
     <link rel="stylesheet" type="text/css" href="/css/Pages/UserDetails.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Addons/FormLayout.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="/css/Pages/DetailForm.css" asp-append-version="true" />
 }
 
-<div id="Main-Div" class="main-section">
+<div id="Main-Div" class="main-section dform">
     <div id="Detail-Container">
 
         @* Fix: duplicate _DetailsHeader outside Main-Div removed *@
@@ -46,6 +47,7 @@
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
+                            CssClass = "Detail-Div",
                             Label = "Email",
                             FieldId = "UserEmail",
                             FieldType = "label"
@@ -53,6 +55,7 @@
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
+                            CssClass = "Detail-Div",
                             Label = "Phone",
                             FieldId = "UserPhone",
                             FieldType = "input"
@@ -60,6 +63,7 @@
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
+                            CssClass = "Detail-Div",
                             Label = "Authority",
                             FieldId = "Authority",
                             FieldType = "label"
@@ -67,6 +71,7 @@
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
+                            CssClass = "Detail-Div",
                             Label = "Admin Level",
                             FieldId = "AdminLevel",
                             FieldType = "select",
@@ -83,6 +88,7 @@
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
+                            CssClass = "Detail-Div",
                             Label = "Locked",
                             FieldId = "Locked",
                             FieldType = "select",
@@ -95,6 +101,7 @@
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
+                            CssClass = "Detail-Div",
                             Label = "Last Logged On",
                             FieldId = "LastConnectionDate",
                             FieldType = "label"
@@ -102,6 +109,7 @@
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
+                            CssClass = "Detail-Div",
                             Label = "Active Account",
                             FieldId = "Active-Account",
                             FieldType = "label",
