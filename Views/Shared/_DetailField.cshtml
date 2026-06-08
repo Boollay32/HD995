@@ -16,9 +16,9 @@
                 <textarea class="Value"
                           id="@Model.FieldId"
                 @(Model.Required ? "required" : "")
-                @(Model.MaxLength.HasValue ? $"maxlength=\"{Model.MaxLength}\"" : "")
-                @(Model.Placeholder != null ? $"placeholder=\"{Model.Placeholder}\"" : "")
-                @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "")/>
+                maxlength="@Model.MaxLength"
+                placeholder="@Model.Placeholder"
+                onchange="@Model.OnChange"></textarea>
         break;
 
             case "select":
@@ -26,7 +26,7 @@
                         id="@Model.FieldId"
                         @(Model.Required  ? "required"  : "")
                         @(Model.Disabled  ? "disabled"  : "")
-                        @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "")>
+                        onchange="@Model.OnChange">
                     @foreach (var option in Model.Options)
                     {
                         <option value="@option.Value"
@@ -42,7 +42,7 @@
                        class="Value"
                        id="@Model.FieldId"
                        @(Model.Disabled  ? "disabled"  : "")
-                       @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "") />
+                       onchange="@Model.OnChange" />
                 break;
 
             case "date":
@@ -51,7 +51,7 @@
                        id="@Model.FieldId"
                        @(Model.Required  ? "required"  : "")
                        @(Model.Disabled  ? "disabled"  : "")
-                       @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "") />
+                       onchange="@Model.OnChange" />
                 break;
 
             default: @* input *@
@@ -59,8 +59,8 @@
                        id="@Model.FieldId"
                        @(Model.Required  ? "required"  : "")
                        @(Model.Disabled  ? "disabled"  : "")
-                       @(Model.Placeholder != null ? $"placeholder=\"{Model.Placeholder}\"" : "")
-                       @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "") />
+                       placeholder="@Model.Placeholder"
+                       onchange="@Model.OnChange" />
                 break;
         }
     </div>
