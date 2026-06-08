@@ -293,13 +293,13 @@ body {
 }
 .td-shell {
     display: grid;
-    grid-template-columns: 1fr 412px;
+    grid-template-columns: 1fr 1fr;
     height: calc(100vh - 58px);
     overflow: hidden;
 }
 
     .td-shell[data-layout="both"] {
-        grid-template-columns: 1fr 412px;
+        grid-template-columns: 1fr 1fr;
     }
 
     .td-shell[data-layout="left-only"] {
