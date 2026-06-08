@@ -1,11 +1,10 @@
 ﻿// =====================  Activity.js  ===================== //
-// Renders the ticket activity timeline and wires the filter chips.
+// Renders the ticket activity as a single chronological timeline.
 //
-// Backend shape: TicketDetails/GetActivity -> HistoryManager.GetHistory returns a
-// flat list of HistoryListItem -> { historyTxt, name, historyDate }. There is no
-// per-event type column, so the chips (Status / Assigned / Notes / Tasks) classify
-// each row by keyword on historyTxt. This is best-effort and depends on the wording
-// produced by usp_Helpdesk_GetHistoryDetail -- adjust TYPE_RULES if needed.
+// Backend: TicketDetails/GetActivity -> HistoryManager.GetHistory returns a flat
+// list of HistoryListItem -> { historyTxt, name, historyDate }. There is no
+// per-event type, so there is no type-based filtering: every entry is shown in
+// sequence, newest first.
 
 'use strict';
 
@@ -15,7 +14,6 @@ const Activity = (() => {
 
     const Dom = {
         list: () => document.getElementById('Activity-List'),
-        filters: () => document.querySelector('.td-act-filters'),
     };
 
     // -------------------------  State  ------------------------- //
@@ -23,26 +21,7 @@ const Activity = (() => {
     const State = {
         ticketId: null,
         items: [],
-        activeFilter: 'all',
     };
-
-    // -------------------------  Classification  ------------------------- //
-    // Maps free-text history to a chip type. First match wins, so order matters.
-
-    const TYPE_RULES = [
-        { type: 'assign', re: /assign|reassign|allocat/i },
-        { type: 'note',   re: /\bnote\b|comment/i },
-        { type: 'task',   re: /\btask\b/i },
-        { type: 'status', re: /status|re-?open|\bopen\b|clos|resolv|pending|progress/i },
-    ];
-
-    function _classify(text) {
-        const t = String(text ?? '');
-        for (const rule of TYPE_RULES) {
-            if (rule.re.test(t)) return rule.type;
-        }
-        return '';
-    }
 
     // -------------------------  Helpers  ------------------------- //
 
@@ -75,7 +54,6 @@ const Activity = (() => {
 
     function init(ticketId) {
         State.ticketId = parseInt(ticketId, 10);
-        _bindFilters();
         _getActivity();
     }
 
@@ -104,37 +82,6 @@ const Activity = (() => {
         }
     }
 
-    // -------------------------  Filters  ------------------------- //
-
-    function _bindFilters() {
-        const bar = Dom.filters();
-        if (!bar) return;
-
-        bar.addEventListener('click', (e) => {
-            const chip = e.target.closest('.td-chip');
-            if (!chip || !bar.contains(chip)) return;
-            _setFilter(chip.dataset.filter || 'all', bar);
-        });
-    }
-
-    function _setFilter(value, bar) {
-        State.activeFilter = value;
-
-        bar.querySelectorAll('.td-chip').forEach(chip => {
-            const active = (chip.dataset.filter || 'all') === value;
-            chip.setAttribute('aria-pressed', active ? 'true' : 'false');
-        });
-
-        _render();
-    }
-
-    function _visibleItems() {
-        if (State.activeFilter === 'all') return State.items;
-        return State.items.filter(
-            i => _classify(i.historyTxt) === State.activeFilter
-        );
-    }
-
     // -------------------------  Render  ------------------------- //
 
     function _render() {
@@ -143,14 +90,13 @@ const Activity = (() => {
 
         list.innerHTML = '';
 
-        const items = _visibleItems();
-        if (items.length === 0) {
+        if (State.items.length === 0) {
             _renderMessage('No activity to show.');
             return;
         }
 
         const fragment = document.createDocumentFragment();
-        items.forEach(item => fragment.appendChild(_buildItem(item)));
+        State.items.forEach(item => fragment.appendChild(_buildItem(item)));
         list.appendChild(fragment);
     }
 
@@ -165,10 +111,8 @@ const Activity = (() => {
     }
 
     function _buildItem(item) {
-        const type = _classify(item.historyTxt);
-
         const li = document.createElement('li');
-        li.className = 'td-timeline-item' + (type ? ` type-${type}` : '');
+        li.className = 'td-timeline-item';
 
         const head = document.createElement('div');
         head.className = 'td-tl-head';
