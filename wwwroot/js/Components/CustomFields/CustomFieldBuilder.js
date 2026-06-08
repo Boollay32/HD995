@@ -27,11 +27,11 @@ class CustomFieldBuilder {
     // -------------------------  Build  ------------------------- //
 
     _buildCustomFields(data) {
-        for (const el of document.querySelectorAll('.CustomDiv #Detail-Div')) {
+        for (const el of document.querySelectorAll('#Custom-fields #Detail-Div')) {
             el.remove();
         }
 
-        const customDiv = document.querySelector('.CustomDiv');
+        const customDiv = document.querySelector('#Custom-fields');
         if (!customDiv) return;
 
         for (const fieldConfig of data) {
@@ -57,7 +57,7 @@ class CustomFieldBuilder {
         outer.className = 'full';
 
         const leftDiv = document.createElement('div');
-        leftDiv.id = 'left';
+        leftDiv.className = 'left';
 
         const label = document.createElement('label');
         label.className = 'Name';
@@ -66,7 +66,7 @@ class CustomFieldBuilder {
         leftDiv.appendChild(label);
 
         const rightDiv = document.createElement('div');
-        rightDiv.id = 'right';
+        rightDiv.className = 'right';
         rightDiv.appendChild(this._createFieldElement(fieldConfig));
 
         outer.appendChild(leftDiv);
