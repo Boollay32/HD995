@@ -1,0 +1,278 @@
+/* ============================================================================
+   DetailForm.css — shared modern, themed surface for the detail + create pages.
+
+   One source of truth for RFCDetails, UserDetails, CreateTicket, CreateRFC and
+   CreateUser. Scoped under .dform (added to #Main-Div) so it only affects these
+   pages and cleanly overrides the shared Details.css / CreateForm.css /
+   UserDetails.css that otherwise leave the legacy .Detail-Div / .left /
+   label.Name / .Value layout unstyled. Built on the themed tokens
+   (--panel/--text/--border/--accent) so it renders in light and dark.
+
+   Two page kinds:
+     * Detail pages (RFCDetails, UserDetails) — header shows an entity id
+       (<a>Entity ID</a><a id="...ID">); sections #Details / #Notes /
+       #Extended-Information.
+     * Create pages (.dform-ticket / .dform-rfc / .dform-user) — header shows a
+       generated title; section #Details (+ dynamic #Custom-fields).
+
+   Handles .Group-Header and #Group-Header, and .Detail-Div and #Detail-Div
+   (the latter injected by CustomFieldBuilder). Field layout follows .full:
+   two columns by default, a single stacked column when .full.
+   ============================================================================ */
+
+.dform#Main-Div {
+  background: var(--paper-2);
+}
+
+/* ---- Shell ---- */
+.dform #Detail-Container {
+  height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* ---- Header bar ---- */
+.dform #Detail-Header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  background: var(--panel);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+/* detail pages: entity label + id value */
+.dform #Detail-Header > a:first-child {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dform #Detail-Header > a:nth-of-type(2) {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+/* create pages: generated title */
+.dform-ticket #Detail-Header::before,
+.dform-rfc #Detail-Header::before,
+.dform-user #Detail-Header::before {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+.dform-ticket #Detail-Header::before { content: "New Ticket"; }
+.dform-rfc #Detail-Header::before { content: "New RFC"; }
+.dform-user #Detail-Header::before { content: "New User"; }
+/* buttons always to the right */
+.dform #Detail-Header #header-buttons {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+/* ---- Body: single centred, scrollable column ---- */
+.dform #Detail-Body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.dform #create-ticket,
+.dform #create-rfc,
+.dform #create-user,
+.dform #User-Form,
+.dform #UpdateRFC {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+.dform #Detail-Inner {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+  max-width: 940px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ---- Section cards ---- */
+.dform #Details,
+.dform #Notes,
+.dform #Extended-Information {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 22px;
+}
+
+/* ---- Section headers (.Group-Header or #Group-Header) ---- */
+.dform .Group-Header,
+.dform #Group-Header {
+  margin: 0 0 14px;
+}
+.dform .Group-Header .left,
+.dform #Group-Header .left {
+  display: block;
+}
+.dform .Group-Header label.Name,
+.dform .Group-Header .Name,
+.dform #Group-Header label.Name,
+.dform #Group-Header .Name {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--border);
+}
+/* UserDetails group header also carries the profile name (.Value#UserName) */
+.dform .Group-Header label.Value {
+  display: block;
+  padding: 0 0 2px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ---- Field rows (.Detail-Div static + #Detail-Div custom) ---- */
+.dform .Detail-Div,
+.dform #Detail-Div {
+  display: grid;
+  gap: 6px 18px;
+  align-items: start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.dform .Detail-Div {
+  grid-template-columns: 168px 1fr;
+}
+.dform .Detail-Div.full,
+.dform #Detail-Div {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.dform #Details > .Detail-Div:last-of-type,
+.dform #Extended-Information > .Detail-Div:last-of-type {
+  border-bottom: none;
+}
+.dform .Detail-Div .left,
+.dform .Detail-Div .right,
+.dform #Detail-Div .left,
+.dform #Detail-Div .right {
+  display: block;
+  min-width: 0;
+}
+
+/* ---- Labels ---- */
+.dform label.Name {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  padding-top: 8px;
+}
+.dform .Detail-Div.full label.Name,
+.dform #Detail-Div label.Name {
+  padding-top: 0;
+  margin-bottom: 2px;
+}
+
+/* ---- Values: read-only display labels + editable controls ---- */
+.dform .Value {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--text);
+}
+.dform .right > label.Value {
+  display: block;
+  line-height: 1.55;
+  word-break: break-word;
+  padding-top: 7px;
+}
+.dform input.Value,
+.dform select.Value,
+.dform textarea.Value {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--paper-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+  color: var(--text);
+  line-height: 1.5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.dform textarea.Value {
+  min-height: 88px;
+  resize: vertical;
+}
+.dform input.Value:focus,
+.dform select.Value:focus,
+.dform textarea.Value:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--panel);
+  box-shadow: 0 0 0 3px rgba(217, 116, 31, 0.18);
+}
+.dform .Value[disabled],
+.dform input.Value[disabled],
+.dform select.Value[disabled],
+.dform textarea.Value[disabled] {
+  background: var(--row-hover);
+  color: var(--muted);
+  cursor: default;
+}
+
+/* ---- Attachments ---- */
+.dform .attachment-row .left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dform .RFCAttachments,
+.dform #CreateNoteAttachmentList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* ---- Custom fields ---- */
+.dform #Custom-fields:empty {
+  display: none;
+}
+
+/* ---- Notes (thread/composer already styled by NoteThread.css) ---- */
+.dform #Notes .td-note-thread {
+  margin-top: 4px;
+}
+.dform #Notes .td-note-compose {
+  margin-top: 14px;
+}
