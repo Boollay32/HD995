@@ -65,9 +65,9 @@ class RFCDetails extends PageBase {
 
     _setupPageUI() {
         SetActivePage('RFCMenu');
-        PaneLayout.setDetailContainerHeight();  // Fix: Layout module
-        PaneLayout.chooseSeason();              // Fix: Layout module
-        PaneLayout.displayScreen();             // Fix: Layout module
+        Layout.setDetailContainerHeight();  // Fix: Layout module
+        Layout.chooseSeason();              // Fix: Layout module
+        Layout.displayScreen();             // Fix: Layout module
         UI.adjustTextAreas();              // Fix: UI module
         Auth.checkPermissions();           // Fix: Auth module
 
@@ -101,7 +101,7 @@ class RFCDetails extends PageBase {
         document.getElementById('Save-Button')?.addEventListener('click', () => rfcSave.saveRFC());
 
         // Fix: single resize listener — removed duplicate at bottom of file
-        window.addEventListener('resize', () => PaneLayout.setDetailContainerHeight());
+        window.addEventListener('resize', () => Layout.setDetailContainerHeight());
     }
 
     // -------------------------  Status Change  ------------------------- //
