@@ -195,7 +195,7 @@ namespace HelpDeskNet8.Services
             {
                 command.Parameters.Add(new SqlParameter(param.Key, param.Value.Type)
                 {
-                    Value = param.Value.Value
+                    Value = param.Value.Value ?? DBNull.Value
                 });
             }
         }
