@@ -36,7 +36,7 @@ function _createHistoryRow(item) {
     outer.className = 'full';
 
     const inner = document.createElement('div');
-    inner.id = 'History-Div';
+    inner.className = 'History-Div';
 
     const dateDiv = _createLabelDiv('left', item.historyDate);
     const nameDiv = _createLabelDiv('left', item.name);
