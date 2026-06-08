@@ -73,7 +73,7 @@ class RFCSave extends PageBase {
         return API.post('RFC/SaveRFC',
             API.authPayload({
                 ...formData,
-                rfcId,
+                rfcId: parseInt(rfcId, 10),
                 emailSent: 0
             })
         );
