@@ -48,7 +48,7 @@ class CreateTicket extends PageBase {
             ?.addEventListener('click', () => this.submitTicket());
 
         // Fix: requestType change wired here — replaces onchange in view
-        document.getElementById(STORAGE_KEYS.REQUEST_TYPE)
+        document.getElementById('requestType')
             ?.addEventListener('change', () => this._onRequestTypeChange());
 
         // Fix: textarea auto-grow wired here — replaces onkeydown in view
@@ -67,7 +67,7 @@ class CreateTicket extends PageBase {
     }
 
     async _onRequestTypeChange() {
-        const requestId = document.getElementById(STORAGE_KEYS.REQUEST_TYPE)?.value;
+        const requestId = document.getElementById('requestType')?.value;
         if (!requestId) return;
 
         await this.customFieldBuilder.changeCustomFields(requestId);
@@ -113,7 +113,7 @@ class CreateTicket extends PageBase {
     }
 
     _getContactClient(elements) {
-        const requestType = elements[STORAGE_KEYS.REQUEST_TYPE]?.value;
+        const requestType = elements['requestType']?.value;
         if (requestType !== '12') return '';
 
         const authority = elements['Authority']?.value ?? '';
