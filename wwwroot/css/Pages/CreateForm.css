@@ -4,11 +4,6 @@ body {
   min-width: 600px;
   overflow-y: hidden;
 }
-.shadow-box {
-  -webkit-box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
-  box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
-}
 #Display-Div {
   display: none;
   z-index: 190;

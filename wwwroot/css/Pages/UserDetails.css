@@ -6,11 +6,6 @@ body {
 /* Font colours*/
 /* Colours*/
 /* Fonts*/
-.shadow-box {
-  -webkit-box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
-  box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
-}
 #User-Form {
   position: relative;
   min-height: 200px;
