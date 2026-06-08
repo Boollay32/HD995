@@ -41,16 +41,16 @@ class UserManager extends PageBase {
 
     _setupPageUI() {
         SetActivePage('UserMenu');
-        PaneLayout.setDetailContainerHeight();
+        Layout.setDetailContainerHeight();
         Auth.checkPermissions();
-        PaneLayout.chooseSeason();
-        PaneLayout.displayScreen();
+        Layout.chooseSeason();
+        Layout.displayScreen();
     }
 
     // -------------------------  Event Listeners  ------------------------- //
 
     _setupEventListeners() {
-        window.addEventListener('resize', () => PaneLayout.setDetailContainerHeight());
+        window.addEventListener('resize', () => Layout.setDetailContainerHeight());
 
         // Action buttons (rendered by _DetailsHeader without handlers) -> UserSave
         document.getElementById('UpdateUser-Button')?.addEventListener('click', () => userSave.manageUser());

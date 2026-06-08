@@ -56,10 +56,10 @@ class TablePage extends PageBase {
 
     _setupPageUI() {
         SetActivePage(`${this.tableName}Menu`);
-        PaneLayout.setTableDimensions();
+        Layout.setTableDimensions();
         Auth.checkPermissions();
-        PaneLayout.chooseSeason();
-        PaneLayout.displayScreen();
+        Layout.chooseSeason();
+        Layout.displayScreen();
 
         // Fix: event listeners — replaces inline onclick/onmouseover in view
         document.getElementById('FilterTab')
@@ -73,8 +73,8 @@ class TablePage extends PageBase {
             ?.addEventListener('click', () => this.handleSearch(''));
 
         window.addEventListener('resize', () => {
-            PaneLayout.setTableDimensions();
-            PaneLayout.setHeaderWidths();
+            Layout.setTableDimensions();
+            Layout.setHeaderWidths();
         });
     }
 
@@ -114,8 +114,8 @@ class TablePage extends PageBase {
             this.tableManager.render(data);
             this.filterManager.updateResultsCount(data.length);
 
-            PaneLayout.setTableDimensions();
-            setTimeout(() => PaneLayout.setHeaderWidths(), 100);
+            Layout.setTableDimensions();
+            setTimeout(() => Layout.setHeaderWidths(), 100);
 
         } catch (error) {
             console.error('Search failed:', error);
