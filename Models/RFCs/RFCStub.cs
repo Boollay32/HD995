@@ -1,11 +1,13 @@
 ﻿using HelpDeskNet8.Interfaces.RFCs;
 using System.Data;
+using System.Text.Json.Serialization;
 
 
 namespace HelpDeskNet8.Models.RFCs
 {
     public class RFCStub : IRFCStub
     {
+        [JsonPropertyName("rfcID")]
         public int? RFCID { get; set; }
         public String Title { get; set; }
         public string Status { get; set; }

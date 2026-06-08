@@ -14,7 +14,7 @@ class UserManager extends PageBase {
 
     constructor() {
         super();
-        this.userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+        this.userLogin = sessionStorage.getItem(STORAGE_KEYS.USER_ID);
         this.adminId = 0;
     }
 
