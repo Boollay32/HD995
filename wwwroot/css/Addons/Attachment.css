@@ -16,7 +16,7 @@
   width: 100%;
 }
 .Attachment-Icon[name="Original"] {
-  background-color: orange;
+  background-color: var(--accent);
 }
 .Attachment-Icon {
   position: relative;
@@ -73,7 +73,7 @@
   padding: 0;
   border: none;
   border-radius: 50%;
-  background-color: #b23121;
+  background-color: var(--danger);
   color: #fff;
   align-items: center;
   justify-content: center;
@@ -86,5 +86,5 @@
   display: flex;
 }
 .Attachment-Icon .attachment-remove:hover {
-  background-color: #d13b28;
+  filter: brightness(1.08);
 }
