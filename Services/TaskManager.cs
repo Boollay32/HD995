@@ -58,7 +58,8 @@ namespace HelpDeskNet8.Services
                     AppLogger.Debug(nameof(TaskManager), $"Column[{i}]: {reader.GetName(i)}");
 
                 while (reader.Read())
-                    taskList.Add((TaskStub)TaskStub.FromReader(reader));
+                    if (TaskStub.FromReader(reader) is TaskStub mappedTask)
+                        taskList.Add(mappedTask);
 
                 AppLogger.Debug(nameof(TaskManager), $"Tasks returned: {taskList.Count}");
             }
@@ -89,7 +90,8 @@ namespace HelpDeskNet8.Services
             {
                 using IDataReader reader = command.ExecuteReader();
                 while (reader.Read())
-                    taskList.Add((TaskStub)TaskStub.FromReader(reader));
+                    if (TaskStub.FromReader(reader) is TaskStub mappedTask)
+                        taskList.Add(mappedTask);
             }
             catch (Exception ex)
             {

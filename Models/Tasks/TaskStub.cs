@@ -24,34 +24,45 @@ namespace HelpDeskNet8.Models.Tasks
 
         internal static ITask FromReader(IDataReader reader)
         {
-            TaskStub newTask = null;
-
             try
             {
-                newTask = new TaskStub
+                var cols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                for (int i = 0; i < reader.FieldCount; i++)
+                    cols.Add(reader.GetName(i));
+
+                object Col(string name)
                 {
-                    TaskID = reader["TaskID"] as int?,
-                    UserID = null,                         
-                    TicketID = reader["TicketID"] as int?,
-                    Title = reader["Title"] as string ?? string.Empty,
-                    Description = reader["Description"] as string ?? string.Empty,
-                    AssignedTech = reader["AssignedTech"] as string ?? string.Empty,
-                    Status = reader["Status"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["Status"]),
-                    Important = reader["Important"] == DBNull.Value ? (bool?)null : Convert.ToInt32(reader["Important"]) == 1,
-                    RequiredDate = reader["RequiredByDate"] as DateTime?,
-                    Created = reader["DateCreated"] as DateTime?, 
-                    Completed = reader["CompletionDate"] as DateTime?,
-                    ProgressLog = reader["ProgressLog"] as string ?? string.Empty,
+                    if (!cols.Contains(name)) return null;
+                    object value = reader[name];
+                    return value == DBNull.Value ? null : value;
+                }
+
+                return new TaskStub
+                {
+                    TaskID = ToInt(Col("TaskID")),
+                    UserID = null,
+                    TicketID = ToInt(Col("TicketID")),
+                    Title = Col("Title") as string ?? string.Empty,
+                    Description = Col("Description") as string ?? string.Empty,
+                    AssignedTech = Col("AssignedTech") as string ?? string.Empty,
+                    Status = ToInt(Col("Status") ?? Col("StatusID")),
+                    Important = Col("Important") is object importantValue ? Convert.ToInt32(importantValue) == 1 : (bool?)null,
+                    RequiredDate = Col("RequiredByDate") as DateTime?,
+                    Created = Col("DateCreated") as DateTime?,
+                    Completed = Col("CompletionDate") as DateTime?,
+                    ProgressLog = Col("ProgressLog") as string ?? string.Empty,
                     Attachments = ReadAttachments(reader)
                 };
             }
             catch (Exception ex)
             {
                 AppLogger.Error(nameof(TaskStub), ex);
+                return null;
             }
-
-            return newTask;
         }
+
+        private static int? ToInt(object value)
+            => value == null ? (int?)null : Convert.ToInt32(value);
 
         private static IEnumerable<IAttachment> ReadAttachments(IDataReader reader)
         {
