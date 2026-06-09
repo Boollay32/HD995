@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="/css/Addons/NotesTable.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Components/NoteThread.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Pages/DetailForm.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="/css/Pages/RFCDetails.css" asp-append-version="true" />
 }
 
 <div id="Main-Div" class="main-section dform"
@@ -50,29 +51,21 @@
                             </div>
                         </div>
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Date Created",
-                            FieldId   = "changeRequestCreateDate",
-                            FieldType = "label",
-                            CssClass  = "Detail-Div full"
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Originator",
-                            FieldId   = "changeRequestOriginator",
-                            FieldType = "label",
-                            CssClass  = "Detail-Div full"
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Originator Email",
-                            FieldId   = "originatorEmail",
-                            FieldType = "label",
-                            CssClass  = "Detail-Div full"
-                        })
+                        @* Read-only meta — compact overview strip *@
+                        <div class="rfc-overview">
+                            <div class="rfc-ov-item">
+                                <span class="rfc-ov-label">Date Created</span>
+                                <label class="Value rfc-ov-value" id="changeRequestCreateDate"></label>
+                            </div>
+                            <div class="rfc-ov-item">
+                                <span class="rfc-ov-label">Originator</span>
+                                <label class="Value rfc-ov-value" id="changeRequestOriginator"></label>
+                            </div>
+                            <div class="rfc-ov-item">
+                                <span class="rfc-ov-label">Originator Email</span>
+                                <label class="Value rfc-ov-value" id="originatorEmail"></label>
+                            </div>
+                        </div>
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
@@ -102,24 +95,6 @@
                             MaxLength = 2000
                         })
 
-                        @* --- Attachments — custom layout, not a _DetailField candidate --- *@
-                        <div class="Detail-Div full attachment-row">
-                            <div class="left">
-                                <label class="Name">Attachments</label>
-                                <div id="AttachBin">
-                                    <img draggable="false"
-                                         src="images/Bin.png"
-                                         class="bin-icon"
-                                         onmouseover="UI.showTooltip(this)"
-                                         onmouseout="UI.hideTooltip()"
-                                         tooltip="Attachment Bin" />
-                                </div>
-                            </div>
-                            <div id="CreateNoteAttachmentList"
-                                 name="MainNoteAttachHolder"
-                                 class="RFCAttachments">
-                            </div>
-                        </div>
                     </div>
 
                     @* --- Notes — group header kept, content dynamic --- *@
@@ -176,19 +151,17 @@
                             </div>
                         </div>
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Approved By",
-                            FieldId   = "ApprovedBy",
-                            FieldType = "input"
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Approval Date",
-                            FieldId   = "ApprovalDate",
-                            FieldType = "date"
-                        })
+                        @* Approval — name + date *@
+                        <div class="rfc-pair">
+                            <div class="rfc-pair-field">
+                                <label class="rfc-pair-label" for="ApprovedBy">Approved by</label>
+                                <input class="Value rfc-pair-control" id="ApprovedBy" />
+                            </div>
+                            <div class="rfc-pair-field rfc-pair-field--narrow">
+                                <label class="rfc-pair-label" for="ApprovalDate">Date</label>
+                                <input type="date" class="Value rfc-pair-control" id="ApprovalDate" />
+                            </div>
+                        </div>
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
@@ -263,21 +236,17 @@
                             @* Fix: options populated dynamically by RFCDetails.js *@
                         })
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Assigned Tech",
-                            FieldId   = "assignedTechName",
-                            FieldType = "select"
-                            @* Fix: options populated dynamically by RFCDetails.js *@
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Assigned Email",
-                            FieldId   = "assignedTechEmail",
-                            FieldType = "input",
-                            Disabled  = true
-                        })
+                        @* Assignment — tech + email *@
+                        <div class="rfc-pair">
+                            <div class="rfc-pair-field">
+                                <label class="rfc-pair-label" for="assignedTechName">Assigned tech</label>
+                                <select class="Value rfc-pair-control" id="assignedTechName"></select>
+                            </div>
+                            <div class="rfc-pair-field rfc-pair-field--narrow">
+                                <label class="rfc-pair-label" for="assignedTechEmail">Email</label>
+                                <input class="Value rfc-pair-control" id="assignedTechEmail" disabled />
+                            </div>
+                        </div>
 
                         @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                         {
