@@ -1,0 +1,70 @@
+/* ============================================================================
+   RFCDetails.css — RFC-specific layout on top of the shared DetailForm.css base.
+
+   Only the bits unique to the RFC details page live here: the read-only
+   overview strip and the paired field rows. The field CONTROLS keep class
+   "Value", so their width / border / focus styling still comes from
+   DetailForm.css; this sheet only handles the surrounding layout. Scoped under
+   .dform and built on the themed tokens, so it renders in light and dark.
+   ============================================================================ */
+
+/* ---- Overview strip: compact read-only meta ---- */
+.dform .rfc-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 30px;
+  padding: 2px 0 14px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.dform .rfc-ov-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.dform .rfc-ov-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dform .rfc-overview .rfc-ov-value {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.4;
+  word-break: break-word;
+  padding: 0;
+}
+
+/* ---- Paired rows: two label-left fields sharing one line ---- */
+.dform .rfc-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 30px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.dform .rfc-pair-field {
+  flex: 1 1 230px;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: center;
+  gap: 0 14px;
+}
+.dform .rfc-pair-field--narrow {
+  grid-template-columns: 56px minmax(0, 1fr);
+}
+.dform .rfc-pair-label {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.dform .rfc-pair-control.Value {
+  width: 100%;
+}
