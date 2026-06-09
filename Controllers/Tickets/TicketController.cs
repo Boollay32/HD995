@@ -73,7 +73,15 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (user == null) return Unauthorized();
 
             DataTable customFields = _dropDown.GetCustomFields(user, request.RequestId);
-            var result = customFields.ToListOfDictionaries();
+
+            // ToListOfDictionaries keys are the DataTable column names (PascalCase), and
+            // System.Text.Json's camelCase policy does not rename dictionary keys -- so the
+            // client read customFilterItem/customFilterObjectType/etc. as undefined and
+            // rendered blank fields. camelCase the keys to match the JS convention.
+            var result = customFields.ToListOfDictionaries()
+                .Select(row => row.ToDictionary(
+                    kv => kv.Key.Length > 0 ? char.ToLowerInvariant(kv.Key[0]) + kv.Key.Substring(1) : kv.Key,
+                    kv => kv.Value));
             return Ok(result);
         }
     }
