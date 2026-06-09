@@ -93,7 +93,7 @@ class TaskPage extends PageBase {
             ],
 
             filters: [
-                { id: 'stat', label: 'Status',   field: '_status' },
+                { id: 'stat', label: 'Status',   field: '_status', overridesView: true },
                 { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
             ],
 
