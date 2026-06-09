@@ -1,25 +1,313 @@
-body {
-  display: none;
-  margin: 0;
-  min-width: 600px;
+/* =============================  UserDetails.css  ============================= */
+/* Modern themed User Details page. Tokens come from Core/tokens.css (light+dark). */
+/* Layout roots on .ud-app so the legacy #Detail-Container height JS safely no-ops. */
+
+.ud-app {
+  font-family: "Spline Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  min-height: calc(100vh - 56px);
+  background: var(--row-hover);
+  color: var(--text);
+  box-sizing: border-box;
+  padding: 28px 20px 56px;
 }
-/* Font colours*/
-/* Colours*/
-/* Fonts*/
-#User-Form {
-  position: relative;
-  min-height: 200px;
-  height: auto;
-  width: 80%;
-  max-width: 1000px;
+
+.ud-app *,
+.ud-app *::before,
+.ud-app *::after {
+  box-sizing: border-box;
+}
+
+.ud-shell {
+  width: 100%;
+  max-width: 880px;
   margin: 0 auto;
 }
-#Save-Button,
-#Back-Button,
-#Delete-Button,
-#SaveEmail-Button {
-  padding: 0 10px 0 10px;
-  width: auto;
-  height: 40px;
-  margin: 5px;
+
+/* -----------------------------  Top bar  ----------------------------- */
+
+.ud-topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.ud-topbar-id {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  margin-right: auto;
+}
+
+.ud-eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ud-id {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.ud-id::before {
+  content: "#";
+  opacity: 0.45;
+}
+
+/* -----------------------------  Actions  ----------------------------- */
+
+.ud-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ud-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 9px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+}
+
+.ud-btn svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.ud-btn:hover {
+  background: var(--row-hover);
+}
+
+.ud-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ud-btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.ud-btn--primary:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.ud-btn--danger {
+  color: var(--danger);
+}
+
+.ud-btn--danger:hover {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+
+/* -----------------------------  Hero  ----------------------------- */
+
+.ud-hero {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 18px;
+}
+
+.ud-avatar {
+  width: 58px;
+  height: 58px;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--info-bg);
+  color: var(--info);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.ud-hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-right: auto;
+  min-width: 0;
+}
+
+.ud-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ud-role {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.ud-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 13px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.ud-pill .ud-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ud-pill--ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.ud-pill--bad {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* -----------------------------  Cards  ----------------------------- */
+
+.ud-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.ud-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px 20px;
+}
+
+.ud-card-title {
+  margin: 0 0 14px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* -----------------------------  Fields  ----------------------------- */
+
+.ud-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.ud-field:last-child {
+  margin-bottom: 0;
+}
+
+.ud-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.ud-value {
+  font-size: 15px;
+  color: var(--text);
+  min-height: 20px;
+  word-break: break-word;
+}
+
+.ud-value--link {
+  color: var(--info);
+}
+
+.ud-field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px 22px;
+}
+
+.ud-field-row .ud-field {
+  margin-bottom: 0;
+}
+
+.ud-input,
+.ud-select {
+  font: inherit;
+  font-size: 14px;
+  width: 100%;
+  height: 38px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  transition: border-color 0.12s ease;
+}
+
+.ud-input:hover:not(:disabled),
+.ud-select:hover:not(:disabled) {
+  border-color: var(--muted);
+}
+
+.ud-input:focus,
+.ud-select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.ud-input:disabled,
+.ud-select:disabled {
+  background: var(--row-hover);
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+/* -----------------------------  Narrow screens  ----------------------------- */
+
+@media (max-width: 600px) {
+  .ud-app {
+    padding: 20px 14px 44px;
+  }
+  .ud-actions {
+    width: 100%;
+  }
+  .ud-actions .ud-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
 }
