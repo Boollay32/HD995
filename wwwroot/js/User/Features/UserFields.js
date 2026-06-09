@@ -19,6 +19,10 @@ function FillUserDetail(details) {
 
         _fillUserElement(el, value);
     }
+
+    _setUserAvatar(details.userName);
+    _setUserRole(details.adminLevel);
+    _setUserStatusPill(details.locked);
 }
 
 function _fillUserElement(el, value) {
@@ -38,4 +42,32 @@ function _fillUserElement(el, value) {
             el.innerText = strValue;
             break;
     }
+}
+
+// -------------------------  Modern header derivations  ------------------------- //
+// Avatar initials, hero role line, and the lock-derived status pill are not part
+// of the GetUserDetail payload; they are computed from the loaded user here.
+
+function _setUserAvatar(name) {
+    const el = document.getElementById('User-Avatar');
+    if (!el) return;
+    const parts = String(name ?? '').trim().split(/\s+/).filter(Boolean);
+    const initials = parts.slice(0, 2).map(p => p.charAt(0).toUpperCase()).join('');
+    el.innerText = initials || '?';
+}
+
+function _setUserRole(adminLevel) {
+    const el = document.getElementById('User-Role');
+    if (el) el.innerText = adminLevel ?? '';
+}
+
+function _setUserStatusPill(locked) {
+    const pill = document.getElementById('User-Status-Pill');
+    const text = document.getElementById('User-Status-Text');
+    if (!pill || !text) return;
+
+    const isLocked = String(locked) === '1';
+    text.innerText = isLocked ? 'Locked' : 'Active';
+    pill.classList.toggle('ud-pill--ok', !isLocked);
+    pill.classList.toggle('ud-pill--bad', isLocked);
 }

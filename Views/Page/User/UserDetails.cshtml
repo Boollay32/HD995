@@ -12,113 +12,100 @@
 
 @section AddCSSToHead {
     <link rel="stylesheet" type="text/css" href="/css/Pages/UserDetails.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="/css/Addons/FormLayout.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="/css/Pages/DetailForm.css" asp-append-version="true" />
 }
 
-<div id="Main-Div" class="main-section dform">
-    <div id="Detail-Container">
+<div class="ud-app" id="UserDetails-App">
+    <div class="ud-shell">
 
-        @* Fix: duplicate _DetailsHeader outside Main-Div removed *@
-        @await Html.PartialAsync("_DetailsHeader", new DetailsHeaderViewModel
-        {
-            EntityLabel = "User",
-            EntityIdElementId = "UserID",
-            Buttons = new List<HeaderButton>
-            {
-                new HeaderButton { Id = "UpdateUser-Button", Label = "Update User" },
-                new HeaderButton { Id = "DeleteUser-Button", Label = "Delete User" },
-                new HeaderButton { Id = "ResetUser-Button",  Label = "Reset User"  }
-            }
-        })
+        <header class="ud-topbar">
+            <div class="ud-topbar-id">
+                <span class="ud-eyebrow">User</span>
+                <a id="UserID" class="ud-id"></a>
+            </div>
+            <div class="ud-actions">
+                <button type="button" id="ResetUser-Button" class="ud-btn ud-btn--ghost" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6" /><path d="M3 12a9 9 0 0 1 15-6.7L21 8" /><path d="M3 22v-6h6" /><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /></svg>
+                    <span>Reset password</span>
+                </button>
+                <button type="button" id="DeleteUser-Button" class="ud-btn ud-btn--danger" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
+                    <span>Delete user</span>
+                </button>
+                <button type="button" id="UpdateUser-Button" class="ud-btn ud-btn--primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><path d="M17 21v-8H7v8" /><path d="M7 3v5h8" /></svg>
+                    <span>Update user</span>
+                </button>
+            </div>
+        </header>
 
-        <div id="Detail-Body">
-            <form id="User-Form">
-                <div id="Detail-Inner">
-                    <div id="Details">
+        <form id="User-Form" class="ud-content" onsubmit="return false">
 
-                        @* --- Profile Header — kept as raw HTML — contains two labels side by side *@
-                        <div class="Group-Header">
-                            <div class="left">
-                                <label class="Value" id="UserName"></label>
-                                <label class="Name">- Profile Information</label>
-                            </div>
-                        </div>
+            <section class="ud-hero">
+                <div id="User-Avatar" class="ud-avatar" aria-hidden="true"></div>
+                <div class="ud-hero-text">
+                    <label id="UserName" class="ud-name"></label>
+                    <div class="ud-role"><span id="User-Role"></span></div>
+                </div>
+                <span id="User-Status-Pill" class="ud-pill ud-pill--ok">
+                    <span class="ud-dot" aria-hidden="true"></span>
+                    <span id="User-Status-Text">Active</span>
+                </span>
+            </section>
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            CssClass = "Detail-Div",
-                            Label = "Email",
-                            FieldId = "UserEmail",
-                            FieldType = "label"
-                        })
+            <div class="ud-grid">
+                <section class="ud-card">
+                    <h2 class="ud-card-title">Contact</h2>
+                    <div class="ud-field">
+                        <span class="ud-label">Email</span>
+                        <label id="UserEmail" class="ud-value ud-value--link"></label>
+                    </div>
+                    <div class="ud-field">
+                        <label class="ud-label" for="UserPhone">Phone</label>
+                        <input type="text" id="UserPhone" class="ud-input" autocomplete="off" disabled />
+                    </div>
+                </section>
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            CssClass = "Detail-Div",
-                            Label = "Phone",
-                            FieldId = "UserPhone",
-                            FieldType = "input"
-                        })
+                <section class="ud-card">
+                    <h2 class="ud-card-title">Access &amp; role</h2>
+                    <div class="ud-field">
+                        <label class="ud-label" for="AdminLevel">Admin level</label>
+                        <select id="AdminLevel" class="ud-select" disabled>
+                            <option value="0">Authority User</option>
+                            <option value="3">TNS User</option>
+                            <option value="4">Govtech RFC User</option>
+                            <option value="1">Govtech User</option>
+                            <option value="5">Govtech TNS User</option>
+                            <option value="2">Govtech Admin User</option>
+                        </select>
+                    </div>
+                    <div class="ud-field">
+                        <span class="ud-label">Authority</span>
+                        <label id="Authority" class="ud-value"></label>
+                    </div>
+                </section>
+            </div>
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            CssClass = "Detail-Div",
-                            Label = "Authority",
-                            FieldId = "Authority",
-                            FieldType = "label"
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            CssClass = "Detail-Div",
-                            Label = "Admin Level",
-                            FieldId = "AdminLevel",
-                            FieldType = "select",
-                            Options = new List<SelectOption>
-                            {
-                                new SelectOption { Value = "0", Label = "Authority User" },
-                                new SelectOption { Value = "3", Label = "TNS User" },
-                                new SelectOption { Value = "4", Label = "Govtech RFC User" },
-                                new SelectOption { Value = "1", Label = "Govtech User" },
-                                new SelectOption { Value = "5", Label = "Govtech TNS User" },
-                                new SelectOption { Value = "2", Label = "Govtech Admin User" }
-                            }
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            CssClass = "Detail-Div",
-                            Label = "Locked",
-                            FieldId = "Locked",
-                            FieldType = "select",
-                            Options = new List<SelectOption>
-                            {
-                                new SelectOption { Value = "0", Label = "No" },
-                                new SelectOption { Value = "1", Label = "Yes" }
-                            }
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            CssClass = "Detail-Div",
-                            Label = "Last Logged On",
-                            FieldId = "LastConnectionDate",
-                            FieldType = "label"
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            CssClass = "Detail-Div",
-                            Label = "Active Account",
-                            FieldId = "Active-Account",
-                            FieldType = "label",
-                            Value = "Yes"
-                        })
-
+            <section class="ud-card">
+                <h2 class="ud-card-title">Account</h2>
+                <div class="ud-field-row">
+                    <div class="ud-field">
+                        <label class="ud-label" for="Locked">Locked</label>
+                        <select id="Locked" class="ud-select" disabled>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="ud-field">
+                        <span class="ud-label">Last logged on</span>
+                        <label id="LastConnectionDate" class="ud-value"></label>
+                    </div>
+                    <div class="ud-field">
+                        <span class="ud-label">Active account</span>
+                        <label id="Active-Account" class="ud-value">Yes</label>
                     </div>
                 </div>
-            </form>
-        </div>
+            </section>
+
+        </form>
     </div>
 </div>
