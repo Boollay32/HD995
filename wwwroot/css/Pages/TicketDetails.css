@@ -110,7 +110,7 @@ body {
 .td-app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 56px);
   overflow: hidden;
 }
 .td-topbar {
@@ -294,7 +294,8 @@ body {
 .td-shell {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: calc(100vh - 58px);
+    flex: 1;
+    min-height: 0;
     overflow: hidden;
 }
 
@@ -1873,3 +1874,9 @@ body {
     justify-content: flex-start;
   }
 }
+
+/* Collapse: the shell is a grid, so a collapsed pane's width:48px alone
+   won't reflow the tracks -- retarget the columns so the open pane fills. */
+.td-shell:has(.td-pane--left.is-collapsed) { grid-template-columns: 48px 1fr; }
+.td-shell:has(.td-pane--right.is-collapsed) { grid-template-columns: 1fr 48px; }
+.td-shell:has(.td-pane--left.is-collapsed):has(.td-pane--right.is-collapsed) { grid-template-columns: 48px 48px; }
