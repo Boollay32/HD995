@@ -21,7 +21,7 @@
    ============================================================================ */
 
 .dform#Main-Div {
-  background: var(--paper-2);
+  background: var(--row-hover);
 }
 
 /* ---- Shell ---- */
@@ -38,7 +38,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 24px;
+  padding: 9px 20px;
   background: var(--panel);
   color: var(--text);
   border-bottom: 1px solid var(--border);
@@ -56,7 +56,7 @@
 }
 .dform #Detail-Header > a:nth-of-type(2) {
   font-family: var(--font-mono);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text);
 }
@@ -222,7 +222,7 @@
 .dform textarea.Value {
   width: 100%;
   box-sizing: border-box;
-  background: var(--paper-2);
+  background: var(--row-hover);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 9px 11px;
