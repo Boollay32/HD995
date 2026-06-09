@@ -1,0 +1,71 @@
+/* =====================  NotePanel.css  =====================
+   Note-creation modal (_NotePanel partial, used on TaskDetails).
+   Extracted from the retired Details.css and re-themed on tokens so
+   it renders correctly in both light and dark mode. Buttons use the
+   global .accept/.cancel (Buttons.css); attachments use Attachment.css.
+   ============================================================ */
+
+#CreateNote-Div {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  max-width: 95vw;
+  max-height: 90vh;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+  z-index: 1000;
+  flex-direction: column;
+  overflow: hidden;
+}
+#CreateNote-Div.active {
+  display: flex;
+}
+#CreateNote-Inner {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 12px;
+  height: 100%;
+  overflow: hidden;
+}
+#CreateNote-Inner form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow: hidden;
+}
+#Text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+}
+#NoteInstruction {
+  font-size: 12px;
+  color: var(--muted);
+}
+#NewNoteText {
+  width: 100%;
+  flex: 1;
+  min-height: 150px;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  box-sizing: border-box;
+  background: var(--panel);
+  color: var(--text);
+}
+#NewNoteText:focus {
+  outline: none;
+  border-color: var(--accent);
+}
