@@ -218,7 +218,11 @@ class QueueView {
         const c = this.cfg;
         const viewDef = c.views?.find(v => v.id === this.view);
         let list = this.rows.slice();
-        if (viewDef?.filter) list = list.filter(viewDef.filter);
+        // A filter may opt in via overridesView:true to bypass the active view's
+        // filter when it has a value -- e.g. the Tasks Status filter, so choosing
+        // "Complete" reveals tasks the open-only views would otherwise hide.
+        const overrideView = (c.filters ?? []).some(f => f.overridesView && this.filterValues[f.id]);
+        if (!overrideView && viewDef?.filter) list = list.filter(viewDef.filter);
 
         for (const f of c.filters ?? []) {
             const val = this.filterValues[f.id];
