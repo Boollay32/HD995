@@ -128,18 +128,6 @@ class TicketPage extends PageBase {
             ],
 
             defaultSort: { key: 'updated', dir: -1 },
-            bulk: [
-                {
-                    id: 'status', label: 'Set status',
-                    options: ['Open', 'Pending', 'Closed', 'Cancelled'],       
-                    apply: async (value, rows) => {
-const code = { Open: 1, Pending: 2, Closed: 3, Cancelled: 4 }[value];
-                        await API.post('Ticket/BulkUpdate', API.authPayload({
-                            ids: rows.map(r => r.ticketID), field: 'status', value: code
-                        }));
-                    }
-                },
-            ],
 
             previewHeader: r => `<div class="qv-pv-tid">#${r.ticketID}</div><div class="qv-pv-title">${TQesc(r.subject)}</div>
                 <div class="qv-pv-meta"><span class="qv-badge">${TQesc(r.requestType)}</span>
