@@ -126,18 +126,6 @@ class TaskPage extends PageBase {
             ],
 
             defaultSort: { key: 'requiredDate', dir: 1 },
-            bulk: [
-                {
-                    id: 'status', label: 'Set status',
-                    options: ['New', 'In Progress', 'Complete', 'Withdrawn', 'Draft'],
-                    apply: async (value, rows) => {
-                        const code = { New: 1, 'In Progress': 2, Complete: 3, Withdrawn: 4, Draft: 5 }[value];
-                        await API.post('Task/BulkUpdate', API.authPayload({
-                            ids: rows.map(r => r.taskID), field: 'status', value: code
-                        }));
-                    }
-                },
-            ],
 
             previewHeader: r => `<div class="qv-pv-tid">#${r.taskID}${r.ticketID ? ` · Ticket #${r.ticketID}` : ''}</div><div class="qv-pv-title">${KQesc(r.title)}</div>
                 <div class="qv-pv-meta"><span class="qv-status" style="color:${KQstatusColor(r._status)[0]};background:${KQstatusColor(r._status)[1]}">${KQesc(r._status)}</span></div>`,
