@@ -227,27 +227,44 @@ function SetNewPassword(form) {
 
 function CreatePinBoxes() {
     const PinBoxes = document.getElementById("Pin-Boxes");
-    let Generate1 = Math.floor(Math.random() * 6) + 1;
-    let Generate2 = Math.floor(Math.random() * 6) + 1;
 
-    while (Generate1 === Generate2) {
-        Generate2 = Math.floor(Math.random() * 6) + 1;
-    }
-
+    // All six positions are plain digit inputs (the random dropdown tiles
+    // were removed). One digit per box, auto-advancing as you type.
     for (let i = 1; i <= 6; i++) {
-        if (Generate1 === i || Generate2 === i) {
-            PinBoxes.innerHTML += `<select class="PIN-Tile" id="pin-${i}" onkeydown="IgnoreAlpha(event)"></select>`;
-            const PinDrop = document.getElementById(`pin-${i}`);
-            for (let j = 0; j <= 9; j++) {
-                PinDrop.innerHTML += `<option>${j}</option>`;
-            }
-        } else {
-            PinBoxes.innerHTML += `<input type="tel" size="1" maxlength="1" id="pin-${i}" />`;
-        }
+        PinBoxes.innerHTML += `<input type="tel" inputmode="numeric" size="1" maxlength="1" id="pin-${i}" aria-label="PIN digit ${i}" />`;
     }
 
-    Array.from(PinBoxes.getElementsByTagName("select"))
-        .forEach(select => select.selectedIndex = -1);
+    const boxAt = i => document.getElementById(`pin-${i}`);
+    const indexOfBox = el => parseInt(el.id.slice(4), 10);
+    const moveTo = i => { const b = boxAt(i); if (b) { b.focus(); b.select(); } };
+
+    // Digits only; typing a digit moves focus to the next box.
+    PinBoxes.addEventListener('input', e => {
+        const box = e.target;
+        if (!box.id || !box.id.startsWith('pin-')) return;
+        box.value = box.value.replace(/[^0-9]/g, '').slice(0, 1);
+        if (box.value) moveTo(indexOfBox(box) + 1);
+    });
+
+    // Backspace on an empty box steps back; Enter submits.
+    PinBoxes.addEventListener('keydown', e => {
+        const box = e.target;
+        if (!box.id || !box.id.startsWith('pin-')) return;
+        if (e.key === 'Backspace' && !box.value) moveTo(indexOfBox(box) - 1);
+        if (e.key === 'Enter') document.getElementById('SecondWall-Submit')?.click();
+    });
+
+    // Pasting a full PIN fills the boxes in order.
+    PinBoxes.addEventListener('paste', e => {
+        const digits = (e.clipboardData?.getData('text') ?? '').replace(/[^0-9]/g, '').slice(0, 6);
+        if (!digits) return;
+        e.preventDefault();
+        for (let i = 0; i < digits.length; i++) {
+            const b = boxAt(i + 1);
+            if (b) b.value = digits[i];
+        }
+        moveTo(Math.min(digits.length + 1, 6));
+    });
 }
 
 function are_cookies_enabled() {
