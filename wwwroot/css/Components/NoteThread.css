@@ -137,6 +137,7 @@
 .td-note-compose.is-dragover { background: var(--row-hover); border-color: var(--accent); outline: 2px dashed var(--accent); }
 .td-note-input {
   flex: 1;
+  min-height: 21px;   /* beats any stray inline height: 0 from sizing a hidden textarea */
   font-family: "Spline Sans", system-ui, sans-serif;
   font-size: 13px;
   color: var(--text);

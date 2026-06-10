@@ -137,6 +137,10 @@ const UI = {
     autoGrow(element) {
         if (!element) return;
         element.style.height = 'auto';
+        // Hidden elements report scrollHeight 0; sizing them would bake in
+        // an inline height of 0px that survives until the next input event
+        // (which a 0-height box can never receive). Leave them at 'auto'.
+        if (element.scrollHeight === 0) return;
         element.style.height = `${element.scrollHeight}px`;
     },
 
