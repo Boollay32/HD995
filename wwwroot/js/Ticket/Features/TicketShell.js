@@ -200,12 +200,17 @@ const Collapse = {
     },
 
     toggleLeft() {
-        Collapse._applyLeft(!State.collapsed.left);
+        const next = !State.collapsed.left;
+        // One pane must stay on screen: collapsing this one re-opens the other.
+        if (next && State.collapsed.right) Collapse._applyRight(false);
+        Collapse._applyLeft(next);
         Collapse._persistState();
     },
 
     toggleRight() {
-        Collapse._applyRight(!State.collapsed.right);
+        const next = !State.collapsed.right;
+        if (next && State.collapsed.left) Collapse._applyLeft(false);
+        Collapse._applyRight(next);
         Collapse._persistState();
     },
 
@@ -221,6 +226,8 @@ const Collapse = {
             const saved = sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED);
             if (!saved) return;
             const parsed = JSON.parse(saved);
+            // Sanitise legacy state: never restore with both panes collapsed.
+            if (parsed.left && parsed.right) parsed.right = false;
             if (parsed.left) Collapse._applyLeft(true);
             if (parsed.right) Collapse._applyRight(true);
         } catch {
