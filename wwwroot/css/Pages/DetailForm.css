@@ -21,7 +21,7 @@
    ============================================================================ */
 
 .dform#Main-Div {
-  background: var(--row-hover);
+  background: var(--canvas);
 }
 
 /* ---- Shell ---- */

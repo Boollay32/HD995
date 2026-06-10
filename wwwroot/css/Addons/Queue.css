@@ -521,7 +521,7 @@
    Every queue surface colour routes through a variable; [data-theme] flips them.
    ============================================================================= */
 :root, html[data-theme="light"]{
-  --bg:#F3F3F1; --panel:#FFFFFF; --text:#1A1A19; --muted:#6B6B66;
+  --bg:var(--canvas); --panel:#FFFFFF; --text:#1A1A19; --muted:#6B6B66;
   --border:#E4E3DF; --row-border:#EDECE8; --row-hover:#FAFAF8;
   --header-bg:#ECEBE7; --scrim:rgba(26,26,25,.28);
   --accent:#E8722A; --accent-strong:#C85F1E; --accent-soft:#FBE7D6; --on-accent:#FFFFFF;
@@ -536,7 +536,7 @@
 html[data-theme="dark"]{
   /* inspired by GitHub "Dim": softer than pure black, layered surfaces
      (page dark, cards lifted lighter so rows stand out), high-contrast text */
-  --bg:#1C2128; --panel:#2D333B; --text:#DBE2EA; --muted:#909DAB;
+  --bg:var(--canvas); --panel:#2D333B; --text:#DBE2EA; --muted:#909DAB;
   --border:#444C56; --row-border:#373E47; --row-hover:#323941;
   --header-bg:#22272E; --scrim:rgba(1,4,9,.6);
   --accent:#F0843A; --accent-strong:#FF9A55; --accent-soft:#3A2C1C; --on-accent:#1C2128;
