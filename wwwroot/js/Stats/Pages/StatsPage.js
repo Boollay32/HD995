@@ -23,7 +23,6 @@ class StatsPage extends PageBase {
 
     _setupPageUI() {
         SetActivePage('StatsMenu');
-        SetTableDimensionsAuto();  // Fix: typo — Dimentions ? Dimensions
         UserPermissions();
         ChooseSeason();
         DisplayScreen();
@@ -33,42 +32,59 @@ class StatsPage extends PageBase {
 
     _setupEventListeners() {
         // Fix: single listener for all stat buttons via data attributes
-        document.querySelectorAll('.Filter-Div .Search[data-stat-type]')
+        document.querySelectorAll('.st-report-btn[data-stat-type]')
             .forEach(btn => btn.addEventListener('click', () => {
                 const type = parseInt(btn.dataset.statType);
                 const label = btn.dataset.statLabel;
-                this.getStats(type, label);
+                this._setActive(btn);
+                this.getStats(type, label, btn.textContent.trim());
             }));
 
         // Fix: download button wired here — not onclick=""
         document.getElementById('Download-Table-Button')
             ?.addEventListener('click', () => this._triggerDownload());
 
-        window.addEventListener('resize', () => {
-            SetTableDimensionsAuto();
-            SetHeaderWidths();
-        });
     }
 
     // -------------------------  Stats  ------------------------- //
 
-    async getStats(statsId, reportName) {
+    async getStats(statsId, reportName, title = reportName) {
         try {
             const data = await API.post('Reports/GetStats',
                 API.authPayload({ statsId })
             );
 
+            this._showResult(title, data?.length ?? 0);
             if (!data?.length) return;
 
             CreateDynamicTable(data, 'Stats', null, null);
             this._createCSV(data, reportName);
-            SetHeaderWidths();
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't load stats.");
             }
         }
+    }
+
+    // -------------------------  Result chrome  ------------------------- //
+
+    _setActive(btn) {
+        document.querySelectorAll('.st-report-btn.is-active')
+            .forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+    }
+
+    _showResult(title, rowCount) {
+        const titleEl = document.getElementById('Stat-Title');
+        const countEl = document.getElementById('Stat-Count');
+        const emptyEl = document.getElementById('Stat-Empty');
+        const tableEl = document.getElementById('Table-Div-Outer');
+
+        if (titleEl) titleEl.textContent = title;
+        if (countEl) countEl.textContent = rowCount ? `${rowCount} row${rowCount === 1 ? '' : 's'}` : 'No data';
+        if (emptyEl) emptyEl.hidden = rowCount > 0;
+        if (tableEl) tableEl.hidden = rowCount === 0;
     }
 
     // -------------------------  CSV  ------------------------- //
@@ -111,6 +127,7 @@ class StatsPage extends PageBase {
         // Fix: blob URL revoked after download — prevents memory leak
         const btn = document.getElementById('Download-Table-Button');
         if (!btn) return;
+        btn.disabled = false;
 
         btn.onclick = () => {
             const link = document.createElement('a');

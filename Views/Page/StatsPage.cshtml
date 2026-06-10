@@ -4,80 +4,86 @@
 
 @section AddJSToHead{
     <script src="~/js/Stats/Pages/StatsPage.js" asp-append-version="true"></script>
-    @* Fix: webshims polyfill removed — obsolete — all modern browsers support date natively *@
 }
 
 @section AddCSSToHead{
-    <link rel="stylesheet" type="text/css" href="/css/Addons/Snow.css"         asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/FilterBox.css"   asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/TableLayout.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Pages/StatsPage.css"    asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Addons/Snow.css"      asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Pages/StatsPage.css" asp-append-version="true">
 }
 
-<div id="Main-Div" class="main-section">
+<div id="Main-Div" class="stats-app">
 
-    <div id="Filter-Box">
-        <div id="Filter-Box-Header">
-            @* Fix: <a> → <span> — not a link *@
-            <span>Search Tickets</span>
+    @* ---- Reports rail ---- *@
+    <aside class="st-side" aria-label="Reports">
+        <div class="st-side-head">
+            <h2>Reports</h2>
         </div>
 
-        <div id="Filter-Box-Body">
-            @* Fix: id="Filter-Div" → class — IDs must be unique *@
-            @* Fix: onclick removed — handled in StatsPage.js *@
-            <div class="Filter-Div">
-                <button class="FilterButton-Large accept Search" type="button"
-                        data-stat-type="1" data-stat-label="Open Calls - ">
-                    Number of open calls
-                </button>
-            </div>
-            <div class="Filter-Div">
-                <button class="FilterButton-Large accept Search" type="button"
-                        data-stat-type="2" data-stat-label="Open Calls DateRange - ">
-                    Number of open calls (date ranges)
-                </button>
-            </div>
-            <div class="Filter-Div">
-                <button class="FilterButton-Large accept Search" type="button"
-                        data-stat-type="3" data-stat-label="Closed or Resolved - ">
-                    Number of calls set to status of closed or resolved
-                </button>
-            </div>
-            <div class="Filter-Div">
-                <button class="FilterButton-Large accept Search" type="button"
-                        data-stat-type="4" data-stat-label="New Calls - ">
-                    Total number of new calls received
-                </button>
-            </div>
-            <div class="Filter-Div">
-                <button class="FilterButton-Large accept Search" type="button"
-                        data-stat-type="5" data-stat-label="Authority Calls - ">
-                    Number of calls by authority
-                </button>
-            </div>
-            <div class="Filter-Div">
-                <button class="FilterButton-Large accept Search" type="button"
-                        data-stat-type="6" data-stat-label="Category Calls - ">
-                    Number of calls in each category
-                </button>
-            </div>
-            <div class="Filter-Div">
-                @* Fix: onclick="" removed — Download Table wired in StatsPage.js *@
-                <button id="Download-Table-Button" class="FilterButton-Large cancel Search" type="button">
-                    Download Table
-                </button>
-            </div>
-        </div>
-    </div>
+        <nav class="st-side-list">
+            <button class="st-report-btn" type="button"
+                    data-stat-type="1" data-stat-label="Open Calls - ">
+                Number of open calls
+            </button>
+            <button class="st-report-btn" type="button"
+                    data-stat-type="2" data-stat-label="Open Calls DateRange - ">
+                Number of open calls (date ranges)
+            </button>
+            <button class="st-report-btn" type="button"
+                    data-stat-type="3" data-stat-label="Closed or Resolved - ">
+                Calls set to closed or resolved
+            </button>
+            <button class="st-report-btn" type="button"
+                    data-stat-type="4" data-stat-label="New Calls - ">
+                Total new calls received
+            </button>
+            <button class="st-report-btn" type="button"
+                    data-stat-type="5" data-stat-label="Authority Calls - ">
+                Calls by authority
+            </button>
+            <button class="st-report-btn" type="button"
+                    data-stat-type="6" data-stat-label="Category Calls - ">
+                Calls in each category
+            </button>
+        </nav>
 
-    @* Fix: onmouseover removed — handled in StatsPage.js *@
-    <div id="Table-Div-Outer">
-        <div id="Table-Div-Inner">
-            @* Fix: name attribute removed — not valid on table — style moved to CSS *@
-            <table id="Table" class="table-fill">
-                <thead id="Table-Header"><tr></tr></thead>
-                <tbody id="Table-Body"></tbody>
-            </table>
+        <div class="st-side-foot">
+            <button id="Download-Table-Button" type="button" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Download CSV
+            </button>
         </div>
-    </div>
+    </aside>
+
+    @* ---- Results ---- *@
+    <section class="st-main" aria-live="polite">
+        <header class="st-main-head">
+            <h1 id="Stat-Title">Reports</h1>
+            <span class="st-count mono" id="Stat-Count"></span>
+        </header>
+
+        <div id="Table-Div-Outer" hidden>
+            <div id="Table-Div-Inner">
+                <table id="Table">
+                    <thead id="Table-Header"><tr></tr></thead>
+                    <tbody id="Table-Body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="st-empty" id="Stat-Empty">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+            <p>Pick a report on the left to run it.</p>
+        </div>
+    </section>
+
 </div>
