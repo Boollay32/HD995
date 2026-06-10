@@ -64,11 +64,11 @@ class QueueView {
             </div>
             <div class="qv-spacer"></div>
             ${c.action ? `<button type="button" class="qv-action">${this._esc(c.action.label)}</button>` : ''}
-            <span class="qv-count" aria-live="polite"></span>
           </header>
           ${c.views?.length ? `<div class="qv-views" role="group" aria-label="Saved views"></div>` : ''}
           ${c.filters?.length ? `<div class="qv-filters"></div>` : ''}
           ${c.bulk?.length ? `<div class="qv-bulkbar" role="region" aria-label="Bulk actions" hidden></div>` : ''}
+          <div class="qv-table-meta"><span class="qv-count" aria-live="polite"></span></div>
           <div class="qv-table-wrap">
             <table class="qv-table"><thead></thead><tbody tabindex="-1"></tbody></table>
           </div>
@@ -148,6 +148,15 @@ class QueueView {
             if (e.target.closest('.qv-cell-select')) return;       // checkbox handled below
             const tr = e.target.closest('tr[data-id]'); if (!tr) return;
             this._open(tr.dataset.id);
+        });
+        // Double-click goes straight to the record (single click = quick glance)
+        this.$.tbody.addEventListener('dblclick', e => {
+            if (e.target.closest('.qv-cell-select')) return;
+            const tr = e.target.closest('tr[data-id]'); if (!tr) return;
+            const row = this.rows.find(r => String(this.cfg.rowKey(r)) === String(tr.dataset.id));
+            if (!row) return;
+            this._closePreview();
+            this.cfg.onOpen?.(row);
         });
         this.$.tbody.addEventListener('change', e => {
             const cb = e.target.closest('.qv-rowcb'); if (!cb) return;
