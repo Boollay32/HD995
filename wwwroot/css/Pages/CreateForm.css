@@ -64,3 +64,48 @@ body {
   max-width: 1000px;
   margin: 0 auto;
 }
+
+/* ============================================================================
+   Two-column create form: general information fixed on the left, the
+   request-type custom fields on the right with their own scroll. High
+   specificity (#Main-Div.dform-ticket) because DetailForm.css loads after
+   this sheet. Columns stack on narrow screens.
+   ============================================================================ */
+
+#Main-Div.dform-ticket #Details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 26px;
+  align-items: start;
+}
+
+#Main-Div.dform-ticket .ct-col {
+  min-width: 0;
+}
+
+#Main-Div.dform-ticket .ct-col--custom #Custom-fields {
+  max-height: calc(100vh - 320px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Empty state: the shared sheet hides #Custom-fields:empty; show a hint instead */
+#Main-Div.dform-ticket #Custom-fields:empty {
+  display: block;
+}
+#Main-Div.dform-ticket #Custom-fields:empty::before {
+  content: "Select a request type to see its fields";
+  display: block;
+  padding: 10px 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  #Main-Div.dform-ticket #Details {
+    grid-template-columns: 1fr;
+  }
+  #Main-Div.dform-ticket .ct-col--custom #Custom-fields {
+    max-height: none;
+  }
+}
