@@ -144,15 +144,21 @@ class QueueView {
             this.render();
         });
 
+        // Single click opens the quick glance after a short delay so a
+        // double-click can cancel it and go straight to the record (the
+        // preview overlay would otherwise swallow the second click).
         this.$.tbody.addEventListener('click', e => {
             if (e.target.closest('.qv-cell-select')) return;       // checkbox handled below
             const tr = e.target.closest('tr[data-id]'); if (!tr) return;
-            this._open(tr.dataset.id);
+            clearTimeout(this._openTimer);
+            const id = tr.dataset.id;
+            this._openTimer = setTimeout(() => this._open(id), 250);
         });
         // Double-click goes straight to the record (single click = quick glance)
         this.$.tbody.addEventListener('dblclick', e => {
             if (e.target.closest('.qv-cell-select')) return;
             const tr = e.target.closest('tr[data-id]'); if (!tr) return;
+            clearTimeout(this._openTimer);
             const row = this.rows.find(r => String(this.cfg.rowKey(r)) === String(tr.dataset.id));
             if (!row) return;
             this._closePreview();
