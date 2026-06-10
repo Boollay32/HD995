@@ -5,6 +5,7 @@
 
 @section AddJSToHead {
     <script src="~/js/Components/CustomFields/CustomFieldBuilder.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Shell/PaneShell.js" asp-append-version="true"></script>
     <script src="~/js/RFC/Features/RFCFields.js" asp-append-version="true"></script>
     <script src="~/js/RFC/Features/RFCSave.js" asp-append-version="true"></script>
     <script src="~/js/RFC/Features/RFCLoader.js" asp-append-version="true"></script>
@@ -17,257 +18,297 @@
     <link rel="stylesheet" type="text/css" href="/css/Addons/Attachment.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Addons/NotesTable.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Components/NoteThread.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="/css/Components/PaneShell.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Pages/DetailForm.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Pages/RFCDetails.css" asp-append-version="true" />
 }
 
-<div id="Main-Div" class="main-section dform"
-     
-     >
+<div class="td-app rfc-app" id="RFCDetails-App">
 
-    <div id="Detail-Container">
+    @* ---- Topbar ---- *@
+    <header class="td-topbar" role="banner">
+        <button type="button" class="td-back" id="Back-Button" style="display:none" aria-label="Back to RFCs">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+            </svg>
+        </button>
 
-        @* Fix: duplicate _DetailsHeader outside Main-Div removed *@
-        @await Html.PartialAsync("_DetailsHeader", new DetailsHeaderViewModel
-        {
-            EntityLabel       = "RFC",
-            EntityIdElementId = "RFCID",
-            Buttons = new List<HeaderButton>
-            {
-                new HeaderButton { Id = "Save-Button", Label = "Save" },
-                new HeaderButton { Id = "Back-Button", Label = "Back", Hidden = true }
-            }
-        })
+        <div class="td-id-block">
+            <span class="td-tid mono">RFC <a id="RFCID"></a></span>
+        </div>
 
-        <div id="Detail-Body">
-            <form id="UpdateRFC">
-                <div id="Detail-Inner">
+        <div class="td-topbar-meta">
+            <span class="td-meta-pill" id="rfc-topbar-status" hidden></span>
+        </div>
 
-                    @* --- General Information --- *@
-                    <div id="Details">
-                        <div class="Group-Header">
-                            <div class="left">
-                                <label class="Name">General Information</label>
-                            </div>
-                        </div>
+        <div class="td-spacer"></div>
 
-                        @* Read-only meta — compact overview strip *@
-                        <div class="rfc-overview">
-                            <div class="rfc-ov-item">
-                                <span class="rfc-ov-label">Date Created</span>
-                                <label class="Value rfc-ov-value" id="changeRequestCreateDate"></label>
-                            </div>
-                            <div class="rfc-ov-item">
-                                <span class="rfc-ov-label">Originator</span>
-                                <label class="Value rfc-ov-value" id="changeRequestOriginator"></label>
-                            </div>
-                            <div class="rfc-ov-item">
-                                <span class="rfc-ov-label">Originator Email</span>
-                                <label class="Value rfc-ov-value" id="originatorEmail"></label>
-                            </div>
-                        </div>
+        <div class="td-topbar-actions">
+            <button type="button" class="td-btn-primary" id="Save-Button">Save</button>
+        </div>
+    </header>
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Title",
-                            FieldId   = "Title",
-                            FieldType = "textarea",
-                            Required  = true,
-                            MaxLength = 250,
-                            CssClass  = "Detail-Div full"
-                        })
+    @* ---- Shell: Notes (left) / Workspace (right) ---- *@
+    <div class="td-shell" id="RFC-Shell" data-layout="both" role="main">
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Priority",
-                            FieldId   = "priority",
-                            FieldType = "select",
-                            Required  = true
-                            @* Fix: options populated dynamically by RFCDetails.js *@
-                        })
+        <div class="td-pane td-pane--left" id="pane-left" aria-label="Notes">
+            <div class="td-rail" id="rail-left" aria-hidden="true" tabindex="-1" hidden>
+                <span class="td-rail-label">Notes</span>
+            </div>
+            <div class="td-pane-inner" id="pane-left-inner">
+                <div class="td-pane-head">
+                    <h2 class="td-pane-title">Notes</h2>
+                    <button type="button" class="td-collapse-btn" id="collapse-left"
+                            aria-expanded="true" aria-controls="pane-left" aria-label="Collapse notes pane">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                </div>
 
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Description",
-                            FieldId   = "Description",
-                            FieldType = "textarea",
-                            Required  = true,
-                            MaxLength = 2000
-                        })
+                <div class="rfc-notes-body">
+                    <div class="td-note-thread" id="RFCNotes-Thread" role="log"
+                         aria-live="polite" aria-label="RFC notes"></div>
 
+                    <div class="td-note-compose" id="RFCNotes-Compose">
+                        <textarea id="rfc-note-textarea"
+                                  class="td-note-input"
+                                  placeholder="Add a note…"
+                                  maxlength="2000"
+                                  rows="1"
+                                  aria-label="Note text"
+                                  aria-describedby="rfc-note-charcount"></textarea>
+                        <button type="button" class="td-note-add-btn" id="rfc-note-send-btn"
+                                aria-label="Save note" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </button>
                     </div>
 
-                    @* --- Notes — group header kept, content dynamic --- *@
-                    <div id="Notes">
-                        <div class="Group-Header">
-                            <div class="left">
-                                <label class="Name">Notes</label>
-                            </div>
-                        </div>
-
-                        <div class="td-note-thread" id="RFCNotes-Thread" role="log"
-                             aria-live="polite" aria-label="RFC notes"></div>
-
-                        <div class="td-note-compose" id="RFCNotes-Compose">
-                            <textarea id="rfc-note-textarea"
-                                      class="td-note-input"
-                                      placeholder="Add a note…"
-                                      maxlength="2000"
-                                      rows="1"
-                                      aria-label="Note text"
-                                      aria-describedby="rfc-note-charcount"></textarea>
-                            <button type="button" class="td-note-add-btn" id="rfc-note-send-btn"
-                                    aria-label="Save note" disabled>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2.2"
-                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="12" y1="5" x2="12" y2="19" />
-                                    <line x1="5" y1="12" x2="19" y2="12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="td-composer-footer">
-                            <span class="td-charcount mono" id="rfc-note-charcount" aria-live="polite">0 / 2000</span>
-                            <div class="td-composer-attachments" id="rfc-note-attachment-list"></div>
-                            <label class="td-attach-btn" aria-label="Add attachment to note">
-                                <input type="file" id="rfc-note-file-input" class="sr-only"
-                                       multiple accept="*/*"
-                                       aria-label="Attach file to note" />
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2.2"
-                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
-                                </svg>
-                            </label>
-                        </div>
-                    </div>
-
-                    @* --- Extended Information --- *@
-                    <div id="Extended-Information">
-                        <div class="Group-Header">
-                            <div class="left">
-                                <label class="Name">Extended Information</label>
-                            </div>
-                        </div>
-
-                        @* Approval — name + date *@
-                        <div class="rfc-pair">
-                            <div class="rfc-pair-field">
-                                <label class="rfc-pair-label" for="ApprovedBy">Approved by</label>
-                                <input class="Value rfc-pair-control" id="ApprovedBy" />
-                            </div>
-                            <div class="rfc-pair-field rfc-pair-field--narrow">
-                                <label class="rfc-pair-label" for="ApprovalDate">Date</label>
-                                <input type="date" class="Value rfc-pair-control" id="ApprovalDate" />
-                            </div>
-                        </div>
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Environment",
-                            FieldId   = "environment",
-                            FieldType = "select",
-                            Required  = true
-                            @* Fix: options populated dynamically by RFCDetails.js *@
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Affected Business Systems or Services",
-                            FieldId   = "AffectedBusinessSystemsOrServices",
-                            FieldType = "textarea",
-                            Required  = true,
-                            MaxLength = 2000
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Affected Customers",
-                            FieldId   = "AffectedCustomers",
-                            FieldType = "textarea",
-                            Required  = true,
-                            MaxLength = 250
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Business Justification",
-                            FieldId   = "BusinessJustification",
-                            FieldType = "textarea",
-                            Required  = true,
-                            MaxLength = 2000
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Risk Assessment",
-                            FieldId   = "RiskAssessment",
-                            FieldType = "textarea",
-                            Required  = true,
-                            MaxLength = 2000
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Impact Analysis",
-                            FieldId   = "ImpactAnalysis",
-                            FieldType = "textarea",
-                            Required  = true,
-                            MaxLength = 2000
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Information Security Considerations",
-                            FieldId   = "InformationSecurityConsiderations",
-                            FieldType = "textarea",
-                            Required  = true,
-                            MaxLength = 2000
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Status",
-                            FieldId   = "rfcStatus",
-                            FieldType = "select",
-                            Required  = true,
-                            OnChange  = "rfcPage.statusChange(this)"
-                            @* Fix: options populated dynamically by RFCDetails.js *@
-                        })
-
-                        @* Assignment — tech + email *@
-                        <div class="rfc-pair">
-                            <div class="rfc-pair-field">
-                                <label class="rfc-pair-label" for="assignedTechName">Assigned tech</label>
-                                <select class="Value rfc-pair-control" id="assignedTechName"></select>
-                            </div>
-                            <div class="rfc-pair-field rfc-pair-field--narrow">
-                                <label class="rfc-pair-label" for="assignedTechEmail">Email</label>
-                                <input class="Value rfc-pair-control" id="assignedTechEmail" disabled />
-                            </div>
-                        </div>
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Target Date",
-                            FieldId   = "TargetDate",
-                            FieldType = "date",
-                            Required  = true
-                        })
-
-                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                        {
-                            Label     = "Complete Date",
-                            FieldId   = "CompletedDate",
-                            FieldType = "date",
-                            Disabled  = true,
-                            Hidden    = true
-                        })
-
+                    <div class="td-composer-footer">
+                        <span class="td-charcount mono" id="rfc-note-charcount" aria-live="polite">0 / 2000</span>
+                        <div class="td-composer-attachments" id="rfc-note-attachment-list"></div>
+                        <label class="td-attach-btn" aria-label="Add attachment to note">
+                            <input type="file" id="rfc-note-file-input" class="sr-only"
+                                   multiple accept="*/*"
+                                   aria-label="Attach file to note" />
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
+                            </svg>
+                        </label>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
+
+        <div class="td-pane td-pane--right" id="pane-right" aria-label="Workspace">
+            <div class="td-rail" id="rail-right" aria-hidden="true" tabindex="-1" hidden>
+                <span class="td-rail-label">Workspace</span>
+            </div>
+            <div class="td-pane-inner" id="pane-right-inner">
+                <div class="td-pane-head">
+                    <h2 class="td-pane-title">Workspace</h2>
+                    <button type="button" class="td-collapse-btn" id="collapse-right"
+                            aria-expanded="true" aria-controls="pane-right" aria-label="Collapse workspace pane">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="dform rfc-ws">
+                    <form id="UpdateRFC">
+
+                        @* --- General Information --- *@
+                        <div id="Details">
+                            <div class="Group-Header">
+                                <div class="left">
+                                    <label class="Name">General Information</label>
+                                </div>
+                            </div>
+
+                            @* Read-only meta — compact overview strip *@
+                            <div class="rfc-overview">
+                                <div class="rfc-ov-item">
+                                    <span class="rfc-ov-label">Date Created</span>
+                                    <label class="Value rfc-ov-value" id="changeRequestCreateDate"></label>
+                                </div>
+                                <div class="rfc-ov-item">
+                                    <span class="rfc-ov-label">Originator</span>
+                                    <label class="Value rfc-ov-value" id="changeRequestOriginator"></label>
+                                </div>
+                                <div class="rfc-ov-item">
+                                    <span class="rfc-ov-label">Originator Email</span>
+                                    <label class="Value rfc-ov-value" id="originatorEmail"></label>
+                                </div>
+                            </div>
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Title",
+                                FieldId   = "Title",
+                                FieldType = "textarea",
+                                Required  = true,
+                                MaxLength = 250,
+                                CssClass  = "Detail-Div full"
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Priority",
+                                FieldId   = "priority",
+                                FieldType = "select",
+                                Required  = true
+                                @* Options populated dynamically (Dropdowns.load('RFC')) *@
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Description",
+                                FieldId   = "Description",
+                                FieldType = "textarea",
+                                Required  = true,
+                                MaxLength = 2000
+                            })
+
+                        </div>
+
+                        @* --- Extended Information --- *@
+                        <div id="Extended-Information">
+                            <div class="Group-Header">
+                                <div class="left">
+                                    <label class="Name">Extended Information</label>
+                                </div>
+                            </div>
+
+                            @* Approval — name + date *@
+                            <div class="rfc-pair">
+                                <div class="rfc-pair-field">
+                                    <label class="rfc-pair-label" for="ApprovedBy">Approved by</label>
+                                    <input class="Value rfc-pair-control" id="ApprovedBy" />
+                                </div>
+                                <div class="rfc-pair-field rfc-pair-field--narrow">
+                                    <label class="rfc-pair-label" for="ApprovalDate">Date</label>
+                                    <input type="date" class="Value rfc-pair-control" id="ApprovalDate" />
+                                </div>
+                            </div>
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Environment",
+                                FieldId   = "environment",
+                                FieldType = "select",
+                                Required  = true
+                                @* Options populated dynamically (Dropdowns.load('RFC')) *@
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Affected Business Systems or Services",
+                                FieldId   = "AffectedBusinessSystemsOrServices",
+                                FieldType = "textarea",
+                                Required  = true,
+                                MaxLength = 2000
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Affected Customers",
+                                FieldId   = "AffectedCustomers",
+                                FieldType = "textarea",
+                                Required  = true,
+                                MaxLength = 250
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Business Justification",
+                                FieldId   = "BusinessJustification",
+                                FieldType = "textarea",
+                                Required  = true,
+                                MaxLength = 2000
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Risk Assessment",
+                                FieldId   = "RiskAssessment",
+                                FieldType = "textarea",
+                                Required  = true,
+                                MaxLength = 2000
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Impact Analysis",
+                                FieldId   = "ImpactAnalysis",
+                                FieldType = "textarea",
+                                Required  = true,
+                                MaxLength = 2000
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Information Security Considerations",
+                                FieldId   = "InformationSecurityConsiderations",
+                                FieldType = "textarea",
+                                Required  = true,
+                                MaxLength = 2000
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Status",
+                                FieldId   = "rfcStatus",
+                                FieldType = "select",
+                                Required  = true
+                                @* Change handled by RFCDetails.js (Complete-date + topbar pill) *@
+                            })
+
+                            @* Assignment — tech + email *@
+                            <div class="rfc-pair">
+                                <div class="rfc-pair-field">
+                                    <label class="rfc-pair-label" for="assignedTechName">Assigned tech</label>
+                                    <select class="Value rfc-pair-control" id="assignedTechName"></select>
+                                </div>
+                                <div class="rfc-pair-field rfc-pair-field--narrow">
+                                    <label class="rfc-pair-label" for="assignedTechEmail">Email</label>
+                                    <input class="Value rfc-pair-control" id="assignedTechEmail" disabled />
+                                </div>
+                            </div>
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Target Date",
+                                FieldId   = "TargetDate",
+                                FieldType = "date",
+                                Required  = true
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Complete Date",
+                                FieldId   = "CompletedDate",
+                                FieldType = "date",
+                                Disabled  = true,
+                                Hidden    = true
+                            })
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
