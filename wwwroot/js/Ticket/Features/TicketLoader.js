@@ -34,6 +34,15 @@ const TicketLoader = {
 
             PaneLayout.init(adminLevel);
             Tabs.restore();
+
+            // Arriving on the Tasks tab: keep Messages reachable but start it
+            // collapsed to its rail. Only when the user has no saved pane
+            // preference, so their own choices always win.
+            if (State.activeTab === 'tasks'
+                && State.layout === TDLAYOUT.BOTH
+                && !sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED)) {
+                Collapse._shell?.collapse?.('left');
+            }
             Topbar.populate(data);
             Fields.populate(data);
             TicketLoader._delegateModules(data);

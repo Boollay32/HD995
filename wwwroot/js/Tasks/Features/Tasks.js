@@ -119,7 +119,9 @@ const Tasks = (() => {
                     group: 'Task',
                 })
             );
-            const raw = data?.assignedTech;
+            // The 'Task' dropdown group returns the tech list under the proc's
+        // column name 'assignedTechName' (old key kept as a fallback).
+        const raw = data?.assignedTechName ?? data?.assignedTech;
             if (Array.isArray(raw)) {
                 State.techs = raw
                     .map(it => ({ id: String(it.id ?? it.value ?? ''), name: it.name ?? it.text ?? '' }))

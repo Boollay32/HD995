@@ -54,6 +54,14 @@ class PaneShell {
 
     // -------------------------  Toggle  ------------------------- //
 
+    // Programmatic collapse for arrival defaults: applies without
+    // persisting, so it never overwrites the user's saved preference.
+    collapse(side) {
+        const other = side === 'left' ? 'right' : 'left';
+        if (this.collapsed[other]) this._apply(other, false);
+        this._apply(side, true);
+    }
+
     toggle(side) {
         const other = side === 'left' ? 'right' : 'left';
         const next = !this.collapsed[side];
