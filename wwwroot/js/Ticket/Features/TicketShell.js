@@ -160,98 +160,22 @@ const UnloadGuard = {
 
 
 // -------------------------  Collapse  ------------------------- //
+// Thin adapter over the shared PaneShell component (Components/Shell/
+// PaneShell.js), which now owns the collapse behaviour. State.collapsed is
+// kept as a live reference to the shell's state object.
 
 const Collapse = {
 
-    _applyLeft(collapsed) {
-        State.collapsed.left = collapsed;
-        const pane = Dom.paneLeft();
-        const btn = Dom.collapseLeft();
-        const rail = Dom.railLeft();
-        if (!pane || !btn) return;
-
-        if (collapsed) {
-            pane.classList.add('is-collapsed');
-            btn.setAttribute('aria-expanded', 'false');
-            rail?.removeAttribute('hidden');
-        } else {
-            pane.classList.remove('is-collapsed');
-            btn.setAttribute('aria-expanded', 'true');
-            rail?.setAttribute('hidden', '');
-        }
-    },
-
-    _applyRight(collapsed) {
-        State.collapsed.right = collapsed;
-        const pane = Dom.paneRight();
-        const btn = Dom.collapseRight();
-        const rail = Dom.railRight();
-        if (!pane || !btn) return;
-
-        if (collapsed) {
-            pane.classList.add('is-collapsed');
-            btn.setAttribute('aria-expanded', 'false');
-            rail?.removeAttribute('hidden');
-        } else {
-            pane.classList.remove('is-collapsed');
-            btn.setAttribute('aria-expanded', 'true');
-            rail?.setAttribute('hidden', '');
-        }
-    },
-
-    toggleLeft() {
-        const next = !State.collapsed.left;
-        // One pane must stay on screen: collapsing this one re-opens the other.
-        if (next && State.collapsed.right) Collapse._applyRight(false);
-        Collapse._applyLeft(next);
-        Collapse._persistState();
-    },
-
-    toggleRight() {
-        const next = !State.collapsed.right;
-        if (next && State.collapsed.left) Collapse._applyLeft(false);
-        Collapse._applyRight(next);
-        Collapse._persistState();
-    },
-
-    _persistState() {
-        sessionStorage.setItem(
-            STORAGE_KEYS.TD_PANES_COLLAPSED,
-            JSON.stringify(State.collapsed),
-        );
-    },
-
-    _restoreState() {
-        try {
-            const saved = sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED);
-            if (!saved) return;
-            const parsed = JSON.parse(saved);
-            // Sanitise legacy state: never restore with both panes collapsed.
-            if (parsed.left && parsed.right) parsed.right = false;
-            if (parsed.left) Collapse._applyLeft(true);
-            if (parsed.right) Collapse._applyRight(true);
-        } catch {
-            // Ignore malformed session data
-        }
-    },
-
-    bind() {
-        Dom.collapseLeft()?.addEventListener('click', Collapse.toggleLeft);
-        Dom.collapseRight()?.addEventListener('click', Collapse.toggleRight);
-
-        // Rail click expands pane
-        Dom.railLeft()?.addEventListener('click', () => {
-            if (State.collapsed.left) Collapse.toggleLeft();
-        });
-
-        Dom.railRight()?.addEventListener('click', () => {
-            if (State.collapsed.right) Collapse.toggleRight();
-        });
-    },
+    _shell: null,
 
     init() {
-        Collapse.bind();
-        Collapse._restoreState();
+        Collapse._shell = new PaneShell({
+            left:  { pane: 'pane-left',  btn: 'collapse-left',  rail: 'rail-left'  },
+            right: { pane: 'pane-right', btn: 'collapse-right', rail: 'rail-right' },
+            storageKey: STORAGE_KEYS.TD_PANES_COLLAPSED,
+        });
+        State.collapsed = Collapse._shell.collapsed;   // live reference
+        Collapse._shell.init();
     },
 };
 
