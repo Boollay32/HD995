@@ -32,12 +32,6 @@ class StatsPage extends PageBase {
     // -------------------------  Event Listeners  ------------------------- //
 
     _setupEventListeners() {
-        // Fix: replaces inline onmouseover in view
-        document.getElementById('FilterTab')
-            ?.addEventListener('mouseover', () => ExpandFilter(true));
-        document.getElementById('Table-Div-Outer')
-            ?.addEventListener('mouseover', () => ExpandFilter(false));
-
         // Fix: single listener for all stat buttons via data attributes
         document.querySelectorAll('.Filter-Div .Search[data-stat-type]')
             .forEach(btn => btn.addEventListener('click', () => {
