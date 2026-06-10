@@ -68,3 +68,38 @@
 .dform .rfc-pair-control.Value {
   width: 100%;
 }
+
+/* ============================================================================
+   Stage B — pane-shell page layout. The shell chrome itself comes from
+   Components/PaneShell.css; these rules are the RFC-specific sizing only.
+   ============================================================================ */
+
+/* 30/70 split: notes left, workspace right */
+.rfc-app .td-shell {
+  --shell-cols: 3fr 7fr;
+}
+
+/* Notes pane: thread scrolls, composer pinned beneath it */
+.rfc-notes-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px 10px;
+}
+.rfc-notes-body .td-note-thread {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.rfc-notes-body .td-note-compose {
+  margin-top: 10px;
+}
+
+/* Workspace pane: the form scrolls within the pane */
+.rfc-ws {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 18px 22px;
+}
