@@ -1510,3 +1510,22 @@ body {
 /* Messages/Workspace split: 30/70 across the whole page (PaneShell knob). */
 #TicketDetails-App .td-shell { --shell-cols: 3fr 7fr; }
 
+/* ============================================================================
+   Wide workspace (Messages collapsed, or workspace-only layout): the open
+   task editor reflows into a 2x2 grid -- Title across the top, then Details /
+   Description / Progress log / Attachments as four boxes, footer across the
+   bottom. Same :has() mechanism as the collapse track rules.
+   ============================================================================ */
+.td-shell:has(.td-pane--left.is-collapsed) .td-task-editor,
+.td-shell[data-layout="right-only"] .td-task-editor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 22px;
+  align-items: start;
+}
+.td-shell:has(.td-pane--left.is-collapsed) .td-task-editor > .td-ed-row:first-child,
+.td-shell[data-layout="right-only"] .td-task-editor > .td-ed-row:first-child,
+.td-shell:has(.td-pane--left.is-collapsed) .td-task-editor > .td-ed-foot,
+.td-shell[data-layout="right-only"] .td-task-editor > .td-ed-foot {
+  grid-column: 1 / -1;
+}
