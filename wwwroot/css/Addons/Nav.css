@@ -10,7 +10,7 @@ body {
     /* Fill the viewport now the footer is gone; themed app surface */
     min-height: 100vh;
     box-sizing: border-box;
-    background: var(--row-hover);
+    background: var(--canvas);
     font-family: Calibri, Arial, sans-serif;
 }
 

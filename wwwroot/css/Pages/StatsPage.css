@@ -15,7 +15,7 @@
     padding: 18px;
     box-sizing: border-box;
     font-family: var(--font-sans);
-    background: #F4F2EE;
+    background: var(--canvas);
 }
 
 /* ---- Filter panel ---- */
@@ -162,7 +162,7 @@ html[data-theme="dark"] #Main-Div.main-section {
     --brand-line:   var(--border);
     --brand-deep:   var(--accent);
     --brand-strong: var(--accent-strong);
-    background: #22272E;                /* page canvas, darker than the panels */
+    background: var(--canvas);          /* page canvas, darker than the panels */
 }
 html[data-theme="dark"] .FilterButton-Large:hover { background: var(--border); }
 html[data-theme="dark"] #Download-Table-Button:hover { background: var(--border); }

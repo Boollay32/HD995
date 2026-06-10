@@ -46,9 +46,10 @@
    app-wide, not only on the list pages -- fixes the unthemed/white footer). */
 :root {
     --panel: #FFFFFF;
-    --text: #1A1A19;
-    --border: #E4E3DF;
+    --text: #221F1B;
+    --border: #DAD5CC;
     --row-hover: #FAFAF8;
+    --canvas: #F1EEE8;       /* page background behind panels */
     --accent: #E8722A;
     --accent-strong: #C85F1E;
     --info: #1E51C0;
@@ -62,6 +63,7 @@ html[data-theme="dark"] {
     --text: #DBE2EA;
     --border: #444C56;
     --row-hover: #323941;
+    --canvas: #21262D;       /* darker than the panels: sections lift */
     --accent: #F0843A;
     --accent-strong: #FF9A55;
     --muted: #9AA4AE;

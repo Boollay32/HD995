@@ -11,7 +11,7 @@
 
 :root {
   --td-panel: #FFFFFF;
-  --td-surface: #FBFAF7;
+  --td-surface: var(--canvas);
   --td-text: #1D1C1A;
   --td-muted: #6A655C;
   --td-muted-2: #56524B;
@@ -33,7 +33,7 @@
 
 html[data-theme="dark"] {
   --td-panel: #2D333B;
-  --td-surface: #262B31;
+  --td-surface: var(--canvas);
   --td-text: #DBE2EA;
   --td-muted: #9AA4AE;
   --td-muted-2: #B3BCC5;
