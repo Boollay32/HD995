@@ -18,7 +18,7 @@
   font-family: "Spline Sans Mono", ui-monospace, monospace;
 }
 .qv.qv--page {
-  height: calc(100vh - 120px);
+  height: calc(100vh - 56px);
 }
 .qv-topbar {
   display: flex;
@@ -58,11 +58,19 @@
   outline: none;
   font: inherit;
   font-size: 13.5px;
+  padding: 0;
+  height: 100%;
   flex: 1;
   color: #1D1C1A;
 }
 .qv-spacer {
   flex: 1;
+}
+.qv-table-meta {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2px 22px 0;
+  flex-shrink: 0;
 }
 .qv-count {
   font-size: 12.5px;
