@@ -70,11 +70,21 @@ class RFCSave extends PageBase {
     }
 
     async _submitRFC({ rfcId, formData }) {
+        // SaveRFCRequest expects the pipe-backtick ObjectInfo format (as used
+        // by SaveNote/SaveTask), not flat fields. The keys are the field
+        // element ids, which is what the controller's PopulateObject maps from.
+        // rfcId is sent separately (the controller adds ChangeRequestID itself).
+        const objectInfo = Object.entries(formData)
+            .filter(([k, v]) => k !== 'rfcId' && v !== null && v !== undefined)
+            .map(([k, v]) => `${k}\`${v}`)
+            .join('|');
+
         return API.post('RFC/SaveRFC',
             API.authPayload({
-                ...formData,
                 rfcId: parseInt(rfcId, 10),
-                emailSent: 0
+                objectInfo,
+                attachment: '',
+                utc: Layout.getUTCOffset?.() ?? 0
             })
         );
     }
