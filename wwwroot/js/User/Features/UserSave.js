@@ -37,8 +37,10 @@ class UserSave extends PageBase {
         try {
             const phone = document.getElementById('UserPhone')?.value;
             const userLogin = document.getElementById('UserEmail')?.innerText;
-            const unlockUser = parseInt(document.getElementById('Locked')?.value) || 0;
-            const adminLevelId = parseInt(document.getElementById('AdminLevel')?.value) || 0;
+            // ManageUserRequest declares these as C# strings; STJ rejects JSON
+            // numbers for string props (400), so send the raw select values.
+            const unlockUser = document.getElementById('Locked')?.value || '0';
+            const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
             await API.post('User/ManageUser', API.authPayload({
                 userLogin,

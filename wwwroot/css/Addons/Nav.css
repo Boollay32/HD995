@@ -7,6 +7,10 @@ body {
     padding: 0;
     padding-top: 56px;
     padding-bottom: 0;
+    /* Fill the viewport now the footer is gone; themed app surface */
+    min-height: 100vh;
+    box-sizing: border-box;
+    background: var(--row-hover);
     font-family: Calibri, Arial, sans-serif;
 }
 
