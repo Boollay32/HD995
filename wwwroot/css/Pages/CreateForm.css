@@ -109,3 +109,45 @@ body {
     max-height: none;
   }
 }
+
+/* ============================================================================
+   CreateTicket polish (page-scoped, high specificity because DetailForm.css
+   loads after this sheet).
+   ============================================================================ */
+
+/* Two-column form uses the whole page, not the 940px centre cap */
+#Main-Div.dform-ticket #Detail-Inner {
+  max-width: none;
+  padding: 24px 28px;
+}
+
+/* Modern attachment drop target (replaces the old bin image; the drop handler
+   still binds to #AttachBin, and the + slot remains click-to-browse) */
+#Main-Div.dform-ticket #AttachBin {
+  width: auto;
+  float: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 1.5px dashed var(--border);
+  border-radius: 9px;
+  background: var(--panel);
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  margin-bottom: 8px;
+}
+#Main-Div.dform-ticket #AttachBin svg {
+  flex: none;
+}
+
+/* Slightly larger slot tiles for easier targets */
+#Main-Div.dform-ticket .Attachment-Icon,
+#Main-Div.dform-ticket .Attachment-Icon .FileUP,
+#Main-Div.dform-ticket .Attachment-Icon .File-ImageUnset,
+#Main-Div.dform-ticket .Attachment-Icon .File-ImageUnset img,
+#Main-Div.dform-ticket .Attachment-Icon .File-ImageSet {
+  height: 32px;
+  width: 32px;
+}
