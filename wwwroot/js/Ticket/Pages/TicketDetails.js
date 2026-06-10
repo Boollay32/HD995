@@ -97,7 +97,9 @@ const PaneLayout = {
         const { isInternal } = Session;
 
         if (!isAdmin) return TDLAYOUT.LEFT_ONLY;
-        if (isInternal) return TDLAYOUT.RIGHT_ONLY;
+        // Internal tickets keep the Messages pane PRESENT (started collapsed
+        // to its rail by TicketLoader) rather than hidden, so the rail is
+        // always visible even when there is no client thread.
         return TDLAYOUT.BOTH;
     },
 
