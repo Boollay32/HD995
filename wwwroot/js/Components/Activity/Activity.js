@@ -119,7 +119,8 @@ const Activity = (() => {
 
         const actor = document.createElement('span');
         actor.className = 'td-tl-actor';
-        actor.textContent = item.name || 'System';
+        actor.appendChild(UI.avatarEl(item.name || 'System'));
+        actor.appendChild(document.createTextNode(item.name || 'System'));
         head.appendChild(actor);
 
         const time = document.createElement('time');

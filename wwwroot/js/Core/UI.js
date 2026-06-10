@@ -211,3 +211,72 @@ function DisplayAndHideItemsByTagName(tags, display) { display ? UI.showByTag(ta
 function ToggleWaiting() { UI.toggleWaiting(); }
 function DisplayToolTip(item) { UI.showTooltip(item); }
 function HideToolTip() { UI.hideTooltip(); }
+
+// -------------------------  Toasts + avatars (additive)  ------------------------- //
+// UI.toast was referenced throughout (always via UI.toast?.()) but never
+// implemented, so all save/error feedback was silently dropped. Self-styling:
+// injects its CSS once, themed on the global tokens.
+
+UI.toast = function (message, type = 'info') {
+    UI._ensureToastStyles();
+    let host = document.getElementById('ui-toast-host');
+    if (!host) {
+        host = document.createElement('div');
+        host.id = 'ui-toast-host';
+        document.body.appendChild(host);
+    }
+    const el = document.createElement('div');
+    el.className = `ui-toast ui-toast--${type}`;
+    el.setAttribute('role', type === 'error' ? 'alert' : 'status');
+    el.textContent = message;
+    host.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('is-in'));
+    setTimeout(() => {
+        el.classList.remove('is-in');
+        setTimeout(() => el.remove(), 300);
+    }, 3200);
+};
+
+UI._ensureToastStyles = function () {
+    if (document.getElementById('ui-toast-styles')) return;
+    const s = document.createElement('style');
+    s.id = 'ui-toast-styles';
+    s.textContent = `
+#ui-toast-host { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; gap: 8px; z-index: 4000; pointer-events: none; }
+.ui-toast { font-family: 'Spline Sans', system-ui, sans-serif; font-size: 13.5px; font-weight: 500;
+  background: var(--panel, #fff); color: var(--text, #1D1C1A);
+  border: 1px solid var(--border, #D8D3C8); border-left-width: 4px; border-radius: 9px;
+  padding: 10px 16px; box-shadow: 0 6px 22px rgba(0,0,0,0.18);
+  opacity: 0; transform: translateY(8px); transition: opacity .25s ease, transform .25s ease; }
+.ui-toast.is-in { opacity: 1; transform: translateY(0); }
+.ui-toast--success { border-left-color: var(--ok, #2e7d32); }
+.ui-toast--error   { border-left-color: var(--danger, #c62828); }
+.ui-toast--warning { border-left-color: var(--warn, #ed6c02); }
+.ui-toast--info    { border-left-color: var(--info, #0277bd); }
+.ui-av { display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%; margin-right: 6px; flex: none;
+  font-family: 'Spline Sans', system-ui, sans-serif; font-size: 9.5px; font-weight: 700;
+  color: #fff; letter-spacing: .02em; vertical-align: -4px; }
+`;
+    document.head.appendChild(s);
+};
+
+// Colour-hashed initials avatar (same palette as the queue assignee chips).
+UI.AV_PALETTE = ['#5A6470', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
+
+UI.avatarColor = function (name) {
+    let h = 0;
+    for (const c of (name || '')) h = c.charCodeAt(0) + ((h << 5) - h);
+    return UI.AV_PALETTE[Math.abs(h) % UI.AV_PALETTE.length];
+};
+
+UI.avatarEl = function (name) {
+    UI._ensureToastStyles();   // .ui-av lives in the same injected sheet
+    const span = document.createElement('span');
+    span.className = 'ui-av';
+    span.setAttribute('aria-hidden', 'true');
+    span.style.background = UI.avatarColor(name);
+    span.textContent = (name || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+    return span;
+};
