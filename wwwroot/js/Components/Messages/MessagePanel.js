@@ -138,7 +138,9 @@ const MessagesPanel = (() => {
         row.className = `td-bubble-row td-bubble-row--${direction}`;
         if (msg.MessageID != null) row.dataset.mid = msg.MessageID;
 
-        if (!outbound && msg.SenderName) {
+        // Sender line + colour-hashed avatar on EVERY message (outbound too)
+        // so individual senders are recognisable at a glance.
+        if (msg.SenderName) {
             const sender = document.createElement('span');
             sender.className = 'td-bubble-sender';
             sender.appendChild(UI.avatarEl(msg.SenderName));
