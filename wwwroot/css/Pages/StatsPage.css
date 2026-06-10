@@ -10,8 +10,9 @@
 #Main-Div.main-section {
     display: flex;
     gap: 18px;
-    align-items: flex-start;
-    padding: 22px;
+    align-items: stretch;
+    height: calc(100vh - 56px);
+    padding: 18px;
     box-sizing: border-box;
     font-family: var(--font-sans);
     background: #F4F2EE;
@@ -19,7 +20,10 @@
 
 /* ---- Filter panel ---- */
 #Filter-Box {
-    flex: 0 0 286px;
+    flex: 0 0 232px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 14px;
@@ -40,7 +44,10 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 14px;
+    padding: 12px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
 .Filter-Div { display: block; }
 
@@ -85,7 +92,9 @@
 #Table-Div-Outer {
     flex: 1 1 auto;
     min-width: 0;
-    align-self: stretch;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 14px;
@@ -94,7 +103,8 @@
 }
 #Table-Div-Inner {
     overflow: auto;
-    max-height: calc(100vh - 80px - 44px);
+    flex: 1;
+    min-height: 0;
 }
 #Table {
     width: 100%;
@@ -129,8 +139,9 @@
 #Table tbody tr:hover td { color: var(--ink); }
 
 @media (max-width: 760px) {
-    #Main-Div.main-section { flex-direction: column; }
+    #Main-Div.main-section { flex-direction: column; height: auto; }
     #Filter-Box { flex: 1 1 auto; width: 100%; }
+    #Table-Div-Inner { max-height: 70vh; }
 }
 
 /* ---- Dark mode ----------------------------------------------------------
