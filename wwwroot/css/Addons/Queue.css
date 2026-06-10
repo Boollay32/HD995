@@ -59,6 +59,7 @@
   font: inherit;
   font-size: 13.5px;
   padding: 0;
+  margin: 0;            /* Template.css gives every input margin-bottom: 10px */
   height: 100%;
   flex: 1;
   color: #1D1C1A;
