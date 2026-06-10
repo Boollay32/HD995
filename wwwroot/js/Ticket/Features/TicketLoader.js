@@ -35,12 +35,12 @@ const TicketLoader = {
             PaneLayout.init(adminLevel);
             Tabs.restore();
 
-            // Arriving on the Tasks tab: keep Messages reachable but start it
-            // collapsed to its rail. Only when the user has no saved pane
-            // preference, so their own choices always win.
-            if (State.activeTab === 'tasks'
-                && State.layout === TDLAYOUT.BOTH
-                && !sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED)) {
+            // Start Messages collapsed to its rail (still reachable) when the
+            // user has no saved pane preference and either they arrived on the
+            // Tasks tab, or the ticket is internal (no client thread).
+            if (State.layout === TDLAYOUT.BOTH
+                && !sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED)
+                && (State.activeTab === 'tasks' || Session.isInternal)) {
                 Collapse._shell?.collapse?.('left');
             }
             Topbar.populate(data);
