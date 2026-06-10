@@ -14,6 +14,9 @@ const Dirty = {
         const saveBtn = Dom.saveBtn();
         if (!saveBtn) return;
 
+        // No changes -> no button (it starts hidden in the markup)
+        saveBtn.hidden = !isDirty;
+
         if (isDirty) {
             saveBtn.classList.add('is-dirty');
             saveBtn.textContent = 'Save Changes';

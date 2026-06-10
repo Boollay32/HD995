@@ -141,7 +141,8 @@ const MessagesPanel = (() => {
         if (!outbound && msg.SenderName) {
             const sender = document.createElement('span');
             sender.className = 'td-bubble-sender';
-            sender.textContent = msg.SenderName;
+            sender.appendChild(UI.avatarEl(msg.SenderName));
+            sender.appendChild(document.createTextNode(msg.SenderName));
             row.appendChild(sender);
         }
 
