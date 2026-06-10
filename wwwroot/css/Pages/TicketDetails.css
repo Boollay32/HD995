@@ -310,6 +310,13 @@ body {
     .td-shell[data-layout="right-only"] {
         grid-template-columns: 1fr;
     }
+/* Author display:flex beats the UA [hidden] rule — hide explicitly, like
+   .td-ws-inner[hidden] below. Without this, single-pane layouts (left-only /
+   right-only) render both panes stacked in the one grid column. */
+.td-pane[hidden] {
+    display: none;
+}
+
 .td-pane {
     display: flex;
     flex-direction: column;
@@ -1877,6 +1884,10 @@ body {
 
 /* Collapse: the shell is a grid, so a collapsed pane's width:48px alone
    won't reflow the tracks -- retarget the columns so the open pane fills. */
+/* Tasks need room: while the Tasks tab is active (and nothing is collapsed,
+   handled by the later collapse rules), give the Workspace 2/3 of the shell. */
+.td-shell[data-layout="both"]:has(#tabpanel-tasks:not([hidden])) { grid-template-columns: 1fr 2fr; }
+
 .td-shell:has(.td-pane--left.is-collapsed) { grid-template-columns: 48px 1fr; }
 .td-shell:has(.td-pane--right.is-collapsed) { grid-template-columns: 1fr 48px; }
 .td-shell:has(.td-pane--left.is-collapsed):has(.td-pane--right.is-collapsed) { grid-template-columns: 48px 48px; }
