@@ -210,7 +210,10 @@ const Save = {
         if (!saveBtn) return;
 
         const payload = Save._buildPayload();
-        if (!payload) return;
+        if (!payload) {
+            UI.toast?.('Nothing to save yet - the ticket is still loading', 'warning');
+            return;
+        }
         if (!Save._validate(payload)) return;
 
         // Loading state

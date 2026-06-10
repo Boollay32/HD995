@@ -2,6 +2,10 @@
 
 const Dropdowns = {
 
+    // Some markup ids predate the proc column names; when a response key
+    // has no directly-matching element, try its legacy alias.
+    _ID_ALIASES: { assignedTechName: 'assignedtech' },
+
     // -------------------------  Load  ------------------------- //
 
     async load(group) {
@@ -27,7 +31,8 @@ const Dropdowns = {
         for (const [tableName, items] of Object.entries(data)) {
             if (!Array.isArray(items)) continue;
 
-            const el = document.getElementById(tableName);
+            const el = document.getElementById(tableName)
+                ?? document.getElementById(this._ID_ALIASES[tableName] ?? '');
             if (!el) continue;
 
             if (el.tagName === 'SELECT') {
