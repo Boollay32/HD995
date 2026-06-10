@@ -49,7 +49,12 @@ const API = {
                 throw new Error(`HTTP error: ${response.status}`);
             }
 
-            return await response.json();
+            // Some endpoints return a plain string (Ok(string) -> text/plain);
+            // an unconditional .json() throws on those even when the call worked.
+            const contentType = response.headers.get('content-type') ?? '';
+            return contentType.includes('application/json')
+                ? await response.json()
+                : await response.text();
 
         } catch (error) {
             console.error(`API error [${endpoint}]:`, error);
