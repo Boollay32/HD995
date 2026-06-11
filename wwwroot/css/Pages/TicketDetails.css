@@ -1595,3 +1595,53 @@ body {
   color: var(--td-text);
   line-height: 1.4;
 }
+
+/* ============================================================================
+   Tasks: Add Task moved to the top; full-panel compose mode for a NEW task.
+   When #tabpanel-tasks has .is-composing, everything but the editor is hidden
+   so the new-task form uses the entire panel with its footer always visible.
+   Existing-task editing (inline in the list) is unaffected.
+   ============================================================================ */
+
+/* Add Task header sits at the top now: divider below instead of above. */
+#tabpanel-tasks .td-add-task {
+  border-top: none;
+  border-bottom: 1px solid var(--td-border-2);
+  padding-top: 0;
+  padding-bottom: 8px;
+}
+
+/* Compose container: hidden until compose mode. */
+.td-task-compose[hidden] { display: none; }
+.td-task-compose {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Compose mode: hide everything except the editor. */
+#tabpanel-tasks.is-composing .td-progress-track,
+#tabpanel-tasks.is-composing .td-progress-label,
+#tabpanel-tasks.is-composing .td-task-list,
+#tabpanel-tasks.is-composing .td-add-task {
+  display: none !important;
+}
+
+/* The editor fills the compose container; body scrolls, footer pinned. */
+.td-task-compose > .td-task-editor {
+  flex: 1;
+  min-height: 0;
+  border-top: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.td-task-compose > .td-task-editor .td-ed-foot {
+  position: sticky;
+  bottom: 0;
+  margin-top: 4px;
+  padding: 10px 0 4px;
+  background: var(--td-surface);
+  box-shadow: 0 -8px 8px -6px var(--td-surface);
+  z-index: 1;
+}
