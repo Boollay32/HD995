@@ -114,28 +114,26 @@ const Activity = (() => {
         const li = document.createElement('li');
         li.className = 'td-timeline-item';
 
-        const head = document.createElement('div');
-        head.className = 'td-tl-head';
-
+        // Single-line row: avatar + actor, the history text (truncated),
+        // and the timestamp pinned right.
         const actor = document.createElement('span');
         actor.className = 'td-tl-actor';
         actor.appendChild(UI.avatarEl(item.name || 'System'));
         actor.appendChild(document.createTextNode(item.name || 'System'));
-        head.appendChild(actor);
+        li.appendChild(actor);
+
+        const body = document.createElement('span');
+        body.className = 'td-tl-body';
+        body.textContent = item.historyTxt || '';
+        body.title = item.historyTxt || '';   // full text on hover (it truncates)
+        li.appendChild(body);
 
         const time = document.createElement('time');
         time.className = 'td-tl-time';
         time.dateTime = item.historyDate || '';
         time.textContent = Helpers.timeAgo(item.historyDate);
         time.title = Helpers.formatDateTime(item.historyDate);
-        head.appendChild(time);
-
-        li.appendChild(head);
-
-        const body = document.createElement('div');
-        body.className = 'td-tl-body';
-        body.textContent = item.historyTxt || '';
-        li.appendChild(body);
+        li.appendChild(time);
 
         return li;
     }
