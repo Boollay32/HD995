@@ -1531,20 +1531,6 @@ body {
 }
 
 /* ============================================================================
-   Wide workspace: Details-tab field groups in a 2x2 grid
-   (Messages collapsed to its rail, or pane absent). Narrow workspaces keep
-   the single column from .td-ws-inner's flex layout.
-   ============================================================================ */
-.td-shell:has(.td-pane--left.is-collapsed) #tabpanel-details:not([hidden]),
-.td-shell[data-layout="right-only"] #tabpanel-details:not([hidden]) {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  align-content: start;
-  align-items: start;
-}
-
-/* ============================================================================
    Task editor: full-width line under the task summary.
    .td-task-item is a horizontal flex row and the inline editor is appended as
    a flex child of it -- without wrapping it gets squeezed BESIDE the task
