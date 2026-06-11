@@ -76,3 +76,50 @@ html[data-theme="dark"] {
     --danger-bg: #3A2220;
     --info-bg: #1E2A44;
 }
+
+/* =============================================================
+   Scrollbars -- themed app-wide (light + dark). Component sheets
+   that style their own scrollbars use more specific selectors and
+   keep their look; this covers everything else.
+   ============================================================= */
+
+:root {
+    --scroll-thumb: #C7C1B7;
+    --scroll-thumb-hover: #A39C91;
+}
+html[data-theme="dark"] {
+    --scroll-thumb: #4C5560;
+    --scroll-thumb-hover: #5F6A77;
+}
+
+/* WebKit / Chromium / Edge */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 8px;
+    border: 2px solid transparent;   /* inset look against any surface */
+    background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-thumb-hover);
+    background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Firefox (engines without ::-webkit-scrollbar). Scoped so Chromium keeps
+   the richer WebKit styling above -- setting scrollbar-color there would
+   disable it. */
+@supports not selector(::-webkit-scrollbar) {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--scroll-thumb) transparent;
+    }
+}
