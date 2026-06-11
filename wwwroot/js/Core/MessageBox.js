@@ -34,6 +34,22 @@ const MessageBox = {
         UI.showById('MessageBox-Outer-Div');
     },
 
+    // -------------------------  Public aliases  ------------------------- //
+    // UserSave (and future callers) use show()/confirm(); previously these
+    // did not exist, so success popups threw AFTER a successful save and
+    // confirm dialogs threw before doing anything.
+
+    show(message, loadPage = '') {
+        this.build(message, loadPage);
+    },
+
+    confirm(message, callback) {
+        this.buildWithCallback(
+            message,
+            typeof callback === 'function' ? callback : undefined
+        );
+    },
+
     // -------------------------  Build  ------------------------- //
 
     build(message, loadPage) {
