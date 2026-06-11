@@ -125,13 +125,13 @@
 }
 .qv-view[aria-pressed="true"] .qv-vc,
 .qv-view[aria-pressed="true"] .qv-vl {
-  color: #fff;
+  color: var(--on-accent);
 }
 .qv-view.warn .qv-vc {
   color: #C0392B;
 }
 .qv-view[aria-pressed="true"].warn .qv-vc {
-  color: #fff;
+  color: var(--on-accent);
 }
 .qv-vc {
   font-size: 20px;
@@ -478,8 +478,8 @@
 }
 .qv-pv-open {
   flex: 1;
-  background: var(--brand);
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
   font-weight: 600;
   font-size: 13px;
   padding: 11px;

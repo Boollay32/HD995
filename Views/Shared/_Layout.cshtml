@@ -72,6 +72,7 @@
 </head>
 
 <body id="Main-Body">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
     @Html.AntiForgeryToken()
 
@@ -93,13 +94,16 @@
 
 
     @* -------------------------  Body  ------------------------- *@
-    @RenderBody()
+    <main id="main-content" tabindex="-1">
+        @RenderBody()
+    </main>
 
     @* -------------------------  Overlays  ------------------------- *@
     <div id="Toggle-BlackBackground" class="BackgroundTint"></div>
 
     <div id="MessageBox-ScreenCover-Div">
-        <div id="MessageBox-Outer-Div">
+        <div id="MessageBox-Outer-Div" role="dialog" aria-modal="true"
+             aria-label="Notification" aria-describedby="MessageBox-Message">
             <div id="MessageBox-Div"></div>
             <div id="Button-Div"></div>
         </div>

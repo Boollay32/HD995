@@ -27,7 +27,7 @@
 
     /* Status (kept neutral/brand-aligned) */
     --ok:    #2E7D46;
-    --warn:  #B5760A;
+    --warn:  #8F5D05;            /* AA: 5.62 on white */
     --danger:#B4392B;
 
     /* Type */
@@ -50,8 +50,10 @@
     --border: #DAD5CC;
     --row-hover: #FAFAF8;
     --canvas: #F1EEE8;       /* page background behind panels */
-    --accent: #E8722A;
-    --accent-strong: #C85F1E;
+    --accent: #B5530E;           /* AA: 4.99 with white text */
+    --accent-strong: #964307;
+    --on-accent: #FFFFFF;        /* text on accent-filled controls */
+    --border-strong: #898379;    /* form-control borders: 3:1+ */
     --info: #1E51C0;
     --ok-bg: #E4F2E8;
     --warn-bg: #FAEFDB;
@@ -66,6 +68,8 @@ html[data-theme="dark"] {
     --canvas: #21262D;       /* darker than the panels: sections lift */
     --accent: #F0843A;
     --accent-strong: #FF9A55;
+    --on-accent: #1B1F24;        /* dark text on the bright accent: 6.36 */
+    --border-strong: #828E9C;    /* form-control borders: 3:1+ */
     --muted: #9AA4AE;
     --ok: #5FD08A;
     --warn: #E2A24F;
@@ -121,5 +125,50 @@ html[data-theme="dark"] {
     * {
         scrollbar-width: thin;
         scrollbar-color: var(--scroll-thumb) transparent;
+    }
+}
+
+/* =============================================================
+   Accessibility layer (pass 1).
+   ============================================================= */
+
+/* Skip-to-content: visually hidden until focused. */
+.skip-link {
+    position: absolute;
+    left: 12px;
+    top: -48px;
+    z-index: 10000;
+    padding: 8px 14px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--on-accent);
+    background: var(--accent);
+    border-radius: 0 0 9px 9px;
+    text-decoration: none;
+    transition: top .12s ease;
+}
+.skip-link:focus {
+    top: 0;
+}
+
+/* Keyboard focus is always visible. Several component sheets remove the
+   default outline; this deliberately wins for keyboard (focus-visible)
+   navigation while leaving mouse clicks ring-free. */
+:focus-visible {
+    outline: 2px solid var(--accent) !important;
+    outline-offset: 2px !important;
+}
+
+/* Respect reduced-motion preferences (includes the falling-snow effect). */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .snowflake, #Snow, .snow {
+        display: none !important;
     }
 }
