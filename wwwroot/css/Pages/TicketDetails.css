@@ -1569,3 +1569,29 @@ body {
   border-top: none;
   border-radius: inherit;
 }
+
+/* ============================================================================
+   Task editor: condensed layout + static title for existing tasks.
+   ============================================================================ */
+.td-task-editor {
+  padding: 10px 12px;
+  gap: 8px;
+}
+.td-ed-row {
+  gap: 3px;
+}
+.td-ed-grid {
+  gap: 8px 12px;
+}
+.td-ed-area {
+  min-height: 44px;
+}
+.td-ed-foot {
+  padding-top: 2px;
+}
+.td-ed-title-static {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--td-text);
+  line-height: 1.4;
+}
