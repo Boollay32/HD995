@@ -53,8 +53,7 @@ class CustomFieldBuilder {
 
     _createDetailDiv(fieldConfig) {
         const outer = document.createElement('div');
-        outer.id = 'Detail-Div';
-        outer.className = 'full';
+        outer.className = 'Detail-Div full';   // class, not a duplicated id per row
 
         const leftDiv = document.createElement('div');
         leftDiv.className = 'left';

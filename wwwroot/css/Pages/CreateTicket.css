@@ -1,0 +1,223 @@
+/* ============================================================================
+   CreateTicket.css -- New Ticket page on the app's modern shell.
+   Header strip + two full-height panels; only Request details scrolls.
+   Light and dark come straight from tokens.css.
+   ============================================================================ */
+
+#Main-Div.create-app {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: calc(100vh - 56px);
+  padding: 16px;
+  box-sizing: border-box;
+  background: var(--canvas);
+  font-family: var(--font-sans);
+  color: var(--text);
+}
+
+/* ---- Header strip ---- */
+.ca-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 16px;
+}
+.ca-head h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.ca-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 9px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background .12s ease, opacity .12s ease;
+}
+.ca-btn-primary:hover { background: var(--accent-strong); }
+.ca-btn-primary:disabled { opacity: .55; cursor: wait; }
+
+/* ---- Body: two panels ---- */
+.ca-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 0;
+}
+.ca-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ca-panel-head {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.ca-panel-head h2 {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ca-panel-body {
+  flex: 1;
+  min-height: 0;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* the ONLY scrollbar on the page */
+.ca-panel--custom .ca-panel-body {
+  overflow-y: auto;
+}
+
+/* ---- Fields (.Detail-Div structure kept for Form.validate + builder) ---- */
+.create-app .Detail-Div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.create-app .Detail-Div .left .Name {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.create-app .Detail-Div .right {
+  width: 100%;
+}
+.create-app .Value {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--canvas);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 9px;
+  margin: 0;                     /* Template.css gives inputs margin-bottom */
+  outline: none;
+  transition: border-color .12s ease;
+}
+.create-app .Value:focus {
+  border-color: var(--accent);
+}
+.create-app input[type="checkbox"].Value {
+  width: auto;
+}
+.create-app textarea.Value {
+  min-height: 96px;
+  max-height: 240px;
+  overflow-y: auto;
+  resize: none;
+  line-height: 1.5;
+}
+.create-app #Custom-fields textarea.Value {
+  min-height: 60px;
+}
+
+/* ---- Attachments: drop target + chips ---- */
+.create-app #AttachBin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color .12s ease, color .12s ease, background .12s ease;
+}
+.create-app #AttachBin:hover,
+.create-app #AttachBin.is-dragover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--row-hover);
+}
+.create-app #ct-attachment-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 6px;
+  padding-top: 8px;
+}
+.create-app #ct-attachment-list:empty {
+  padding-top: 0;
+}
+.ct-att-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 240px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 6px 4px 10px;
+}
+.ct-att-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ct-att-remove {
+  border: none;
+  background: var(--row-hover);
+  color: var(--muted);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ct-att-remove:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* ---- Narrow screens: stack and give the page its scroll back ---- */
+@media (max-width: 900px) {
+  #Main-Div.create-app {
+    height: auto;
+    min-height: calc(100vh - 56px);
+  }
+  .ca-body {
+    grid-template-columns: 1fr;
+  }
+  .ca-panel--custom .ca-panel-body {
+    overflow-y: visible;
+  }
+}

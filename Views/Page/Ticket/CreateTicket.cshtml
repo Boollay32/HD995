@@ -3,13 +3,9 @@
 }
 
 @section AddCSSToHead {
-    <link rel="stylesheet" type="text/css" href="/css/Pages/CreateForm.css" asp-append-version="true">
     <link rel="stylesheet" type="text/css" href="/css/Addons/Snow.css" asp-append-version="true">
     <link rel="stylesheet" type="text/css" href="/css/Addons/PopupWindows.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/NotesTable.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/FormLayout.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/Attachment.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Pages/DetailForm.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Pages/CreateTicket.css" asp-append-version="true">
 }
 
 @section AddJSToHead {
@@ -17,98 +13,74 @@
     <script src="~/js/Ticket/Pages/CreateTicket.js" asp-append-version="true"></script>
 }
 
-<div id="Main-Div" class="main-section dform dform-ticket">
-    <div id="Detail-Container">
-        <div id="Detail-Header">
-            @* Fix: empty <a> removed *@
-            <div id="header-buttons">
-                @* Fix: onclick removed — handled in CreateTicket.js *@
-                <button type="button" id="SubmitCreatedTicket" class="accept">Submit</button>
-            </div>
-        </div>
+<div id="Main-Div" class="create-app">
 
-        <div id="Detail-Body">
-            <form id="create-ticket">
-                <div id="Detail-Inner">
-                    <div id="Details">
+    <header class="ca-head">
+        <h1>New ticket</h1>
+        <button type="button" id="SubmitCreatedTicket" class="ca-btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <span>Create ticket</span>
+        </button>
+    </header>
 
-                        <div class="ct-col ct-col--general">
+    <form id="create-ticket" class="ca-body">
 
-                        <div id="Group-Header">
-                            <div class="left">
-                                @* Fix: missing space before class *@
-                                <label id="GTI" class="Name">General Ticket Information</label>
-                            </div>
-                        </div>
+        @* ---- General information ---- *@
+        <section class="ca-panel">
+            <header class="ca-panel-head"><h2>General information</h2></header>
+            <div class="ca-panel-body">
 
-                        @* Request Type *@
-                        @* Fix: id="Detail-Div", id="left", id="right" → classes — were duplicated *@
-                        <div class="Detail-Div full">
-                            <div class="left">
-                                <label class="Name">Request Type</label>
-                            </div>
-                            <div class="right">
-                                @* Fix: onchange removed — handled in CreateTicket.js *@
-                                <select required id="requestType" class="Value"></select>
-                            </div>
-                        </div>
-
-                        @* Subject *@
-                        <div class="Detail-Div full">
-                            <div class="left">
-                                <label class="Name" for="subject">Subject</label>
-                            </div>
-                            <div class="right">
-                                <input required id="subject" class="Value" type="text">
-                            </div>
-                        </div>
-
-                        @* Description *@
-                        <div class="Detail-Div full">
-                            <div class="left">
-                                <label class="Name" for="requestDetail">Description</label>
-                            </div>
-                            <div class="right">
-                                @* Fix: inline style + onkeydown removed — moved to CSS/JS *@
-                                <textarea required id="requestDetail" class="Value"></textarea>
-                            </div>
-                        </div>
-
-                        @* Attachments *@
-                        @* Fix: inline style height:80px — moved to CSS *@
-                        <div class="Detail-Div full attachment-row">
-                            <div class="left">
-                                <label class="Name">Attachments</label>
-                                @* Fix: ondrop removed — handled in Attachments.js *@
-                                <div id="AttachBin">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
-                                    </svg>
-                                    <span>Drag &amp; drop files or click to browse</span>
-                                </div>
-                            </div>
-                            <input type="file" id="ct-file-input" multiple hidden aria-label="Attach files" />
-                            <div id="ct-attachment-list" aria-live="polite"></div>
-                        </div>
-
-                        </div>
-
-                        <div class="ct-col ct-col--custom">
-                            <div class="Group-Header">
-                                <div class="left">
-                                    <label class="Name">Request Details</label>
-                                </div>
-                            </div>
-
-                            <div id="Custom-fields"></div>
-                        </div>
-
+                <div class="Detail-Div full">
+                    <div class="left"><label class="Name" for="requestType">Request type</label></div>
+                    <div class="right">
+                        <select required id="requestType" class="Value"></select>
                     </div>
                 </div>
-            </form>
-        </div>
-    </div>
+
+                <div class="Detail-Div full">
+                    <div class="left"><label class="Name" for="subject">Subject</label></div>
+                    <div class="right">
+                        <input required id="subject" class="Value" type="text">
+                    </div>
+                </div>
+
+                <div class="Detail-Div full">
+                    <div class="left"><label class="Name" for="requestDetail">Description</label></div>
+                    <div class="right">
+                        <textarea required id="requestDetail" class="Value"></textarea>
+                    </div>
+                </div>
+
+                <div class="Detail-Div full ca-attach-row">
+                    <div class="left"><label class="Name">Attachments</label></div>
+                    <div class="right">
+                        <div id="AttachBin">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
+                            </svg>
+                            <span>Drag &amp; drop files or click to browse</span>
+                        </div>
+                        <input type="file" id="ct-file-input" multiple hidden aria-label="Attach files" />
+                        <div id="ct-attachment-list" aria-live="polite"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        @* ---- Request details (custom fields) ---- *@
+        <section class="ca-panel ca-panel--custom">
+            <header class="ca-panel-head"><h2>Request details</h2></header>
+            <div id="Custom-fields" class="ca-panel-body"></div>
+        </section>
+
+    </form>
+
 </div>
 
 <div id="Display-Div"></div>

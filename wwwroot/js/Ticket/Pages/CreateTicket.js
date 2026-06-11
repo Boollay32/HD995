@@ -33,7 +33,6 @@ class CreateTicket extends PageBase {
 
     _setupPageUI() {
         SetActivePage('TicketMenu');
-        SetDetailContainerHeight();
         UserPermissions();
         ChooseSeason();
         DisplayScreen();
@@ -77,7 +76,6 @@ class CreateTicket extends PageBase {
         });
 
 
-        window.addEventListener('resize', () => SetDetailContainerHeight());
     }
 
     async _onRequestTypeChange() {
