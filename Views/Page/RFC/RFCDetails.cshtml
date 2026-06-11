@@ -153,6 +153,45 @@
                                 </div>
                             </div>
 
+                            @* Key state & schedule — surfaced to the top *@
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Status",
+                                FieldId   = "rfcStatus",
+                                FieldType = "select",
+                                Required  = true
+                                @* Change handled by RFCDetails.js (Complete-date + topbar pill) *@
+                            })
+
+                            @* Assignment — tech + email *@
+                            <div class="rfc-pair">
+                                <div class="rfc-pair-field">
+                                    <label class="rfc-pair-label" for="assignedTechName">Assigned tech</label>
+                                    <select class="Value rfc-pair-control" id="assignedTechName"></select>
+                                </div>
+                                <div class="rfc-pair-field rfc-pair-field--narrow">
+                                    <label class="rfc-pair-label" for="assignedTechEmail">Email</label>
+                                    <input class="Value rfc-pair-control" id="assignedTechEmail" disabled />
+                                </div>
+                            </div>
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Target Date",
+                                FieldId   = "TargetDate",
+                                FieldType = "date",
+                                Required  = true
+                            })
+
+                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                            {
+                                Label     = "Complete Date",
+                                FieldId   = "CompletedDate",
+                                FieldType = "date",
+                                Disabled  = true,
+                                Hidden    = true
+                            })
+
                             @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
                             {
                                 Label     = "Title",
@@ -264,44 +303,6 @@
                                 FieldType = "textarea",
                                 Required  = true,
                                 MaxLength = 2000
-                            })
-
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Status",
-                                FieldId   = "rfcStatus",
-                                FieldType = "select",
-                                Required  = true
-                                @* Change handled by RFCDetails.js (Complete-date + topbar pill) *@
-                            })
-
-                            @* Assignment — tech + email *@
-                            <div class="rfc-pair">
-                                <div class="rfc-pair-field">
-                                    <label class="rfc-pair-label" for="assignedTechName">Assigned tech</label>
-                                    <select class="Value rfc-pair-control" id="assignedTechName"></select>
-                                </div>
-                                <div class="rfc-pair-field rfc-pair-field--narrow">
-                                    <label class="rfc-pair-label" for="assignedTechEmail">Email</label>
-                                    <input class="Value rfc-pair-control" id="assignedTechEmail" disabled />
-                                </div>
-                            </div>
-
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Target Date",
-                                FieldId   = "TargetDate",
-                                FieldType = "date",
-                                Required  = true
-                            })
-
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Complete Date",
-                                FieldId   = "CompletedDate",
-                                FieldType = "date",
-                                Disabled  = true,
-                                Hidden    = true
                             })
 
                         </div>
