@@ -63,7 +63,7 @@ class UserSave extends PageBase {
     confirmReset() {
         MessageBox.confirm(
             'Are you sure you want to reset the password and pin for this user?',
-            'userSave.resetUser()'
+            () => userSave.resetUser()
         );
     }
 
@@ -92,7 +92,7 @@ class UserSave extends PageBase {
     confirmDelete() {
         MessageBox.confirm(
             'Are you sure you want to delete this user?',
-            'userSave.deleteUser()'
+            () => userSave.deleteUser()
         );
     }
 
