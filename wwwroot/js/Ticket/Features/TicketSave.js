@@ -14,8 +14,9 @@ const Dirty = {
         const saveBtn = Dom.saveBtn();
         if (!saveBtn) return;
 
-        // No changes -> no button (it starts hidden in the markup)
-        saveBtn.hidden = !isDirty;
+        // No changes -> no button. Also only ever visible on the Details
+        // tab (its fields are the only editable ones); other tabs hide it.
+        saveBtn.hidden = !(isDirty && State.activeTab === TAB.DETAILS);
 
         if (isDirty) {
             saveBtn.classList.add('is-dirty');
