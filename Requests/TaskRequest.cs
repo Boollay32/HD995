@@ -1,4 +1,5 @@
 ﻿using HelpDeskNet8.Interfaces.Attachments;
+using HelpDeskNet8.Models.Attachments;
 
 namespace HelpDeskNet8.Requests
 {
@@ -15,6 +16,10 @@ namespace HelpDeskNet8.Requests
     public class SaveTaskRequest : AuthenticatedRequest
     {
         public string ObjectInfo { get; set; }
-        public IEnumerable<IAttachment> Attachments { get; set; } = Enumerable.Empty<IAttachment>();
+        // Concrete type: System.Text.Json cannot deserialize interfaces.
+        // AttachmentStub's properties are the exact wire shape the client
+        // sends; IEnumerable<out T> covariance keeps consumers that take
+        // IEnumerable<IAttachment> working unchanged.
+        public IEnumerable<AttachmentStub> Attachments { get; set; } = Enumerable.Empty<AttachmentStub>();
     }
 }
