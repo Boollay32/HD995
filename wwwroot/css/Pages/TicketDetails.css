@@ -1529,3 +1529,43 @@ body {
 .td-shell[data-layout="right-only"] .td-task-editor > .td-ed-foot {
   grid-column: 1 / -1;
 }
+
+/* ============================================================================
+   Wide workspace: Details-tab field groups in a 2x2 grid
+   (Messages collapsed to its rail, or pane absent). Narrow workspaces keep
+   the single column from .td-ws-inner's flex layout.
+   ============================================================================ */
+.td-shell:has(.td-pane--left.is-collapsed) #tabpanel-details:not([hidden]),
+.td-shell[data-layout="right-only"] #tabpanel-details:not([hidden]) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-content: start;
+  align-items: start;
+}
+
+/* ============================================================================
+   Task editor: full-width line under the task summary.
+   .td-task-item is a horizontal flex row and the inline editor is appended as
+   a flex child of it -- without wrapping it gets squeezed BESIDE the task
+   content and its footer ends up unreachable. Wrap the row and let the editor
+   claim the whole next line.
+   ============================================================================ */
+.td-task-item {
+  flex-wrap: wrap;
+}
+.td-task-item > .td-task-editor {
+  flex-basis: 100%;
+  min-width: 0;
+  margin-top: 10px;
+}
+
+/* New-task host card holds only the editor: let it fill the card cleanly. */
+.td-task-item.is-new {
+  padding: 0;
+}
+.td-task-item.is-new > .td-task-editor {
+  margin-top: 0;
+  border-top: none;
+  border-radius: inherit;
+}
