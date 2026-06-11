@@ -167,7 +167,7 @@
   display: grid;
   gap: 6px 18px;
   align-items: start;
-  padding: 10px 0;
+  padding: 5px 0;
   border-bottom: 1px solid var(--border);
 }
 .dform .Detail-Div {

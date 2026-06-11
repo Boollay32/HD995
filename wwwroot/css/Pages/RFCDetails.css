@@ -103,3 +103,69 @@
   overflow-y: auto;
   padding: 14px 18px 22px;
 }
+
+/* ============================================================================
+   General Information: 2-column grid for the quick-access fields, with
+   Description spanning both columns. Read-only one-line Title.
+   ============================================================================ */
+.dform .rfc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 30px;
+  padding: 4px 0 6px;
+}
+.dform .rfc-cell {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dform .rfc-cell--full {
+  grid-column: 1 / -1;
+}
+.dform .rfc-cell-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.dform .rfc-cell-value {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.4;
+  padding: 6px 0;
+  word-break: break-word;
+}
+/* Title: forced to a single line with ellipsis. */
+.dform .rfc-title-1line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dform .rfc-cell-control {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--row-hover);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.4;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.dform .rfc-cell-control:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.dform textarea.rfc-desc {
+  min-height: 92px;
+  resize: vertical;
+}
+@media (max-width: 640px) {
+  .dform .rfc-grid { grid-template-columns: 1fr; }
+}

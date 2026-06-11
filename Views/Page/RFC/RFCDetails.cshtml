@@ -137,90 +137,57 @@
                                     <label class="Name">General Information</label>
                                 </div>
                             </div>
+                            <div class="rfc-grid">
+                                <div class="rfc-cell">
+                                    <span class="rfc-cell-label">Title</span>
+                                    <label class="Value rfc-cell-value rfc-title-1line" id="Title"></label>
+                                </div>
+                                <div class="rfc-cell">
+                                    <span class="rfc-cell-label">Date Created</span>
+                                    <label class="Value rfc-cell-value" id="changeRequestCreateDate"></label>
+                                </div>
 
-                            @* Read-only meta — compact overview strip *@
-                            <div class="rfc-overview">
-                                <div class="rfc-ov-item">
-                                    <span class="rfc-ov-label">Date Created</span>
-                                    <label class="Value rfc-ov-value" id="changeRequestCreateDate"></label>
+                                <div class="rfc-cell">
+                                    <span class="rfc-cell-label">Originator</span>
+                                    <label class="Value rfc-cell-value" id="changeRequestOriginator"></label>
                                 </div>
-                                <div class="rfc-ov-item">
-                                    <span class="rfc-ov-label">Originator</span>
-                                    <label class="Value rfc-ov-value" id="changeRequestOriginator"></label>
+                                <div class="rfc-cell">
+                                    <span class="rfc-cell-label">Originator Email</span>
+                                    <label class="Value rfc-cell-value" id="originatorEmail"></label>
                                 </div>
-                                <div class="rfc-ov-item">
-                                    <span class="rfc-ov-label">Originator Email</span>
-                                    <label class="Value rfc-ov-value" id="originatorEmail"></label>
+
+                                <div class="rfc-cell">
+                                    <label class="rfc-cell-label" for="assignedTechName">Assigned Tech</label>
+                                    <select class="Value rfc-cell-control" id="assignedTechName"></select>
+                                </div>
+                                <div class="rfc-cell">
+                                    <label class="rfc-cell-label" for="assignedTechEmail">Assigned Tech Email</label>
+                                    <input class="Value rfc-cell-control" id="assignedTechEmail" disabled />
+                                </div>
+
+                                <div class="rfc-cell">
+                                    <label class="rfc-cell-label" for="rfcStatus">Status</label>
+                                    <select class="Value rfc-cell-control" id="rfcStatus" required></select>
+                                </div>
+                                <div class="rfc-cell">
+                                    <label class="rfc-cell-label" for="priority">Priority</label>
+                                    <select class="Value rfc-cell-control" id="priority" required></select>
+                                </div>
+
+                                <div class="rfc-cell">
+                                    <label class="rfc-cell-label" for="TargetDate">Target Date</label>
+                                    <input type="date" class="Value rfc-cell-control" id="TargetDate" required />
+                                </div>
+                                <div class="rfc-cell">
+                                    <label class="rfc-cell-label" for="CompletedDate">Completion Date</label>
+                                    <input type="date" class="Value rfc-cell-control" id="CompletedDate" disabled />
+                                </div>
+
+                                <div class="rfc-cell rfc-cell--full">
+                                    <label class="rfc-cell-label" for="Description">Description</label>
+                                    <textarea class="Value rfc-cell-control rfc-desc" id="Description" required maxlength="2000"></textarea>
                                 </div>
                             </div>
-
-                            @* Key state & schedule — surfaced to the top *@
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Status",
-                                FieldId   = "rfcStatus",
-                                FieldType = "select",
-                                Required  = true
-                                @* Change handled by RFCDetails.js (Complete-date + topbar pill) *@
-                            })
-
-                            @* Assignment — tech + email *@
-                            <div class="rfc-pair">
-                                <div class="rfc-pair-field">
-                                    <label class="rfc-pair-label" for="assignedTechName">Assigned tech</label>
-                                    <select class="Value rfc-pair-control" id="assignedTechName"></select>
-                                </div>
-                                <div class="rfc-pair-field rfc-pair-field--narrow">
-                                    <label class="rfc-pair-label" for="assignedTechEmail">Email</label>
-                                    <input class="Value rfc-pair-control" id="assignedTechEmail" disabled />
-                                </div>
-                            </div>
-
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Target Date",
-                                FieldId   = "TargetDate",
-                                FieldType = "date",
-                                Required  = true
-                            })
-
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Complete Date",
-                                FieldId   = "CompletedDate",
-                                FieldType = "date",
-                                Disabled  = true,
-                                Hidden    = true
-                            })
-
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Title",
-                                FieldId   = "Title",
-                                FieldType = "textarea",
-                                Required  = true,
-                                MaxLength = 250,
-                                CssClass  = "Detail-Div full"
-                            })
-
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Priority",
-                                FieldId   = "priority",
-                                FieldType = "select",
-                                Required  = true
-                                @* Options populated dynamically (Dropdowns.load('RFC')) *@
-                            })
-
-                            @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
-                            {
-                                Label     = "Description",
-                                FieldId   = "Description",
-                                FieldType = "textarea",
-                                Required  = true,
-                                MaxLength = 2000
-                            })
-
                         </div>
 
                         @* --- Extended Information --- *@

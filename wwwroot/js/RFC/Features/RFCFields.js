@@ -34,6 +34,9 @@ class RFCPopulator {
 
         if (field.tagName === 'SELECT') {
             this._handleSelectField(field, value);
+        } else if (field.tagName === 'LABEL') {
+            // Read-only display fields (e.g. Title, originator) show via text.
+            field.innerText = value;
         } else {
             // input + textarea both expose .value; dates handled in _handleInputField
             this._handleInputField(field, value);
