@@ -29,6 +29,17 @@ const Tabs = {
 
         // Persist active tab in session
         sessionStorage.setItem(STORAGE_KEYS.TD_ACTIVE_TAB, name);
+
+        // The Save button belongs to the Details tab: show it only there,
+        // and only when there are unsaved changes. Dirty state is preserved
+        // across tab switches, so it reappears on returning to Details.
+        Tabs.applySaveVisibility();
+    },
+
+    applySaveVisibility() {
+        const saveBtn = Dom.saveBtn();
+        if (!saveBtn) return;
+        saveBtn.hidden = !(State.activeTab === TAB.DETAILS && State.isDirty);
     },
 
     restore() {
