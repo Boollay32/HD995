@@ -74,9 +74,14 @@ class RFCSave extends PageBase {
         // by SaveNote/SaveTask), not flat fields. The keys are the field
         // element ids, which is what the controller's PopulateObject maps from.
         // rfcId is sent separately (the controller adds ChangeRequestID itself).
+        // Form ids that differ from the RFC model's property names (the
+        // controller's PopulateObject matches keys to properties by name).
+        // 'rfcStatus' is the select's id but the property is 'Status'.
+        const KEY_ALIASES = { rfcStatus: 'status' };
+
         const objectInfo = Object.entries(formData)
             .filter(([k, v]) => k !== 'rfcId' && v !== null && v !== undefined)
-            .map(([k, v]) => `${k}\`${v}`)
+            .map(([k, v]) => `${KEY_ALIASES[k] ?? k}\`${v}`)
             .join('|');
 
         return API.post('RFC/SaveRFC',
