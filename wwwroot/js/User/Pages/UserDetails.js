@@ -55,7 +55,11 @@ class UserManager extends PageBase {
         // Action buttons (rendered by _DetailsHeader without handlers) -> UserSave
         document.getElementById('UpdateUser-Button')?.addEventListener('click', () => userSave.manageUser());
         document.getElementById('ResetUser-Button')?.addEventListener('click', () => userSave.confirmReset());
-        document.getElementById('DeleteUser-Button')?.addEventListener('click', () => userSave.confirmDelete());
+        document.getElementById('DeleteUser-Button')?.addEventListener('click', (e) => {
+            e.currentTarget.dataset.mode === 'activate'
+                ? userSave.confirmActivate()
+                : userSave.confirmDelete();
+        });
     }
 
     // -------------------------  Load Data  ------------------------- //
@@ -63,6 +67,8 @@ class UserManager extends PageBase {
     async _loadUserData() {
         const data = await UserLoader.getDetail(this.userLogin);
         if (data) FillUserDetail(data);
+        // Raw lock state (the Locked select cannot represent 99/deactivated)
+        this.userLocked = Number(data?.locked) || 0;
     }
 
     // -------------------------  Admin Controls  ------------------------- //
@@ -80,14 +86,20 @@ class UserManager extends PageBase {
         }
     }
 
+    // State-aware: deactivated accounts (locked 99) offer reactivation;
+    // everyone else gets the deactivate action. (The old version compared
+    // the Locked select's value to 'No', but the option values are '0'/'1',
+    // so the label was permanently 'Activate User' while the click always
+    // ran the delete confirm.) Label lives in the <span> so the icon
+    // survives.
     _setDeleteButtonLabel() {
-        const lockedEl = document.getElementById('Locked');
         const deleteBtn = document.getElementById('DeleteUser-Button');
-        if (!lockedEl || !deleteBtn) return;
+        if (!deleteBtn) return;
 
-        deleteBtn.innerText = lockedEl.value === 'No'
-            ? 'Disable User'
-            : 'Activate User';
+        const isDeactivated = this.userLocked === 99;
+        const span = deleteBtn.querySelector('span');
+        if (span) span.innerText = isDeactivated ? 'Activate user' : 'Deactivate user';
+        deleteBtn.dataset.mode = isDeactivated ? 'activate' : 'delete';
     }
 }
 

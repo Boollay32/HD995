@@ -132,6 +132,7 @@ const MessageBox = {
             'RFCDetails': () => Nav.toRFCDetails(),
             'UserDetails': () => Nav.toUserDetails(),
             'Users': () => Nav.toUserPage(),
+            'UserPage': () => Nav.toUserPage(),   // alias used by UserSave
             'Index': () => { sessionStorage.clear(); window.open('.', '_self', false); }
         };
 

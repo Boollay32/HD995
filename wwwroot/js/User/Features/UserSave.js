@@ -58,6 +58,40 @@ class UserSave extends PageBase {
         }
     }
 
+    // -------------------------  Activate  ------------------------- //
+
+    confirmActivate() {
+        MessageBox.confirm(
+            'Reactivate this user? They will be able to sign in again.',
+            () => userSave.activateUser()
+        );
+    }
+
+    async activateUser() {
+        UI.toggleWaiting();
+        try {
+            const userLogin = document.getElementById('UserEmail')?.innerText;
+            const phone = document.getElementById('UserPhone')?.value;
+            const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
+
+            await API.post('User/ManageUser', API.authPayload({
+                userLogin,
+                unlockUser: '0',
+                adminLevelId,
+                phone
+            }));
+
+            MessageBox.show('User has been reactivated', 'UserPage');
+
+        } catch (error) {
+            if (error.message !== 'Unauthorized') {
+                this.handleError("Error: Couldn't reactivate user.");
+            }
+        } finally {
+            UI.toggleWaiting();
+        }
+    }
+
     // -------------------------  Reset  ------------------------- //
 
     confirmReset() {
@@ -91,7 +125,7 @@ class UserSave extends PageBase {
 
     confirmDelete() {
         MessageBox.confirm(
-            'Are you sure you want to delete this user?',
+            'Deactivate this user? They will no longer be able to sign in.',
             () => userSave.deleteUser()
         );
     }

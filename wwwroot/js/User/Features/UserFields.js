@@ -20,9 +20,48 @@ function FillUserDetail(details) {
         _fillUserElement(el, value);
     }
 
+    // The generic loop above sets selects by option TEXT, but the detail
+    // payload's adminLevel/locked values never equal the option labels --
+    // set the two selects explicitly with tolerant matching.
+    _setSelectSmart('AdminLevel', details.adminLevelID ?? details.adminLevel);
+    _setSelectSmart('Locked', String(details.locked) === '1' ? '1' : '0');
+
     _setUserAvatar(details.userName);
     _setUserRole(details.adminLevel);
     _setUserStatusPill(details.locked);
+}
+
+// Select the option matching by VALUE first, then exact text, then a known
+// label alias. Unmatched values are logged so the real payload shape
+// surfaces instead of failing silently.
+const _ADMIN_LABEL_ALIASES = {
+    'user': '0', 'authority': '0', 'authority user': '0',
+    'govtech': '1', 'govtech user': '1',
+    'govtech admin': '2', 'govtech admin user': '2',
+    'tns': '3', 'tns user': '3',
+    'govtech rfc': '4', 'govtech rfc user': '4',
+    'govtech tns': '5', 'govtech tns user': '5',
+};
+
+function _setSelectSmart(id, value) {
+    const el = document.getElementById(id);
+    if (!el || value === null || value === undefined || value === '') return;
+
+    const str = String(value).trim();
+    const byValue = [...el.options].find(o => o.value === str);
+    if (byValue) { el.value = byValue.value; return; }
+
+    const lower = str.toLowerCase();
+    const byText = [...el.options].find(o => o.innerText.trim().toLowerCase() === lower);
+    if (byText) { el.value = byText.value; return; }
+
+    const alias = _ADMIN_LABEL_ALIASES[lower];
+    if (alias !== undefined && [...el.options].some(o => o.value === alias)) {
+        el.value = alias;
+        return;
+    }
+
+    console.warn(`UserFields: no option in #${id} matches`, value);
 }
 
 function _fillUserElement(el, value) {
@@ -66,8 +105,8 @@ function _setUserStatusPill(locked) {
     const text = document.getElementById('User-Status-Text');
     if (!pill || !text) return;
 
-    const isLocked = String(locked) === '1';
-    text.innerText = isLocked ? 'Locked' : 'Active';
-    pill.classList.toggle('ud-pill--ok', !isLocked);
-    pill.classList.toggle('ud-pill--bad', isLocked);
+    const l = Number(locked) || 0;
+    text.innerText = l === 99 ? 'Deactivated' : (l ? 'Locked' : 'Active');
+    pill.classList.toggle('ud-pill--ok', l === 0);
+    pill.classList.toggle('ud-pill--bad', l !== 0 && l !== 99);
 }
