@@ -80,6 +80,7 @@ class UserManager extends PageBase {
             UI.showById('ResetUser-Button,DeleteUser-Button');
             UI.enableById('UserPhone,AdminLevel,Locked');
             this._setDeleteButtonLabel();
+            this._wireDirtyTracking();
         } else {
             UI.hideById('ResetUser-Button,DeleteUser-Button,UpdateUser-Button');
             UI.disableById('UserPhone,AdminLevel,Locked');
@@ -92,6 +93,27 @@ class UserManager extends PageBase {
     // so the label was permanently 'Activate User' while the click always
     // ran the delete confirm.) Label lives in the <span> so the icon
     // survives.
+    // Save changes is active only when an editable field differs from its
+    // loaded value (mirrors the ticket Details tab). Fields are already
+    // populated (_loadUserData ran before _setupExtraControls).
+    _wireDirtyTracking() {
+        const ids = ['UserPhone', 'AdminLevel', 'Locked'];
+        const els = ids.map(id => document.getElementById(id)).filter(Boolean);
+        const saveBtn = document.getElementById('UpdateUser-Button');
+        if (!saveBtn) return;
+
+        const baseline = els.map(el => el.value);
+        const refresh = () => {
+            const dirty = els.some((el, i) => el.value !== baseline[i]);
+            saveBtn.disabled = !dirty;
+        };
+        els.forEach(el => {
+            el.addEventListener('input', refresh);
+            el.addEventListener('change', refresh);
+        });
+        saveBtn.disabled = true;
+    }
+
     _setDeleteButtonLabel() {
         const deleteBtn = document.getElementById('DeleteUser-Button');
         if (!deleteBtn) return;
