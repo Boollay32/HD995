@@ -3,46 +3,44 @@
 }
 
 @section AddCSSToHead {
-    <link rel="stylesheet" type="text/css" href="~/css/Pages/RFC.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="~/css/Addons/TableLayout.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="~/css/Addons/FilterBox.css" asp-append-version="true" />
-    <link rel="stylesheet" type="text/css" href="~/css/Addons/Attachment.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/Pages/SearchPage.css" asp-append-version="true" />
 }
 
 @section AddJSToBody {
     <script src="~/js/Shared/TablePage.js" asp-append-version="true"></script>
 }
 
-<div id="Main-Div" class="main-section">
+<div id="Main-Div" class="search-app">
 
-    <div id="DisplayImage"></div>
-
-    <div id="FilterTab">
-        <span>Filter</span>
-    </div>
-
-    <div id="Filter-Box">
-        <div id="Filter-Box-Header">
-            <span>Search</span>
+    @* ---- Search rail ---- *@
+    <aside id="Filter-Box" class="sp-side" aria-label="Search filters">
+        <div id="Filter-Box-Header" class="sp-side-head">
+            <h2>Search</h2>
         </div>
 
-        <div id="Filter-Box-Body"></div>
+        <div id="Filter-Box-Body" class="sp-side-body">
+            <div id="Filter-Fields-Container"></div>
+        </div>
 
-        <div id="filter-buttons">
-            <button id="Search-Button-Filter" class="FilterButton-Small accept" type="button">Search</button>
-            <button id="Clear-Button-Filter" class="FilterButton-Small accept" type="button">Clear</button>
-            <div id="ListCountOuterDiv">
-                <p id="TotalRowsCount"></p>
+        <div id="filter-buttons" class="sp-side-foot">
+            <div class="sp-foot-btns">
+                <button id="Search-Button-Filter" type="button" class="sp-btn-primary">Search</button>
+                <button id="Clear-Button-Filter" type="button" class="sp-btn-ghost">Clear</button>
+            </div>
+            <p id="Filter-Results-Count" class="sp-count" aria-live="polite"></p>
+        </div>
+    </aside>
+
+    @* ---- Results ---- *@
+    <section class="sp-main">
+        <div id="Table-Div-Outer">
+            <div id="Table-Div-Inner">
+                <table id="Table">
+                    <thead id="Table-Header"><tr></tr></thead>
+                    <tbody id="Table-Body"></tbody>
+                </table>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div id="Table-Div-Outer">
-        <div id="Table-Div-Inner">
-            <table id="Table" class="table-fill">
-                <thead id="Table-Header"><tr></tr></thead>
-                <tbody id="Table-Body"></tbody>
-            </table>
-        </div>
-    </div>
 </div>
