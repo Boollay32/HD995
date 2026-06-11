@@ -48,6 +48,8 @@ const Tasks = (() => {
         progressLabel: () => document.getElementById('task-progress-label'),
         progressTrack: () => document.getElementById('task-progress-track'),
         addTaskBtn: () => document.getElementById('add-task-btn'),
+        compose: () => document.getElementById('Task-Compose'),
+        panel: () => document.getElementById('tabpanel-tasks'),
     };
 
     // -------------------------  Helpers  ------------------------- //
@@ -253,11 +255,13 @@ const Tasks = (() => {
 
         let host;
         if (isNew) {
-            host = document.createElement('div');
-            host.className = 'td-task-item is-editing is-new';
-            host.dataset.tid = NEW_ID;
-            list.querySelector('.td-thread-empty')?.remove();
-            list.prepend(host);
+            // Full-panel compose mode: hide the list/progress/add button and
+            // render the editor into the dedicated compose container.
+            Dom.panel()?.classList.add('is-composing');
+            host = Dom.compose();
+            if (!host) return;
+            host.hidden = false;
+            host.replaceChildren();
         } else {
             host = list.querySelector(`.td-task-item[data-tid="${id}"]`);
             if (!host) return;
@@ -401,6 +405,11 @@ const Tasks = (() => {
     }
 
     function _collapseDom() {
+        // Leave compose mode if we were in it.
+        Dom.panel()?.classList.remove('is-composing');
+        const compose = Dom.compose();
+        if (compose) { compose.replaceChildren(); compose.hidden = true; }
+
         const list = Dom.taskList();
         if (!list) return;
         list.querySelector(`.td-task-item.is-new[data-tid="${NEW_ID}"]`)?.remove();

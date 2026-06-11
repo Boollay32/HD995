@@ -306,10 +306,6 @@
                         </div>
                         <p class="td-progress-label" id="task-progress-label"></p>
 
-                        <div class="td-task-list" id="Task-List" aria-label="Task list">
-                            <!-- tasks injected by Tasks.js -->
-                        </div>
-
                         <div class="td-add-task">
                             <button type="button" class="td-btn-ghost" id="add-task-btn">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -321,6 +317,13 @@
                                 Add Task
                             </button>
                         </div>
+
+                        <div class="td-task-list" id="Task-List" aria-label="Task list">
+                            <!-- tasks injected by Tasks.js -->
+                        </div>
+
+                        <!-- Full-panel host for the NEW-task editor (compose mode) -->
+                        <div class="td-task-compose" id="Task-Compose" hidden></div>
 
                         <!-- Task overlay -->
                         <div class="td-overlay" id="task-overlay" hidden>
