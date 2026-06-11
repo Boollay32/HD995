@@ -120,8 +120,8 @@ class CustomFieldBuilder {
         const textarea = document.createElement('textarea');
         textarea.className = 'Value';
         textarea.id = config.customFilterItem;
-        textarea.addEventListener('keydown', function () {
-            auto_grow(this);
+        textarea.addEventListener('input', function () {
+            UI.autoGrow(this);
         });
         return textarea;
     }

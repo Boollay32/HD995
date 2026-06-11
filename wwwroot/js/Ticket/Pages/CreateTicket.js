@@ -52,9 +52,10 @@ class CreateTicket extends PageBase {
         document.getElementById('requestType')
             ?.addEventListener('change', () => this._onRequestTypeChange());
 
-        // Fix: textarea auto-grow wired here — replaces onkeydown in view
+        // Auto-grow the description as the user types (UI.autoGrow is the
+        // real, hidden-safe implementation; auto_grow was never defined).
         document.getElementById('requestDetail')
-            ?.addEventListener('keydown', (e) => auto_grow(e.target));
+            ?.addEventListener('input', (e) => UI.autoGrow(e.target));
 
         // Attachments: composer-style drop zone + click-to-browse + chips
         const bin = document.getElementById('AttachBin');
@@ -172,11 +173,23 @@ class CreateTicket extends PageBase {
     }
 
     async _submitTicket(formData, contactClient) {
-        return API.post('Ticket/SaveTicket', API.authPayload({
-            ...formData,
-            contactClient,
-            emailSent: 0
-        }));
+        // SaveTicketRequest expects the pipe-backtick ObjectInfo format. The
+        // keys are the field element ids; TicketMapper maps them onto the
+        // Ticket model case-insensitively, so custom fields persist too.
+        const objectInfo = Object.entries(formData)
+            .filter(([, v]) => v !== null && v !== undefined && v !== '')
+            .map(([k, v]) => `${k}\`${v}`)
+            .join('|');
+
+        const payload = { objectInfo, falseReply: false, emailSent: 0 };
+
+        if (contactClient) {
+            const [authorityId, clientId] = contactClient.split('|');
+            payload.contactClientAuthorityId = parseInt(authorityId, 10) || null;
+            payload.contactClientUserId = parseInt(clientId, 10) || null;
+        }
+
+        return API.post('Ticket/SaveTicket', API.authPayload(payload));
     }
 
     // -------------------------  Create Success  ------------------------- //
