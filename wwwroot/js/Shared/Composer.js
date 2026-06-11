@@ -289,3 +289,33 @@ const Composer = (() => {
     return { create, encode, download, fetchNoteAttachments };
 
 })();
+
+// ---------------------------------------------------------------------------
+// SaveOriginalNote -- shared global. The description entered when creating a
+// ticket or RFC becomes the record's FIRST note (client-visible for tickets),
+// carrying any attachments. Legacy call signature preserved:
+//   SaveOriginalNote(files, isRfc, note, id)
+// This was previously called in three places but defined nowhere, so every
+// ticket/RFC creation threw right after the record was created and the first
+// note (and its attachments) never saved.
+// ---------------------------------------------------------------------------
+
+async function SaveOriginalNote(files, isRfc, note, id) {
+    if (!note || !id) return null;
+
+    const fields = isRfc
+        ? { RFCID: id, noteDescription: note }
+        : { TicketID: id, noteDescription: note, visibleToClient: '1' };
+
+    const objectInfo = Object.entries(fields)
+        .map(([key, value]) => `${key}\`${value}`)
+        .join('|');
+
+    const fileList = (files && typeof files.length === 'number') ? files : [];
+    const attachments = await Composer.encode(fileList);
+
+    return API.post(
+        isRfc ? 'Note/SaveNote' : 'TicketDetails/SaveNote',
+        API.authPayload({ objectInfo, attachments, rfc: !!isRfc })
+    );
+}

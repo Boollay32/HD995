@@ -85,23 +85,11 @@
                                          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
                                     </svg>
-                                    <span>Drag &amp; drop files</span>
+                                    <span>Drag &amp; drop files or click to browse</span>
                                 </div>
                             </div>
-                            <div id="CreateNoteAttachmentList" name="MainNoteAttachHolder">
-                                <div class="Attachment-Icon" id="Attachment-Icon1" draggable="true">
-                                    <div value="" class="File-ImageUnset" id="File-Image1">
-                                        <img src="images/PlusIcon.png">
-                                    </div>
-                                    @* Fix: inline style opacity:0 — moved to CSS *@
-                                    @* Fix: onchange removed — handled in Attachments.js *@
-                                    <input type="file" title=" " class="FileUP"
-                                           name="Value" value="1" id="fileupload1">
-                                    @* Fix: inline style padding — moved to CSS *@
-                                    <label id="Attach-Label" class="attach-label"></label>
-                                    <button type="button" class="attachment-remove" aria-label="Remove attachment" tabindex="-1"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-                                </div>
-                            </div>
+                            <input type="file" id="ct-file-input" multiple hidden aria-label="Attach files" />
+                            <div id="ct-attachment-list" aria-live="polite"></div>
                         </div>
 
                         </div>
