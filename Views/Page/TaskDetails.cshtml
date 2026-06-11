@@ -1,6 +1,7 @@
 ﻿@using HelpDeskNet8.Models.ViewModels
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Task details";
 }
 
 @section AddJSToHead {
@@ -145,7 +146,7 @@
                             <div class="left">
                                 <label class="Name">Attachments</label>
                                 <div id="AttachBin">
-                                    <img draggable="false"
+                                    <img draggable="false" alt="Remove attachment"
                                          src="images/Bin.png"
                                          class="bin-icon"
                                          onmouseover="UI.showTooltip(this)"

@@ -96,14 +96,14 @@ class QueueView {
     _buildHead() {
         const cells = this.cfg.columns.map(col => {
             if (col.sortable) {
-                return `<th data-key="${col.key}" aria-sort="none" class="qv-sortable">
+                return `<th scope="col" data-key="${col.key}" aria-sort="none" class="qv-sortable">
                           <button type="button">${this._esc(col.label)}<span class="qv-arw">▲</span></button>
                         </th>`;
             }
-            return `<th>${this._esc(col.label)}</th>`;
+            return `<th scope="col">${this._esc(col.label)}</th>`;
         }).join('');
         const sel = this.cfg.bulk?.length
-            ? `<th class="qv-cell-select"><input type="checkbox" class="qv-select-all" aria-label="Select all"></th>` : '';
+            ? `<th scope="col" class="qv-cell-select"><input type="checkbox" class="qv-select-all" aria-label="Select all"></th>` : '';
         this.$.thead.innerHTML = `<tr>${sel}${cells}</tr>`;
     }
 

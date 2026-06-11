@@ -112,7 +112,7 @@ function clearAttachment(number, noteDiv) {
         attachIcon.id = `Attachment-Icon${i}`;
         attachIcon.innerHTML = `
             <div class="${fileSet}" id="File-Image${i}">
-                <img src="${imageToShow}" style="height:25px; width:25px;">
+                <img src="${imageToShow}" alt="" style="height:25px; width:25px;">
             </div>
             <input type="${fileNodeType}" name="${fileNodeName}" value="${i}"
                 id="fileupload${i}" class="FileUP"
