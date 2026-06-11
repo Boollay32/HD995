@@ -1572,16 +1572,24 @@ body {
    ============================================================================ */
 .td-task-editor {
   padding: 10px 12px;
-  gap: 8px;
+  gap: 6px;
 }
 .td-ed-row {
-  gap: 3px;
+  gap: 2px;
+}
+.td-ed-label {
+  font-size: 10px;
+  line-height: 1.2;
 }
 .td-ed-grid {
-  gap: 8px 12px;
+  gap: 6px 12px;
+}
+.td-ed-input {
+  padding: 6px 9px;
 }
 .td-ed-area {
-  min-height: 44px;
+  min-height: 40px;
+  line-height: 1.4;
 }
 .td-ed-foot {
   padding-top: 2px;
