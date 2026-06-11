@@ -144,6 +144,15 @@ const Tasks = (() => {
             );
             State.tasks = Array.isArray(data) ? data : [];
             _render();
+
+            // Arriving from the Tasks queue: auto-expand the task the user
+            // clicked so they can see which one they just opened. One-shot:
+            // the key is consumed so a refresh does not re-expand it.
+            const arriveId = sessionStorage.getItem(STORAGE_KEYS.TASK_ID);
+            sessionStorage.removeItem(STORAGE_KEYS.TASK_ID);
+            if (arriveId && State.tasks.some(t => String(t.taskID) === String(arriveId))) {
+                _openEditor(String(arriveId));
+            }
         } catch (err) {
             console.error('Tasks._getTasks:', err);
             UI.toast?.('Failed to load tasks', 'error');
@@ -265,7 +274,8 @@ const Tasks = (() => {
         State.openId = id;
         State.dirty = false;
 
-        setTimeout(() => editor.querySelector('[data-fld="title"]')?.focus(), 40);
+        setTimeout(() => editor.querySelector(
+            'input:not([type="hidden"]), select, textarea')?.focus(), 40);
         editor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
@@ -290,8 +300,11 @@ const Tasks = (() => {
         return `
             <div class="td-ed-row">
                 <label class="td-ed-label">Title</label>
-                <input type="text" class="td-ed-input" data-fld="title" maxlength="200"
-                       value="${H.esc(task.title || '')}" placeholder="Task title">
+                ${isNew
+                    ? `<input type="text" class="td-ed-input" data-fld="title" maxlength="200"
+                       value="${H.esc(task.title || '')}" placeholder="Task title">`
+                    : `<div class="td-ed-title-static">${H.esc(task.title || '')}</div>
+                       <input type="hidden" data-fld="title" value="${H.esc(task.title || '')}">`}
             </div>
             <div class="td-ed-grid">
                 <div class="td-ed-row">
