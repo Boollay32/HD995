@@ -56,26 +56,16 @@ class TablePage extends PageBase {
 
     _setupPageUI() {
         SetActivePage(`${this.tableName}Menu`);
-        Layout.setTableDimensions();
         Auth.checkPermissions();
         Layout.chooseSeason();
         Layout.displayScreen();
 
-        // Fix: event listeners — replaces inline onclick/onmouseover in view
-        document.getElementById('FilterTab')
-            ?.addEventListener('mouseover', () => ExpandFilter(true));
-        document.getElementById('Table-Div-Outer')
-            ?.addEventListener('mouseover', () => ExpandFilter(false));
         document.getElementById('Search-Button-Filter')
             ?.addEventListener('click', () => this.handleSearch(
                 this.filterManager.buildFilterParams()));
         document.getElementById('Clear-Button-Filter')
             ?.addEventListener('click', () => this.handleSearch(''));
 
-        window.addEventListener('resize', () => {
-            Layout.setTableDimensions();
-            Layout.setHeaderWidths();
-        });
     }
 
     // -------------------------  Managers  ------------------------- //
@@ -99,7 +89,7 @@ class TablePage extends PageBase {
             onSearch: (filterString) => this.handleSearch(filterString),
             onClear: () => this.handleSearch(''),
             autoSave: true,
-            collapsible: true
+            collapsible: false   // pinned rail: filters always visible
         });
     }
 
@@ -114,8 +104,6 @@ class TablePage extends PageBase {
             this.tableManager.render(data);
             this.filterManager.updateResultsCount(data.length);
 
-            Layout.setTableDimensions();
-            setTimeout(() => Layout.setHeaderWidths(), 100);
 
         } catch (error) {
             console.error('Search failed:', error);
