@@ -286,9 +286,11 @@ const MessagesPanel = (() => {
 
     // -------------------------  Init  ------------------------- //
 
-    function init(ticketId) {
+    function init(ticketId, adminLevel = 0) {
         State.ticketId = parseInt(ticketId, 10);
         if (!State.ticketId) return;
+
+        _initScopeReminder(adminLevel);
 
         Composer.create({
             textarea: 'msg-textarea',
@@ -304,6 +306,24 @@ const MessagesPanel = (() => {
         });
 
         load();
+    }
+
+    // Dismissible scope reminder -- Govtech users only (adminLevel >= 1);
+    // authority users never see it. Session-only dismissal.
+    const SCOPE_DISMISS_KEY = 'td-msg-scope-dismissed';
+
+    function _initScopeReminder(adminLevel) {
+        const banner = document.getElementById('msg-scope-banner');
+        if (!banner) return;
+        if (Number(adminLevel) < 1 || sessionStorage.getItem(SCOPE_DISMISS_KEY) === '1') {
+            banner.remove();
+            return;
+        }
+        banner.removeAttribute('hidden');
+        document.getElementById('msg-scope-dismiss')?.addEventListener('click', () => {
+            sessionStorage.setItem(SCOPE_DISMISS_KEY, '1');
+            banner.remove();
+        });
     }
 
     return {
