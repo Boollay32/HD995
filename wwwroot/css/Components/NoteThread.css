@@ -178,7 +178,7 @@
 }
 .td-charcount.is-near-limit { color: var(--warn); }
 .td-charcount.is-at-limit { color: var(--danger); font-weight: 700; }
-.td-composer-attachments { display: flex; flex-wrap: wrap; gap: 4px; }
+.td-composer-attachments { display: flex; flex-wrap: nowrap; gap: 4px; min-width: 0; }
 .td-attach-chip {
   display: inline-flex;
   align-items: center;
@@ -190,9 +190,43 @@
   font-size: 10.5px;
   font-weight: 600;
   color: var(--muted);
-  max-width: 160px;
+  min-width: 0;
+  flex: 0 1 auto;
+  max-width: 200px;
+  transition: max-width 0.18s ease, background 0.15s ease;
 }
 .td-attach-chip span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Collapsed-to-icon: the filename and size spans hide, leaving the file
+   icon + remove button (a compact "icon" pill), so 5 chips fit on one line. */
+.td-attach-chip .td-chip-name,
+.td-attach-chip .td-chip-size {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 0.18s ease, opacity 0.12s ease, margin 0.18s ease;
+}
+/* Hovered or keyboard-focused chip expands to reveal the full filename. */
+.td-attach-chip:hover,
+.td-attach-chip:focus-within {
+  max-width: 260px;
+  background: var(--panel);
+  flex-shrink: 0;
+}
+.td-attach-chip:hover .td-chip-name,
+.td-attach-chip:focus-within .td-chip-name {
+  max-width: 180px;
+  opacity: 1;
+}
+.td-attach-chip:hover .td-chip-size,
+.td-attach-chip:focus-within .td-chip-size {
+  max-width: 70px;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-attach-chip,
+  .td-attach-chip .td-chip-name,
+  .td-attach-chip .td-chip-size { transition: none; }
+}
 .td-attach-chip button {
   background: none;
   border: none;
