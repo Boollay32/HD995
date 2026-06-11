@@ -15,7 +15,7 @@ const UQavColor = n => { let h = 0; for (const c of (n || '')) h = c.charCodeAt(
 const UQrole = v => UQ_ROLE_LABELS[String(v ?? '').trim()] ?? (v || '—');
 // locked: 0/empty = active, 99 = deactivated, anything else = locked
 const UQstatus = r => {
-    const l = r.locked;
+    const l = Number(r.locked) || 0;   // tolerate string/null wire values
     if (l === 99) return { label: 'Deactivated', color: 'var(--neutral-fg)', bg: 'var(--neutral-bg)' };
     if (l) return { label: 'Locked', color: 'var(--bad-fg)', bg: 'var(--bad-bg)' };
     return { label: 'Active', color: 'var(--ok-fg)', bg: 'var(--ok-bg)' };
@@ -57,8 +57,27 @@ class UserPage extends PageBase {
     }
 
     async _fetch() {
-        const data = await API.post('User/GetUsers', API.authPayload({ filters: {} }));
-        return Array.isArray(data) ? data : [];
+        // usp_Helpdesk_GetUsers EXCLUDES deactivated accounts (UserLocked = 99)
+        // unless asked for exactly those -- there is no "everyone" parameter.
+        // Fetch both sets in parallel and merge, so deactivated users are
+        // visible too. If the server ignores the Locked filter, the second
+        // call returns the default set and the userID dedupe is a no-op.
+        const [current, deactivated] = await Promise.all([
+            API.post('User/GetUsers', API.authPayload({ filters: {} })),
+            API.post('User/GetUsers', API.authPayload({ filters: { Locked: '99' } }))
+                .catch(() => []),
+        ]);
+
+        const rows = [];
+        const seen = new Set();
+        for (const r of [...(Array.isArray(current) ? current : []),
+                         ...(Array.isArray(deactivated) ? deactivated : [])]) {
+            const key = String(r.userID ?? '');
+            if (!key || seen.has(key)) continue;
+            seen.add(key);
+            rows.push(r);
+        }
+        return rows;
     }
 
     _open(row) {
@@ -75,8 +94,9 @@ class UserPage extends PageBase {
 
             views: [
                 { id: 'all',    label: 'All',     filter: () => true },
-                { id: 'active', label: 'Active',  filter: r => !r.locked },
-                { id: 'locked', label: 'Locked',  warn: true, filter: r => !!r.locked && r.locked !== 99 },
+                { id: 'active', label: 'Active',  filter: r => !Number(r.locked) },
+                { id: 'locked', label: 'Locked',  warn: true, filter: r => { const l = Number(r.locked); return !!l && l !== 99; } },
+                { id: 'deactivated', label: 'Deactivated', filter: r => Number(r.locked) === 99 },
             ],
 
             filters: [
