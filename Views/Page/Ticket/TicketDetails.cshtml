@@ -94,6 +94,13 @@
                 </div>
 
                 <!-- ── Thread ── -->
+                <!-- scope reminder (Govtech only; shown/dismissed by MessagesPanel.js) -->
+                <div class="td-scope-note td-scope-note--msg" id="msg-scope-banner" hidden>
+                    <button type="button" class="td-scope-dismiss"
+                            id="msg-scope-dismiss" aria-label="Dismiss reminder">&times;</button>
+                    <span class="td-scope-text">Visible to the client — messages here are sent to the requester.</span>
+                </div>
+
                 <div class="td-thread" id="Messages-Thread" role="log" aria-live="polite" aria-label="Message thread">
                     <!-- bubbles injected by MessagesPanel.js -->
                 </div>
@@ -228,6 +235,8 @@
 
                         <!-- scope banner — id required by Notes.js Dom.scopeNote() -->
                         <div class="td-scope-note" id="note-scope-banner" hidden>
+                            <button type="button" class="td-scope-dismiss"
+                                    id="note-scope-dismiss" aria-label="Dismiss reminder">&times;</button>
                             <span class="td-lock-icon" aria-hidden="true">🔒</span>
                             Internal only — not visible to client
                         </div>

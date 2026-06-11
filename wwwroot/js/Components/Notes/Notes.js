@@ -27,6 +27,7 @@ const Notes = (() => {
         noteThread: () => document.getElementById('Notes-Thread'),
         visibilityBtn: () => document.getElementById('note-visibility-btn'),
         scopeNote: () => document.getElementById('note-scope-banner'),
+        scopeDismiss: () => document.getElementById('note-scope-dismiss'),
     };
 
     const Session = {
@@ -57,7 +58,7 @@ const Notes = (() => {
         // Messages pane. Pin internal and hide the client/internal toggle.
         State.visibility = VISIBILITY.INTERNAL;
         Dom.visibilityBtn()?.setAttribute('hidden', '');
-        Dom.scopeNote()?.setAttribute('hidden', '');
+        _initScopeReminder();
 
         composer = Composer.create({
             textarea: 'note-textarea',
@@ -341,6 +342,25 @@ const Notes = (() => {
         });
 
         return wrap;
+    }
+
+    // -------------------------  Scope reminder  ------------------------- //
+    // Dismissible, session-only. Once dismissed it is removed until the
+    // ticket is opened fresh.
+    const SCOPE_DISMISS_KEY = 'td-notes-scope-dismissed';
+
+    function _initScopeReminder() {
+        const banner = Dom.scopeNote();
+        if (!banner) return;
+        if (sessionStorage.getItem(SCOPE_DISMISS_KEY) === '1') {
+            banner.remove();
+            return;
+        }
+        banner.removeAttribute('hidden');
+        Dom.scopeDismiss()?.addEventListener('click', () => {
+            sessionStorage.setItem(SCOPE_DISMISS_KEY, '1');
+            banner.remove();
+        });
     }
 
     // -------------------------  Scope banner  ------------------------- //
