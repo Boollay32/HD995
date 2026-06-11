@@ -193,7 +193,7 @@ function createBlankAttachment(index, prefix = '') {
             draggable="true" onmouseover="DisplayToolTip(this)" onmouseout="HideToolTip()" 
             Tooltip="Add Attachment">
             <div value="" class="File-ImageUnset" id="File-Image${id}">
-                <img src="images/PlusIcon.png">
+                <img src="images/PlusIcon.png" alt="">
             </div>
             <input title=" " type="file" style="opacity:0;" name="Value"
                 value="${index}" id="fileupload${id}" class="FileUP">
@@ -208,9 +208,9 @@ function setAttachmentImage(attachment) {
     const imageTypeId = manageImageType(imageType);
 
     const images = {
-        '1': '<img src="/images/Image-Icon.png" width="25px" height="25px">',
-        '2': '<img src="/images/PDF-Icon.png" width="25px" height="25px">',
-        '3': '<img src="/images/file.png" width="25px" height="25px">'
+        '1': '<img src="/images/Image-Icon.png" alt="" width="25px" height="25px">',
+        '2': '<img src="/images/PDF-Icon.png" alt="" width="25px" height="25px">',
+        '3': '<img src="/images/file.png" alt="" width="25px" height="25px">'
     };
 
     imageDiv.innerHTML = images[imageTypeId] ?? images['3'];

@@ -107,7 +107,7 @@ body {
 .field label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-soft); margin: 0 0 6px 2px; }
 .login-input {
     width: 100%; height: 46px; padding: 0 14px; font-family: var(--font); font-size: 14.5px; color: var(--ink);
-    background: var(--paper-2); border: 1px solid var(--line-2); border-radius: var(--r-md); outline: none;
+    background: var(--paper-2); border: 1px solid var(--border-strong); border-radius: var(--r-md); outline: none;
     box-sizing: border-box; transition: border-color .15s, box-shadow .15s, background .15s;
 }
 .login-input::placeholder { color: #a8a299; }
@@ -128,7 +128,7 @@ body {
 #Pin-Boxes { display: flex; gap: 10px; justify-content: center; margin: 6px 0 8px; }
 #Pin-Boxes input, #Pin-Boxes select {
     width: 52px; height: 62px; text-align: center; font-family: var(--mono); font-size: 24px; font-weight: 600;
-    color: var(--ink); background: var(--paper-2); border: 1px solid var(--line-2); border-radius: var(--r-md);
+    color: var(--ink); background: var(--paper-2); border: 1px solid var(--border-strong); border-radius: var(--r-md);
     outline: none; padding: 0; box-sizing: border-box; transition: border-color .15s, box-shadow .15s, background .15s;
 }
 #Pin-Boxes input:focus, #Pin-Boxes select:focus { border-color: var(--brand); background: #fff; box-shadow: 0 0 0 3px var(--brand-pale); }

@@ -553,7 +553,7 @@ html[data-theme="dark"]{
 /* re-point the queue's surfaces at the variables (later source order wins) */
 .qv{ background:var(--bg); color:var(--text); }
 .qv-table tbody td, .qv-title, .qv-prio, .qv-assignee, .qv-vc{ color:var(--text); }
-.qv-search{ background:var(--panel); border-color:var(--border); }
+.qv-search{ background:var(--panel); border-color:var(--border-strong); }
 .qv-search:focus-within{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
 .qv-search svg, .qv-count, .qv-vl, .qv-filt label, .qv-subj .s2,
 .qv-updated, .qv-pv-h, .qv-pv-tid, .qv-pv-close{ color:var(--muted); }

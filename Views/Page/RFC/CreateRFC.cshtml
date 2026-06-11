@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "New RFC";
 }
 
 @section AddCSSToHead {
@@ -85,7 +86,7 @@
                                 <div id="AttachBin">
                                     @* Fix: inline styles + onmouseover/onmouseout — moved to CSS/JS *@
                                     @* Fix: Tooltip — non-standard attribute — use data-tooltip *@
-                                    <img draggable="false" src="images/Bin.png"
+                                    <img draggable="false" alt="Remove attachment" src="images/Bin.png"
                                          class="attach-bin-icon"
                                          data-tooltip="Attachment Bin" />
                                 </div>
@@ -96,7 +97,7 @@
                                      draggable="true"
                                      data-tooltip="Create Attachment">
                                     <div value="" class="File-ImageUnset" id="File-Image1">
-                                        <img src="images/PlusIcon.png">
+                                        <img src="images/PlusIcon.png" alt="">
                                     </div>
                                     @* Fix: inline style + onchange — moved to CSS/JS *@
                                     <input type="file" title=" " class="FileUP"
