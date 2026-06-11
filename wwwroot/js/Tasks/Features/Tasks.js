@@ -253,21 +253,13 @@ const Tasks = (() => {
         const task = isNew ? { taskID: '', title: '', status: 1, important: false } : _taskById(id);
         if (!task) return;
 
-        let host;
-        if (isNew) {
-            // Full-panel compose mode: hide the list/progress/add button and
-            // render the editor into the dedicated compose container.
-            Dom.panel()?.classList.add('is-composing');
-            host = Dom.compose();
-            if (!host) return;
-            host.hidden = false;
-            host.replaceChildren();
-        } else {
-            host = list.querySelector(`.td-task-item[data-tid="${id}"]`);
-            if (!host) return;
-            host.classList.add('is-editing');
-            host.querySelector('.td-task-open')?.setAttribute('aria-expanded', 'true');
-        }
+        // Both new and existing tasks open full-panel: hide the list/progress/
+        // add button and render the editor into the dedicated compose container.
+        Dom.panel()?.classList.add('is-composing');
+        const host = Dom.compose();
+        if (!host) return;
+        host.hidden = false;
+        host.replaceChildren();
 
         const editor = document.createElement('div');
         editor.className = 'td-task-editor';
@@ -348,8 +340,8 @@ const Tasks = (() => {
             <div class="td-ed-foot">
                 <span class="td-ed-dirty" hidden>Unsaved changes</span>
                 <div class="td-ed-foot-btns">
-                    <button type="button" class="td-btn-ghost" data-act="cancel">Cancel</button>
-                    <button type="button" class="td-btn-primary" data-act="save">${isNew ? 'Add task' : 'Save'}</button>
+                    <button type="button" class="td-btn-ghost" data-act="cancel">${isNew ? 'Cancel' : 'Back to tasks'}</button>
+                    <button type="button" class="td-btn-primary" data-act="save"${isNew ? '' : ' disabled'}>${isNew ? 'Add task' : 'Save changes'}</button>
                 </div>
             </div>`;
     }
@@ -361,6 +353,8 @@ const Tasks = (() => {
             if (State.dirty) return;
             State.dirty = true;
             editor.querySelector('.td-ed-dirty')?.removeAttribute('hidden');
+            const saveBtn = editor.querySelector('[data-act="save"]');
+            if (saveBtn) saveBtn.disabled = false;
         };
 
         editor.querySelectorAll('input[data-fld], select[data-fld], textarea[data-fld]').forEach(el => {
