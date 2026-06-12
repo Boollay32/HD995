@@ -83,7 +83,7 @@ const Topbar = {
 
         // Ticket ID
         const tidEl = Dom.ticketId();
-        if (tidEl) tidEl.textContent = `#${data.ticketID}`;
+        if (tidEl) tidEl.textContent = `Ticket #${data.ticketID}`;
 
         // Subject
         const subEl = Dom.subject();
@@ -107,13 +107,17 @@ const Topbar = {
         // SLA pill — the model has no dedicated SLA field, so we treat the
         // target date as the due date. Swap to data.estimatedCompletionDate
         // if that is your real SLA source.
+        const slaGroup = document.getElementById('meta-sla-group');
         if (data.targetDate) {
+            if (slaGroup) slaGroup.hidden = false;
             Topbar.renderPill(
                 Dom.metaSla(),
                 Topbar.slaClass(data.targetDate),
                 Topbar.slaLabel(data.targetDate),
                 false,
             );
+        } else if (slaGroup) {
+            slaGroup.hidden = true;
         }
 
         // Page title

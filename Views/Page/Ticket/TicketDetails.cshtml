@@ -47,10 +47,19 @@
         </div>
 
         <div class="td-topbar-meta" id="Topbar-Meta">
-            <!-- populated by JS: status pill, priority, SLA -->
-            <div class="td-meta-pill" id="meta-status"></div>
-            <div class="td-meta-pill" id="meta-priority"></div>
-            <div class="td-meta-pill" id="meta-sla"></div>
+            <!-- pills populated by JS; captions are static -->
+            <div class="td-meta-group">
+                <span class="td-meta-cap">Status</span>
+                <div class="td-meta-pill" id="meta-status"></div>
+            </div>
+            <div class="td-meta-group">
+                <span class="td-meta-cap">Priority</span>
+                <div class="td-meta-pill" id="meta-priority"></div>
+            </div>
+            <div class="td-meta-group" id="meta-sla-group">
+                <span class="td-meta-cap">Due</span>
+                <div class="td-meta-pill" id="meta-sla"></div>
+            </div>
         </div>
 
         <div class="td-spacer"></div>
@@ -59,8 +68,8 @@
             <button type="button" class="td-btn-ghost hidden" id="FalseReply">
                 Hide Notification
             </button>
-            <button type="button" class="td-btn-primary" id="Save-Button" hidden>
-                Save
+            <button type="button" class="td-btn-primary" id="Save-Button" hidden disabled>
+                Save Changes
             </button>
         </div>
 

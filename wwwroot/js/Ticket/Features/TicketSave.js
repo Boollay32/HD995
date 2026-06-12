@@ -14,17 +14,13 @@ const Dirty = {
         const saveBtn = Dom.saveBtn();
         if (!saveBtn) return;
 
-        // No changes -> no button. Also only ever visible on the Details
-        // tab (its fields are the only editable ones); other tabs hide it.
-        saveBtn.hidden = !(isDirty && State.activeTab === TAB.DETAILS);
-
-        if (isDirty) {
-            saveBtn.classList.add('is-dirty');
-            saveBtn.textContent = 'Save Changes';
-        } else {
-            saveBtn.classList.remove('is-dirty');
-            saveBtn.textContent = 'Save';
-        }
+        // On the Details tab the button is always visible but DISABLED
+        // until something changes; other tabs hide it (nothing to save).
+        const onDetails = State.activeTab === TAB.DETAILS;
+        saveBtn.hidden = !onDetails;
+        saveBtn.disabled = !isDirty;
+        saveBtn.textContent = 'Save Changes';
+        saveBtn.classList.toggle('is-dirty', isDirty);
     },
 
     guard() {

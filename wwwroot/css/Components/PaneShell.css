@@ -449,3 +449,37 @@ html[data-theme="dark"] {
     gap: 8px;
   }
 }
+
+/* ===== Ticket header polish: prominent ID + title, captioned pills,
+   greyed disabled Save. ===== */
+.td-id-block .td-tid {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--td-text);
+  letter-spacing: 0.02em;
+}
+.td-id-block .td-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--td-muted);
+}
+.td-meta-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.td-meta-group[hidden] { display: none; }
+.td-meta-cap {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--td-muted);
+  padding-left: 2px;
+}
+.td-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: default;
+  filter: grayscale(0.4);
+}
