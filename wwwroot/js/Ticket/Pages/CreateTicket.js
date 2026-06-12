@@ -90,7 +90,20 @@ class CreateTicket extends PageBase {
 
     _addFiles(list) {
         if (!list?.length) return;
-        this.files.push(...Array.from(list));
+
+        // Cap the total at 5 attachments, matching the shared Composer used
+        // by notes/messages/RFC.
+        const MAX_ATTACHMENTS = 5;
+        const remaining = MAX_ATTACHMENTS - this.files.length;
+        if (remaining <= 0) {
+            UI.toast?.(`Maximum ${MAX_ATTACHMENTS} attachments allowed`, 'warning');
+            return;
+        }
+        const incoming = Array.from(list);
+        if (incoming.length > remaining) {
+            UI.toast?.(`Maximum ${MAX_ATTACHMENTS} attachments allowed`, 'warning');
+        }
+        this.files.push(...incoming.slice(0, remaining));
         this._renderAttachmentChips();
     }
 
