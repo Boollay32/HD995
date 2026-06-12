@@ -100,7 +100,8 @@
 .rfc-ws {
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
   padding: 14px 18px 18px;
 }
 
@@ -136,7 +137,7 @@
   font-size: 13.5px;
   color: var(--text);
   line-height: 1.4;
-  padding: 2px 0 2px 10px;
+  padding: 2px 0 4px 10px;
   margin-left: 2px;
   border-left: 2px solid var(--border);
   word-break: break-word;
