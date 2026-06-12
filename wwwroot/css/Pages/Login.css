@@ -154,3 +154,65 @@ body {
     #Pin-Boxes input, #Pin-Boxes select { width: 42px; height: 54px; font-size: 20px; }
     #Pin-Boxes select.PIN-Tile { background-position: center 40px; }
 }
+
+/* ---- Forgot-password hint (no self-service reset; contact support) ---- */
+.login-help {
+    position: relative;
+    text-align: center;
+    margin-top: 16px;
+}
+.login-help-trigger {
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    padding: 4px 6px;
+    cursor: help;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--line-2);
+}
+.login-help-trigger:hover,
+.login-help-trigger:focus-visible {
+    color: var(--ink-soft);
+    text-decoration-color: var(--brand);
+    outline: none;
+}
+.login-help-bubble {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%) translateY(4px);
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--paper);
+    background: #2a2521;
+    border-radius: var(--r-md);
+    box-shadow: 0 6px 18px rgba(20,16,12,.28);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .14s ease, transform .14s ease;
+    z-index: 5;
+}
+.login-help-bubble::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #2a2521;
+}
+.login-help-trigger:hover + .login-help-bubble,
+.login-help-trigger:focus-visible + .login-help-bubble {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+    .login-help-bubble { transition: none; }
+}
