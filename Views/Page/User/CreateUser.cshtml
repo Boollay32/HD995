@@ -4,95 +4,84 @@
 }
 
 @section AddCSSToHead {
-    <link rel="stylesheet" type="text/css" href="/css/Pages/CreateForm.css" asp-append-version="true">
     <link rel="stylesheet" type="text/css" href="/css/Addons/Snow.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/FormLayout.css" asp-append-version="true">
     <link rel="stylesheet" type="text/css" href="/css/Addons/PopupWindows.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Pages/DetailForm.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Pages/CreateUser.css" asp-append-version="true">
 }
 
 @section AddJSToHead {
     <script src="~/js/User/Pages/CreateUser.js" asp-append-version="true"></script>
 }
 
-<div id="Main-Div" class="main-section dform dform-user">
-    <div id="Detail-Container">
-        <div id="Detail-Header">
-            <div id="header-buttons">
-                <button type="button" id="SubmitCreatedUser" class="accept">Submit</button>
-            </div>
-        </div>
+<div id="Main-Div" class="create-app">
 
-        <div id="Detail-Body">
-            <form id="create-user">
-                <div id="Detail-Inner">
-                    <div id="Details">
+    <header class="ca-head">
+        <h1>New user</h1>
+        <button type="button" id="SubmitCreatedUser" class="ca-btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <span>Create user</span>
+        </button>
+    </header>
 
-                        <div id="Group-Header">
-                            <div class="left">
-                                <label class="Name">Create User</label>
-                            </div>
+    <form id="create-user" class="ca-body">
+
+        <section class="ca-panel">
+            <header class="ca-panel-head"><h2>User details</h2></header>
+            <div class="ca-panel-body">
+                <div class="ca-grid">
+
+                    <div class="Detail-Div full">
+                        <div class="left"><label class="Name" for="LoginName">Login email</label></div>
+                        <div class="right">
+                            <input required type="email" maxlength="250" id="LoginName" class="Value" autocomplete="off" />
                         </div>
-
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="LoginName">Login Email</label>
-                            </div>
-                            <div class="right">
-                                <input required type="email" maxlength="250" id="LoginName" class="Value" autocomplete="off" />
-                            </div>
-                        </div>
-
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="FirstName">First Name</label>
-                            </div>
-                            <div class="right">
-                                <input required maxlength="100" id="FirstName" class="Value" />
-                            </div>
-                        </div>
-
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="SecondName">Last Name</label>
-                            </div>
-                            <div class="right">
-                                <input required maxlength="100" id="SecondName" class="Value" />
-                            </div>
-                        </div>
-
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="PhoneNumber">Phone</label>
-                            </div>
-                            <div class="right">
-                                <input maxlength="50" id="PhoneNumber" class="Value" />
-                            </div>
-                        </div>
-
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="Authority">Authority</label>
-                            </div>
-                            <div class="right">
-                                <select required id="Authority" class="Value"></select>
-                            </div>
-                        </div>
-
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="Department">Department</label>
-                            </div>
-                            <div class="right">
-                                <select required id="Department" class="Value"></select>
-                            </div>
-                        </div>
-
                     </div>
+
+                    <div class="Detail-Div">
+                        <div class="left"><label class="Name" for="FirstName">First name</label></div>
+                        <div class="right">
+                            <input required maxlength="100" id="FirstName" class="Value" />
+                        </div>
+                    </div>
+
+                    <div class="Detail-Div">
+                        <div class="left"><label class="Name" for="SecondName">Last name</label></div>
+                        <div class="right">
+                            <input required maxlength="100" id="SecondName" class="Value" />
+                        </div>
+                    </div>
+
+                    <div class="Detail-Div full">
+                        <div class="left"><label class="Name" for="PhoneNumber">Phone</label></div>
+                        <div class="right">
+                            <input maxlength="50" id="PhoneNumber" class="Value" />
+                        </div>
+                    </div>
+
+                    <div class="Detail-Div">
+                        <div class="left"><label class="Name" for="Authority">Authority</label></div>
+                        <div class="right">
+                            <select required id="Authority" class="Value"></select>
+                        </div>
+                    </div>
+
+                    <div class="Detail-Div">
+                        <div class="left"><label class="Name" for="Department">Department</label></div>
+                        <div class="right">
+                            <select required id="Department" class="Value"></select>
+                        </div>
+                    </div>
+
                 </div>
-            </form>
-        </div>
-    </div>
+            </div>
+        </section>
+
+    </form>
+
 </div>
 
 <div id="Display-Div"></div>

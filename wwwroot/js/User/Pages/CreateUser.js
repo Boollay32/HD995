@@ -33,7 +33,6 @@ class CreateUser extends PageBase {
 
     _setupPageUI() {
         SetActivePage('UserMenu');
-        SetDetailContainerHeight();
         UserPermissions();
         ChooseSeason();
         DisplayScreen();
@@ -46,7 +45,6 @@ class CreateUser extends PageBase {
         document.getElementById('SubmitCreatedUser')
             ?.addEventListener('click', () => this.submitUser());
 
-        window.addEventListener('resize', () => SetDetailContainerHeight());
     }
 
     // -------------------------  Submit  ------------------------- //
