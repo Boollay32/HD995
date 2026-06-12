@@ -4,8 +4,8 @@
   height: 100%;
   min-height: 0;
   font-family: "Spline Sans", system-ui, sans-serif;
-  background: #EDEBE4;
-  color: #1D1C1A;
+  background: #EEF1F4;
+  color: #1A2027;
   font-size: 14px;
   line-height: 1.45;
 }
@@ -37,7 +37,7 @@
   align-items: center;
   gap: 9px;
   background: #FFFFFF;
-  border: 1px solid #D8D3C8;
+  border: 1px solid #C9CFD6;
   border-radius: 10px;
   padding: 0 12px;
   height: 38px;
@@ -49,7 +49,7 @@
   box-shadow: 0 0 0 3px var(--brand-pale);
 }
 .qv-search svg {
-  color: #6A655C;
+  color: #5C6670;
   flex-shrink: 0;
 }
 .qv-search-input {
@@ -62,7 +62,7 @@
   margin: 0;            /* Template.css gives every input margin-bottom: 10px */
   height: 100%;
   flex: 1;
-  color: #1D1C1A;
+  color: #1A2027;
 }
 .qv-spacer {
   flex: 1;
@@ -75,7 +75,7 @@
 }
 .qv-count {
   font-size: 12.5px;
-  color: #6A655C;
+  color: #5C6670;
   font-weight: 500;
 }
 .qv-action {
@@ -106,7 +106,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  border: 1px solid #D8D3C8;
+  border: 1px solid #C9CFD6;
   background: #FFFFFF;
   border-radius: 12px;
   padding: 9px 15px;
@@ -117,7 +117,7 @@
   font: inherit;
 }
 .qv-view:hover {
-  border-color: #56524B;
+  border-color: #5C6670;
 }
 .qv-view[aria-pressed="true"] {
   background: var(--brand);
@@ -142,7 +142,7 @@
 .qv-vl {
   font-size: 11.5px;
   font-weight: 600;
-  color: #6A655C;
+  color: #5C6670;
 }
 .qv-filters {
   display: flex;
@@ -155,7 +155,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  border: 1px solid #D8D3C8;
+  border: 1px solid #C9CFD6;
   background: #FFFFFF;
   border-radius: 9px;
   padding: 0 8px 0 11px;
@@ -163,7 +163,7 @@
 }
 .qv-filt label {
   font-size: 11px;
-  color: #6A655C;
+  color: #5C6670;
   font-weight: 600;
 }
 .qv-filt select {
@@ -172,7 +172,7 @@
   font: inherit;
   font-size: 12.5px;
   font-weight: 600;
-  color: #1D1C1A;
+  color: #1A2027;
   outline: none;
   cursor: pointer;
   height: 100%;
@@ -240,16 +240,16 @@
 .qv-table thead th {
   position: sticky;
   top: 0;
-  background: #EDEBE4;
+  background: #EEF1F4;
   z-index: 5;
   text-align: left;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #6A655C;
+  color: #5C6670;
   padding: 8px 12px;
-  border-bottom: 1px solid #D8D3C8;
+  border-bottom: 1px solid #C9CFD6;
   white-space: nowrap;
 }
 .qv-table thead th.qv-sortable button {
@@ -273,7 +273,7 @@
 }
 .qv-table thead th[aria-sort="ascending"] button,
 .qv-table thead th[aria-sort="descending"] button {
-  color: #1D1C1A;
+  color: #1A2027;
 }
 .qv-table tbody tr {
   background: #FFFFFF;
@@ -282,12 +282,12 @@
 }
 .qv-table tbody td {
   padding: 11px 12px;
-  border-bottom: 1px solid #E6E2D9;
-  border-top: 1px solid #E6E2D9;
+  border-bottom: 1px solid #E2E6EB;
+  border-top: 1px solid #E2E6EB;
   vertical-align: middle;
 }
 .qv-table tbody tr:hover td {
-  background: #FBFAF7;
+  background: #F7F9FB;
 }
 .qv-table tbody tr[aria-selected="true"] td {
   background: var(--brand-pale);
@@ -318,7 +318,7 @@
 }
 .qv-empty td {
   text-align: center;
-  color: #6A655C;
+  color: #5C6670;
   padding: 40px;
   font-size: 13.5px;
   background: #FFFFFF;
@@ -332,12 +332,12 @@
 .qv-subj .s1 {
   font-size: 13.5px;
   font-weight: 600;
-  color: #1D1C1A;
+  color: #1A2027;
   line-height: 1.3;
 }
 .qv-subj .s2 {
   font-size: 11.5px;
-  color: #6A655C;
+  color: #5C6670;
   margin-top: 1px;
 }
 .qv-unread {
@@ -408,7 +408,7 @@
 }
 .qv-updated {
   font-size: 12px;
-  color: #6A655C;
+  color: #5C6670;
   font-family: "Spline Sans Mono", ui-monospace, monospace;
   white-space: nowrap;
 }
@@ -443,7 +443,7 @@
 }
 .qv-pv-head {
   padding: 18px 20px 14px;
-  border-bottom: 1px solid #D8D3C8;
+  border-bottom: 1px solid #C9CFD6;
   flex-shrink: 0;
   position: relative;
 }
@@ -457,12 +457,12 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #56524B;
+  color: #5C6670;
   font-size: 15px;
 }
 .qv-pv-close:hover {
-  background: #FBFAF7;
-  color: #1D1C1A;
+  background: #F7F9FB;
+  color: #1A2027;
 }
 .qv-pv-body {
   flex: 1;
@@ -471,7 +471,7 @@
 }
 .qv-pv-foot {
   flex-shrink: 0;
-  border-top: 1px solid #D8D3C8;
+  border-top: 1px solid #C9CFD6;
   padding: 14px 20px;
   display: flex;
   gap: 10px;
@@ -495,13 +495,13 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #6A655C;
+  color: #5C6670;
   margin: 4px 0 8px;
 }
 .qv-pv-tid {
   font-family: "Spline Sans Mono", ui-monospace, monospace;
   font-size: 11px;
-  color: #6A655C;
+  color: #5C6670;
 }
 .qv-pv-title {
   font-size: 16px;
@@ -523,15 +523,15 @@
    ============================================================================= */
 :root, html[data-theme="light"]{
   --bg:var(--canvas); --panel:#FFFFFF; --text:#1A1A19; --muted:#6B6B66;
-  --border:#E4E3DF; --row-border:#EDECE8; --row-hover:#FAFAF8;
-  --header-bg:#ECEBE7; --scrim:rgba(26,26,25,.28);
+  --border:#C9CFD6; --row-border:#E8ECF0; --row-hover:#F4F6F8;
+  --header-bg:#EEF1F4; --scrim:rgba(16,20,26,.30);
   --accent:#E8722A; --accent-strong:#C85F1E; --accent-soft:#FBE7D6; --on-accent:#FFFFFF;
-  --badge-fg:#5A554D; --badge-bg:#F0EEE9;
+  --badge-fg:#566069; --badge-bg:#EDF0F3;
   --info-fg:#1E51C0; --info-bg:#E8EFFD;
   --warn-fg:#9A4D0C; --warn-bg:#FBE7D2;
   --ok-fg:#1F7A43;   --ok-bg:#E4F2E8;
   --bad-fg:#B23121;  --bad-bg:#FAE7E4;
-  --neutral-fg:#5F5A52; --neutral-bg:#E9E7E2;
+  --neutral-fg:#566069; --neutral-bg:#E7EBEF;
   --pri-urgent:#C0392B; --pri-high:#C85F1E; --pri-normal:#6B6B66; --pri-low:#9A958C;
 }
 html[data-theme="dark"]{
