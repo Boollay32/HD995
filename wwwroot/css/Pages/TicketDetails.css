@@ -1375,10 +1375,10 @@ body {
 .td-task-editor {
   border-top: 1px solid var(--td-border-2);
   background: var(--td-surface);
-  padding: 14px 14px 12px;
+  padding: 14px 14px 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   animation: rise 0.25s ease both;
 }
 .td-ed-row {
@@ -1421,6 +1421,12 @@ body {
 }
 .td-ed-important {
   justify-content: flex-end;
+  align-items: flex-start;
+}
+/* Pill bottom-aligns with the adjacent input (its cell has no label). */
+.td-ed-grid .td-ed-important {
+  flex-direction: row;
+  align-items: flex-end;
 }
 .td-ed-check {
   display: flex;
@@ -1489,7 +1495,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding-top: 4px;
+  padding: 0 0 10px;
 }
 .td-ed-dirty {
   font-size: 10.5px;
