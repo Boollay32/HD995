@@ -1650,3 +1650,57 @@ body {
   box-shadow: 0 -8px 8px -6px var(--td-surface);
   z-index: 1;
 }
+
+/* ============================================================================
+   Task attachments as square icon tiles (hover/focus expands to the name).
+   ============================================================================ */
+.td-att-list {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.td-att {
+  min-width: 30px;
+  max-width: 30px;
+  height: 30px;
+  padding: 0;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: max-width 0.18s ease, background 0.15s ease;
+}
+.td-att-icon {
+  flex-shrink: 0;
+  font-size: 13px;
+  line-height: 1;
+}
+.td-att .td-att-name {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 0.18s ease, opacity 0.12s ease;
+}
+.td-att .td-att-remove {
+  display: none;
+}
+.td-att:hover,
+.td-att:focus-within {
+  max-width: 300px;
+  padding: 0 5px 0 8px;
+  justify-content: flex-start;
+}
+.td-att:hover .td-att-name,
+.td-att:focus-within .td-att-name {
+  max-width: 200px;
+  opacity: 1;
+}
+.td-att:hover .td-att-remove,
+.td-att:focus-within .td-att-remove {
+  display: inline-flex;
+}
+.td-att-list .td-att-empty {
+  align-self: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-att,
+  .td-att .td-att-name { transition: none; }
+}

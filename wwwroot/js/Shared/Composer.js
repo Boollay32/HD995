@@ -224,7 +224,7 @@ const Composer = (() => {
             chip.dataset.index = index;
             chip.innerHTML = `
                 <span aria-hidden="true">${Format.fileIcon(file.name)}</span>
-                <span class="td-chip-name" title="${Format.escapeHtml(file.name)}">${Format.escapeHtml(file.name)}</span>
+                <span class="td-chip-name">${Format.escapeHtml(file.name)}</span>
                 <span class="td-chip-size mono">${Format.fileSizeLabel(file.size)}</span>
                 <button type="button" aria-label="Remove ${Format.escapeHtml(file.name)}" data-index="${index}">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
