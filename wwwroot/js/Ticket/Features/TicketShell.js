@@ -192,6 +192,11 @@ const Collapse = {
         });
         State.collapsed = Collapse._shell.collapsed;   // live reference
         Collapse._shell.init();
+        Collapse._shell.initResize({
+            shell: 'TD-Shell',
+            divider: 'pane-divider',
+            colsKey: STORAGE_KEYS.TD_SHELL_COLS,
+        });
     },
 };
 

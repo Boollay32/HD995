@@ -110,4 +110,91 @@ class PaneShell {
         this.bind();
         this._restore();
     }
+
+    // -------------------------  Resize (draggable split)  ------------------------- //
+
+    // ids: { shell, divider }, colsKey: sessionStorage key for the ratio.
+    // MIN/MAX bound the left pane to 30%-70%; dragging past collapses it.
+    initResize({ shell, divider, colsKey }) {
+        this._shellEl = document.getElementById(shell);
+        this._dividerEl = document.getElementById(divider);
+        this._colsKey = colsKey;
+        if (!this._shellEl || !this._dividerEl) return;
+
+        this._MINPCT = 30;
+        this._MAXPCT = 70;
+        this._restoreCols();
+
+        const onMove = (e) => {
+            const rect = this._shellEl.getBoundingClientRect();
+            if (rect.width <= 0) return;
+            const pct = ((e.clientX - rect.left) / rect.width) * 100;
+            // Past the bounds -> collapse that pane and end the drag.
+            if (pct < this._MINPCT) { this._endDrag(); this.toggleViaDrag('left'); return; }
+            if (pct > this._MAXPCT) { this._endDrag(); this.toggleViaDrag('right'); return; }
+            this._setCols(pct);
+        };
+        const onUp = () => {
+            this._endDrag();
+            this._persistCols();
+            window.removeEventListener('pointermove', onMove);
+            window.removeEventListener('pointerup', onUp);
+        };
+        this._dividerEl.addEventListener('pointerdown', (e) => {
+            // Only resize in the both layout (divider hidden otherwise).
+            if (this.collapsed.left || this.collapsed.right) return;
+            e.preventDefault();
+            this._dividerEl.classList.add('is-dragging');
+            this._shellEl.classList.add('is-resizing');
+            window.addEventListener('pointermove', onMove);
+            window.addEventListener('pointerup', onUp);
+        });
+        // Double-click resets to an even split.
+        this._dividerEl.addEventListener('dblclick', () => {
+            this._setCols(50);
+            this._persistCols();
+        });
+        // Keyboard: arrows nudge the split 2% at a time.
+        this._dividerEl.addEventListener('keydown', (e) => {
+            if (this.collapsed.left || this.collapsed.right) return;
+            const cur = this._currentPct();
+            if (e.key === 'ArrowLeft')  { this._setCols(Math.max(this._MINPCT, cur - 2)); this._persistCols(); e.preventDefault(); }
+            if (e.key === 'ArrowRight') { this._setCols(Math.min(this._MAXPCT, cur + 2)); this._persistCols(); e.preventDefault(); }
+        });
+    }
+
+    // Drag past a bound collapses that pane (persists, like the buttons).
+    toggleViaDrag(side) {
+        if (!this.collapsed[side]) { this.collapse(side); this._persist(); }
+    }
+
+    _currentPct() {
+        const v = getComputedStyle(this._shellEl).getPropertyValue('--shell-cols').trim();
+        const n = parseFloat(v);
+        return Number.isFinite(n) ? n : 50;
+    }
+
+    _setCols(pct) {
+        const left = Math.min(this._MAXPCT, Math.max(this._MINPCT, pct));
+        this._shellEl.style.setProperty('--shell-cols', left + '%');
+        this._shellEl.style.setProperty('--shell-cols-r', (100 - left) + '%');
+    }
+
+    _endDrag() {
+        this._dividerEl?.classList.remove('is-dragging');
+        this._shellEl?.classList.remove('is-resizing');
+    }
+
+    _persistCols() {
+        if (!this._colsKey) return;
+        sessionStorage.setItem(this._colsKey, String(this._currentPct()));
+    }
+
+    _restoreCols() {
+        if (!this._colsKey) return;
+        const saved = sessionStorage.getItem(this._colsKey);
+        if (saved == null) return;
+        const n = parseFloat(saved);
+        if (Number.isFinite(n)) this._setCols(n);
+    }
 }

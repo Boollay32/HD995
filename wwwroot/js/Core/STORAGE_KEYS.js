@@ -49,6 +49,7 @@ const STORAGE_KEYS = {
 
     TD_ACTIVE_TAB: 'TDActiveTab',
     TD_PANES_COLLAPSED: 'TDPanesCollapsed',
+    TD_SHELL_COLS: 'TDShellCols',
     RFC_PANES_COLLAPSED: 'RFCPanesCollapsed',
 
     // -------------------------  Admin  ------------------------- //

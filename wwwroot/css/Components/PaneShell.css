@@ -279,8 +279,38 @@ html[data-theme="dark"] {
 }
 
     .td-shell[data-layout="both"] {
-        grid-template-columns: var(--shell-cols, 1fr 1fr);
+        grid-template-columns: var(--shell-cols, 1fr) 8px var(--shell-cols-r, 1fr);
     }
+
+    /* Drag divider between the panes (only in the both layout). */
+    .td-divider {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: col-resize;
+        background: var(--td-border-2);
+        position: relative;
+        z-index: 15;
+        touch-action: none;
+    }
+    .td-shell[data-layout="both"] .td-divider { display: flex; }
+    .td-divider:hover,
+    .td-divider:focus-visible,
+    .td-divider.is-dragging {
+        background: var(--accent);
+        outline: none;
+    }
+    .td-divider-grip {
+        width: 2px;
+        height: 30px;
+        border-radius: 2px;
+        background: var(--td-muted);
+        opacity: 0.5;
+    }
+    .td-divider:hover .td-divider-grip,
+    .td-divider.is-dragging .td-divider-grip { background: #fff; opacity: 0.9; }
+    /* While dragging, suppress the pane width animation for 1:1 tracking. */
+    .td-shell.is-resizing .td-pane { transition: none; }
 
     .td-shell[data-layout="left-only"] {
         grid-template-columns: 1fr;
