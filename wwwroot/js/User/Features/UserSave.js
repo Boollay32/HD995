@@ -60,11 +60,13 @@ class UserSave extends PageBase {
 
     // -------------------------  Activate  ------------------------- //
 
-    confirmActivate() {
-        MessageBox.confirm(
-            'Reactivate this user? They will be able to sign in again.',
-            () => userSave.activateUser()
-        );
+    async confirmActivate() {
+        const ok = await Confirm.ask({
+            title: 'Reactivate user',
+            message: 'Reactivate this user? They will be able to sign in again.',
+            confirmText: 'Reactivate',
+        });
+        if (ok) this.activateUser();
     }
 
     async activateUser() {
@@ -94,11 +96,14 @@ class UserSave extends PageBase {
 
     // -------------------------  Reset  ------------------------- //
 
-    confirmReset() {
-        MessageBox.confirm(
-            'Are you sure you want to reset the password and pin for this user?',
-            () => userSave.resetUser()
-        );
+    async confirmReset() {
+        const ok = await Confirm.ask({
+            title: 'Reset credentials',
+            message: 'Reset the password and pin for this user?',
+            confirmText: 'Reset',
+            danger: true,
+        });
+        if (ok) this.resetUser();
     }
 
     async resetUser() {
@@ -123,11 +128,14 @@ class UserSave extends PageBase {
 
     // -------------------------  Delete  ------------------------- //
 
-    confirmDelete() {
-        MessageBox.confirm(
-            'Deactivate this user? They will no longer be able to sign in.',
-            () => userSave.deleteUser()
-        );
+    async confirmDelete() {
+        const ok = await Confirm.ask({
+            title: 'Deactivate user',
+            message: 'Deactivate this user? They will no longer be able to sign in.',
+            confirmText: 'Deactivate',
+            danger: true,
+        });
+        if (ok) this.deleteUser();
     }
 
     async deleteUser() {

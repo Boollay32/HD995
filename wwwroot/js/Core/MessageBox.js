@@ -61,13 +61,6 @@ const MessageBox = {
         this.build(message, loadPage);
     },
 
-    confirm(message, callback) {
-        this.buildWithCallback(
-            message,
-            typeof callback === 'function' ? callback : undefined
-        );
-    },
-
     // -------------------------  Build  ------------------------- //
 
     build(message, loadPage) {
@@ -87,34 +80,6 @@ const MessageBox = {
         this._show();
         this._bindDismiss(() => this.okayButtonPress(loadPage));
         okayBtn.focus();
-    },
-
-    buildWithCallback(message, callback) {
-        const { screenCover, messageBox, outerDiv, buttonDiv } = this._getElements();
-        if (!screenCover || !buttonDiv) return;
-
-        this._setMessage(messageBox, outerDiv, message);
-
-        buttonDiv.innerHTML = '';
-        buttonDiv.style.width = '140px';
-
-        const yesBtn = document.createElement('button');
-        yesBtn.className = 'accept OkayButton';
-        yesBtn.innerText = 'Yes';
-        yesBtn.addEventListener('click', () => {
-            this.okayButtonPress('');
-            if (typeof callback === 'function') callback();
-        });
-
-        const noBtn = document.createElement('button');
-        noBtn.className = 'cancel OkayButton';
-        noBtn.innerText = 'No';
-        noBtn.addEventListener('click', () => this.okayButtonPress(''));
-
-        buttonDiv.appendChild(yesBtn);
-        buttonDiv.appendChild(noBtn);
-        this._show();
-        noBtn.focus();
     },
 
     // -------------------------  Okay / Close  ------------------------- //

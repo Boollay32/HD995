@@ -59,27 +59,14 @@ const NavBar = {
 
     // -------------------------  Logout  ------------------------- //
 
-    startLogout() {
-        BuildMessageBox('Are you sure you want to logout?', '');
-
-        const buttonBox = document.getElementById('Button-Div');
-        if (!buttonBox) return;
-
-        buttonBox.innerHTML = '';
-        buttonBox.style.width = '140px';
-
-        const yesBtn = document.createElement('button');
-        yesBtn.className = 'accept OkayButton';
-        yesBtn.innerText = 'Yes';
-        yesBtn.addEventListener('click', () => OkayButtonPress('Index'));
-
-        const noBtn = document.createElement('button');
-        noBtn.className = 'cancel OkayButton';
-        noBtn.innerText = 'No';
-        noBtn.addEventListener('click', () => OkayButtonPress(''));
-
-        buttonBox.appendChild(yesBtn);
-        buttonBox.appendChild(noBtn);
+    async startLogout() {
+        const ok = await Confirm.ask({
+            title: 'Log out',
+            message: 'Are you sure you want to log out?',
+            confirmText: 'Log out',
+        });
+        // Same logout path as before: clear the session and reload.
+        if (ok) MessageBox.okayButtonPress('Index');
     },
 
     // -------------------------  Z-Index  ------------------------- //
