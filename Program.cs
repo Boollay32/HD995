@@ -80,6 +80,23 @@ app.Use(async (context, next) =>
     headers["X-Content-Type-Options"] = "nosniff";
     headers["X-Frame-Options"] = "SAMEORIGIN";
     headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+
+    // Content-Security-Policy, scoped to what the app loads. Shipped
+    // REPORT-ONLY: violations are logged to the browser console but nothing
+    // is blocked. Once verified clean for normal use, switch the header name
+    // below to "Content-Security-Policy" (without -Report-Only) to enforce.
+    headers["Content-Security-Policy-Report-Only"] =
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+        "font-src 'self' https://fonts.gstatic.com; " +
+        "img-src 'self' data:; " +
+        "connect-src 'self'; " +
+        "object-src 'none'; " +
+        "frame-ancestors 'self'; " +
+        "base-uri 'self'; " +
+        "form-action 'self'";
+
     await next();
 });
 
