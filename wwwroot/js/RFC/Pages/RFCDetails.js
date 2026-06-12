@@ -101,6 +101,11 @@ class RFCDetails extends PageBase {
         // Save (RFCSave was previously unwired)
         document.getElementById('Save-Button')?.addEventListener('click', () => rfcSave.saveRFC());
 
+        // Save Changes is active only when an editable field changes
+        // (same principle as Ticket Details). Fields are populated by
+        // RFCFields before this runs.
+        this._wireRfcDirty();
+
         // Pane collapse -- shared PaneShell component
         new PaneShell({
             left:  { pane: 'pane-left',  btn: 'collapse-left',  rail: 'rail-left'  },
@@ -150,6 +155,23 @@ class RFCDetails extends PageBase {
 // -------------------------  Init  ------------------------- //
 
 const rfcDetails = new RFCDetails();  // Fix: stored — accessible externally
+
+RFCDetails.prototype._wireRfcDirty = function () {
+    const ids = ['assignedTechName', 'rfcStatus', 'priority', 'TargetDate', 'Description'];
+    const els = ids.map(id => document.getElementById(id)).filter(Boolean);
+    const saveBtn = document.getElementById('Save-Button');
+    if (!saveBtn) return;
+    const baseline = els.map(el => el.value);
+    const refresh = () => {
+        const dirty = els.some((el, i) => el.value !== baseline[i]);
+        saveBtn.disabled = !dirty;
+    };
+    els.forEach(el => {
+        el.addEventListener('input', refresh);
+        el.addEventListener('change', refresh);
+    });
+    saveBtn.disabled = true;
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
     await rfcDetails.init();
