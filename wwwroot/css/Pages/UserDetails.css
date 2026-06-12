@@ -112,6 +112,21 @@
   border-color: var(--accent-strong);
 }
 
+/* Disabled button: greyed + not clickable (matches .ud-input:disabled). */
+.ud-btn:disabled,
+.ud-btn--primary:disabled {
+  background: var(--row-hover);
+  border-color: var(--border-strong);
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.ud-btn:disabled:hover,
+.ud-btn--primary:disabled:hover {
+  background: var(--row-hover);
+  border-color: var(--border-strong);
+}
+
 .ud-btn--danger {
   color: var(--danger);
 }
