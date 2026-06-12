@@ -115,11 +115,17 @@ class CreateTicket extends PageBase {
         this.files.forEach((file, index) => {
             const chip = document.createElement('span');
             chip.className = 'ct-att-chip';
+            chip.tabIndex = 0;
+
+            const icon = document.createElement('span');
+            icon.className = 'ct-att-icon';
+            icon.setAttribute('aria-hidden', 'true');
+            icon.innerHTML = (typeof Format !== 'undefined' && Format.fileIcon)
+                ? Format.fileIcon(file.name) : '';
 
             const name = document.createElement('span');
             name.className = 'ct-att-name';
             name.textContent = file.name;
-            name.title = file.name;
 
             const remove = document.createElement('button');
             remove.type = 'button';
@@ -131,7 +137,7 @@ class CreateTicket extends PageBase {
                 this._renderAttachmentChips();
             });
 
-            chip.append(name, remove);
+            chip.append(icon, name, remove);
             holder.appendChild(chip);
         });
     }
