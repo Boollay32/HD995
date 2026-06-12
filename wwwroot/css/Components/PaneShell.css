@@ -261,7 +261,8 @@ html[data-theme="dark"] {
 
 .td-btn-ghost:hover {
   background: var(--td-surface);
-  color: var(--td-text);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .td-btn-ghost:disabled {

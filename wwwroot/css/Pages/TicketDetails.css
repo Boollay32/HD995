@@ -1627,7 +1627,7 @@ body {
 
 /* Compose mode: hide everything except the editor. */
 #tabpanel-tasks.is-composing .td-progress-track,
-#tabpanel-tasks.is-composing .td-progress-label,
+#tabpanel-tasks.is-composing .td-tasks-bar,
 #tabpanel-tasks.is-composing .td-task-list,
 #tabpanel-tasks.is-composing .td-add-task {
   display: none !important;
@@ -1842,4 +1842,9 @@ body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--td-muted);
+}
+
+/* Read-only title row: label sits tight to the static title (no row gap). */
+.td-ed-row:has(.td-ed-title-static) {
+  gap: 0;
 }
