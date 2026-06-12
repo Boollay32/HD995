@@ -172,3 +172,27 @@ html[data-theme="dark"] {
         display: none !important;
     }
 }
+
+/* ============================================================================
+   Form validation: inline highlight for empty required fields, and a greyed
+   "incomplete" look for submit buttons (kept clickable so a click can
+   highlight the offending fields).
+   ============================================================================ */
+.field-invalid,
+input.field-invalid,
+select.field-invalid,
+textarea.field-invalid {
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 3px var(--danger-bg);
+}
+.ca-btn-primary.is-incomplete,
+.accept.is-incomplete {
+    background: var(--row-hover);
+    border-color: var(--border-strong);
+    color: var(--muted);
+}
+.ca-btn-primary.is-incomplete:hover,
+.accept.is-incomplete:hover {
+    background: var(--row-hover);
+    color: var(--muted);
+}

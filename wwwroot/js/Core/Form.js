@@ -49,17 +49,61 @@ const Form = {
         const fields = document.getElementById(formId)
             ?.getElementsByClassName('Value') ?? [];
 
+        let firstInvalid = null;
         for (const field of fields) {
-            if (!field.required || field.value !== '') continue;
-
-            const label = field.parentElement?.parentElement
-                ?.children[0]?.children[0]?.innerText;
-
-            BuildMessageBox(`${label} must be filled out.`);
-            return false;
+            const empty = field.required && field.value === '';
+            field.classList.toggle('field-invalid', empty);
+            if (empty) {
+                field.setAttribute('aria-invalid', 'true');
+                if (!firstInvalid) firstInvalid = field;
+                Form._bindClearInvalid(field);
+            } else {
+                field.removeAttribute('aria-invalid');
+            }
         }
 
+        if (firstInvalid) {
+            firstInvalid.focus({ preventScroll: true });
+            firstInvalid.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            return false;
+        }
         return true;
+    },
+
+    // Clear a field's invalid highlight as soon as it gets a value.
+    _bindClearInvalid(field) {
+        if (field._invalidBound) return;
+        field._invalidBound = true;
+        const clear = () => {
+            if (field.value !== '') {
+                field.classList.remove('field-invalid');
+                field.removeAttribute('aria-invalid');
+            }
+        };
+        field.addEventListener('input', clear);
+        field.addEventListener('change', clear);
+    },
+
+    // Grey the submit button while any required field is empty. The button
+    // stays clickable: clicking while incomplete highlights the fields
+    // (handled by the form's own validate() call).
+    gateSubmit(formId, btnId) {
+        const form = document.getElementById(formId);
+        const btn = document.getElementById(btnId);
+        if (!form || !btn) return;
+        const fields = form.getElementsByClassName('Value');
+        const refresh = () => {
+            let incomplete = false;
+            for (const f of fields) {
+                if (f.required && f.value === '') { incomplete = true; break; }
+            }
+            btn.classList.toggle('is-incomplete', incomplete);
+        };
+        for (const f of fields) {
+            f.addEventListener('input', refresh);
+            f.addEventListener('change', refresh);
+        }
+        refresh();
     },
 
     // -------------------------  Clear  ------------------------- //

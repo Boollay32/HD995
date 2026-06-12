@@ -46,6 +46,7 @@ class CreateTicket extends PageBase {
         // Fix: submit button wired here — replaces onclick in view
         document.getElementById('SubmitCreatedTicket')
             ?.addEventListener('click', () => this.submitTicket());
+        Form.gateSubmit(this.formId, 'SubmitCreatedTicket');
 
         // Fix: requestType change wired here — replaces onchange in view
         document.getElementById('requestType')
