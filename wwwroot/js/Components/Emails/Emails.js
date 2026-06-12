@@ -158,12 +158,12 @@ async function GetUserEmailAddress(userInfo) {
         userId = userInfo;
     }
 
-    const data = await API.post('User/GetUserEmailAddress', {
+    const data = await API.post('User/GetUserEmailAddress', API.authPayload({
         userId,
         userFirstName,
         userLastName,
         authorityName
-    });
+    }));
 
     return data ?? '';
 }

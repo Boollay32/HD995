@@ -39,7 +39,7 @@
         public string Phone { get; set; }
     }
 
-    public class GetUserEmailAddressRequest
+    public class GetUserEmailAddressRequest : AuthenticatedRequest
     {
         public int UserId { get; set; }
         public string FirstName { get; set; }

@@ -136,6 +136,9 @@ namespace HelpDeskNet8.Controllers.Users
         [HttpPost]
         public IActionResult GetUserEmailAddress([FromBody] GetUserEmailAddressRequest request)
         {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null) return Unauthorized();
+
             return Ok(_userManager.GetUserEmailAddress(request.UserId, request.FirstName, request.LastName, request.AuthorityName));
         }
     }
