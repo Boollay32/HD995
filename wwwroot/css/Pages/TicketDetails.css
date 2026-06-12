@@ -878,9 +878,6 @@ body {
   background: #1F7A43;
   box-shadow: 0 0 0 1px var(--td-ok);
 }
-.td-timeline-item:last-child {
-  padding-bottom: 0;
-}
 .td-tl-head {
   display: flex;
   align-items: center;
