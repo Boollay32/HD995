@@ -171,15 +171,21 @@ namespace HelpDeskNet8.Services
             }
         }
 
-        private static (string ByteArray, string Info, int ImageType) GetAttachmentDetails(List<IAttachment> attachmentList, int index)
+        // Returns the attachment as a byte[] (decoded from the base64 wire
+        // string) so it binds to the @Attachment{i} VarBinary parameter.
+        // A null byte[] becomes DBNull via AddParameters for empty slots.
+        private static (byte[] ByteArray, string Info, int ImageType) GetAttachmentDetails(List<IAttachment> attachmentList, int index)
         {
-            if (attachmentList.Count <= index) return ("", "", 0);
+            if (attachmentList.Count <= index) return (null, "", 0);
 
             try
             {
                 var attachment = attachmentList[index];
+                byte[] bytes = string.IsNullOrEmpty(attachment.AttachmentByteArray)
+                    ? null
+                    : Convert.FromBase64String(attachment.AttachmentByteArray);
                 return (
-                    attachment.AttachmentByteArray,
+                    bytes,
                     attachment.AttachmentName,
                     (int)attachment.AttachmentImageType
                 );
@@ -187,7 +193,7 @@ namespace HelpDeskNet8.Services
             catch (Exception ex)
             {
                 AppLogger.Error(nameof(TaskManager), ex);
-                return ("", "", 0);
+                return (null, "", 0);
             }
         }
 
