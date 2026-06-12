@@ -47,9 +47,10 @@ builder.Services.AddControllersWithViews(options =>
 });
 builder.Services.AddScoped<AuthenticateActionFilter>();
 
-// CORS: restrict to origins listed under "Cors:AllowedOrigins" in config.
-// Falls back to the previous permissive behaviour only while none are set,
-// so nothing changes until you populate that setting - then it locks down.
+// CORS: allow ONLY the cross-origin hosts listed under "Cors:AllowedOrigins".
+// Fails CLOSED: with none configured, no cross-origin access is granted
+// (same-origin requests are unaffected). Populate the setting to open it up
+// to specific hosts. Never use AllowAnyOrigin in production.
 var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
 {
@@ -57,8 +58,7 @@ builder.Services.AddCors(options =>
     {
         if (corsOrigins is { Length: > 0 })
             policy.WithOrigins(corsOrigins).AllowAnyMethod().AllowAnyHeader();
-        else
-            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); // TODO: set Cors:AllowedOrigins
+        // else: no origins configured -> no cross-origin access (fail closed).
     });
 });
 
