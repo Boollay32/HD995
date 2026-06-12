@@ -6,7 +6,7 @@
 
 /* ============= Cookie Bar Base ============= */
 #cookie-bar {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    background: #232A31;
     color: #eeeeee;
     font-family: Calibri, Arial, sans-serif;
     font-size: 14px;
@@ -68,23 +68,23 @@
 
     /* ============= Accept Button ============= */
     #cookie-bar .cb-enable {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        border-color: #28a745;
+        background: var(--accent, #B5530E);
+        border-color: var(--accent, #B5530E);
     }
 
         #cookie-bar .cb-enable:hover {
-            background: linear-gradient(135deg, #218838 0%, #1ea87a 100%);
+            background: var(--accent-strong, #964307);
             box-shadow: 0 2px 8px rgba(40, 167, 69, 0.4);
         }
 
     /* ============= Decline Button ============= */
     #cookie-bar .cb-disable {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-        border-color: #dc3545;
+        background: var(--danger, #B42318);
+        border-color: var(--danger, #B42318);
     }
 
         #cookie-bar .cb-disable:hover {
-            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+            background: #8E1B12;
             box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
         }
 

@@ -19,7 +19,7 @@
   border-bottom: 3px solid var(--accent-strong);
   border-radius: 3px;
   background-color: var(--accent);
-  color: var(--ink, #211F1D);
+  color: var(--ink, #1A2027);
   font-size: 20px;
   min-width: 100px;
   margin: 0;
@@ -28,7 +28,7 @@
 #accept:hover,
 .accept:hover {
   background-color: var(--accent-strong);
-  color: var(--ink, #211F1D);
+  color: var(--ink, #1A2027);
 }
 
 button#cancel,

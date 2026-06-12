@@ -67,7 +67,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 300;
-  background: #424141;
+  background: #39434C;
 }
 #Table table thead::after {
   content: '';
@@ -81,8 +81,8 @@ body {
 #Table table thead tr th {
   font-family: Calibri;
   color: white;
-  background: #424141;
-  border-bottom: 4px solid #9ea7af;
+  background: #39434C;
+  border-bottom: 4px solid #8E99A3;
   font-size: 18px;
   font-weight: 600;
   text-align: left;
@@ -93,7 +93,7 @@ body {
   white-space: nowrap;
 }
 #Table table thead tr th:hover {
-  background: #5c5a5a;
+  background: #4E5862;
 }
 #Table table thead tr th:first-child {
   text-align: center;
@@ -116,7 +116,7 @@ body {
   cursor: pointer;
 }
 #Table table tbody tr:hover td {
-  color: var(--ink, #211F1D);
+  color: var(--ink, #1A2027);
 }
 #Table table tbody tr td {
   font-family: Calibri;

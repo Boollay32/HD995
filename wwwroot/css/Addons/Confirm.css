@@ -59,8 +59,8 @@
 }
 
 .cf-danger .cf-icon {
-    background: #FBE6E2;
-    color: #B03A2E;
+    background: #FCE9E7;
+    color: #B42318;
 }
 
 .cf-title {
@@ -137,12 +137,12 @@
 }
 
 .cf-btn-danger {
-    background: #B03A2E;
+    background: #B42318;
     color: #FFFFFF;
 }
 
 .cf-btn-danger:hover {
-    background: #92301F;
+    background: #8E1B12;
 }
 
 @media (max-width: 480px) {

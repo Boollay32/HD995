@@ -22,7 +22,7 @@ table caption {
   margin: 0.5em 0 0.75em;
 }
 table tr {
-  background: #f8f8f8;
+  background: #F4F6F8;
   border: 1px solid #ddd;
   padding: 0.35em;
 }
@@ -44,6 +44,6 @@ td {
 }
 .StickyNote {
   background-color: rgba(0, 146, 255, 0.73);
-  border: 2px solid #00487e;
+  border: 2px solid #1D4ED8;
   width: 40%;
 }

@@ -522,17 +522,17 @@
    Every queue surface colour routes through a variable; [data-theme] flips them.
    ============================================================================= */
 :root, html[data-theme="light"]{
-  --bg:var(--canvas); --panel:#FFFFFF; --text:#1A1A19; --muted:#6B6B66;
+  --bg:var(--canvas); --panel:#FFFFFF; --text:#1A2027; --muted:#5C6670;
   --border:#C9CFD6; --row-border:#E8ECF0; --row-hover:#F4F6F8;
   --header-bg:#EEF1F4; --scrim:rgba(16,20,26,.30);
-  --accent:#E8722A; --accent-strong:#C85F1E; --accent-soft:#FBE7D6; --on-accent:#FFFFFF;
+  --accent:#B5530E; --accent-strong:#964307; --accent-soft:#F7E7DA; --on-accent:#FFFFFF;
   --badge-fg:#566069; --badge-bg:#EDF0F3;
-  --info-fg:#1E51C0; --info-bg:#E8EFFD;
-  --warn-fg:#9A4D0C; --warn-bg:#FBE7D2;
-  --ok-fg:#1F7A43;   --ok-bg:#E4F2E8;
-  --bad-fg:#B23121;  --bad-bg:#FAE7E4;
+  --info-fg:#1D4ED8; --info-bg:#E2EBF9;
+  --warn-fg:#946300; --warn-bg:#FAF0DA;
+  --ok-fg:#0E7A3D;   --ok-bg:#DCF2E5;
+  --bad-fg:#B42318;  --bad-bg:#FCE9E7;
   --neutral-fg:#566069; --neutral-bg:#E7EBEF;
-  --pri-urgent:#C0392B; --pri-high:#C85F1E; --pri-normal:#6B6B66; --pri-low:#9A958C;
+  --pri-urgent:#B42318; --pri-high:#C85F1E; --pri-normal:#5C6670; --pri-low:#8E99A3;
 }
 html[data-theme="dark"]{
   /* inspired by GitHub "Dim": softer than pure black, layered surfaces
