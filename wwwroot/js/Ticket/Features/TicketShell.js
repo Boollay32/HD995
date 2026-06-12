@@ -39,7 +39,12 @@ const Tabs = {
     applySaveVisibility() {
         const saveBtn = Dom.saveBtn();
         if (!saveBtn) return;
-        saveBtn.hidden = !(State.activeTab === TAB.DETAILS && State.isDirty);
+        // Always present on Details (greyed until dirty); hidden elsewhere.
+        const onDetails = State.activeTab === TAB.DETAILS;
+        saveBtn.hidden = !onDetails;
+        saveBtn.disabled = !State.isDirty;
+        saveBtn.textContent = 'Save Changes';
+        saveBtn.classList.toggle('is-dirty', State.isDirty);
     },
 
     restore() {
