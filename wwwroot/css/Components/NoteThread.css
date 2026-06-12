@@ -118,7 +118,7 @@
   text-decoration: none;
   transition: background 0.15s ease;
 }
-.td-note-file:hover { background: var(--border); }
+.td-note-file:hover { background: var(--row-hover); }
 
 /* ---- composer ---- */
 .td-note-compose {
@@ -355,6 +355,23 @@
   overflow: hidden;
   border-radius: 8px;
   transition: max-width 0.18s ease, background 0.15s ease;
+}
+/* Icon fills the collapsed square tile. */
+.td-note-file .td-file-icon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+}
+/* When expanded, the icon shrinks back to its natural width on the left. */
+.td-note-file:hover .td-file-icon,
+.td-note-file:focus-visible .td-file-icon {
+  width: auto;
+  margin-right: 2px;
 }
 .td-note-file .td-file-name,
 .td-note-file .td-file-size {
