@@ -184,8 +184,8 @@ const MessagesPanel = (() => {
                 });
             }
             el.innerHTML = `
-                <span aria-hidden="true">${Format.fileIcon(att.name)}</span>
-                <span>${Format.escapeHtml(att.name)}</span>`;
+                <span class="td-file-icon" aria-hidden="true">${Format.fileIcon(att.name)}</span>
+                <span class="td-file-name">${Format.escapeHtml(att.name)}</span>`;
             wrap.appendChild(el);
         });
         return wrap;

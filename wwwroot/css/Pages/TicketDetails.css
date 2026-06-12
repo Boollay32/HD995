@@ -1704,3 +1704,41 @@ body {
   .td-att,
   .td-att .td-att-name { transition: none; }
 }
+
+/* ============================================================================
+   Message-bubble attachments as square icon tiles (hover/focus -> full name),
+   consistent with composer chips and note/task attachments.
+   ============================================================================ */
+.td-bubble-file {
+  min-width: 30px;
+  max-width: 30px;
+  height: 30px;
+  padding: 0;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: max-width 0.18s ease, background 0.15s ease;
+}
+.td-bubble-file .td-file-name {
+  max-width: 0;
+  opacity: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: max-width 0.18s ease, opacity 0.12s ease;
+}
+.td-bubble-file:hover,
+.td-bubble-file:focus-visible {
+  max-width: 280px;
+  padding: 0 9px;
+  justify-content: flex-start;
+}
+.td-bubble-file:hover .td-file-name,
+.td-bubble-file:focus-visible .td-file-name {
+  max-width: 220px;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-bubble-file,
+  .td-bubble-file .td-file-name { transition: none; }
+}
