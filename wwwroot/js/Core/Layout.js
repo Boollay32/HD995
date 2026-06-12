@@ -140,25 +140,13 @@ const Layout = {
 // -------------------------  Legacy Wrappers  ------------------------- //
 
 function DisplayScreen() { Layout.displayScreen(); }
-function SetDetailContainerHeight() { Layout.setDetailContainerHeight(); }
 function UTCWorkAround() { return Layout.getUTCOffset(); }
 function ChooseSeason() { Layout.chooseSeason(); }
 function MakeDropDownsEditable() { Layout.makeDropdownsEditable(); }
 function SetCurrentAssignedTech(fieldId) { Layout.setCurrentAssignedTech(fieldId); }
-function SetTableDimentionsAuto() { Layout.setTableDimensions(); }
-function SetHeaderWidths(tableId = 'Table') { Layout.setHeaderWidths(tableId); }
 
 
-// ----- Stats page helpers (define previously-missing globals) ----- //
-function SetTableDimensionsAuto() { Layout.setTableDimensions(); }
 
-// Expand / collapse the stats filter panel (also used by TablePage hover handlers).
-function ExpandFilter(expand) {
-    const box = document.getElementById('Filter-Box');
-    if (box) { box.classList.toggle('expanded', !!expand); box.classList.toggle('collapsed', !expand); }
-    const body = document.getElementById('Filter-Box-Body');
-    if (body) body.style.display = expand ? '' : 'none';
-}
 
 // Render an array of uniform row objects into #Table (dynamic columns from the row keys).
 function CreateDynamicTable(data) {

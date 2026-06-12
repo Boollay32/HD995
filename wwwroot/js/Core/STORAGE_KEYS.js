@@ -43,7 +43,6 @@ const STORAGE_KEYS = {
 
     // -------------------------  Table  ------------------------- //
 
-    TABLE_PAGE_NAME: 'TablePageName',
 
     // -------------------------  Ticket Details  ------------------------- //
 
