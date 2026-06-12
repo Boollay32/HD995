@@ -1825,3 +1825,24 @@ body {
 .td-task-editor .td-ed-area { min-height: 38px; }
 .td-task-editor .td-ed-input { padding: 5px 9px; }
 .td-task-editor .td-ed-title-static { font-size: 13px; }
+
+/* ============================================================================
+   Details tab header: "Details" heading with the Save button top-right.
+   ============================================================================ */
+.td-details-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--td-border-2);
+}
+.td-details-head .td-details-title {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--td-muted);
+}
