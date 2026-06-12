@@ -317,10 +317,14 @@ const Tasks = (() => {
                            value="${H.toInputDate(task.requiredDate)}">
                 </div>
                 <div class="td-ed-row td-ed-important">
-                    <label class="td-ed-check">
-                        <input type="checkbox" data-fld="important" ${task.important ? 'checked' : ''}>
-                        <span>Mark as important</span>
-                    </label>
+                    <button type="button" class="td-imp-pill" data-fld="important"
+                            aria-pressed="${task.important ? 'true' : 'false'}">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 21V4a1 1 0 011-1h11l-2 4 2 4H5"/>
+                        </svg>
+                        <span>${task.important ? 'Important' : 'Mark as important'}</span>
+                    </button>
                 </div>
             </div>
             <div class="td-ed-row">
@@ -335,7 +339,17 @@ const Tasks = (() => {
             </div>
             <div class="td-ed-row">
                 <label class="td-ed-label">Attachments</label>
-                <ul class="td-att-list" data-fld="attachments">${_attListHtml(atts)}</ul>
+                <div class="td-att-wrap">
+                    <ul class="td-att-list" data-fld="attachments">${_attListHtml(atts)}</ul>
+                    <button type="button" class="td-att-add" data-att-add aria-label="Add attachment">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        <span>Add file</span>
+                    </button>
+                    <input type="file" class="td-att-input" data-att-input multiple hidden>
+                </div>
             </div>
             <div class="td-ed-foot">
                 <span class="td-ed-dirty" hidden>Unsaved changes</span>
@@ -373,6 +387,42 @@ const Tasks = (() => {
             });
         };
         wireAttRemoves();
+
+        // Important pill: toggle aria-pressed + label.
+        const impBtn = editor.querySelector('.td-imp-pill');
+        impBtn?.addEventListener('click', () => {
+            const on = impBtn.getAttribute('aria-pressed') !== 'true';
+            impBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+            const lbl = impBtn.querySelector('span');
+            if (lbl) lbl.textContent = on ? 'Important' : 'Mark as important';
+            markDirty();
+        });
+
+        // Add file: encode picked files and append to the kept list.
+        const addBtn = editor.querySelector('[data-att-add]');
+        const fileInput = editor.querySelector('[data-att-input]');
+        addBtn?.addEventListener('click', () => fileInput?.click());
+        fileInput?.addEventListener('change', async () => {
+            const files = Array.from(fileInput.files || []);
+            if (!files.length) return;
+            try {
+                const encoded = await Composer.encode(files);
+                // Composer.encode returns PascalCase; the kept list + renderer
+                // use camelCase, so map before pushing.
+                encoded.forEach(a => editor._kept.push({
+                    attachmentName: a.AttachmentName,
+                    attachmentByteArray: a.AttachmentByteArray,
+                    attachmentImageType: a.AttachmentImageType ?? 0,
+                }));
+                const ul = editor.querySelector('[data-fld="attachments"]');
+                if (ul) { ul.innerHTML = _attListHtml(editor._kept); wireAttRemoves(); }
+                markDirty();
+            } catch (e) {
+                UI.toast?.('Could not attach file', 'warning');
+            } finally {
+                fileInput.value = '';
+            }
+        });
 
         editor.querySelector('[data-act="cancel"]')?.addEventListener('click', _onCancel);
         editor.querySelector('[data-act="save"]')?.addEventListener('click', () => _saveEditor(editor, task, isNew));
@@ -428,7 +478,7 @@ const Tasks = (() => {
         }
 
         const status = parseInt(get('status')?.value ?? '1', 10);
-        const important = get('important')?.checked ? '1' : '0';
+        const important = get('important')?.getAttribute('aria-pressed') === 'true' ? '1' : '0';
         const requiredDate = get('requiredDate')?.value || '';
 
         const assignSel = get('assignedTech');
