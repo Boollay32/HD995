@@ -44,6 +44,7 @@ class CreateUser extends PageBase {
     _setupEventListeners() {
         document.getElementById('SubmitCreatedUser')
             ?.addEventListener('click', () => this.submitUser());
+        Form.gateSubmit(this.formId, 'SubmitCreatedUser');
 
     }
 

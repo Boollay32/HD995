@@ -42,6 +42,7 @@ class CreateRFC extends PageBase {
         // Fix: submit button — replaces onclick in view
         document.getElementById('SubmitCreatedRFC')
             ?.addEventListener('click', () => this.submitRFC());
+        Form.gateSubmit(this.formId, 'SubmitCreatedRFC');
 
         // Fix: attachment drop — replaces ondrop in view
         document.getElementById('AttachBin')
