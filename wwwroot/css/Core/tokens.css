@@ -47,7 +47,7 @@
 :root {
     --panel: #FFFFFF;
     --text: #221F1B;
-    --border: #DAD5CC;
+    --border: #C4BEB2;
     --row-hover: #FAFAF8;
     --canvas: #F1EEE8;       /* page background behind panels */
     --accent: #B5530E;           /* AA: 4.99 with white text */
@@ -63,7 +63,7 @@
 html[data-theme="dark"] {
     --panel: #2D333B;
     --text: #DBE2EA;
-    --border: #444C56;
+    --border: #5A636E;
     --row-hover: #323941;
     --canvas: #21262D;       /* darker than the panels: sections lift */
     --accent: #F0843A;
