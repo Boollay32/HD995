@@ -34,6 +34,24 @@ const MessageBox = {
         UI.showById('MessageBox-Outer-Div');
     },
 
+    // Alert dialogs (single OK) dismiss on Escape or a backdrop click, then
+    // run the same close action as the OK button. Confirm dialogs do not use
+    // this -- a Yes/No choice must be explicit.
+    _bindDismiss(onClose) {
+        const cover = document.getElementById('MessageBox-ScreenCover-Div');
+        const outer = document.getElementById('MessageBox-Outer-Div');
+        if (!cover) return;
+        const close = () => {
+            document.removeEventListener('keydown', onKey);
+            cover.removeEventListener('mousedown', onCover);
+            onClose();
+        };
+        const onKey = (e) => { if (e.key === 'Escape') close(); };
+        const onCover = (e) => { if (!outer || !outer.contains(e.target)) close(); };
+        document.addEventListener('keydown', onKey);
+        cover.addEventListener('mousedown', onCover);
+    },
+
     // -------------------------  Public aliases  ------------------------- //
     // UserSave (and future callers) use show()/confirm(); previously these
     // did not exist, so success popups threw AFTER a successful save and
@@ -67,6 +85,8 @@ const MessageBox = {
 
         buttonDiv.appendChild(okayBtn);
         this._show();
+        this._bindDismiss(() => this.okayButtonPress(loadPage));
+        okayBtn.focus();
     },
 
     buildWithCallback(message, callback) {
@@ -94,6 +114,7 @@ const MessageBox = {
         buttonDiv.appendChild(yesBtn);
         buttonDiv.appendChild(noBtn);
         this._show();
+        noBtn.focus();
     },
 
     // -------------------------  Help  ------------------------- //
