@@ -139,12 +139,3 @@ if (typeof window !== 'undefined') {
     window.userManager = userManager;
 }
 
-// -------------------------  Legacy Wrappers  ------------------------- //
-// Kept for any external callers; write operations now live on UserSave.
-
-function UpdateUser() { userSave.updateUser(); }
-function ManageUser() { userSave.manageUser(); }
-function ResetUserQuestion() { userSave.confirmReset(); }
-function ResetUser() { userSave.resetUser(); }
-function DeleteUserQuestion() { userSave.confirmDelete(); }
-function DeleteUser() { userSave.deleteUser(); }

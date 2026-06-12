@@ -241,5 +241,3 @@ document.addEventListener('DOMContentLoaded', () => page.init());
 
 // -------------------------  Legacy Wrappers  ------------------------- //
 
-function SubmitCreatedTicket() { page.submitTicket(); }
-function selector1DropDown() { page._onRequestTypeChange(); }
