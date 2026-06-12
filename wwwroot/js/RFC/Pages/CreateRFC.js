@@ -1,9 +1,14 @@
 // =============================  CreateRFC.js  ============================= //
+// New RFC page on the modern create-app shell. Composer-style attachments:
+// files are kept on this.files and passed to SaveOriginalNote, which encodes
+// them via Composer.encode -- previously null was passed, so RFC attachments
+// were silently dropped.
 
 class CreateRFC extends PageBase {
     constructor() {
         super();
         this.formId = 'create-rfc';
+        this.files = [];
     }
 
     // -------------------------  Init  ------------------------- //
@@ -28,7 +33,6 @@ class CreateRFC extends PageBase {
 
     _setupPageUI() {
         SetActivePage('RFCMenu');
-        SetDetailContainerHeight();
         UserPermissions();
         ChooseSeason();
         DisplayScreen();
@@ -39,27 +43,86 @@ class CreateRFC extends PageBase {
     // -------------------------  Event Listeners  ------------------------- //
 
     _setupEventListeners() {
-        // Fix: submit button — replaces onclick in view
         document.getElementById('SubmitCreatedRFC')
             ?.addEventListener('click', () => this.submitRFC());
         Form.gateSubmit(this.formId, 'SubmitCreatedRFC');
 
-        // Fix: attachment drop — replaces ondrop in view
-        document.getElementById('AttachBin')
-            ?.addEventListener('drop', (e) => dropIt(e));
+        // Attachments: drop zone + click-to-browse + square icon tiles
+        const bin = document.getElementById('AttachBin');
+        const fileInput = document.getElementById('cr-file-input');
+        bin?.addEventListener('click', () => fileInput?.click());
+        bin?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput?.click(); }
+        });
+        bin?.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            bin.classList.add('is-dragover');
+        });
+        bin?.addEventListener('dragleave', () => bin.classList.remove('is-dragover'));
+        bin?.addEventListener('drop', (e) => {
+            e.preventDefault();
+            bin.classList.remove('is-dragover');
+            this._addFiles(e.dataTransfer?.files);
+        });
+        fileInput?.addEventListener('change', (e) => {
+            this._addFiles(e.target.files);
+            e.target.value = '';
+        });
+    }
 
-        // Fix: file upload — replaces onchange in view
-        document.getElementById('fileupload1')
-            ?.addEventListener('change', (e) => GetByteArray('1', e.target));
+    // -------------------------  Attachments  ------------------------- //
 
-        // Fix: tooltip events — replaces onmouseover/onmouseout in view
-        document.querySelectorAll('[data-tooltip]')
-            .forEach(el => {
-                el.addEventListener('mouseover', () => DisplayToolTip(el));
-                el.addEventListener('mouseout', () => HideToolTip());
+    _addFiles(list) {
+        if (!list?.length) return;
+
+        // Cap the total at 5 attachments, matching the shared Composer.
+        const MAX_ATTACHMENTS = 5;
+        const remaining = MAX_ATTACHMENTS - this.files.length;
+        if (remaining <= 0) {
+            UI.toast?.(`Maximum ${MAX_ATTACHMENTS} attachments allowed`, 'warning');
+            return;
+        }
+        const incoming = Array.from(list);
+        if (incoming.length > remaining) {
+            UI.toast?.(`Maximum ${MAX_ATTACHMENTS} attachments allowed`, 'warning');
+        }
+        this.files.push(...incoming.slice(0, remaining));
+        this._renderAttachmentChips();
+    }
+
+    _renderAttachmentChips() {
+        const holder = document.getElementById('cr-attachment-list');
+        if (!holder) return;
+
+        holder.replaceChildren();
+        this.files.forEach((file, index) => {
+            const chip = document.createElement('span');
+            chip.className = 'ct-att-chip';
+            chip.tabIndex = 0;
+
+            const icon = document.createElement('span');
+            icon.className = 'ct-att-icon';
+            icon.setAttribute('aria-hidden', 'true');
+            icon.innerHTML = (typeof Format !== 'undefined' && Format.fileIcon)
+                ? Format.fileIcon(file.name) : '';
+
+            const name = document.createElement('span');
+            name.className = 'ct-att-name';
+            name.textContent = file.name;
+
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.className = 'ct-att-remove';
+            remove.setAttribute('aria-label', `Remove ${file.name}`);
+            remove.textContent = '\u00d7';
+            remove.addEventListener('click', () => {
+                this.files.splice(index, 1);
+                this._renderAttachmentChips();
             });
 
-        window.addEventListener('resize', () => SetDetailContainerHeight());
+            chip.append(icon, name, remove);
+            holder.appendChild(chip);
+        });
     }
 
     // -------------------------  Submit  ------------------------- //
@@ -67,7 +130,6 @@ class CreateRFC extends PageBase {
     async submitRFC() {
         if (!validateForm(this.formId)) return;
 
-        // Fix: correct button ID — was 'Submit-Button' — not found in view
         const submitButton = document.getElementById('SubmitCreatedRFC');
         if (submitButton) submitButton.disabled = true;
         ToggleWaiting();
@@ -111,11 +173,12 @@ class CreateRFC extends PageBase {
     // -------------------------  Create Success  ------------------------- //
 
     async _handleCreateSuccess(data, note) {
-        // Fix: named properties — replaces magic array indexes data[0], data[1]
         const newRfcId = data.id ?? data.rfcId;
         const message = data.message ?? 'Created';
 
-        SaveOriginalNote(null, true, note, newRfcId);
+        // The description becomes the RFC's first note, now CARRYING the
+        // attachments (previously null was passed and files were lost).
+        await SaveOriginalNote(this.files, true, note, newRfcId);
 
         const assignedTech = document.getElementById('assignedTechName');
         if (assignedTech?.selectedIndex >= 0) {
@@ -130,10 +193,5 @@ class CreateRFC extends PageBase {
 
 // -------------------------  Init  ------------------------- //
 
-// Fix: page hoisted to module scope — legacy wrapper can access it
 const page = new CreateRFC();
 document.addEventListener('DOMContentLoaded', () => page.init());
-
-// -------------------------  Legacy Wrappers  ------------------------- //
-
-function SubmitCreatedRFC() { page.submitRFC(); }

@@ -4,256 +4,126 @@
 }
 
 @section AddCSSToHead {
-    <link rel="stylesheet" type="text/css" href="/css/Pages/CreateForm.css" asp-append-version="true">
     <link rel="stylesheet" type="text/css" href="/css/Addons/Snow.css" asp-append-version="true">
     <link rel="stylesheet" type="text/css" href="/css/Addons/PopupWindows.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/NotesTable.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/FormLayout.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Addons/Attachment.css" asp-append-version="true">
-    <link rel="stylesheet" type="text/css" href="/css/Pages/DetailForm.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Pages/CreateRFC.css" asp-append-version="true">
 }
 
 @section AddJSToHead {
     <script src="~/js/RFC/Pages/CreateRFC.js" asp-append-version="true"></script>
 }
 
-<div id="Main-Div" class="main-section dform dform-rfc">
-    <div id="Detail-Container">
-        <div id="Detail-Header">
-            @* Fix: empty <a> removed *@
-            <div id="header-buttons">
-                @* Fix: onclick removed — handled in CreateRFC.js *@
-                <button type="button" id="SubmitCreatedRFC" class="accept">Submit</button>
-            </div>
-        </div>
+<div id="Main-Div" class="create-app">
 
-        <div id="Detail-Body">
-            <form id="create-rfc">
-                <div id="Detail-Inner">
-                    <div id="Details">
+    <header class="ca-head">
+        <h1>New RFC</h1>
+        <button type="button" id="SubmitCreatedRFC" class="ca-btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <span>Submit RFC</span>
+        </button>
+    </header>
 
-                        <div id="Group-Header">
-                            @* Fix: id="left" → class *@
-                            <div class="left">
-                                <label class="Name">Create RFC</label>
-                            </div>
-                        </div>
+    <form id="create-rfc" class="ca-body">
 
-                        @* Title *@
-                        @* Fix: id="Detail-Div/left/right" → classes — duplicate IDs *@
-                        @* Fix: <lable> → <label> — typo *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="Title">Title</label>
-                            </div>
-                            <div class="right">
-                                <input required maxlength="250" id="Title" class="Value" />
-                            </div>
-                        </div>
+        <section class="ca-panel">
+            <header class="ca-panel-head"><h2>General information</h2></header>
+            <div class="ca-panel-body">
+                <div class="ca-grid">
 
-                        @* Priority *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="Priority">Priority</label>
-                            </div>
-                            <div class="right">
-                                <select required id="Priority" class="Value">
-                                    <option value="1">Emergency</option>
-                                    <option value="2">High</option>
-                                    <option value="3">Medium</option>
-                                    <option value="4">Low</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        @* Description *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="Description">Description</label>
-                            </div>
-                            <div class="right">
-                                @* Fix: inline style — moved to CreateForm.less *@
-                                <textarea required maxlength="1000" id="Description" class="Value"></textarea>
-                            </div>
-                        </div>
-
-                        @* Attachments *@
-                        @* Fix: inline style height:80px — moved to CSS *@
-                        <div class="Detail-Div full attachment-row">
-                            <div class="left">
-                                <label class="Name">Attachments</label>
-                                @* Fix: ondrop removed — handled in Attachments.js *@
-                                <div id="AttachBin">
-                                    @* Fix: inline styles + onmouseover/onmouseout — moved to CSS/JS *@
-                                    @* Fix: Tooltip — non-standard attribute — use data-tooltip *@
-                                    <img draggable="false" alt="Remove attachment" src="images/Bin.png"
-                                         class="attach-bin-icon"
-                                         data-tooltip="Attachment Bin" />
-                                </div>
-                            </div>
-                            <div id="CreateNoteAttachmentList" name="MainNoteAttachHolder">
-                                @* Fix: onmouseover/onmouseout — moved to JS *@
-                                <div class="Attachment-Icon" id="Attachment-Icon1"
-                                     draggable="true"
-                                     data-tooltip="Create Attachment">
-                                    <div value="" class="File-ImageUnset" id="File-Image1">
-                                        <img src="images/PlusIcon.png" alt="">
-                                    </div>
-                                    @* Fix: inline style + onchange — moved to CSS/JS *@
-                                    <input type="file" title=" " class="FileUP"
-                                           name="Value" value="1" id="fileupload1">
-                                    @* Fix: inline style — moved to CSS *@
-                                    <label id="Attach-Label" class="attach-label"></label>
-                                </div>
-                            </div>
-                        </div>
-
-                        @* Approved By *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="ApprovedBy">Approved By</label>
-                            </div>
-                            <div class="right">
-                                <input id="ApprovedBy" class="Value">
-                            </div>
-                        </div>
-
-                        @* Approval Date *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="ApprovalDate">Approval Date</label>
-                            </div>
-                            <div class="right">
-                                <input type="date" id="ApprovalDate" class="Value">
-                            </div>
-                        </div>
-
-                        @* Environment *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="Environment">Environment</label>
-                            </div>
-                            <div class="right">
-                                <select required id="Environment" class="Value">
-                                    <option value="1">Live</option>
-                                    <option value="2">Test</option>
-                                    <option value="3">Live and Test</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        @* Affected Business Systems or Services *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="AffectedBusinessSystemsOrServices">
-                                    Affected Business Systems or Services
-                                </label>
-                            </div>
-                            <div class="right">
-                                <textarea required maxlength="1000"
-                                          id="AffectedBusinessSystemsOrServices"
-                                          class="Value"></textarea>
-                            </div>
-                        </div>
-
-                        @* Affected Customers *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="AffectedCustomers">Affected Customers</label>
-                            </div>
-                            <div class="right">
-                                <textarea required maxlength="250" id="AffectedCustomers" class="Value"></textarea>
-                            </div>
-                        </div>
-
-                        @* Business Justification *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="BusinessJustification">Business Justification</label>
-                            </div>
-                            <div class="right">
-                                <textarea required maxlength="1000" id="BusinessJustification" class="Value"></textarea>
-                            </div>
-                        </div>
-
-                        @* Risk Assessment *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="RiskAssessment">Risk Assessment</label>
-                            </div>
-                            <div class="right">
-                                <textarea required maxlength="1000" id="RiskAssessment" class="Value"></textarea>
-                            </div>
-                        </div>
-
-                        @* Impact Analysis *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="ImpactAnalysis">Impact Analysis</label>
-                            </div>
-                            <div class="right">
-                                <textarea required maxlength="1000" id="ImpactAnalysis" class="Value"></textarea>
-                            </div>
-                        </div>
-
-                        @* Information Security Considerations *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="InformationSecurityConsiderations">
-                                    Information Security Considerations
-                                </label>
-                            </div>
-                            <div class="right">
-                                <textarea required maxlength="1000"
-                                          id="InformationSecurityConsiderations"
-                                          class="Value"></textarea>
-                            </div>
-                        </div>
-
-                        @* Status *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="Status">Status</label>
-                            </div>
-                            <div class="right">
-                                <select required id="Status" class="Value">
-                                    <option value="1">Draft</option>
-                                    <option value="2">New</option>
-                                    <option value="3">Approved</option>
-                                    <option value="4">Rejected</option>
-                                    <option value="5">Approved with condition</option>
-                                    <option value="6">Incomplete</option>
-                                    <option value="7">Complete</option>
-                                    <option value="8">In Progress</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        @* Assigned To *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="assignedTechName">Assigned To</label>
-                            </div>
-                            <div class="right">
-                                <select id="assignedTechName" class="Value"></select>
-                            </div>
-                        </div>
-
-                        @* Target Date *@
-                        <div class="Detail-Div">
-                            <div class="left">
-                                <label class="Name" for="TargetDate">Target Date</label>
-                            </div>
-                            <div class="right">
-                                <input required type="date" id="TargetDate" class="Value" />
-                            </div>
-                        </div>
-
+                    <div class="Detail-Div full">
+                        <div class="left"><label class="Name" for="Title">Title</label></div>
+                        <div class="right"><input required maxlength="250" id="Title" class="Value" /></div>
                     </div>
+
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="Priority">Priority</label></div>
+                            <div class="right"><select required id="Priority" class="Value"><option value="1">Emergency</option><option value="2">High</option><option value="3">Medium</option><option value="4">Low</option></select></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="Status">Status</label></div>
+                            <div class="right"><select required id="Status" class="Value"><option value="1">Draft</option><option value="2">New</option><option value="3">Approved</option><option value="4">Rejected</option><option value="5">Approved with condition</option><option value="6">Incomplete</option><option value="7">Complete</option><option value="8">In Progress</option></select></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="assignedTechName">Assigned To</label></div>
+                            <div class="right"><select id="assignedTechName" class="Value"></select></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="TargetDate">Target Date</label></div>
+                            <div class="right"><input required type="date" id="TargetDate" class="Value" /></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="Environment">Environment</label></div>
+                            <div class="right"><select required id="Environment" class="Value"><option value="1">Live</option><option value="2">Test</option><option value="3">Live and Test</option></select></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="ApprovedBy">Approved By</label></div>
+                            <div class="right"><input id="ApprovedBy" class="Value"></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="ApprovalDate">Approval Date</label></div>
+                            <div class="right"><input type="date" id="ApprovalDate" class="Value"></div>
+                        </div>
+
                 </div>
-            </form>
-        </div>
-    </div>
+            </div>
+        </section>
+
+        <section class="ca-panel ca-panel--custom">
+            <header class="ca-panel-head"><h2>Assessment details</h2></header>
+            <div class="ca-panel-body">
+
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="Description">Description</label></div>
+                            <div class="right"><textarea required maxlength="1000" id="Description" class="Value"></textarea></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="AffectedBusinessSystemsOrServices">Affected Business Systems or Services</label></div>
+                            <div class="right"><textarea required maxlength="1000" id="AffectedBusinessSystemsOrServices" class="Value"></textarea></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="AffectedCustomers">Affected Customers</label></div>
+                            <div class="right"><textarea required maxlength="250" id="AffectedCustomers" class="Value"></textarea></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="BusinessJustification">Business Justification</label></div>
+                            <div class="right"><textarea required maxlength="1000" id="BusinessJustification" class="Value"></textarea></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="RiskAssessment">Risk Assessment</label></div>
+                            <div class="right"><textarea required maxlength="1000" id="RiskAssessment" class="Value"></textarea></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="ImpactAnalysis">Impact Analysis</label></div>
+                            <div class="right"><textarea required maxlength="1000" id="ImpactAnalysis" class="Value"></textarea></div>
+                        </div>
+                        <div class="Detail-Div">
+                            <div class="left"><label class="Name" for="InformationSecurityConsiderations">Information Security Considerations</label></div>
+                            <div class="right"><textarea required maxlength="1000" id="InformationSecurityConsiderations" class="Value"></textarea></div>
+                        </div>
+
+                <div class="Detail-Div full">
+                    <div class="left"><label class="Name">Attachments</label></div>
+                    <div id="AttachBin" role="button" tabindex="0"
+                         aria-label="Add attachments (drag and drop or click to browse)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                        </svg>
+                        <span>Drag &amp; drop files or click to browse</span>
+                    </div>
+                    <input type="file" id="cr-file-input" multiple hidden />
+                    <div id="cr-attachment-list"></div>
+                </div>
+
+            </div>
+        </section>
+
+    </form>
+
 </div>
 
 <div id="Display-Div"></div>
