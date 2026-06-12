@@ -50,6 +50,7 @@ const TaskPopulation = {
         return atts.length
             ? atts.map((a, i) => `
                 <li class="td-att" data-att="${i}">
+                    <span class="td-att-icon" aria-hidden="true">${Format.fileIcon(a.attachmentName || '')}</span>
                     <span class="td-att-name">${TaskPopulation.esc(a.attachmentName || ('Attachment ' + (i + 1)))}</span>
                     <button type="button" class="td-att-remove" data-att-remove="${i}" aria-label="Remove attachment">&times;</button>
                 </li>`).join('')

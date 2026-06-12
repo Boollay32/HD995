@@ -334,9 +334,9 @@ const Notes = (() => {
                 });
             }
             el.innerHTML = `
-                <span aria-hidden="true">${Format.fileIcon(att.name)}</span>
-                <span>${Format.escapeHtml(att.name)}</span>
-                ${att.size != null ? `<span class="mono">${Format.fileSizeLabel(att.size)}</span>` : ''}
+                <span class="td-file-icon" aria-hidden="true">${Format.fileIcon(att.name)}</span>
+                <span class="td-file-name">${Format.escapeHtml(att.name)}</span>
+                ${att.size != null ? `<span class="td-file-size mono">${Format.fileSizeLabel(att.size)}</span>` : ''}
             `;
             wrap.appendChild(el);
         });
