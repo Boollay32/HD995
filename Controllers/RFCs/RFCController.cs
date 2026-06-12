@@ -17,11 +17,17 @@ namespace HelpDeskNet8.Controllers
         private readonly IRFCManager _changeRequestManager = changeRequestM;
         private readonly IAuthenticator _authenticator = auth;
 
+        // RFCs are internal-only. External authority users
+        // (AdminLevel.Authority) must not access any RFC endpoint.
+        private bool IsInternal(IUser user) =>
+            _authenticator.CheckAdmin(user) != Constants.AdminLevel.Authority;
+
         [HttpPost]
         public IActionResult GetRFCs([FromBody] GetRFCsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
+            if (!IsInternal(user)) return StatusCode(403);
 
             var filterDict = new Dictionary<string, string>();
             if (request.Filters != null)
@@ -43,6 +49,7 @@ namespace HelpDeskNet8.Controllers
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
+            if (!IsInternal(user)) return StatusCode(403);
 
             var result = _changeRequestManager.GetRFCDetail(request.RFCId);
             return Ok(result);
@@ -53,6 +60,7 @@ namespace HelpDeskNet8.Controllers
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
+            if (!IsInternal(user)) return StatusCode(403);
 
             var rfcBuild = new Dictionary<string, string>();
             rfcBuild.Add("ChangeRequestID", request.RFCId.ToString());
