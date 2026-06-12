@@ -824,7 +824,7 @@ body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 6px;
   position: relative;
   padding-left: 28px;
 }
@@ -842,8 +842,11 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 0 5px 16px;
+  padding: 6px 10px;
   min-width: 0;
+  background: var(--td-panel);
+  border: 1px solid var(--td-border-2);
+  border-radius: 7px;
   animation: rise 0.25s ease both;
 }
 .td-timeline-item::before {
