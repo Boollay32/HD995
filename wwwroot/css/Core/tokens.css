@@ -7,27 +7,29 @@
    ============================================================= */
 
 :root {
-    /* Brand — orange */
-    --brand:        #D9741F;
+    /* Brand — warm orange (Civic Warmth). #E8633C is the friendly brand
+       hue for DECORATIVE fills only (logo, avatars, progress) -- it does NOT
+       pass AA with text, so anything carrying text uses --accent below. */
+    --brand:        #E8633C;
     --brand-strong: #C2640F;
-    --brand-deep:   #9C4A08;
-    --brand-pale:   #FBE9D6;
-    --brand-line:   #ECCBA8;
+    --brand-deep:   #A4561C;     /* orange AS TEXT (links/nav): 5.35 on white */
+    --brand-pale:   #FDEFE0;
+    --brand-line:   #F6D7BC;
 
-    /* Ink / text (slate) */
-    --ink:      #1A2027;
-    --ink-soft: #3C454E;
-    --muted:    #5C6670;
+    /* Ink / text (warm) */
+    --ink:      #33302C;
+    --ink-soft: #55504A;
+    --muted:    #7A6E60;         /* body min: 4.97 on white, 4.62 on canvas */
 
-    /* Surfaces / lines (slate) */
+    /* Surfaces / lines (warm cream) */
     --paper:   #FFFFFF;
-    --paper-2: #F4F6F8;
-    --line:    #E8ECF0;
-    --line-2:  #C9CFD6;
+    --paper-2: #F7EFE4;
+    --line:    #F0E4D4;
+    --line-2:  #D9C9B4;
 
     /* Status */
     --ok:    #0E7A3D;
-    --warn:  #946300;            /* AA on white */
+    --warn:  #8A5318;            /* darkened for AA on warn-bg: 5.20 */
     --danger:#B42318;
 
     /* Type */
@@ -46,37 +48,43 @@
    app-wide, not only on the list pages -- fixes the unthemed/white footer). */
 :root {
     --panel: #FFFFFF;
-    --text: #1A2027;
-    --border: #C9CFD6;
-    --row-hover: #F4F6F8;
-    --canvas: #EEF1F4;       /* cool slate page background behind panels */
-    --accent: #B5530E;           /* orange kept: AA 4.99 with white text */
-    --accent-strong: #964307;
+    --text: #33302C;
+    --border: #E5D8C6;
+    --row-hover: #FBF6EF;
+    --canvas: #FBF6EF;       /* warm cream page background behind panels */
+    --accent: #B5530E;           /* button orange: AA 4.99 with white text */
+    --accent-strong: #964307;    /* hover: 6.77 with white text */
     --on-accent: #FFFFFF;        /* text on accent-filled controls */
-    --border-strong: #8E99A3;    /* form-control borders */
+    --accent-2: #2C7A6E;         /* teal companion: 5.10 white text, 7.72 as text */
+    --accent-2-strong: #225F56;
+    --accent-2-bg: #D7EDE9;      /* teal tint for 'open' pills (text #1F5249: 7.28) */
+    --border-strong: #B59E82;    /* form-control borders: 3:1+ warm */
     --info: #1D4ED8;
-    --ok-bg: #DCF2E5;
-    --warn-bg: #FAF0DA;
-    --danger-bg: #FCE9E7;
+    --ok-bg: #D7EDE9;
+    --warn-bg: #FBE6CF;
+    --danger-bg: #FAE3DF;
     --info-bg: #E2EBF9;
 }
 html[data-theme="dark"] {
-    --panel: #2D333B;
-    --text: #DBE2EA;
-    --border: #5A636E;
-    --row-hover: #323941;
-    --canvas: #21262D;       /* darker than the panels: sections lift */
-    --accent: #F0843A;
+    --panel: #2B2724;        /* warm charcoal panel */
+    --text: #E8E0D6;         /* warm off-white: 11.33 on panel */
+    --border: #544D45;
+    --row-hover: #34302C;
+    --canvas: #1E1B19;       /* darker warm canvas: sections lift */
+    --accent: #F0843A;           /* bright orange; dark text on it: 6.39 */
     --accent-strong: #FF9A55;
-    --on-accent: #1B1F24;        /* dark text on the bright accent: 6.36 */
-    --border-strong: #828E9C;    /* form-control borders: 3:1+ */
-    --muted: #9AA4AE;
+    --on-accent: #2A1B0E;        /* dark text on the bright accent */
+    --accent-2: #5FCDBC;         /* teal on dark: 7.72 as text on panel */
+    --accent-2-strong: #7FD6C5;
+    --accent-2-bg: #234640;      /* teal tint (text #7FD6C5: 6.10) */
+    --border-strong: #7D7468;    /* form-control borders: 3.22 on panel */
+    --muted: #A89C8E;            /* 5.51 on panel */
     --ok: #5FD08A;
     --warn: #E2A24F;
     --danger: #F0867A;
     --info: #88A7F2;
-    --ok-bg: #16301F;
-    --warn-bg: #352B16;
+    --ok-bg: #234640;
+    --warn-bg: #3D3322;
     --danger-bg: #3A2220;
     --info-bg: #1E2A44;
 }
