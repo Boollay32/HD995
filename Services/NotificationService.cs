@@ -1,5 +1,7 @@
 ﻿using HelpDeskNet8.Infrastructure;
 using HelpDeskNet8.Interfaces.Shared;
+using HelpDeskNet8.Interfaces.RFCs;
+using System.Linq;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
 
@@ -16,11 +18,13 @@ namespace HelpDeskNet8.Services
 
         private readonly ITicketManager _ticketManager;
         private readonly IMiscManager _miscManager;
+        private readonly IRFCManager _rfcManager;
 
-        public NotificationService(ITicketManager ticketManager, IMiscManager miscManager)
+        public NotificationService(ITicketManager ticketManager, IMiscManager miscManager, IRFCManager rfcManager)
         {
             _ticketManager = ticketManager;
             _miscManager = miscManager;
+            _rfcManager = rfcManager;
         }
 
         public void Notify(int ticketId, NotificationType type, IUser user)
@@ -39,6 +43,35 @@ namespace HelpDeskNet8.Services
                 string body = BuildBody(type, ticketId);
 
                 _miscManager.SendMailMessage(FromAddress, new[] { recipient }, subject, body);
+            }
+            catch
+            {
+                // A notification failure must never break the originating save.
+            }
+        }
+
+        // RFC notifications. Internal-only: both reply and assign go to the
+        // assigned tech + the originator. Recipients are identical for both
+        // types; the type only selects the wording.
+        public void NotifyRFC(int rfcId, NotificationType type)
+        {
+            try
+            {
+                if (rfcId <= 0) return;
+
+                IRFC rfc = _rfcManager.GetRFCDetail(rfcId);
+                if (rfc == null) return;
+
+                string[] recipients = new[] { rfc.AssignedTechEmail, rfc.OriginatorEmail }
+                    .Where(e => !string.IsNullOrWhiteSpace(e))
+                    .Distinct()
+                    .ToArray();
+                if (recipients.Length == 0) return;
+
+                string subject = BuildSubject(type, rfcId);
+                string body = BuildBody(type, rfcId);
+
+                _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
             }
             catch
             {
@@ -92,6 +125,8 @@ namespace HelpDeskNet8.Services
                 NotificationType.NoteResponded => $"Responded Ticket {ticketId}",
                 NotificationType.TicketResponded => $"Responded Ticket {ticketId}",
                 NotificationType.TicketAssigned => $"Assigned Ticket {ticketId}",
+                NotificationType.RFCResponded => $"Responded RFC {ticketId}",
+                NotificationType.RFCAssigned => $"Assigned RFC {ticketId}",
                 _ => $"Notification - Ticket {ticketId}",
             };
         }
@@ -110,6 +145,10 @@ namespace HelpDeskNet8.Services
                     $"Ticket {ticketId} has been responded to. It may require your attention, please review.",
                 NotificationType.TicketAssigned =>
                     $"Ticket {ticketId} has been assigned to you. It may require your attention, please review.",
+                NotificationType.RFCResponded =>
+                    $"RFC {ticketId} has been updated. It may require your attention, please review.",
+                NotificationType.RFCAssigned =>
+                    $"RFC {ticketId} has been assigned to you. It may require your attention, please review.",
                 _ => $"Ticket {ticketId} has an update.",
             };
 

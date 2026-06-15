@@ -12,10 +12,11 @@ namespace HelpDeskNet8.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class RFCController(IRFCManager changeRequestM, IAuthenticator auth) : ControllerBase
+    public class RFCController(IRFCManager changeRequestM, IAuthenticator auth, INotificationService notificationService) : ControllerBase
     {
         private readonly IRFCManager _changeRequestManager = changeRequestM;
         private readonly IAuthenticator _authenticator = auth;
+        private readonly INotificationService _notificationService = notificationService;
 
         // RFCs are internal-only. External authority users
         // (AdminLevel.Authority) must not access any RFC endpoint.
@@ -83,6 +84,17 @@ namespace HelpDeskNet8.Controllers
                 : _changeRequestManager.SaveRFC((int)user.UserID, rfc, request.UTC);
 
             if (result[0]?.ToString() == "Error") return BadRequest(result);
+
+            // Notify the assigned tech + originator. 'Created' uses the assign
+            // wording, an update uses the reply wording; recipients are the same.
+            if (result.Count > 1 && int.TryParse(result[1]?.ToString(), out int savedRfcId))
+            {
+                NotificationType rfcType = result[0]?.ToString() == "Created"
+                    ? NotificationType.RFCAssigned
+                    : NotificationType.RFCResponded;
+                _notificationService.NotifyRFC(savedRfcId, rfcType);
+            }
+
             return Ok(result);
         }
 
