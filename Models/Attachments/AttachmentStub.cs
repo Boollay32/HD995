@@ -15,6 +15,18 @@ namespace HelpDeskNet8.Models.Attachments
         public int AttachmentImageType { get; set; }        
         public DateTime? AttachmentDate { get; set; }
 
+        // Defensively convert the Attachment column to base64 regardless of how
+        // the driver surfaces it: byte[], an already-base64 string, DBNull/null,
+        // or another binary shape. Returns null only when there is no data.
+        private static string ToBase64(object value)
+        {
+            if (value == null || value is System.DBNull) return null;
+            if (value is byte[] bytes) return bytes.Length > 0 ? System.Convert.ToBase64String(bytes) : null;
+            if (value is string s) return string.IsNullOrWhiteSpace(s) ? null : s;
+            try { return System.Convert.ToBase64String((byte[])value); }
+            catch { return null; }
+        }
+
         internal static IAttachment FromReader(IDataReader reader)
         {
             AttachmentStub newAttachment = null;
@@ -25,7 +37,7 @@ namespace HelpDeskNet8.Models.Attachments
                 {
                     AttachmentID = (int)reader["AttachmentID"],
                     NoteID = (int)reader["NoteID"],
-                    AttachmentByteArray = reader["Attachment"] is byte[] b1 ? Convert.ToBase64String(b1) : null,
+                    AttachmentByteArray = ToBase64(reader["Attachment"]),
                     AttachmentDate = (DateTime)reader["AttachmentDate"],
                     AttachmentName = (string)reader["AttachmentInfo"],
                     AttachmentImageType = (int)reader["AttachmentImageType"],
@@ -41,7 +53,7 @@ namespace HelpDeskNet8.Models.Attachments
                     {
                         AttachmentID = (int)reader["AttachmentID"],
                         NoteID = (int)reader["TaskID"],
-                        AttachmentByteArray = reader["Attachment"] is byte[] b2 ? Convert.ToBase64String(b2) : null,
+                        AttachmentByteArray = ToBase64(reader["Attachment"]),
                         AttachmentDate = (DateTime)reader["AttachmentDate"],
                         AttachmentName = (string)reader["AttachmentInfo"],
                         AttachmentImageType = (int)reader["AttachmentImageType"],
