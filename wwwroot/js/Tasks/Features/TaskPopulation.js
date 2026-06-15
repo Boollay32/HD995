@@ -48,12 +48,19 @@ const TaskPopulation = {
 
     attListHtml(atts) {
         return atts.length
-            ? atts.map((a, i) => `
+            ? atts.map((a, i) => {
+                const nm = TaskPopulation.esc(a.attachmentName || ('Attachment ' + (i + 1)));
+                const canOpen = !!a.attachmentByteArray;
+                const nameEl = canOpen
+                    ? `<button type="button" class="td-att-name td-att-open" data-att-open="${i}" title="Open ${nm}">${nm}</button>`
+                    : `<span class="td-att-name">${nm}</span>`;
+                return `
                 <li class="td-att" data-att="${i}">
                     <span class="td-att-icon" aria-hidden="true">${Format.fileIcon(a.attachmentName || '')}</span>
-                    <span class="td-att-name">${TaskPopulation.esc(a.attachmentName || ('Attachment ' + (i + 1)))}</span>
+                    ${nameEl}
                     <button type="button" class="td-att-remove" data-att-remove="${i}" aria-label="Remove attachment">&times;</button>
-                </li>`).join('')
+                </li>`;
+            }).join('')
             : '<li class="td-att-empty">No attachments</li>';
     },
 

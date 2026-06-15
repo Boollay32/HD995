@@ -145,6 +145,15 @@ const Tasks = (() => {
                 API.authPayload({ filters: { TicketID: String(State.ticketId) } })
             );
             State.tasks = Array.isArray(data) ? data : [];
+            // Attachments are not returned by GetTasks; fetch them
+            // separately and merge by task id so they display + open.
+            try {
+                const attMap = await Composer.fetchTaskAttachments(State.ticketId);
+                State.tasks.forEach(t => {
+                    const tid = t.taskID;
+                    t.attachments = (attMap.get(tid) || attMap.get(String(tid)) || []);
+                });
+            } catch (e) { /* non-fatal: tasks still render without attachments */ }
             _render();
 
             // Arriving from the Tasks queue: auto-expand the task the user
@@ -377,6 +386,12 @@ const Tasks = (() => {
         });
 
         const wireAttRemoves = () => {
+            editor.querySelectorAll('[data-att-open]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const a = editor._kept[parseInt(btn.dataset.attOpen, 10)];
+                    if (a && a.attachmentByteArray) Composer.download(a.attachmentName, a.attachmentByteArray);
+                });
+            });
             editor.querySelectorAll('[data-att-remove]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     editor._kept.splice(parseInt(btn.dataset.attRemove, 10), 1);
