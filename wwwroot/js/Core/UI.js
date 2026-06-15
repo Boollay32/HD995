@@ -248,7 +248,7 @@ UI._ensureToastStyles = function () {
     s.textContent = `
 #ui-toast-host { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; gap: 8px; z-index: 4000; pointer-events: none; }
-.ui-toast { font-family: 'Spline Sans', system-ui, sans-serif; font-size: 13.5px; font-weight: 500;
+.ui-toast { font-family: 'Spline Sans', system-ui, sans-serif; font-size: 0.84375rem; font-weight: 500;
   background: var(--panel, #fff); color: var(--text, #1D1C1A);
   border: 1px solid var(--border, #D8D3C8); border-left-width: 4px; border-radius: 9px;
   padding: 10px 16px; box-shadow: 0 6px 22px rgba(0,0,0,0.18);
@@ -260,7 +260,7 @@ UI._ensureToastStyles = function () {
 .ui-toast--info    { border-left-color: var(--info, #0277bd); }
 .ui-av { display: inline-flex; align-items: center; justify-content: center;
   width: 18px; height: 18px; border-radius: 50%; margin-right: 6px; flex: none;
-  font-family: 'Spline Sans', system-ui, sans-serif; font-size: 9.5px; font-weight: 700;
+  font-family: 'Spline Sans', system-ui, sans-serif; font-size: 0.59375rem; font-weight: 700;
   color: #fff; letter-spacing: .02em; vertical-align: -4px; }
 `;
     document.head.appendChild(s);

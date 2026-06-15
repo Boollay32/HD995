@@ -130,9 +130,9 @@ class TaskPage extends PageBase {
             previewHeader: r => `<div class="qv-pv-tid">#${r.taskID}${r.ticketID ? ` · Ticket #${r.ticketID}` : ''}</div><div class="qv-pv-title">${KQesc(r.title)}</div>
                 <div class="qv-pv-meta"><span class="qv-status" style="color:${KQstatusColor(r._status)[0]};background:${KQstatusColor(r._status)[1]}">${KQesc(r._status)}</span></div>`,
             preview: r => `<h3 class="qv-pv-h">Detail</h3>
-                <div style="font-size:12.5px;line-height:1.6;margin-bottom:10px">${KQesc(r.description) || '—'}</div>
+                <div style="font-size:0.78125rem;line-height:1.6;margin-bottom:10px">${KQesc(r.description) || '—'}</div>
                 <h3 class="qv-pv-h">At a glance</h3>
-                <div style="font-size:12.5px;line-height:1.9">
+                <div style="font-size:0.78125rem;line-height:1.9">
                   <div>Assignee&nbsp; ${r.assignedTech ? KQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</div>
                   <div>Required by&nbsp; ${KQdate(r.requiredDate)}</div>
                   <div>Parent&nbsp; ${r.ticketID ? `Ticket #${r.ticketID}` : '—'}</div>

@@ -137,12 +137,12 @@ class UserPage extends PageBase {
             preview: r => {
                 const s = UQstatus(r);
                 return `<h3 class="qv-pv-h">Contact</h3>
-                    <div style="font-size:12.5px;line-height:1.9">
+                    <div style="font-size:0.78125rem;line-height:1.9">
                       <div>Email&nbsp; ${r.email ? UQesc(r.email) : '—'}</div>
                       <div>Phone&nbsp; ${r.phone ? UQesc(r.phone) : '—'}</div>
                     </div>
                     <h3 class="qv-pv-h">Account</h3>
-                    <div style="font-size:12.5px;line-height:1.9">
+                    <div style="font-size:0.78125rem;line-height:1.9">
                       <div>Status&nbsp; <span class="qv-status" style="color:${s.color};background:${s.bg}">${s.label}</span></div>
                       <div>Last login&nbsp; ${UQdate(r.lastLoginDate)}</div>
                     </div>`;

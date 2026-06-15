@@ -118,9 +118,9 @@ class RFCPage extends PageBase {
             preview: r => {
                 const c = RQstatusColor(r.status);
                 return `<h3 class="qv-pv-h">Raised by</h3>
-                    <div style="font-size:12.5px;line-height:1.9;margin-bottom:6px">${RQesc(r.createdBy)}</div>
+                    <div style="font-size:0.78125rem;line-height:1.9;margin-bottom:6px">${RQesc(r.createdBy)}</div>
                     <h3 class="qv-pv-h">At a glance</h3>
-                    <div style="font-size:12.5px;line-height:1.9">
+                    <div style="font-size:0.78125rem;line-height:1.9">
                       <div>Status&nbsp; <span class="qv-status" style="color:${c[0]};background:${c[1]}">${RQesc(r.status)}</span></div>
                       <div>Assignee&nbsp; ${r.assignedTech ? RQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</div>
                       <div>Target&nbsp; ${RQdate(r.targetDate)}</div>

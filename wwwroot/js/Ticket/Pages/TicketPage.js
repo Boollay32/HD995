@@ -137,9 +137,9 @@ class TicketPage extends PageBase {
                 const note = (r.notes || '').trim();
                 const snippet = note.length > 220 ? note.slice(0, 220) + '…' : note;
                 return `<h3 class="qv-pv-h">Requester</h3>
-                <div class="qv-assignee" style="margin-bottom:14px"><span class="qv-av" style="background:${TQavColor(r.userName)};width:28px;height:28px;font-size:10px">${TQinitials(r.userName)}</span><div><div style="font-weight:600;font-size:13px">${TQesc(r.userName)}</div><div style="font-size:11.5px;color:var(--muted, #6A655C)">${TQesc(r.authority)}</div></div></div>
+                <div class="qv-assignee" style="margin-bottom:14px"><span class="qv-av" style="background:${TQavColor(r.userName)};width:28px;height:28px;font-size:0.625rem">${TQinitials(r.userName)}</span><div><div style="font-weight:600;font-size:0.8125rem">${TQesc(r.userName)}</div><div style="font-size:0.71875rem;color:var(--muted, #6A655C)">${TQesc(r.authority)}</div></div></div>
                 <h3 class="qv-pv-h">At a glance</h3>
-                <div style="font-size:12.5px;line-height:1.9">
+                <div style="font-size:0.78125rem;line-height:1.9">
                   <div>Status&nbsp; <span class="qv-status" style="color:${sc[0]};background:${sc[1]}">${TQesc(r.status)}</span></div>
                   <div>Priority&nbsp; <span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span></div>
                   <div>Type&nbsp; ${TQesc(r.requestType)}</div>
@@ -148,7 +148,7 @@ class TicketPage extends PageBase {
                   <div>Last activity&nbsp; ${TQago(r.updated)}</div>
                   ${r.notify ? '<div style="color:var(--accent-strong);font-weight:600">● Awaiting reply</div>' : ''}
                 </div>
-                ${snippet ? `<h3 class="qv-pv-h">Latest note</h3><div style="font-size:12.5px;line-height:1.6">${TQesc(snippet)}</div>` : ''}`;
+                ${snippet ? `<h3 class="qv-pv-h">Latest note</h3><div style="font-size:0.78125rem;line-height:1.6">${TQesc(snippet)}</div>` : ''}`;
             },
             onOpen: r => this._open(r),
         };
