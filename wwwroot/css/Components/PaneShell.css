@@ -447,11 +447,11 @@ html[data-theme="dark"] {
 }
 
 /* ---- Collapsed-pane grid tracks (uses :has, as on TicketDetails) ---- */
-.td-shell:has(.td-pane--left.is-collapsed) { grid-template-columns: 48px 1fr; }
+.td-shell:has(.td-pane--left.is-collapsed) { grid-template-columns: 48px 8px 1fr; }
 
-.td-shell:has(.td-pane--right.is-collapsed) { grid-template-columns: 1fr 48px; }
+.td-shell:has(.td-pane--right.is-collapsed) { grid-template-columns: 1fr 8px 48px; }
 
-.td-shell:has(.td-pane--left.is-collapsed):has(.td-pane--right.is-collapsed) { grid-template-columns: 48px 48px; }
+.td-shell:has(.td-pane--left.is-collapsed):has(.td-pane--right.is-collapsed) { grid-template-columns: 48px 8px 48px; }
 
 /* ---- Narrow screens ---- */
 @media (max-width: 860px) {
