@@ -18,10 +18,12 @@ namespace HelpDeskNet8.Controllers.Tickets
     public class TicketController(
         ITicketManager ticketM,
         IAuthenticator auth,
-        IDropdowns dropDownProv) : ControllerBase
+        IDropdowns dropDownProv,
+        INotificationService notificationService) : ControllerBase
     {
         private readonly ITicketManager _ticketManager = ticketM;
         private readonly IDropdowns _dropDown = dropDownProv;
+        private readonly INotificationService _notificationService = notificationService;
 
         // GetTicketDetail removed - the detail page calls
         // TicketDetailsController.GetTicketDetail (with id validation + NotFound).
@@ -55,6 +57,12 @@ namespace HelpDeskNet8.Controllers.Tickets
                 user.AuthorityID = request.ContactClientAuthorityId.Value;
             }
 
+            // On update, capture the current assigned tech so we can tell a
+            // re-assignment ('Assigned') from a plain reply ('Responded').
+            int? oldAssignedTechId = null;
+            if (ticket.TicketID != null)
+                oldAssignedTechId = _ticketManager.GetTicketDetail(ticket.TicketID.Value, user)?.AssignedTechID;
+
             // Fix: SaveResult — strongly typed — replaces List<object> index access
             SaveResult result = ticket.TicketID != null
                 ? _ticketManager.SaveTicket(ticket.GetChanges(), user, request.UTC, request.FalseReply, request.EmailSent, visibleToClient: 1)
@@ -62,6 +70,20 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
+
+            // Notify on update only: Assigned if the tech changed, else Responded.
+            if (ticket.TicketID != null)
+            {
+                var saved = _ticketManager.GetTicketDetail(ticket.TicketID.Value, user);
+                if (saved != null)
+                {
+                    bool techChanged = oldAssignedTechId != saved.AssignedTechID;
+                    NotificationType type = techChanged
+                        ? NotificationType.TicketAssigned
+                        : NotificationType.TicketResponded;
+                    _notificationService.Notify(ticket.TicketID.Value, type, user);
+                }
+            }
 
             return Ok(result);
         }
