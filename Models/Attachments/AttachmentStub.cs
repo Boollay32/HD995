@@ -25,7 +25,7 @@ namespace HelpDeskNet8.Models.Attachments
                 {
                     AttachmentID = (int)reader["AttachmentID"],
                     NoteID = (int)reader["NoteID"],
-                    AttachmentByteArray = (string)reader["Attachment"],
+                    AttachmentByteArray = reader["Attachment"] is byte[] b1 ? Convert.ToBase64String(b1) : null,
                     AttachmentDate = (DateTime)reader["AttachmentDate"],
                     AttachmentName = (string)reader["AttachmentInfo"],
                     AttachmentImageType = (int)reader["AttachmentImageType"],
@@ -41,7 +41,7 @@ namespace HelpDeskNet8.Models.Attachments
                     {
                         AttachmentID = (int)reader["AttachmentID"],
                         NoteID = (int)reader["TaskID"],
-                        AttachmentByteArray = (string)reader["Attachment"],
+                        AttachmentByteArray = reader["Attachment"] is byte[] b2 ? Convert.ToBase64String(b2) : null,
                         AttachmentDate = (DateTime)reader["AttachmentDate"],
                         AttachmentName = (string)reader["AttachmentInfo"],
                         AttachmentImageType = (int)reader["AttachmentImageType"],
