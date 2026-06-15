@@ -8,6 +8,9 @@ namespace HelpDeskNet8.Interfaces.Shared
     {
         // A task on the ticket was created, updated, or completed.
         TaskSaved,
+
+        // A note/reply was added to the ticket.
+        NoteResponded,
     }
 
     // Server-side notification routing. Resolves the recipients for a ticket
