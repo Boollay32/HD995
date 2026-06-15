@@ -58,7 +58,7 @@
   height: 100%;
 }
 #MessageBox-ScreenCover-Div #MessageBox-Outer-Div #MessageBox-Message {
-  text-align: left;
+  text-align: center;
   margin: 0;
   position: relative;
   box-sizing: border-box;
@@ -76,7 +76,7 @@
 }
 #MessageBox-ScreenCover-Div #MessageBox-Outer-Div #Button-Div {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 9px;
   margin-top: auto;
 }
