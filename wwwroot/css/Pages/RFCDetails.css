@@ -76,7 +76,8 @@
 
 /* 30/70 split: notes left, workspace right */
 .rfc-app .td-shell {
-  --shell-cols: 3fr 7fr;
+  --shell-cols: 3fr;
+  --shell-cols-r: 7fr;
 }
 
 /* Notes pane: thread scrolls, composer pinned beneath it */

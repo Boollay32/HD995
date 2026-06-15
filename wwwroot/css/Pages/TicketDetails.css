@@ -1525,7 +1525,7 @@ body {
 /* Collapse: the shell is a grid, so a collapsed pane's width:48px alone
    won't reflow the tracks -- retarget the columns so the open pane fills. */
 /* Messages/Workspace split: 30/70 across the whole page (PaneShell knob). */
-#TicketDetails-App .td-shell { --shell-cols: 3fr 7fr; }
+#TicketDetails-App .td-shell { --shell-cols: 3fr; --shell-cols-r: 7fr; }
 
 /* ============================================================================
    Wide workspace (Messages collapsed, or workspace-only layout): the open
