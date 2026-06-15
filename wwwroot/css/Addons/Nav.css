@@ -138,6 +138,7 @@ html[data-theme="dark"] .qv-theme .qv-knob{ transform:translateX(22px); }
 .qv-font-opt:nth-child(3){ font-size:0.9375rem; }
 .qv-font-opt:hover{ color:var(--text); }
 .qv-font-opt[aria-pressed="true"]{ background:var(--accent); color:var(--on-accent); }
+.qv-font-lbl{ color:var(--muted); font-size:0.75rem; font-weight:600; margin-right:4px; }
 
 
 /* ============= Footer ============= */

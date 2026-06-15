@@ -27,6 +27,8 @@ const FontSize = {
         document.querySelectorAll('.qv-font-opt').forEach(b => {
             b.setAttribute('aria-pressed', String(b.dataset.size === v));
         });
+        const lbl = v[0].toUpperCase() + v.slice(1);
+        document.querySelectorAll('.qv-font-lbl').forEach(l => { l.textContent = lbl; });
     },
 
     set(v) { this.apply(v); },
@@ -38,7 +40,7 @@ const FontSize = {
         wrap.className = 'qv-font';
         wrap.setAttribute('role', 'group');
         wrap.setAttribute('aria-label', 'Text size');
-        wrap.innerHTML = this.SIZES.map(s =>
+        wrap.innerHTML = '<span class="qv-font-lbl"></span>' + this.SIZES.map(s =>
             '<button type="button" class="qv-font-opt" data-size="' + s +
             '" aria-label="' + s[0].toUpperCase() + s.slice(1) + ' text" title="' +
             s[0].toUpperCase() + s.slice(1) + '">A</button>'
