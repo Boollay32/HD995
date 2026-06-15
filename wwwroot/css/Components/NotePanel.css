@@ -48,7 +48,7 @@
   min-height: 0;
 }
 #NoteInstruction {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 #NewNoteText {
@@ -59,7 +59,7 @@
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 8px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-family: inherit;
   box-sizing: border-box;
   background: var(--panel);

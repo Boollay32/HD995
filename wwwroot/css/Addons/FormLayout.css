@@ -23,7 +23,7 @@
   gap: 12px;
 }
 #History .HistoryDiv .History-Div label {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-family: Calibri;
   color: var(--text);
 }

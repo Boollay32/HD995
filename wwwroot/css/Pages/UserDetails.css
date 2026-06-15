@@ -41,7 +41,7 @@
 }
 
 .ud-eyebrow {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -49,7 +49,7 @@
 }
 
 .ud-id {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 600;
   color: var(--text);
   text-decoration: none;
@@ -74,7 +74,7 @@
   align-items: center;
   gap: 7px;
   font: inherit;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1;
   padding: 9px 15px;
@@ -160,7 +160,7 @@
   justify-content: center;
   background: var(--info-bg);
   color: var(--info);
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -174,13 +174,13 @@
 }
 
 .ud-name {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
 }
 
 .ud-role {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 
@@ -188,7 +188,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   padding: 6px 13px;
   border-radius: 999px;
@@ -231,7 +231,7 @@
 .ud-card-title {
   margin: 0 0 14px;
   padding: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -252,13 +252,13 @@
 }
 
 .ud-label {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   color: var(--muted);
 }
 
 .ud-value {
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--text);
   min-height: 20px;
   word-break: break-word;
@@ -281,7 +281,7 @@
 .ud-input,
 .ud-select {
   font: inherit;
-  font-size: 14px;
+  font-size: 0.875rem;
   width: 100%;
   height: 38px;
   padding: 9px 11px;

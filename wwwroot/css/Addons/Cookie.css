@@ -9,7 +9,7 @@
     background: #232A31;
     color: #eeeeee;
     font-family: Calibri, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.6;
     text-align: center;
     padding: 16px 20px;
@@ -50,7 +50,7 @@
         padding: 8px 16px;
         margin: 4px 6px;
         font-weight: 600;
-        font-size: 13px;
+        font-size: 0.8125rem;
         transition: all 0.2s ease;
         border: 1px solid transparent;
         cursor: pointer;
@@ -103,7 +103,7 @@
 @media screen and (max-width: 768px) {
     #cookie-bar {
         padding: 12px 16px;
-        font-size: 13px;
+        font-size: 0.8125rem;
     }
 
         #cookie-bar p {
@@ -116,7 +116,7 @@
             display: inline-block;
             margin: 4px 4px;
             padding: 8px 12px;
-            font-size: 12px;
+            font-size: 0.75rem;
         }
 }
 

@@ -20,7 +20,7 @@
   border-radius: 3px;
   background-color: var(--accent);
   color: var(--ink, #1A2027);
-  font-size: 20px;
+  font-size: 1.25rem;
   min-width: 100px;
   margin: 0;
 }
@@ -45,6 +45,6 @@ button.cancel {
   border-bottom: 3px solid var(--border);
   background-color: var(--row-hover);
   color: var(--text);
-  font-size: 20px;
+  font-size: 1.25rem;
   min-width: 100px;
 }
