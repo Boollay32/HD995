@@ -123,6 +123,29 @@ const Composer = (() => {
         }
     }
 
+    // Fetch all task attachments for a ticket, grouped by taskID. Mirrors
+    // fetchNoteAttachments; GetAttachmentsTasks returns rows keyed by
+    // noteID, which carries the TaskID for tasks.
+    async function fetchTaskAttachments(ticketId) {
+        try {
+            const data = await API.post(
+                'Attachment/GetAttachmentsTasks',
+                API.authPayload({ ticketId })
+            );
+            const map = new Map();
+            (Array.isArray(data) ? data : []).forEach(a => {
+                const tid = a.noteID;
+                if (tid == null) return;
+                if (!map.has(tid)) map.set(tid, []);
+                map.get(tid).push(a);
+            });
+            return map;
+        } catch (err) {
+            console.error('Composer.fetchTaskAttachments:', err);
+            return new Map();
+        }
+    }
+
     // ---- instance ---- //
 
     function create(cfg) {
@@ -286,7 +309,7 @@ const Composer = (() => {
         };
     }
 
-    return { create, encode, download, fetchNoteAttachments };
+    return { create, encode, download, fetchNoteAttachments, fetchTaskAttachments };
 
 })();
 
