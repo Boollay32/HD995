@@ -17,6 +17,12 @@ namespace HelpDeskNet8.Interfaces.Shared
 
         // A ticket's assigned tech was changed.
         TicketAssigned,
+
+        // An RFC was saved as a reply / update.
+        RFCResponded,
+
+        // An RFC was created or its assigned tech changed.
+        RFCAssigned,
     }
 
     // Server-side notification routing. Resolves the recipients for a ticket
@@ -25,5 +31,9 @@ namespace HelpDeskNet8.Interfaces.Shared
     public interface INotificationService
     {
         void Notify(int ticketId, NotificationType type, IUser user);
+
+        // RFCs are internal-only; recipients come from the RFC itself, so no
+        // IUser is needed for scoping.
+        void NotifyRFC(int rfcId, NotificationType type);
     }
 }
