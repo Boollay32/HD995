@@ -22,7 +22,14 @@ namespace HelpDeskNet8.Models.Attachments
         {
             if (value == null || value is System.DBNull) return null;
             if (value is byte[] bytes) return bytes.Length > 0 ? System.Convert.ToBase64String(bytes) : null;
-            if (value is string s) return string.IsNullOrWhiteSpace(s) ? null : s;
+            if (value is string s)
+            {
+                // A string here is raw bytes surfaced as text, not base64.
+                // Latin1 maps each char 1:1 to a byte, recovering the
+                // original bytes; base64-encode those for the client.
+                if (string.IsNullOrEmpty(s)) return null;
+                return System.Convert.ToBase64String(System.Text.Encoding.Latin1.GetBytes(s));
+            }
             try { return System.Convert.ToBase64String((byte[])value); }
             catch { return null; }
         }
