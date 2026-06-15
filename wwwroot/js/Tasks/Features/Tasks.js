@@ -523,6 +523,8 @@ const Tasks = (() => {
             State.tasks = Array.isArray(data) ? data : State.tasks;
             _render();
             UI.toast?.(successMsg, 'success');
+            // Refresh the activity timeline so the new/updated task shows.
+            if (typeof Activity !== 'undefined') Activity.refresh();
             _notifyTask(data);
         } catch (err) {
             console.error('Tasks._commit:', err);
