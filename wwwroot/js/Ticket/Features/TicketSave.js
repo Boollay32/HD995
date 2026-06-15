@@ -167,39 +167,6 @@ const Save = {
     },
 
     // Email the ticket's watchers after a save. Ported from the old
-    // TicketOperations; the old modal + page-reload feedback is intentionally
-    // dropped (the inline 'Ticket saved' toast replaces it), so we send the
-    // mail directly instead of going through SendNotificationEmail.
-    // NOTE: verify against the live mail flow — can't be exercised from here.
-    async _notify(saveResult, ticketId) {
-        if (typeof BuildEmailAddressList !== 'function') return;
-
-        const newTech = sessionStorage.getItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);
-        const oldTech = sessionStorage.getItem(STORAGE_KEYS.OLD_ASSIGNED_TECH);
-
-        const serverType = Array.isArray(saveResult) ? saveResult[0] : saveResult;
-        const notifyType = serverType === 'Update' && newTech !== oldTech
-            ? 'Assigned'
-            : serverType;
-        if (!notifyType) return;
-
-        const id = ticketId ?? (Array.isArray(saveResult) ? saveResult[1] : null);
-        const username = sessionStorage.getItem(STORAGE_KEYS.USER_NAME);
-
-        try {
-            const address = await BuildEmailAddressList(
-                notifyType, 'Ticket', newTech, username, getItemOwner()
-            );
-            if (!address) return;
-            await SendMailMessage(
-                address,
-                CreateMessageSubject(notifyType, 'Ticket', id),
-                BuildEmailBody(notifyType, 'Ticket', id)
-            );
-        } catch (err) {
-            console.error('Save._notify:', err);
-        }
-    },
 
 
     async execute() {
@@ -229,8 +196,6 @@ const Save = {
                 ...State.ticketData,
                 priority: payload.PriorityID,
             });
-
-            await Save._notify(data, payload.TicketID);
 
             // Clear assigned tech session keys
             sessionStorage.removeItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);

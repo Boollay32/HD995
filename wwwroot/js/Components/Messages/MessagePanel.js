@@ -242,8 +242,6 @@ const MessagesPanel = (() => {
             await load();
             _scrollToBottom(true);
 
-            // Notify the client that a visible update was posted.
-            _notify();
             return true;
 
         } catch (err) {
@@ -255,34 +253,6 @@ const MessagesPanel = (() => {
         }
     }
 
-    // -------------------------  Notify  ------------------------- //
-    // A client-visible message is a "Responded" event on the ticket. Send the
-    // notification mail directly (toast UI -- skip the modal that
-    // SendNotificationEmail shows), mirroring TicketSave._notify. The recipient
-    // logic (and the "no email for internal/Govtech authorities" case) lives in
-    // BuildEmailAddressList. Fire-and-forget: a mail failure must not block the
-    // send, and it has its own error handling.
-    // NOTE: untestable from here -- verify against the live mail flow.
-    async function _notify() {
-        if (typeof BuildEmailAddressList !== 'function') return;
-        try {
-            const newTech = sessionStorage.getItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);
-            const username = sessionStorage.getItem(STORAGE_KEYS.USER_NAME);
-
-            const address = await BuildEmailAddressList(
-                'Responded', 'Ticket', newTech, username, getItemOwner()
-            );
-            if (!address) return;
-
-            await SendMailMessage(
-                address,
-                CreateMessageSubject('Responded', 'Ticket', State.ticketId),
-                BuildEmailBody('Responded', 'Ticket', State.ticketId)
-            );
-        } catch (err) {
-            console.error('MessagesPanel._notify:', err);
-        }
-    }
 
     // -------------------------  Init  ------------------------- //
 

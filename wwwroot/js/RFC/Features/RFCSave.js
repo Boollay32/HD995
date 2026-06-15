@@ -102,10 +102,6 @@ class RFCSave extends PageBase {
         this._updateAssignedTechSession();
         this._saveOriginalNote(rfcId);
 
-        if (visibility && !autoSave) {
-            // _sendNotificationEmail inherited from TicketBase
-            this._sendNotificationEmail('RFC', data[0], rfcId ?? data[1]);
-        }
     }
 
     _updateAssignedTechSession() {

@@ -180,12 +180,6 @@ class CreateRFC extends PageBase {
         // attachments (previously null was passed and files were lost).
         await SaveOriginalNote(this.files, true, note, newRfcId);
 
-        const assignedTech = document.getElementById('assignedTechName');
-        if (assignedTech?.selectedIndex >= 0) {
-            const techId = assignedTech.options[assignedTech.selectedIndex].value;
-            const techEmail = GetUserEmailAddress(techId);
-            CreateAndSendEmail(newRfcId, 'Assigned', 'RFC', techEmail, '', '', '', '');
-        }
 
         BuildMessageBox(`${message} RFC ${newRfcId}`, 'RFC');
     }
