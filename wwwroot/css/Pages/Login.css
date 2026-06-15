@@ -8,16 +8,16 @@
 
 :root {
     --brand: #B5530E;
-    --brand-deep: #B5530E;
-    --brand-pale: #FBE9D6;
-    --brand-line: #ECCBA8;
-    --ink: #1A2027;
-    --ink-soft: #3C454E;
-    --muted: #566069;
+    --brand-deep: #964307;
+    --brand-pale: #FDEFE0;
+    --brand-line: #F6D7BC;
+    --ink: #33302C;
+    --ink-soft: #55504A;
+    --muted: #7A6E60;
     --paper: #FFFFFF;
-    --paper-2: #F4F6F8;
-    --line: #E8ECF0;
-    --line-2: #C9CFD6;
+    --paper-2: #F7EFE4;
+    --line: #F0E4D4;
+    --line-2: #D9C9B4;
     --font: "Spline Sans", system-ui, sans-serif;
     --mono: "Spline Sans Mono", ui-monospace, monospace;
     --r-lg: 20px;
@@ -33,9 +33,9 @@ body {
     overflow-x: hidden;
     font-family: var(--font);
     background:
-        radial-gradient(900px 500px at 15% -20%, #FBEEDF 0%, transparent 55%),
-        radial-gradient(700px 500px at 110% 120%, #E9EEF3 0%, transparent 50%),
-        linear-gradient(160deg, #F4F1EC 0%, #EEF1F4 60%, #E7EBEF 100%) !important;
+        radial-gradient(900px 500px at 15% -20%, #FCEAD6 0%, transparent 55%),
+        radial-gradient(700px 500px at 110% 120%, #F3E7D6 0%, transparent 50%),
+        linear-gradient(160deg, #FBF6EF 0%, #F7EFE4 60%, #F2E8D9 100%) !important;
     background-attachment: fixed !important;
 }
 #nav, .footer, #Menu-Div { display: none !important; }
