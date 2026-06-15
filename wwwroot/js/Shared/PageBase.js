@@ -29,25 +29,6 @@ class PageBase {
 
     // -------------------------  Notifications  ------------------------- //
 
-    _determineNotificationType(originalType) {
-        const newTech = sessionStorage.getItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);
-        const oldTech = sessionStorage.getItem(STORAGE_KEYS.OLD_ASSIGNED_TECH);
-
-        return originalType === 'Update' && newTech !== oldTech
-            ? 'Assigned'
-            : originalType;
-    }
-
-    _sendNotificationEmail(type, notificationType, id) {
-        const finalType = this._determineNotificationType(notificationType);
-        SendNotificationEmail(
-            type,
-            finalType,
-            id,
-            this.username,
-            getItemOwner()
-        );
-    }
 
 
     // -------------------------  Navigation  ------------------------- //
