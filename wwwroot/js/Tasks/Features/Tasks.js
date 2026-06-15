@@ -518,6 +518,8 @@ const Tasks = (() => {
             );
             if (!data) throw new Error('SaveTask returned null');
 
+            // Close the editor and return to the task list on success.
+            _closeEditor();
             State.tasks = Array.isArray(data) ? data : State.tasks;
             _render();
             UI.toast?.(successMsg, 'success');
