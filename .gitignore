@@ -27,3 +27,4 @@ secrets.json
 .DS_Store
 Thumbs.db
 *.log
+apply_*.py
