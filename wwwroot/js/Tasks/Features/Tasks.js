@@ -518,11 +518,12 @@ const Tasks = (() => {
             );
             if (!data) throw new Error('SaveTask returned null');
 
-            // Close the editor and return to the task list on success.
+            // Close the editor, then re-fetch the task list from the server
+            // (same loader the manual refresh uses) so the new/edited task
+            // appears immediately. Stays on the Tasks tab -- no page reload.
             _closeEditor();
-            State.tasks = Array.isArray(data) ? data : State.tasks;
-            _render();
             UI.toast?.(successMsg, 'success');
+            await _getTasks();
             // Refresh the activity timeline so the new/updated task shows.
             if (typeof Activity !== 'undefined') Activity.refresh();
         } catch (err) {
