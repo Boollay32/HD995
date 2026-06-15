@@ -32,6 +32,7 @@ builder.Services.AddScoped<IRFCManager, RFCManager>();
 builder.Services.AddScoped<IReports, ReportManager>();
 builder.Services.AddScoped<ITaskManager, TaskManager>();
 builder.Services.AddScoped<IMiscManager, MiscManager>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddSingleton<JavaScriptSnippet>();

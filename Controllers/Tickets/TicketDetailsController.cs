@@ -23,13 +23,15 @@ namespace HelpDeskNet8.Controllers.Tickets
         INoteManager noteManager,
         ITaskManager taskManager,
         IAttachmentManager attachmentManager,
-        IHistory history) : ControllerBase
+        IHistory history,
+        INotificationService notificationService) : ControllerBase
     {
         private readonly ITicketManager _ticketManager = ticketManager;
         private readonly INoteManager _noteManager = noteManager;
         private readonly ITaskManager _taskManager = taskManager;
         private readonly IAttachmentManager _attachmentManager = attachmentManager;
         private readonly IHistory _history = history;
+        private readonly INotificationService _notificationService = notificationService;
 
         // -------------------------  Ticket  ------------------------- //
 
@@ -134,6 +136,9 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
+
+            // Notify the ticket's assigned tech of the task change.
+            _notificationService.Notify(task.TicketID ?? 0, NotificationType.TaskSaved, user);
 
             // Return updated task list scoped to same ticket
             var filter = new Filter { TicketID = task.TicketID };
