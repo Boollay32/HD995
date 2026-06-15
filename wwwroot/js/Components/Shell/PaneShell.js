@@ -114,7 +114,7 @@ class PaneShell {
     // -------------------------  Resize (draggable split)  ------------------------- //
 
     // ids: { shell, divider }, colsKey: sessionStorage key for the ratio.
-    // MIN/MAX bound the left pane to 30%-70%; dragging past collapses it.
+    // MIN/MAX hard-clamp the left pane to 30%-70%; dragging stops at the bounds.
     initResize({ shell, divider, colsKey }) {
         this._shellEl = document.getElementById(shell);
         this._dividerEl = document.getElementById(divider);
@@ -129,9 +129,7 @@ class PaneShell {
             const rect = this._shellEl.getBoundingClientRect();
             if (rect.width <= 0) return;
             const pct = ((e.clientX - rect.left) / rect.width) * 100;
-            // Past the bounds -> collapse that pane and end the drag.
-            if (pct < this._MINPCT) { this._endDrag(); this.toggleViaDrag('left'); return; }
-            if (pct > this._MAXPCT) { this._endDrag(); this.toggleViaDrag('right'); return; }
+            // Hard-clamped to 30/70 by _setCols; dragging past just stops.
             this._setCols(pct);
         };
         const onUp = () => {
@@ -161,11 +159,6 @@ class PaneShell {
             if (e.key === 'ArrowLeft')  { this._setCols(Math.max(this._MINPCT, cur - 2)); this._persistCols(); e.preventDefault(); }
             if (e.key === 'ArrowRight') { this._setCols(Math.min(this._MAXPCT, cur + 2)); this._persistCols(); e.preventDefault(); }
         });
-    }
-
-    // Drag past a bound collapses that pane (persists, like the buttons).
-    toggleViaDrag(side) {
-        if (!this.collapsed[side]) { this.collapse(side); this._persist(); }
     }
 
     _currentPct() {
