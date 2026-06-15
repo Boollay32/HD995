@@ -4,8 +4,8 @@
   height: 100%;
   min-height: 0;
   font-family: "Spline Sans", system-ui, sans-serif;
-  background: #EEF1F4;
-  color: #1A2027;
+  background: var(--canvas);
+  color: var(--text);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -36,8 +36,8 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  background: #FFFFFF;
-  border: 1px solid #C9CFD6;
+  background: var(--panel);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0 12px;
   height: 38px;
@@ -49,7 +49,7 @@
   box-shadow: 0 0 0 3px var(--brand-pale);
 }
 .qv-search svg {
-  color: #5C6670;
+  color: var(--muted);
   flex-shrink: 0;
 }
 .qv-search-input {
@@ -62,7 +62,7 @@
   margin: 0;            /* Template.css gives every input margin-bottom: 10px */
   height: 100%;
   flex: 1;
-  color: #1A2027;
+  color: var(--text);
 }
 .qv-spacer {
   flex: 1;
@@ -75,7 +75,7 @@
 }
 .qv-count {
   font-size: 12.5px;
-  color: #5C6670;
+  color: var(--muted);
   font-weight: 500;
 }
 .qv-action {
@@ -106,8 +106,8 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  border: 1px solid #C9CFD6;
-  background: #FFFFFF;
+  border: 1px solid var(--border);
+  background: var(--panel);
   border-radius: 12px;
   padding: 9px 15px;
   min-width: 104px;
@@ -117,7 +117,7 @@
   font: inherit;
 }
 .qv-view:hover {
-  border-color: #5C6670;
+  border-color: var(--muted);
 }
 .qv-view[aria-pressed="true"] {
   background: var(--brand);
@@ -128,7 +128,7 @@
   color: var(--on-accent);
 }
 .qv-view.warn .qv-vc {
-  color: #C0392B;
+  color: var(--bad-fg);
 }
 .qv-view[aria-pressed="true"].warn .qv-vc {
   color: var(--on-accent);
@@ -142,7 +142,7 @@
 .qv-vl {
   font-size: 11.5px;
   font-weight: 600;
-  color: #5C6670;
+  color: var(--muted);
 }
 .qv-filters {
   display: flex;
@@ -155,15 +155,15 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  border: 1px solid #C9CFD6;
-  background: #FFFFFF;
+  border: 1px solid var(--border);
+  background: var(--panel);
   border-radius: 9px;
   padding: 0 8px 0 11px;
   height: 34px;
 }
 .qv-filt label {
   font-size: 11px;
-  color: #5C6670;
+  color: var(--muted);
   font-weight: 600;
 }
 .qv-filt select {
@@ -172,7 +172,7 @@
   font: inherit;
   font-size: 12.5px;
   font-weight: 600;
-  color: #1A2027;
+  color: var(--text);
   outline: none;
   cursor: pointer;
   height: 100%;
@@ -198,7 +198,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #FFFFFF;
+  background: var(--panel);
   border: 1px solid var(--brand-line);
   border-radius: 9px;
   padding: 0 10px;
@@ -240,16 +240,16 @@
 .qv-table thead th {
   position: sticky;
   top: 0;
-  background: #EEF1F4;
+  background: var(--canvas);
   z-index: 5;
   text-align: left;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #5C6670;
+  color: var(--muted);
   padding: 8px 12px;
-  border-bottom: 1px solid #C9CFD6;
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 .qv-table thead th.qv-sortable button {
@@ -273,21 +273,21 @@
 }
 .qv-table thead th[aria-sort="ascending"] button,
 .qv-table thead th[aria-sort="descending"] button {
-  color: #1A2027;
+  color: var(--text);
 }
 .qv-table tbody tr {
-  background: #FFFFFF;
+  background: var(--panel);
   cursor: pointer;
   transition: 0.1s;
 }
 .qv-table tbody td {
   padding: 11px 12px;
-  border-bottom: 1px solid #E2E6EB;
-  border-top: 1px solid #E2E6EB;
+  border-bottom: 1px solid var(--row-border);
+  border-top: 1px solid var(--row-border);
   vertical-align: middle;
 }
 .qv-table tbody tr:hover td {
-  background: #F7F9FB;
+  background: var(--row-hover);
 }
 .qv-table tbody tr[aria-selected="true"] td {
   background: var(--brand-pale);
@@ -318,10 +318,10 @@
 }
 .qv-empty td {
   text-align: center;
-  color: #5C6670;
+  color: var(--muted);
   padding: 40px;
   font-size: 13.5px;
-  background: #FFFFFF;
+  background: var(--panel);
   border-radius: 10px;
 }
 .qv-subj {
@@ -332,19 +332,19 @@
 .qv-subj .s1 {
   font-size: 13.5px;
   font-weight: 600;
-  color: #1A2027;
+  color: var(--text);
   line-height: 1.3;
 }
 .qv-subj .s2 {
   font-size: 11.5px;
-  color: #5C6670;
+  color: var(--muted);
   margin-top: 1px;
 }
 .qv-unread {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #1E51C0;
+  background: var(--info-fg);
   flex-shrink: 0;
 }
 .qv-ref {
@@ -408,7 +408,7 @@
 }
 .qv-updated {
   font-size: 12px;
-  color: #5C6670;
+  color: var(--muted);
   font-family: "Spline Sans Mono", ui-monospace, monospace;
   white-space: nowrap;
 }
@@ -430,7 +430,7 @@
   bottom: 0;
   width: 460px;
   max-width: 94vw;
-  background: #FFFFFF;
+  background: var(--panel);
   box-shadow: -18px 0 50px rgba(20, 18, 15, 0.16);
   transform: translateX(100%);
   transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
@@ -443,7 +443,7 @@
 }
 .qv-pv-head {
   padding: 18px 20px 14px;
-  border-bottom: 1px solid #C9CFD6;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
   position: relative;
 }
@@ -457,12 +457,12 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #5C6670;
+  color: var(--muted);
   font-size: 15px;
 }
 .qv-pv-close:hover {
-  background: #F7F9FB;
-  color: #1A2027;
+  background: var(--row-hover);
+  color: var(--text);
 }
 .qv-pv-body {
   flex: 1;
@@ -471,7 +471,7 @@
 }
 .qv-pv-foot {
   flex-shrink: 0;
-  border-top: 1px solid #C9CFD6;
+  border-top: 1px solid var(--border);
   padding: 14px 20px;
   display: flex;
   gap: 10px;
@@ -495,13 +495,13 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #5C6670;
+  color: var(--muted);
   margin: 4px 0 8px;
 }
 .qv-pv-tid {
   font-family: "Spline Sans Mono", ui-monospace, monospace;
   font-size: 11px;
-  color: #5C6670;
+  color: var(--muted);
 }
 .qv-pv-title {
   font-size: 16px;
@@ -522,32 +522,32 @@
    Every queue surface colour routes through a variable; [data-theme] flips them.
    ============================================================================= */
 :root, html[data-theme="light"]{
-  --bg:var(--canvas); --panel:#FFFFFF; --text:#1A2027; --muted:#5C6670;
-  --border:#C9CFD6; --row-border:#E8ECF0; --row-hover:#F4F6F8;
-  --header-bg:#EEF1F4; --scrim:rgba(16,20,26,.30);
-  --accent:#B5530E; --accent-strong:#964307; --accent-soft:#F7E7DA; --on-accent:#FFFFFF;
-  --badge-fg:#566069; --badge-bg:#EDF0F3;
+  --bg:var(--canvas); --panel:#FFFFFF; --text:#33302C; --muted:#7A6E60;
+  --border:#E5D8C6; --row-border:#F0E4D4; --row-hover:#FBF6EF;
+  --header-bg:#FBF6EF; --scrim:rgba(38,28,18,.30);
+  --accent:#B5530E; --accent-strong:#964307; --accent-soft:#FDEFE0; --on-accent:#FFFFFF;
+  --badge-fg:#4A443C; --badge-bg:#EDE4D6;
   --info-fg:#1D4ED8; --info-bg:#E2EBF9;
-  --warn-fg:#946300; --warn-bg:#FAF0DA;
-  --ok-fg:#0E7A3D;   --ok-bg:#DCF2E5;
-  --bad-fg:#B42318;  --bad-bg:#FCE9E7;
-  --neutral-fg:#566069; --neutral-bg:#E7EBEF;
-  --pri-urgent:#B42318; --pri-high:#C85F1E; --pri-normal:#5C6670; --pri-low:#8E99A3;
+  --warn-fg:#8A5318; --warn-bg:#FBE6CF;
+  --ok-fg:#1F5249;   --ok-bg:#D7EDE9;
+  --bad-fg:#9A2018;  --bad-bg:#FAE3DF;
+  --neutral-fg:#6B6052; --neutral-bg:#F0E8DC;
+  --pri-urgent:#9A2018; --pri-high:#A4561C; --pri-normal:#7A6E60; --pri-low:#7E6A50;
 }
 html[data-theme="dark"]{
   /* inspired by GitHub "Dim": softer than pure black, layered surfaces
      (page dark, cards lifted lighter so rows stand out), high-contrast text */
-  --bg:var(--canvas); --panel:#2D333B; --text:#DBE2EA; --muted:#909DAB;
-  --border:#444C56; --row-border:#373E47; --row-hover:#323941;
-  --header-bg:#22272E; --scrim:rgba(1,4,9,.6);
-  --accent:#F0843A; --accent-strong:#FF9A55; --accent-soft:#3A2C1C; --on-accent:#1C2128;
-  --badge-fg:#ADBAC7; --badge-bg:#373E47;
-  --info-fg:#6CB6FF; --info-bg:#143049;
-  --warn-fg:#F0A868; --warn-bg:#3A2A14;
-  --ok-fg:#6BC46D;   --ok-bg:#14331E;
-  --bad-fg:#FF938A;  --bad-bg:#3D211E;
-  --neutral-fg:#ADBAC7; --neutral-bg:#373E47;
-  --pri-urgent:#FF938A; --pri-high:#F0A868; --pri-normal:#ADBAC7; --pri-low:#768390;
+  --bg:var(--canvas); --panel:#2B2724; --text:#E8E0D6; --muted:#A89C8E;
+  --border:#4A433C; --row-border:#3A342E; --row-hover:#34302C;
+  --header-bg:#211E1B; --scrim:rgba(9,6,3,.6);
+  --accent:#F0843A; --accent-strong:#FF9A55; --accent-soft:#3A2C1C; --on-accent:#2A1B0E;
+  --badge-fg:#C5BBAD; --badge-bg:#3A342E;
+  --info-fg:#88A7F2; --info-bg:#1E2A44;
+  --warn-fg:#F2B872; --warn-bg:#3D3322;
+  --ok-fg:#7FD6C5;   --ok-bg:#234640;
+  --bad-fg:#F0867A;  --bad-bg:#3A2220;
+  --neutral-fg:#C5BBAD; --neutral-bg:#3A342E;
+  --pri-urgent:#F0867A; --pri-high:#F2B872; --pri-normal:#C5BBAD; --pri-low:#A89C8E;
 }
 
 /* re-point the queue's surfaces at the variables (later source order wins) */
