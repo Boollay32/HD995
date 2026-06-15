@@ -33,9 +33,9 @@ body {
     overflow-x: hidden;
     font-family: var(--font);
     background:
-        radial-gradient(1100px 700px at 18% -10%, #7a4e22 0%, transparent 55%),
-        radial-gradient(900px 700px at 110% 20%, #3a2c1e 0%, transparent 50%),
-        linear-gradient(160deg, #2a2521 0%, #1b1714 60%, #141110 100%) !important;
+        radial-gradient(900px 500px at 15% -20%, #FBEEDF 0%, transparent 55%),
+        radial-gradient(700px 500px at 110% 120%, #E9EEF3 0%, transparent 50%),
+        linear-gradient(160deg, #F4F1EC 0%, #EEF1F4 60%, #E7EBEF 100%) !important;
     background-attachment: fixed !important;
 }
 #nav, .footer, #Menu-Div { display: none !important; }
@@ -59,7 +59,7 @@ body {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    opacity: .5;
+    opacity: .35;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/></svg>");
 }
 #Main-Div::after {
@@ -69,7 +69,7 @@ body {
     height: 520px;
     left: -120px;
     bottom: -160px;
-    background: radial-gradient(circle, rgba(217,116,31,.18), transparent 70%);
+    background: radial-gradient(circle, rgba(217,116,31,.08), transparent 70%);
     filter: blur(10px);
     pointer-events: none;
     animation: login-drift 16s ease-in-out infinite alternate;
