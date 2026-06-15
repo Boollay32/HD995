@@ -60,6 +60,14 @@ namespace HelpDeskNet8.Services
                 case NotificationType.NoteResponded:
                     return IsInternal(ticket) ? ticket.AssignedTechEmail : ticket.Email;
 
+                // A ticket reply -> same routing as a note reply.
+                case NotificationType.TicketResponded:
+                    return IsInternal(ticket) ? ticket.AssignedTechEmail : ticket.Email;
+
+                // The assigned tech was changed -> notify the new tech.
+                case NotificationType.TicketAssigned:
+                    return ticket.AssignedTechEmail;
+
                 default:
                     return null;
             }
@@ -82,6 +90,8 @@ namespace HelpDeskNet8.Services
             {
                 NotificationType.TaskSaved => $"Updated Task on Ticket {ticketId}",
                 NotificationType.NoteResponded => $"Responded Ticket {ticketId}",
+                NotificationType.TicketResponded => $"Responded Ticket {ticketId}",
+                NotificationType.TicketAssigned => $"Assigned Ticket {ticketId}",
                 _ => $"Notification - Ticket {ticketId}",
             };
         }
@@ -96,6 +106,10 @@ namespace HelpDeskNet8.Services
                     $"A task on Ticket {ticketId} has been updated. It may require your attention, please review.",
                 NotificationType.NoteResponded =>
                     $"Ticket {ticketId} has been responded to. It may require your attention, please review.",
+                NotificationType.TicketResponded =>
+                    $"Ticket {ticketId} has been responded to. It may require your attention, please review.",
+                NotificationType.TicketAssigned =>
+                    $"Ticket {ticketId} has been assigned to you. It may require your attention, please review.",
                 _ => $"Ticket {ticketId} has an update.",
             };
 

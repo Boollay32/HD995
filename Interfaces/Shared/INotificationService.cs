@@ -11,6 +11,12 @@ namespace HelpDeskNet8.Interfaces.Shared
 
         // A note/reply was added to the ticket.
         NoteResponded,
+
+        // A ticket was saved as a reply (no assigned-tech change).
+        TicketResponded,
+
+        // A ticket's assigned tech was changed.
+        TicketAssigned,
     }
 
     // Server-side notification routing. Resolves the recipients for a ticket
