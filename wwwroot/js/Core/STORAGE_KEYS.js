@@ -50,6 +50,7 @@ const STORAGE_KEYS = {
     TD_PANES_COLLAPSED: 'TDPanesCollapsed',
     TD_SHELL_COLS: 'TDShellCols',
     RFC_PANES_COLLAPSED: 'RFCPanesCollapsed',
+    RFC_SHELL_COLS: 'RFCShellCols',
 
     // -------------------------  Admin  ------------------------- //
 

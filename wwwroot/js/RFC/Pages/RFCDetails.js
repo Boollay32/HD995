@@ -106,12 +106,19 @@ class RFCDetails extends PageBase {
         // RFCFields before this runs.
         this._wireRfcDirty();
 
-        // Pane collapse -- shared PaneShell component
-        new PaneShell({
+        // Pane collapse + draggable split -- shared PaneShell component
+        // (same slider as Ticket Details; hard-clamped to 30/70).
+        const shell = new PaneShell({
             left:  { pane: 'pane-left',  btn: 'collapse-left',  rail: 'rail-left'  },
             right: { pane: 'pane-right', btn: 'collapse-right', rail: 'rail-right' },
             storageKey: STORAGE_KEYS.RFC_PANES_COLLAPSED,
-        }).init();
+        });
+        shell.init();
+        shell.initResize({
+            shell: 'RFC-Shell',
+            divider: 'pane-divider',
+            colsKey: STORAGE_KEYS.RFC_SHELL_COLS,
+        });
 
         // Fix: single resize listener — removed duplicate at bottom of file
         window.addEventListener('resize', () => Layout.setDetailContainerHeight());
