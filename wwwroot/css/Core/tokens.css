@@ -1,3 +1,9 @@
+/* Font-size scale: Small=100% (default), Medium, Large. Sets the
+   root font-size so every rem-based size scales together. */
+html { font-size: 100%; }
+html[data-font="medium"] { font-size: 112%; }
+html[data-font="large"] { font-size: 125%; }
+
 /* =============================================================
    Design tokens — canonical brand palette (orange / white / gray).
    Loaded globally (first) from _Layout so every stylesheet can use
@@ -148,7 +154,7 @@ html[data-theme="dark"] {
     z-index: 10000;
     padding: 8px 14px;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 600;
     color: var(--on-accent);
     background: var(--accent);

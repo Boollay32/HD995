@@ -48,7 +48,7 @@ nav.Nav-Bar {
             height: 56px;
             padding: 0 14px;
             color: var(--muted) !important;
-            font-size: 13px;
+            font-size: 0.8125rem;
             font-weight: 600;
             font-family: Calibri, Arial, sans-serif;
             letter-spacing: 0.04em;
@@ -80,7 +80,7 @@ nav.Nav-Bar {
 
         nav.Nav-Bar #navbar-logout #Account-Name {
             color: var(--muted);
-            font-size: 13px;
+            font-size: 0.8125rem;
             font-weight: 500;
             font-family: Calibri, Arial, sans-serif;
             max-width: 140px;
@@ -99,7 +99,7 @@ nav.Nav-Bar {
             color: #ffffff !important;
             border: none;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 0.75rem;
             font-weight: 700;
             font-family: Calibri, Arial, sans-serif;
             letter-spacing: 0.04em;
@@ -115,7 +115,7 @@ nav.Nav-Bar {
 
 /* ============= Theme toggle (nav header) ============= */
 .qv-theme{ display:inline-flex; align-items:center; gap:8px; margin-left:14px;
-  color:var(--muted); font-size:12px; font-weight:600; }
+  color:var(--muted); font-size:0.75rem; font-weight:600; }
 .qv-theme .qv-sw{ position:relative; width:48px; height:26px; border-radius:20px;
   border:1px solid var(--border); background:var(--row-hover); cursor:pointer;
   transition:.18s ease; flex-shrink:0; padding:0; }
@@ -124,6 +124,21 @@ nav.Nav-Bar {
   transition:.18s cubic-bezier(.4,0,.2,1); }
 html[data-theme="dark"] .qv-theme .qv-knob{ transform:translateX(22px); }
 .qv-theme .qv-knob svg{ width:12px; height:12px; color:var(--on-accent); }
+
+/* ============= Text-size control (nav header) ============= */
+.qv-font{ display:inline-flex; align-items:center; gap:2px; margin-left:14px;
+  padding:2px; border:1px solid var(--border); border-radius:9px;
+  background:var(--row-hover); }
+.qv-font-opt{ display:grid; place-items:center; width:26px; height:24px;
+  border:none; background:transparent; color:var(--muted); cursor:pointer;
+  border-radius:7px; font-family:var(--font-sans); font-weight:700;
+  line-height:1; padding:0; transition:.15s ease; }
+.qv-font-opt:nth-child(1){ font-size:0.6875rem; }
+.qv-font-opt:nth-child(2){ font-size:0.8125rem; }
+.qv-font-opt:nth-child(3){ font-size:0.9375rem; }
+.qv-font-opt:hover{ color:var(--text); }
+.qv-font-opt[aria-pressed="true"]{ background:var(--accent); color:var(--on-accent); }
+
 
 /* ============= Footer ============= */
 footer {
@@ -143,7 +158,7 @@ footer {
     footer a {
         font-family: Calibri, Arial, sans-serif;
         color: var(--muted);
-        font-size: 12px;
+        font-size: 0.75rem;
         text-decoration: none;
     }
 
@@ -155,7 +170,7 @@ footer {
     }
 
         nav.Nav-Bar #navbar-menu a {
-            font-size: 12px;
+            font-size: 0.75rem;
             padding: 0 10px;
             height: 50px;
         }

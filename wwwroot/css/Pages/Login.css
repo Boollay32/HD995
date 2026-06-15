@@ -97,16 +97,16 @@ body {
     background: linear-gradient(150deg, #B5530E 0%, #964307 100%);
     box-shadow: 0 6px 16px rgba(156,74,8,.32); color: #fff;
 }
-.brand-name { font-size: 13.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.brand-name { font-size: 0.84375rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 .brand-name b { color: var(--ink); }
-.stage-title { font-size: 23px; font-weight: 700; text-align: center; margin: 0 0 4px; letter-spacing: -.01em; color: var(--ink); }
-.stage-sub { font-size: 14.5px; color: var(--muted); text-align: center; margin: 0 0 24px; line-height: 1.5; }
+.stage-title { font-size: 1.4375rem; font-weight: 700; text-align: center; margin: 0 0 4px; letter-spacing: -.01em; color: var(--ink); }
+.stage-sub { font-size: 0.90625rem; color: var(--muted); text-align: center; margin: 0 0 24px; line-height: 1.5; }
 
 /* ---- fields ---- */
 .field { margin-bottom: 16px; text-align: left; }
-.field label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-soft); margin: 0 0 6px 2px; }
+.field label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft); margin: 0 0 6px 2px; }
 .login-input {
-    width: 100%; height: 46px; padding: 0 14px; font-family: var(--font); font-size: 15.5px; color: var(--ink);
+    width: 100%; height: 46px; padding: 0 14px; font-family: var(--font); font-size: 0.96875rem; color: var(--ink);
     background: var(--paper-2); border: 1px solid var(--border-strong); border-radius: var(--r-md); outline: none;
     box-sizing: border-box; transition: border-color .15s, box-shadow .15s, background .15s;
 }
@@ -116,7 +116,7 @@ body {
 /* ---- primary button (.accept is reused by Login.js) ---- */
 .accept {
     width: 100%; height: 46px; margin-top: 6px; border: none; cursor: pointer;
-    font-family: var(--font); font-size: 15.5px; font-weight: 700; color: #fff; border-radius: var(--r-md);
+    font-family: var(--font); font-size: 0.96875rem; font-weight: 700; color: #fff; border-radius: var(--r-md);
     background: linear-gradient(150deg, #B5530E 0%, #964307 100%);
     box-shadow: 0 6px 16px rgba(156,74,8,.30); transition: filter .15s, transform .05s, box-shadow .15s;
 }
@@ -127,7 +127,7 @@ body {
 /* ---- PIN: 2 dropdowns + 4 inputs, built by Login.js into #Pin-Boxes ---- */
 #Pin-Boxes { display: flex; gap: 10px; justify-content: center; margin: 6px 0 8px; }
 #Pin-Boxes input, #Pin-Boxes select {
-    width: 52px; height: 62px; text-align: center; font-family: var(--mono); font-size: 24px; font-weight: 600;
+    width: 52px; height: 62px; text-align: center; font-family: var(--mono); font-size: 1.5rem; font-weight: 600;
     color: var(--ink); background: var(--paper-2); border: 1px solid var(--border-strong); border-radius: var(--r-md);
     outline: none; padding: 0; box-sizing: border-box; transition: border-color .15s, box-shadow .15s, background .15s;
 }
@@ -138,20 +138,20 @@ body {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%239C4A08' stroke-width='1.8'><path d='M1 1l4 4 4-4'/></svg>");
     background-repeat: no-repeat; background-position: center 46px;
 }
-.pin-caption { display: flex; align-items: center; gap: 7px; justify-content: center; font-size: 12.5px; color: var(--muted); margin: 14px 0 22px; }
+.pin-caption { display: flex; align-items: center; gap: 7px; justify-content: center; font-size: 0.78125rem; color: var(--muted); margin: 14px 0 22px; }
 .pin-caption .dot { width: 13px; height: 13px; border-radius: 4px; background: var(--brand-pale); border: 1px solid var(--brand-line); flex: none; }
 #SecondWall-div { text-align: center; }
 
 /* ---- reset password — requirements ---- */
 #Reset-Password .req-list { list-style: none; margin: 0 0 22px; padding: 14px 16px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-md); }
-#Reset-Password .req-title { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 8px; }
-#Reset-Password li.req { display: flex; align-items: center; gap: 9px; font-size: 13.5px; color: var(--muted); padding: 3px 0; }
+#Reset-Password .req-title { font-size: 0.75rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 8px; }
+#Reset-Password li.req { display: flex; align-items: center; gap: 9px; font-size: 0.84375rem; color: var(--muted); padding: 3px 0; }
 #Reset-Password li.req .req-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); flex: none; }
 
 @media (max-width: 480px) {
     .auth-container { padding: 30px 22px; }
     #Pin-Boxes { gap: 7px; }
-    #Pin-Boxes input, #Pin-Boxes select { width: 42px; height: 54px; font-size: 20px; }
+    #Pin-Boxes input, #Pin-Boxes select { width: 42px; height: 54px; font-size: 1.25rem; }
     #Pin-Boxes select.PIN-Tile { background-position: center 40px; }
 }
 
@@ -163,7 +163,7 @@ body {
 }
 .login-help-trigger {
     font-family: var(--font);
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--muted);
     background: none;
     border: none;
@@ -187,7 +187,7 @@ body {
     width: max-content;
     max-width: 280px;
     padding: 9px 12px;
-    font-size: 12.5px;
+    font-size: 0.78125rem;
     line-height: 1.45;
     color: var(--paper);
     background: #2a2521;

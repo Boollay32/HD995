@@ -33,7 +33,7 @@
 }
 .ca-head h1 {
   margin: 0;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
 .ca-btn-primary {
@@ -41,7 +41,7 @@
   align-items: center;
   gap: 7px;
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--on-accent);
   background: var(--accent);
@@ -81,7 +81,7 @@
 }
 .ca-panel-head h2 {
   margin: 0;
-  font-size: 11.5px;
+  font-size: 0.71875rem;
   font-weight: 600;
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -110,7 +110,7 @@
   grid-column: 1 / -1;
 }
 .create-app .Detail-Div .left .Name {
-  font-size: 11.5px;
+  font-size: 0.71875rem;
   font-weight: 600;
   letter-spacing: .03em;
   text-transform: uppercase;
@@ -121,7 +121,7 @@
   width: 100%;
   box-sizing: border-box;
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text);
   background: var(--canvas);
   border: 1px solid var(--border-strong);

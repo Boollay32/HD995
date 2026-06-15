@@ -33,7 +33,7 @@
 }
 .sp-side-head h2 {
   margin: 0;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -54,7 +54,7 @@
   margin-bottom: 12px;
 }
 .filter-row label {
-  font-size: 11.5px;
+  font-size: 0.71875rem;
   font-weight: 600;
   letter-spacing: .03em;
   text-transform: uppercase;
@@ -65,7 +65,7 @@
   width: 100%;
   box-sizing: border-box;
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text);
   background: var(--canvas);
   border: 1px solid var(--border-strong);
@@ -82,7 +82,7 @@
 .filter-loading,
 .filter-empty,
 .filter-error {
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   color: var(--muted);
   padding: 6px 0;
 }
@@ -101,7 +101,7 @@
 .sp-btn-ghost {
   flex: 1;
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   border-radius: 9px;
   padding: 8px 10px;
@@ -127,7 +127,7 @@
 .sp-count {
   margin: 10px 0 0;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 
@@ -157,7 +157,7 @@
 #Table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 #Table thead th {
   position: sticky;
@@ -167,7 +167,7 @@
   color: var(--muted);
   text-align: left;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: .05em;
   text-transform: uppercase;
   padding: 10px 16px;

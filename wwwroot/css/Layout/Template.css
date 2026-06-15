@@ -171,20 +171,20 @@ a {
 }
 h1 {
   font-family: Calibri;
-  font-size: 60px;
+  font-size: 3.75rem;
   color: var(--text);
 }
 label {
   padding: 5px;
   color: var(--text);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-family: Calibri;
 }
 input {
   padding: 5px;
   margin-bottom: 10px;
   color: var(--text);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-family: Calibri;
 }
 /*=============== Generic fixed Calls End ===================*/
@@ -220,7 +220,7 @@ input {
   border-top: 1px solid var(--border);
   color: var(--muted);
   font-family: var(--font-sans, "Spline Sans", system-ui, sans-serif);
-  font-size: 12px;
+  font-size: 0.75rem;
   text-align: center;
 }
 .footer a {
