@@ -55,9 +55,25 @@ namespace HelpDeskNet8.Services
                 case NotificationType.TaskSaved:
                     return ticket.AssignedTechEmail;
 
+                // A note was added -> an internal ticket notifies the assigned
+                // tech; a client ticket notifies the client (originator).
+                case NotificationType.NoteResponded:
+                    return IsInternal(ticket) ? ticket.AssignedTechEmail : ticket.Email;
+
                 default:
                     return null;
             }
+        }
+
+        // Internal tickets are raised by internal users; their request type
+        // is one of these. Mirrors the client's INTERNAL_REQUEST_TYPES list.
+        // (Contact Client, type 12, is intentionally NOT internal.)
+        private static readonly int[] InternalRequestTypes = { 4, 8, 10, 11, 14 };
+
+        private static bool IsInternal(ITicket ticket)
+        {
+            return ticket.RequestID.HasValue
+                && System.Array.IndexOf(InternalRequestTypes, ticket.RequestID.Value) >= 0;
         }
 
         private static string BuildSubject(NotificationType type, int ticketId)
@@ -65,6 +81,7 @@ namespace HelpDeskNet8.Services
             return type switch
             {
                 NotificationType.TaskSaved => $"Updated Task on Ticket {ticketId}",
+                NotificationType.NoteResponded => $"Responded Ticket {ticketId}",
                 _ => $"Notification - Ticket {ticketId}",
             };
         }
@@ -77,6 +94,8 @@ namespace HelpDeskNet8.Services
             {
                 NotificationType.TaskSaved =>
                     $"A task on Ticket {ticketId} has been updated. It may require your attention, please review.",
+                NotificationType.NoteResponded =>
+                    $"Ticket {ticketId} has been responded to. It may require your attention, please review.",
                 _ => $"Ticket {ticketId} has an update.",
             };
 
