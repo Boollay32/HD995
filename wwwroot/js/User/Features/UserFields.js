@@ -63,6 +63,23 @@ function _setSelectSmart(id, value) {
         return;
     }
 
+    // Word-set fallback: the DB phrasing can differ in word order from the
+    // option text / alias keys (e.g. "Admin Govtech User" vs "Govtech Admin
+    // User"). Match on the sorted set of words so order does not matter.
+    const wordSet = t => t.split(/\s+/).filter(Boolean).sort().join(' ');
+    const target = wordSet(lower);
+    if (target) {
+        const aliasByWords = Object.keys(_ADMIN_LABEL_ALIASES)
+            .find(k => wordSet(k) === target);
+        if (aliasByWords) {
+            const v = _ADMIN_LABEL_ALIASES[aliasByWords];
+            if ([...el.options].some(o => o.value === v)) { el.value = v; return; }
+        }
+        const optByWords = [...el.options]
+            .find(o => wordSet(o.innerText.trim().toLowerCase()) === target);
+        if (optByWords) { el.value = optByWords.value; return; }
+    }
+
     console.warn(`UserFields: no option in #${id} matches`, value);
 }
 
