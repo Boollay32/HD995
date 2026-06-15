@@ -23,8 +23,8 @@ function FillUserDetail(details) {
     // The generic loop above sets selects by option TEXT, but the detail
     // payload's adminLevel/locked values never equal the option labels --
     // set the two selects explicitly with tolerant matching.
-    _setSelectSmart('AdminLevel', details.adminLevelID ?? details.adminLevel);
-    _setSelectSmart('Locked', String(details.locked) === '1' ? '1' : '0');
+    _setSelectSmart('AdminLevel', details.adminLevel);
+    _setSelectSmart('Locked', Number(details.locked) === 1 ? '1' : '0');
 
     _setUserAvatar(details.userName);
     _setUserRole(details.adminLevel);
@@ -47,7 +47,9 @@ function _setSelectSmart(id, value) {
     const el = document.getElementById(id);
     if (!el || value === null || value === undefined || value === '') return;
 
-    const str = String(value).trim();
+    let str = String(value).trim();
+    // Normalise numeric-ish values so 1, '1', '2.0' match option values.
+    if (/^-?\d+(\.0+)?$/.test(str)) str = String(parseInt(str, 10));
     const byValue = [...el.options].find(o => o.value === str);
     if (byValue) { el.value = byValue.value; return; }
 
