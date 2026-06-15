@@ -24,7 +24,7 @@ class UserSave extends PageBase {
                 phone
             }));
 
-            MessageBox.show('User has been updated', 'UserPage');
+            MessageBox.show('User has been updated', 'UserDetails');
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
@@ -49,7 +49,7 @@ class UserSave extends PageBase {
                 phone
             }));
 
-            MessageBox.show('User has been updated', 'UserPage');
+            MessageBox.show('User has been updated', 'UserDetails');
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
