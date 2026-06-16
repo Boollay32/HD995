@@ -106,7 +106,13 @@ namespace HelpDeskNet8.Services
 
             for (int i = 1; i <= 5; i++)
             {
-                object byteArray = DBNull.Value;
+                // The Attachment column is varchar(max): store the client's
+                // base64 string as-is. (Previously this decoded base64 to bytes
+                // and bound a VarBinary param, so SQL reinterpreted the binary
+                // through the column codepage on insert and corrupted any
+                // non-text file -- PNGs etc. Base64 is ASCII and round-trips
+                // through varchar cleanly.)
+                object attachmentData = DBNull.Value;
                 object info = DBNull.Value;
                 object imageType = DBNull.Value;
 
@@ -116,7 +122,7 @@ namespace HelpDeskNet8.Services
                     var attachment = attachmentList[index];
 
                     if (!string.IsNullOrEmpty(attachment.AttachmentByteArray))
-                        byteArray = Convert.FromBase64String(attachment.AttachmentByteArray);
+                        attachmentData = attachment.AttachmentByteArray;
 
                     if (!string.IsNullOrEmpty(attachment.AttachmentName))
                         info = attachment.AttachmentName;
@@ -124,7 +130,7 @@ namespace HelpDeskNet8.Services
                     imageType = attachment.AttachmentImageType.ToString();
                 }
 
-                command.Parameters.Add(new SqlParameter($"@Attachment{i}", SqlDbType.VarBinary) { Value = byteArray });
+                command.Parameters.Add(new SqlParameter($"@Attachment{i}", SqlDbType.VarChar) { Value = attachmentData });
                 command.Parameters.Add(new SqlParameter($"@Attachment{i}Desc", SqlDbType.NVarChar) { Value = info });
                 command.Parameters.Add(new SqlParameter($"@Attachment{i}ImageType", SqlDbType.NVarChar) { Value = imageType });
             }
