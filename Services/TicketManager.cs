@@ -160,10 +160,10 @@ namespace HelpDeskNet8.Services
                     {
                         Value = notifyUser
                     });
-                    command.Parameters.Add(new SqlParameter("@NotifyTech", SqlDbType.Bit)
-                    {
-                        Value = ticket.NotifyTech ?? false
-                    });
+                    // NOTE: usp_Helpdesk_WriteNewTicket has no @NotifyTech
+                    // parameter (the new-ticket INSERT sets Notify only), so
+                    // sending it caused "too many arguments specified". The
+                    // update branch (usp_Helpdesk_UpdateTicket) still sends it.
                 }
 
 
