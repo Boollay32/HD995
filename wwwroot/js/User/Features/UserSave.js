@@ -94,6 +94,33 @@ class UserSave extends PageBase {
         }
     }
 
+    // Unlock a locked account. The UserManage proc treats any @UnlockUser
+    // value as 'unlock' (sets UserLocked = 0), so we send '0' and reload.
+    async unlockUser() {
+        UI.toggleWaiting();
+        try {
+            const userLogin = document.getElementById('UserEmail')?.innerText;
+            const phone = document.getElementById('UserPhone')?.value;
+            const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
+
+            await API.post('User/ManageUser', API.authPayload({
+                userLogin,
+                unlockUser: '0',
+                adminLevelId,
+                phone
+            }));
+
+            MessageBox.show('User has been unlocked', 'UserDetails');
+
+        } catch (error) {
+            if (error.message !== 'Unauthorized') {
+                this.handleError("Error: Couldn't unlock user.");
+            }
+        } finally {
+            UI.toggleWaiting();
+        }
+    }
+
     // -------------------------  Reset  ------------------------- //
 
     async confirmReset() {

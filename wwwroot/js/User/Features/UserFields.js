@@ -24,7 +24,9 @@ function FillUserDetail(details) {
     // payload's adminLevel/locked values never equal the option labels --
     // set the two selects explicitly with tolerant matching.
     _setSelectSmart('AdminLevel', details.adminLevel);
-    _setSelectSmart('Locked', Number(details.locked) === 1 ? '1' : '0');
+    // Locked is shown read-only now (Unlock button handles the action).
+    const lockedVal = document.getElementById('Locked-Value');
+    if (lockedVal) lockedVal.innerText = Number(details.locked) === 1 ? 'Yes' : 'No';
 
     _setUserAvatar(details.userName);
     _setUserRole(details.adminLevel);
