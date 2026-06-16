@@ -54,6 +54,7 @@
         string EmailCC { get; set; }
         string ProjectName { get; set; }
         int? ProjectTypeID { get; set; }
+        int? ProjectID { get; set; }
         string FileName { get; set; }
         string BusinessImpact { get; set; }
         DateTime? IncidentStartDate { get; set; }

@@ -228,6 +228,7 @@ namespace HelpDeskNet8.Services
                 // Project
                 command.Parameters.Add(new SqlParameter("@ProjectName", SqlDbType.NVarChar) { Value = ToSqlValue(ticket.ProjectName) });
                 command.Parameters.Add(new SqlParameter("@ProjectTypeID", SqlDbType.Int) { Value = ToSqlValue(ticket.ProjectTypeID) });
+                command.Parameters.Add(new SqlParameter("@ProjectID", SqlDbType.Int) { Value = ToSqlValue(ticket.ProjectID) });
 
                 // System
                 command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
