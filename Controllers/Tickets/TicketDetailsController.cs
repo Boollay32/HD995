@@ -1,4 +1,5 @@
 ﻿using HelpDeskNet8.Controllers.Shared;
+using System.Linq;
 using HelpDeskNet8.Controllers.Tasks;
 using HelpDeskNet8.Infrastructure;
 using HelpDeskNet8.Interfaces.Attachments;
@@ -74,6 +75,19 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             if (string.IsNullOrWhiteSpace(note.NoteDescription))
                 return BadRequest("Note description is required.");
+
+            // Editing an existing note (NoteID present): only the creator may
+            // edit it. Verify ownership server-side -- the client hides the edit
+            // affordance for non-creators, but that is UX only, not security.
+            if (note.NoteID.HasValue && note.NoteID.Value != 0)
+            {
+                var existing = _noteManager.GetNotes(user, note.TicketID ?? 0)
+                    .FirstOrDefault(n => n.NoteID == note.NoteID.Value);
+                if (existing == null)
+                    return NotFound("Note not found.");
+                if (existing.NotesUserID != user.UserID)
+                    return StatusCode(403, "You can only edit your own notes.");
+            }
 
             var attachments = _mapAttachments(request.Attachments);
 
