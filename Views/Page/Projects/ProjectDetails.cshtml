@@ -1,0 +1,70 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Project";
+}
+
+@section AddJSToHead{
+    <script src="~/js/Projects/Pages/ProjectDetails.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead{
+    <link rel="stylesheet" type="text/css" href="/css/Pages/ProjectsPage.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Pages/ProjectDetails.css" asp-append-version="true">
+}
+
+<div id="Main-Div" class="pjd-app">
+
+    <header class="pjd-top">
+        <button type="button" class="pjd-back" id="pjd-back" aria-label="Back to projects">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+            </svg>
+        </button>
+        <span class="pjd-name" id="pjd-name">Project</span>
+        <span class="pjd-badges">
+            <span class="pj-type" id="pjd-type"></span>
+            <span class="pj-status" id="pjd-status"></span>
+        </span>
+    </header>
+
+    <div id="pjd-body">
+
+        <section class="pjd-meta" aria-label="Project details">
+            <p class="pjd-desc" id="pjd-desc"></p>
+            <dl class="pjd-grid">
+                <div class="pjd-field"><dt>Owner</dt><dd id="pjd-owner"></dd></div>
+                <div class="pjd-field"><dt>Created by</dt><dd id="pjd-created-by"></dd></div>
+                <div class="pjd-field"><dt>Created</dt><dd id="pjd-created"></dd></div>
+                <div class="pjd-field"><dt>Target date</dt><dd id="pjd-target"></dd></div>
+                <div class="pjd-field"><dt>Completed</dt><dd id="pjd-completion"></dd></div>
+                <div class="pjd-field"><dt>Tickets</dt><dd id="pjd-ticket-count"></dd></div>
+            </dl>
+        </section>
+
+        <div class="pjd-tickets-head">
+            <h2>Tickets</h2>
+        </div>
+
+        <p class="pjd-tickets-empty" id="pjd-tickets-empty">No tickets in this project yet.</p>
+
+        <div class="pjd-table-wrap">
+            <table class="pjd-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th class="pjd-h-type">Type</th>
+                        <th class="pjd-h-tech">Assigned</th>
+                        <th>Target</th>
+                    </tr>
+                </thead>
+                <tbody id="pjd-ticket-rows"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
