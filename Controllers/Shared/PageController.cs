@@ -28,6 +28,9 @@ namespace HelpDeskNet8.Controllers.Shared
         [Route("TicketDetails")]
         public IActionResult TicketDetails() => View("~/Views/Page/Ticket/TicketDetails.cshtml");
 
+        [Route("Projects")]
+        public IActionResult Projects() => View("~/Views/Page/Projects/ProjectsPage.cshtml");
+
         [Route("TicketPage")]
         public IActionResult TicketPage() => View("~/Views/Page/Ticket/TicketPage.cshtml");
 

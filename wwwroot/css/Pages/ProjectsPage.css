@@ -1,0 +1,165 @@
+/* =============================  ProjectsPage.css  =============================
+   The Projects list — the separation layer. Project cards with roll-up counts,
+   themed on the global tokens (warm civic palette). Cards link into a project;
+   the individual tickets are only seen inside. */
+
+.projects-app {
+    padding: 20px 24px 40px;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.pj-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+.pj-head h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.pj-filters {
+    display: flex;
+    gap: 6px;
+}
+.pj-filter {
+    font-size: 0.8125rem;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.pj-filter:hover { background: var(--row-hover); color: var(--text); }
+.pj-filter.is-active {
+    color: var(--accent);
+    background: var(--row-hover);
+    border-color: var(--border);
+    font-weight: 600;
+}
+
+/* Card grid */
+.pj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+    gap: 14px;
+}
+.pj-grid[aria-busy="true"] { opacity: 0.55; pointer-events: none; }
+
+.pj-empty {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-size: 0.875rem;
+    padding: 32px 0;
+    text-align: center;
+}
+
+/* Card */
+.pj-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 16px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+.pj-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: 0 1px 2px rgba(20, 18, 15, 0.04), 0 8px 22px rgba(20, 18, 15, 0.07);
+}
+.pj-card:active { transform: translateY(1px); }
+.pj-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pj-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.pj-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+/* Type badge */
+.pj-type {
+    flex-shrink: 0;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    text-transform: uppercase;
+}
+.pj-type--release  { color: var(--info);  background: var(--info-bg); }
+.pj-type--internal { color: var(--muted); background: var(--row-hover); border: 1px solid var(--border); }
+.pj-type--maint    { color: var(--warn);  background: var(--warn-bg); }
+
+.pj-sub {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.75rem;
+}
+.pj-status {
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+.pj-status--new    { color: var(--muted);     background: var(--row-hover); }
+.pj-status--active { color: var(--accent-2);   background: var(--accent-2-bg); }
+.pj-status--draft  { color: var(--muted);      background: var(--row-hover); }
+.pj-status--done   { color: var(--ok);         background: var(--ok-bg); }
+.pj-status--wdn    { color: var(--danger);     background: var(--danger-bg); }
+.pj-target { color: var(--muted); }
+
+.pj-counts {
+    display: flex;
+    gap: 16px;
+    font-size: 0.8125rem;
+    color: var(--muted);
+}
+.pj-counts strong { color: var(--text); font-weight: 600; }
+
+/* Progress bar */
+.pj-bar {
+    height: 6px;
+    background: var(--row-hover);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.pj-bar-fill {
+    height: 100%;
+    background: var(--accent-2);
+    border-radius: 4px;
+    transition: width 0.2s ease;
+}
+
+.pj-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+.pj-owner { font-weight: 500; }
+
+@media (max-width: 560px) {
+    .projects-app { padding: 14px 14px 30px; }
+    .pj-grid { grid-template-columns: 1fr; }
+    .pj-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+}

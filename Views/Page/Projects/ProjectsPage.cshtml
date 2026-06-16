@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Projects";
+}
+
+@section AddJSToHead{
+    <script src="~/js/Projects/Pages/ProjectsPage.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead{
+    <link rel="stylesheet" type="text/css" href="/css/Pages/ProjectsPage.css" asp-append-version="true">
+}
+
+<div id="Main-Div" class="projects-app">
+
+    <header class="pj-head">
+        <h1>Projects</h1>
+        <nav class="pj-filters" aria-label="Filter projects by status">
+            <button class="pj-filter is-active" type="button" data-status="">All</button>
+            <button class="pj-filter" type="button" data-status="2">Active</button>
+            <button class="pj-filter" type="button" data-status="1">New</button>
+            <button class="pj-filter" type="button" data-status="3">Complete</button>
+        </nav>
+    </header>
+
+    <section id="pj-grid" class="pj-grid" aria-label="Projects"></section>
+
+</div>
