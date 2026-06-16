@@ -141,7 +141,9 @@ const Fields = {
 
         // Target date input
         const targetEl = document.getElementById('targetdate');
-        if (targetEl && data.targetDate) {
+        // Skip the 1900-01-01 placeholder the proc returns for a null date
+        // (isnull(TargetDate, '') -> datetime epoch), so the input stays blank.
+        if (targetEl && data.targetDate && !String(data.targetDate).startsWith('1900-01-01')) {
             targetEl.value = data.targetDate.split('T')[0];
         }
 
@@ -169,6 +171,9 @@ const Fields = {
 
     _formatDate(raw) {
         if (!raw) return '—';
+        // The detail proc wraps null dates with isnull(col, '') which SQL Server
+        // coerces to 1900-01-01 (the datetime epoch); treat that as no date.
+        if (String(raw).startsWith('1900-01-01')) return '—';
         const d = new Date(raw);
         if (isNaN(d)) return '—';
         return d.toLocaleDateString('en-GB', {
