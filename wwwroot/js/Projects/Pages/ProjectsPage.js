@@ -15,6 +15,7 @@ class ProjectsPage extends PageBase {
             SetActivePage('ProjectsMenu');
             if (typeof UserPermissions === 'function') UserPermissions();
             this._wireFilters();
+            await this._setupNew();
             await this._load();
         } catch (error) {
             if (error.message !== 'Unauthorized') {
@@ -32,6 +33,23 @@ class ProjectsPage extends PageBase {
                 btn.classList.add('is-active');
                 this._load();
             }));
+    }
+
+    async _setupNew() {
+        // Only Govtech Admins (level 2) can create projects.
+        try {
+            const level = await AdminContext.resolve();
+            if (level === 2) {
+                const btn = document.getElementById('pj-new');
+                if (btn) {
+                    btn.style.display = '';
+                    btn.addEventListener('click', () => {
+                        sessionStorage.removeItem('EditProjectID');
+                        Nav.toProjectForm();
+                    });
+                }
+            }
+        } catch (err) { console.error('ProjectsPage._setupNew:', err); }
     }
 
     async _load() {

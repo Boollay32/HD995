@@ -159,3 +159,12 @@
     .pjd-table thead th.pjd-h-type,
     .pjd-table thead th.pjd-h-tech { display: none; }
 }
+
+/* Edit-project button (admin only) */
+.pjd-edit-btn {
+    font-size: 0.8125rem; font-weight: 600; color: var(--accent);
+    background: var(--row-hover); border: 1px solid var(--border);
+    padding: 6px 14px; border-radius: 8px; cursor: pointer; margin-left: 8px;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.pjd-edit-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }

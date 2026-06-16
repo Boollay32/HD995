@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Project";
+}
+
+@section AddJSToHead{
+    <script src="~/js/Projects/Pages/ProjectForm.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead{
+    <link rel="stylesheet" type="text/css" href="/css/Pages/ProjectForm.css" asp-append-version="true">
+}
+
+<div id="Main-Div" class="pf-app">
+
+    <header class="pf-head">
+        <h1 id="pf-heading">New project</h1>
+        <div class="pf-actions">
+            <button type="button" class="pf-btn pf-btn-ghost" id="pf-cancel">Cancel</button>
+            <button type="button" class="pf-btn pf-btn-primary" id="pf-submit">
+                <span id="pf-submit-label">Create project</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="pf-form">
+
+        <div class="pf-field">
+            <label for="pf-name">Project name</label>
+            <input type="text" id="pf-name" class="pf-input" maxlength="100"
+                   placeholder="e.g. Release 1.2" autocomplete="off">
+        </div>
+
+        <div class="pf-row">
+            <div class="pf-field">
+                <label for="pf-type">Type</label>
+                <select id="pf-type" class="pf-select">
+                    <option value="1">Release</option>
+                    <option value="2">Internal</option>
+                    <option value="3">Maintenance</option>
+                </select>
+            </div>
+            <div class="pf-field">
+                <label for="pf-status">Status</label>
+                <select id="pf-status" class="pf-select">
+                    <option value="1">New</option>
+                    <option value="2">Active</option>
+                    <option value="5">Draft</option>
+                    <option value="3">Complete</option>
+                    <option value="4">Withdrawn</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="pf-row">
+            <div class="pf-field">
+                <label for="assignedTechName">Owner</label>
+                <select id="assignedTechName" class="pf-select"></select>
+            </div>
+            <div class="pf-field">
+                <label for="pf-target">Target date</label>
+                <input type="date" id="pf-target" class="pf-input">
+            </div>
+        </div>
+
+        <div class="pf-field">
+            <label for="pf-desc">Description</label>
+            <textarea id="pf-desc" class="pf-textarea" maxlength="500"
+                      placeholder="What is this project for?"></textarea>
+            <span class="pf-hint">A project can only be marked Complete once all its tickets are closed.</span>
+        </div>
+
+    </div>
+
+</div>

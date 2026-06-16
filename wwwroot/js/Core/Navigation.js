@@ -9,6 +9,7 @@ const Nav = {
 
     toTicketPage() { Nav._navigate('/TicketPage'); },
     toTasksPage() { Nav._navigate('/Tasks'); },
+    toProjectForm() { Nav._navigate('/ProjectForm'); },
     toProjectsPage() { Nav._navigate('/Projects'); },
     toProjectDetail() { Nav._navigate('/ProjectDetails'); },
     toCreateRFC() { Nav._navigate('/CreateRFC'); },
