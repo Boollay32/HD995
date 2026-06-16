@@ -20,7 +20,6 @@ const Tasks = (() => {
     // -------------------------  Constants  ------------------------- //
 
     const DONE = 3;        // Complete
-    const REOPEN = 2;      // In Progress (when un-ticking done)
     const WITHDRAWN = 4;
 
     // Status display constants live in TaskPopulation (loaded first).
@@ -569,57 +568,6 @@ const Tasks = (() => {
         }
     }
 
-
-    // -------------------------  Toggle done (quick)  ------------------------- //
-
-    async function _toggleDone(taskId, checked, checkboxEl) {
-        const task = _taskById(taskId);
-        if (!task) return;
-
-        // protect unsaved edits open elsewhere (a re-render would discard them)
-        if (State.dirty && State.openId !== null) {
-            const safe = await _guardLeave();
-            if (!safe) { if (checkboxEl) checkboxEl.checked = !checked; return; }
-        }
-
-        const status = checked ? DONE : REOPEN;
-        const completed = checked ? (task.completed || new Date().toISOString()) : '';
-
-        const fields = {
-            TaskID: task.taskID,
-            TicketID: State.ticketId,
-            title: task.title || '',
-            description: task.description || '',
-            progressLog: task.progressLog || '',
-            status,
-            important: task.important ? '1' : '0',
-            requiredDate: task.requiredDate ? H.toInputDate(task.requiredDate) : '',
-            completed,
-        };
-        const techId = H.nameToId(task.assignedTech);
-        if (techId) fields.assignedTech = techId; // omit when unresolved (don't clear)
-
-        task.status = status; // optimistic
-        _updateProgress();
-        _updatePip();
-
-        try {
-            const data = await API.post(
-                'TicketDetails/SaveTask',
-                API.authPayload({ objectInfo: _objectInfo(fields), attachments: _echoAttachments(task) })
-            );
-            if (!data) throw new Error('SaveTask returned null');
-            State.tasks = Array.isArray(data) ? data : State.tasks;
-            _render();
-        } catch (err) {
-            console.error('Tasks._toggleDone:', err);
-            task.status = checked ? REOPEN : DONE; // revert model
-            if (checkboxEl) checkboxEl.checked = !checked;
-            _updateProgress();
-            _updatePip();
-            UI.toast?.('Failed to update task', 'error');
-        }
-    }
 
     // -------------------------  Delete  ------------------------- //
 
