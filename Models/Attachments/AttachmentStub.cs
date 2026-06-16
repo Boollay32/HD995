@@ -1,5 +1,6 @@
 ﻿using HelpDeskNet8.Interfaces.Attachments;
 using HelpDeskNet8.Utilities;
+using System;
 using System.Data;
 
 
@@ -34,47 +35,45 @@ namespace HelpDeskNet8.Models.Attachments
             catch { return null; }
         }
 
+        // Returns true if the reader exposes a column with the given name
+        // (case-insensitive). Used to pick NoteID vs TaskID without relying on
+        // exception-driven control flow, which is fragile on a forward-only
+        // reader and was throwing IndexOutOfRangeException for task attachments.
+        private static bool HasColumn(IDataReader reader, string name)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (string.Equals(reader.GetName(i), name, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
+
         internal static IAttachment FromReader(IDataReader reader)
         {
-            AttachmentStub newAttachment = null;
-
             try
             {
-                newAttachment = new AttachmentStub
+                // Note attachments expose NoteID; task attachments expose TaskID.
+                // Either way the owning id is stored in NoteID on the stub.
+                int ownerId = HasColumn(reader, "NoteID")
+                    ? (int)reader["NoteID"]
+                    : (int)reader["TaskID"];
+
+                return new AttachmentStub
                 {
                     AttachmentID = (int)reader["AttachmentID"],
-                    NoteID = (int)reader["NoteID"],
+                    NoteID = ownerId,
                     AttachmentByteArray = ToBase64(reader["Attachment"]),
                     AttachmentDate = (DateTime)reader["AttachmentDate"],
                     AttachmentName = (string)reader["AttachmentInfo"],
                     AttachmentImageType = (int)reader["AttachmentImageType"],
-
                 };
-
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
-                try
-                {
-                    newAttachment = new AttachmentStub
-                    {
-                        AttachmentID = (int)reader["AttachmentID"],
-                        NoteID = (int)reader["TaskID"],
-                        AttachmentByteArray = ToBase64(reader["Attachment"]),
-                        AttachmentDate = (DateTime)reader["AttachmentDate"],
-                        AttachmentName = (string)reader["AttachmentInfo"],
-                        AttachmentImageType = (int)reader["AttachmentImageType"],
-
-                    };
-                }
-                catch (Exception ex)
-                {
-                    AppLogger.Error(nameof(Attachments), ex);
-                }
+                AppLogger.Error(nameof(Attachments), ex);
+                return null;
             }
-
-
-            return newAttachment;
         }
     }
 }
