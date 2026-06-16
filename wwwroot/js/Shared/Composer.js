@@ -82,7 +82,7 @@ const Composer = (() => {
             let b64 = String(base64).trim();
             const comma = b64.indexOf(',');
             if (b64.startsWith('data:') && comma >= 0) b64 = b64.slice(comma + 1);
-            b64 = b64.replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
+            b64 = b64.replace(/ /g, '+').replace(/[\r\n\t]+/g, '').replace(/-/g, '+').replace(/_/g, '/');
             if (b64.length % 4) b64 += '='.repeat(4 - (b64.length % 4));
             const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
             const blob = new Blob([bytes], { type: _mimeFromName(name) });
