@@ -32,6 +32,10 @@ const Notes = (() => {
 
     const Session = {
         get userName() { return sessionStorage.getItem(STORAGE_KEYS.USER_NAME); },
+        get userID() {
+            const v = sessionStorage.getItem(STORAGE_KEYS.USER_ID);
+            return v == null || v === '' ? null : Number(v);
+        },
     };
 
     let composer = null;
@@ -127,6 +131,80 @@ const Notes = (() => {
         };
     }
 
+    // -------------------------  Inline edit  ------------------------- //
+
+    // Swap a note card's body for an editable textarea with Save/Cancel.
+    function _beginNoteEdit(note) {
+        const card = Dom.noteThread()?.querySelector('[data-nid="' + note.NoteID + '"]');
+        if (!card || card.querySelector('.td-note-editor')) return;
+        const body = card.querySelector('.td-note-body');
+        if (!body) return;
+        const original = note.Body ?? '';
+
+        const wrap = document.createElement('div');
+        wrap.className = 'td-note-editor';
+        const ta = document.createElement('textarea');
+        ta.className = 'td-note-edit-input';
+        ta.value = original;
+        ta.rows = Math.min(8, Math.max(2, original.split('\n').length));
+        const bar = document.createElement('div');
+        bar.className = 'td-note-edit-actions';
+        const save = document.createElement('button');
+        save.type = 'button'; save.className = 'td-note-edit-save'; save.textContent = 'Save';
+        const cancel = document.createElement('button');
+        cancel.type = 'button'; cancel.className = 'td-note-edit-cancel'; cancel.textContent = 'Cancel';
+        bar.appendChild(save); bar.appendChild(cancel);
+        wrap.appendChild(ta); wrap.appendChild(bar);
+        body.replaceWith(wrap);
+        ta.focus();
+
+        const restore = () => {
+            const fresh = _buildNoteBody({ Body: original });
+            wrap.replaceWith(fresh);
+        };
+        cancel.addEventListener('click', restore);
+        save.addEventListener('click', async () => {
+            const text = ta.value.trim();
+            if (!text || text === original) { restore(); return; }
+            save.disabled = cancel.disabled = true;
+            const ok = await _submitNoteEdit(note, text);
+            if (!ok) { save.disabled = cancel.disabled = false; }
+        });
+    }
+
+    // Re-submit an existing note with new text. The proc updates in place
+    // when NoteID is present; it also wipes + re-inserts attachments, so we
+    // re-send the note's existing attachments to preserve them.
+    async function _submitNoteEdit(note, text) {
+        try {
+            const objectInfo = _buildObjectInfo({
+                TicketID: State.ticketId,
+                NoteID: note.NoteID,
+                noteDescription: text,
+                visibleToClient: note.IsVisibleToClient ? '1' : '0',
+            });
+            const attachments = (note.Attachments ?? [])
+                .filter(a => a && a.base64)
+                .map(a => ({
+                    AttachmentName: a.name,
+                    AttachmentByteArray: a.base64,
+                    AttachmentImageType: 0,
+                }));
+            const data = await API.post(
+                'TicketDetails/SaveNote',
+                API.authPayload({ objectInfo, attachments, rfc: false })
+            );
+            if (!data) throw new Error('SaveNote returned null');
+            UI.toast?.('Note updated', 'success');
+            await _getNotes();
+            return true;
+        } catch (err) {
+            console.error('Notes._submitNoteEdit:', err);
+            UI.toast?.('Failed to update note', 'error');
+            return false;
+        }
+    }
+
     // -------------------------  Get notes  ------------------------- //
 
     async function _getNotes() {
@@ -159,6 +237,7 @@ const Notes = (() => {
         if (n && n.noteID !== undefined) {
             return {
                 NoteID: n.noteID,
+                OwnerID: n.notesUserID ?? null,
                 AuthorName: n.notesAddedBy,
                 Body: n.noteDescription,
                 CreatedDate: n.noteDate,
@@ -306,6 +385,24 @@ const Notes = (() => {
         time.textContent = Format.formatDateTime(note.CreatedDate);
         time.setAttribute('title', note.CreatedDate ?? '');
         head.appendChild(time);
+
+        // Creator-only: edit your own note inline. Optimistic notes
+        // (temp id, still saving) are not editable yet.
+        if (!note._optimistic && note.OwnerID != null &&
+            Session.userID != null && note.OwnerID === Session.userID) {
+            const editBtn = document.createElement('button');
+            editBtn.type = 'button';
+            editBtn.className = 'td-note-edit';
+            editBtn.setAttribute('aria-label', 'Edit note');
+            editBtn.title = 'Edit';
+            editBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" '
+                + 'fill="none" stroke="currentColor" stroke-width="2" '
+                + 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                + '<path d="M12 20h9"/>'
+                + '<path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+            editBtn.addEventListener('click', () => _beginNoteEdit(note));
+            head.appendChild(editBtn);
+        }
 
         return head;
     }

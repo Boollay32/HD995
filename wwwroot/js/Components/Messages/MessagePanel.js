@@ -56,6 +56,78 @@ const MessagesPanel = (() => {
         return String(msg.SenderID) === String(Session.userId);
     }
 
+    // -------------------------  Inline edit  ------------------------- //
+
+    function _beginMessageEdit(msg) {
+        const row = document.querySelector('[data-mid="' + msg.MessageID + '"]');
+        if (!row || row.querySelector('.td-bubble-editing')) return;
+        const bubble = row.querySelector('.td-bubble');
+        const body = bubble?.querySelector('.td-bubble-body');
+        if (!bubble) return;
+        const original = msg.Body ?? '';
+
+        const wrap = document.createElement('div');
+        wrap.className = 'td-bubble-editing';
+        const ta = document.createElement('textarea');
+        ta.className = 'td-bubble-edit-input';
+        ta.value = original;
+        ta.rows = Math.min(8, Math.max(1, original.split('\n').length));
+        const bar = document.createElement('div');
+        bar.className = 'td-bubble-edit-actions';
+        const save = document.createElement('button');
+        save.type = 'button'; save.className = 'td-bubble-edit-save'; save.textContent = 'Save';
+        const cancel = document.createElement('button');
+        cancel.type = 'button'; cancel.className = 'td-bubble-edit-cancel'; cancel.textContent = 'Cancel';
+        bar.appendChild(save); bar.appendChild(cancel);
+        wrap.appendChild(ta); wrap.appendChild(bar);
+        if (body) body.style.display = 'none';
+        bubble.insertBefore(wrap, bubble.firstChild);
+        ta.focus();
+
+        const restore = () => {
+            wrap.remove();
+            if (body) body.style.display = '';
+        };
+        cancel.addEventListener('click', restore);
+        save.addEventListener('click', async () => {
+            const text = ta.value.trim();
+            if (!text || text === original) { restore(); return; }
+            save.disabled = cancel.disabled = true;
+            const ok = await _submitMessageEdit(msg, text);
+            if (!ok) { save.disabled = cancel.disabled = false; }
+        });
+    }
+
+    async function _submitMessageEdit(msg, text) {
+        try {
+            const objectInfo = [
+                `TicketID\`${State.ticketId}`,
+                `NoteID\`${msg.MessageID}`,
+                `noteDescription\`${text}`,
+                'visibleToClient`1',
+            ].join('|');
+            const attachments = (msg.Attachments ?? [])
+                .filter(a => a && a.base64)
+                .map(a => ({
+                    AttachmentName: a.name,
+                    AttachmentByteArray: a.base64,
+                    AttachmentImageType: 0,
+                }));
+            const data = await API.post(
+                'TicketDetails/SaveNote',
+                API.authPayload({ objectInfo, attachments, rfc: false })
+            );
+            if (!data) throw new Error('SaveNote returned null');
+            UI.toast?.('Message updated', 'success');
+            await load();
+            return true;
+        } catch (err) {
+            console.error('MessagesPanel._submitMessageEdit:', err);
+            UI.toast?.('Failed to update message', 'error');
+            return false;
+        }
+    }
+
     // -------------------------  Load  ------------------------- //
 
     async function load() {
@@ -164,6 +236,22 @@ const MessagesPanel = (() => {
         }
         if (Array.isArray(msg.Attachments) && msg.Attachments.length > 0) {
             bubble.appendChild(_buildBubbleAttachments(msg.Attachments));
+        }
+        // Sender-only: edit your own message inline. Saved messages only
+        // (MessageID present); optimistic bubbles have no id yet.
+        if (msg.MessageID != null && _isOutbound(msg)) {
+            const editBtn = document.createElement('button');
+            editBtn.type = 'button';
+            editBtn.className = 'td-bubble-edit';
+            editBtn.setAttribute('aria-label', 'Edit message');
+            editBtn.title = 'Edit';
+            editBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" '
+                + 'fill="none" stroke="currentColor" stroke-width="2" '
+                + 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                + '<path d="M12 20h9"/>'
+                + '<path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+            editBtn.addEventListener('click', () => _beginMessageEdit(msg));
+            bubble.appendChild(editBtn);
         }
         return bubble;
     }
