@@ -78,7 +78,9 @@ const TicketLoader = {
 
         if (typeof CustomFieldBuilder !== 'undefined') {
             const builder = new CustomFieldBuilder();
-            builder.changeCustomFields(data.requestID);
+            // Pass the full ticket data so the builder can populate saved
+            // custom-field values (field ids match the serialized field names).
+            builder.changeCustomFields(data.requestID, data);
         }
     }
 
