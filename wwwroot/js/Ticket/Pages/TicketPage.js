@@ -20,6 +20,11 @@ const TQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').
 const TQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
 const TQavColor = n => { let h = 0; for (const c of (n || '')) h = c.charCodeAt(0) + ((h << 5) - h); return TQ_AV_PALETTE[Math.abs(h) % TQ_AV_PALETTE.length]; };
 const TQisOpen = r => !['Closed', 'Solved'].includes(r.status);
+// The assigned tech has a client reply to answer: notify '0' (client
+// replied) and the ticket is assigned to the current user. myId is set
+// per-render in _config (sessionStorage UserID).
+let TQ_MY_ID = null;
+const TQneedsMyReply = r => r.notify === '0' && TQ_MY_ID != null && Number(r.assignedTechID) === TQ_MY_ID;
 const TQdate = iso => { if (!iso) return '—'; const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }); };
 const TQago = iso => {
     if (!iso) return '—';
@@ -71,6 +76,8 @@ class TicketPage extends PageBase {
     // ---- Config consumed by QueueView ----
     _config() {
         const me = this.username;   // compared to assignedTech for the "My open" view
+        const myId = Number(sessionStorage.getItem(STORAGE_KEYS.USER_ID));
+        TQ_MY_ID = Number.isNaN(myId) ? null : myId;
         return {
             title: 'Tickets',
             action: { label: '+ New Ticket', onClick: () => Nav.toCreateTicket() },
@@ -81,7 +88,7 @@ class TicketPage extends PageBase {
             views: [
                 { id: 'mine',  label: 'My open',     filter: r => r.assignedTech === me && TQisOpen(r) },
                 { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && TQisOpen(r) },
-                { id: 'reply', label: 'Needs reply', filter: r => r.notify && TQisOpen(r) },
+                { id: 'reply', label: 'Needs reply', filter: r => r.notify === '0' && TQisOpen(r) },
                 { id: 'all',   label: 'All open',     filter: r => TQisOpen(r) },
             ],
 
@@ -96,7 +103,7 @@ class TicketPage extends PageBase {
                 {
                     key: 'subject', label: 'Ticket', sortable: true,
                     sortValue: r => (r.subject || '').toLowerCase(),
-                    render: r => `<div class="qv-subj">${r.notify ? '<span class="qv-unread" title="Awaiting reply"></span>' : ''}<div><div class="s1">${TQesc(r.subject)}</div><div class="s2"><span class="qv-ref">#${r.ticketID}</span> · ${TQesc(r.userName)}</div></div></div>`
+                    render: r => `<div class="qv-subj">${TQneedsMyReply(r) ? '<span class="qv-unread qv-mine" title="Client replied \u2013 your reply needed"></span>' : (r.notify === '0' ? '<span class="qv-unread" title="Awaiting reply"></span>' : '')}<div><div class="s1">${TQesc(r.subject)}</div><div class="s2"><span class="qv-ref">#${r.ticketID}</span> · ${TQesc(r.userName)}</div></div></div>`
                 },
                 {
                     key: 'requestType', label: 'Type',
@@ -127,7 +134,7 @@ class TicketPage extends PageBase {
                 },
             ],
 
-            defaultSort: { key: 'updated', dir: -1 },
+            defaultSort: { key: 'notify', dir: 1 },
 
             previewHeader: r => `<div class="qv-pv-tid">#${r.ticketID}</div><div class="qv-pv-title">${TQesc(r.subject)}</div>
                 <div class="qv-pv-meta">
