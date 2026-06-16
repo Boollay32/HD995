@@ -36,7 +36,9 @@ class RFCPopulator {
             this._handleSelectField(field, value);
         } else if (field.tagName === 'LABEL') {
             // Read-only display fields (e.g. Title, originator) show via text.
-            field.innerText = value;
+            // Date-valued labels (e.g. changeRequestCreateDate) arrive as ISO;
+            // render them human-readable rather than showing the raw timestamp.
+            field.innerText = this._formatDisplayDate(value);
         } else {
             // input + textarea both expose .value; dates handled in _handleInputField
             this._handleInputField(field, value);
@@ -85,11 +87,33 @@ class RFCPopulator {
     }
 
     _setDateField(field, value) {
-        const parts = value.split('/');
-        if (parts.length !== 3) return;
+        const raw = String(value);
+        // null dates may arrive as the proc's 1900-01-01 placeholder
+        // (isnull(col, '') -> datetime epoch); leave the input blank.
+        if (!raw || raw.startsWith('1900-01-01')) { field.value = ''; return; }
 
+        // Dates serialize as ISO (yyyy-MM-ddTHH:mm:ss) by default. Accept that
+        // and the legacy dd/MM/yyyy form, normalising both to the yyyy-MM-dd a
+        // date input requires.
+        if (raw.includes('T') || /^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+            field.value = raw.split('T')[0];
+            return;
+        }
+        const parts = raw.split('/');
+        if (parts.length !== 3) return;
         const [day, month, year] = parts;
         field.value = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
+
+    // Format an ISO date string for read-only display. Non-date strings pass
+    // through unchanged; the 1900-01-01 null placeholder renders blank.
+    _formatDisplayDate(value) {
+        const raw = String(value);
+        if (!raw.includes('T') && !/^\d{4}-\d{2}-\d{2}/.test(raw)) return raw;
+        if (raw.startsWith('1900-01-01')) return '';
+        const d = new Date(raw);
+        if (isNaN(d)) return raw;
+        return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
     }
 }
 
