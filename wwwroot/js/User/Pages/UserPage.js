@@ -132,18 +132,19 @@ class UserPage extends PageBase {
             defaultSort: { key: 'userName', dir: 1 },
 
             previewHeader: r => `<div class="qv-pv-tid">${UQesc(r.authority)}</div><div class="qv-pv-title">${UQesc(r.userName)}</div>
-                <div class="qv-pv-meta"><span class="qv-badge">${UQesc(UQrole(r.adminLevel))}</span></div>`,
+                <div class="qv-pv-meta"><span class="qv-pv-chip"><span class="qv-pv-chip-label">Role</span><span class="qv-badge">${UQesc(UQrole(r.adminLevel))}</span></span></div>`,
             preview: r => {
                 const s = UQstatus(r);
                 return `<h3 class="qv-pv-h">Contact</h3>
-                    <div style="font-size:0.78125rem;line-height:1.9">
-                      <div>Email&nbsp; ${r.email ? UQesc(r.email) : '—'}</div>
-                      <div>Phone&nbsp; ${r.phone ? UQesc(r.phone) : '—'}</div>
+                    <div class="qv-pv-dl">
+                      <span class="qv-pv-dt">Email</span><span class="qv-pv-dd">${r.email ? UQesc(r.email) : '\u2014'}</span>
+                      <span class="qv-pv-dt">Phone</span><span class="qv-pv-dd">${r.phone ? UQesc(r.phone) : '\u2014'}</span>
                     </div>
                     <h3 class="qv-pv-h">Account</h3>
-                    <div style="font-size:0.78125rem;line-height:1.9">
-                      <div>Status&nbsp; <span class="qv-status" style="color:${s.color};background:${s.bg}">${s.label}</span></div>
-                      <div>Last login&nbsp; ${UQdate(r.lastLoginDate)}</div>
+                    <div class="qv-pv-dl">
+                      <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${s.color};background:${s.bg}">${s.label}</span></span>
+                      <span class="qv-pv-dt">Role</span><span class="qv-pv-dd">${UQesc(UQrole(r.adminLevel))}</span>
+                      <span class="qv-pv-dt">Last login</span><span class="qv-pv-dd">${UQdate(r.lastLoginDate)}</span>
                     </div>`;
             },
             onOpen: r => this._open(r),

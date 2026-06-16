@@ -114,16 +114,19 @@ class RFCPage extends PageBase {
             defaultSort: { key: 'targetDate', dir: 1 },
 
             previewHeader: r => `<div class="qv-pv-tid">#${r.rfcID}</div><div class="qv-pv-title">${RQesc(r.title)}</div>
-                <div class="qv-pv-meta"><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${RQesc(r.priority)}</span></div>`,
+                <div class="qv-pv-meta"><span class="qv-pv-chip"><span class="qv-pv-chip-label">Priority</span><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${RQesc(r.priority)}</span></span></div>`,
             preview: r => {
                 const c = RQstatusColor(r.status);
                 return `<h3 class="qv-pv-h">Raised by</h3>
-                    <div style="font-size:0.78125rem;line-height:1.9;margin-bottom:6px">${RQesc(r.createdBy)}</div>
+                    <div class="qv-pv-dl" style="margin-bottom:6px">
+                      <span class="qv-pv-dt">Raised by</span><span class="qv-pv-dd">${RQesc(r.createdBy)}</span>
+                    </div>
                     <h3 class="qv-pv-h">At a glance</h3>
-                    <div style="font-size:0.78125rem;line-height:1.9">
-                      <div>Status&nbsp; <span class="qv-status" style="color:${c[0]};background:${c[1]}">${RQesc(r.status)}</span></div>
-                      <div>Assignee&nbsp; ${r.assignedTech ? RQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</div>
-                      <div>Target&nbsp; ${RQdate(r.targetDate)}</div>
+                    <div class="qv-pv-dl">
+                      <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${c[0]};background:${c[1]}">${RQesc(r.status)}</span></span>
+                      <span class="qv-pv-dt">Priority</span><span class="qv-pv-dd"><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${RQesc(r.priority)}</span></span>
+                      <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? RQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
+                      <span class="qv-pv-dt">Target</span><span class="qv-pv-dd">${RQdate(r.targetDate)}</span>
                     </div>`;
             },
             onOpen: r => this._open(r),

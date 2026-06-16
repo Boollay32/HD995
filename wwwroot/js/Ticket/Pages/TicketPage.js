@@ -130,23 +130,25 @@ class TicketPage extends PageBase {
             defaultSort: { key: 'updated', dir: -1 },
 
             previewHeader: r => `<div class="qv-pv-tid">#${r.ticketID}</div><div class="qv-pv-title">${TQesc(r.subject)}</div>
-                <div class="qv-pv-meta"><span class="qv-badge">${TQesc(r.requestType)}</span>
-                <span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span></div>`,
+                <div class="qv-pv-meta">
+                  <span class="qv-pv-chip"><span class="qv-pv-chip-label">Type</span><span class="qv-badge">${TQesc(r.requestType)}</span></span>
+                  <span class="qv-pv-chip"><span class="qv-pv-chip-label">Priority</span><span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span></span>
+                </div>`,
             preview: r => {
                 const sc = TQ_STATUS_COLOR[r.status] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
                 const note = (r.notes || '').trim();
-                const snippet = note.length > 220 ? note.slice(0, 220) + '…' : note;
+                const snippet = note.length > 220 ? note.slice(0, 220) + '\u2026' : note;
                 return `<h3 class="qv-pv-h">Requester</h3>
                 <div class="qv-assignee" style="margin-bottom:14px"><span class="qv-av" style="background:${TQavColor(r.userName)};width:28px;height:28px;font-size:0.625rem">${TQinitials(r.userName)}</span><div><div style="font-weight:600;font-size:0.8125rem">${TQesc(r.userName)}</div><div style="font-size:0.71875rem;color:var(--muted, #6A655C)">${TQesc(r.authority)}</div></div></div>
                 <h3 class="qv-pv-h">At a glance</h3>
-                <div style="font-size:0.78125rem;line-height:1.9">
-                  <div>Status&nbsp; <span class="qv-status" style="color:${sc[0]};background:${sc[1]}">${TQesc(r.status)}</span></div>
-                  <div>Priority&nbsp; <span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span></div>
-                  <div>Type&nbsp; ${TQesc(r.requestType)}</div>
-                  <div>Assignee&nbsp; ${r.assignedTech ? TQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</div>
-                  <div>Opened&nbsp; ${TQdate(r.created)}</div>
-                  <div>Last activity&nbsp; ${TQago(r.updated)}</div>
-                  ${r.notify ? '<div style="color:var(--accent-strong);font-weight:600">● Awaiting reply</div>' : ''}
+                <div class="qv-pv-dl">
+                  <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${sc[0]};background:${sc[1]}">${TQesc(r.status)}</span></span>
+                  <span class="qv-pv-dt">Priority</span><span class="qv-pv-dd"><span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span></span>
+                  <span class="qv-pv-dt">Type</span><span class="qv-pv-dd">${TQesc(r.requestType)}</span>
+                  <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? TQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
+                  <span class="qv-pv-dt">Opened</span><span class="qv-pv-dd">${TQdate(r.created)}</span>
+                  <span class="qv-pv-dt">Last activity</span><span class="qv-pv-dd">${TQago(r.updated)}</span>
+                  ${r.notify ? '<span class="qv-pv-dt">Status</span><span class="qv-pv-dd" style="color:var(--accent-strong);font-weight:600">\u25cf Awaiting reply</span>' : ''}
                 </div>
                 ${snippet ? `<h3 class="qv-pv-h">Latest note</h3><div style="font-size:0.78125rem;line-height:1.6">${TQesc(snippet)}</div>` : ''}`;
             },
