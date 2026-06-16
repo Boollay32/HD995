@@ -189,7 +189,11 @@ const Tasks = (() => {
             return;
         }
 
-        const sorted = [...State.tasks].sort((a, b) => {
+        // Withdrawn tasks (status 4) are hidden from the per-ticket list; they
+        // remain in the data and are reachable via the Withdrawn search filter.
+        const sorted = [...State.tasks]
+            .filter(t => H.statusOf(t) !== 4)
+            .sort((a, b) => {
             const ad = H.isDone(a), bd = H.isDone(b);
             if (ad !== bd) return ad ? 1 : -1;
             const as = H.statusOf(a), bs = H.statusOf(b);
@@ -224,8 +228,6 @@ const Tasks = (() => {
 
         item.innerHTML = TaskPopulation.itemSummaryHtml(task, { done, status, dueLabel });
 
-        item.querySelector('input[type="checkbox"]')
-            ?.addEventListener('change', (e) => _toggleDone(task.taskID, e.target.checked, e.target));
         item.querySelector('.td-task-open')
             ?.addEventListener('click', () => _requestOpen(task.taskID));
         item.querySelector('.td-task-delete-btn')
@@ -324,6 +326,11 @@ const Tasks = (() => {
                     <label class="td-ed-label">Due date</label>
                     <input type="date" class="td-ed-input" data-fld="requiredDate"
                            value="${H.toInputDate(task.requiredDate)}">
+                </div>
+                <div class="td-ed-row">
+                    <label class="td-ed-label">Completion date</label>
+                    <input type="date" class="td-ed-input" data-fld="completed"
+                           value="${H.toInputDate(task.completed) || H.toInputDate(new Date())}">
                 </div>
                 <div class="td-ed-row td-ed-important">
                     <button type="button" class="td-imp-pill" data-fld="important"
@@ -501,8 +508,15 @@ const Tasks = (() => {
         const assignKeep = selOpt?.dataset?.keep === '1';
         const assignedTech = assignKeep ? '' : (assignSel?.value || '');
 
-        let completed = '';
-        if (status === DONE) completed = task.completed || new Date().toISOString();
+        // Completion date comes from its editable field (YYYY-MM-DD, like the
+        // due date). It is REQUIRED when the task is being marked Complete --
+        // a task can't be completed without recording when.
+        let completed = get('completed')?.value || '';
+        if (status === DONE && !completed) {
+            get('completed')?.focus();
+            UI.toast?.('Please set a completion date before marking the task complete', 'warning');
+            return;
+        }
 
         const fields = {
             TaskID: isNew ? '' : task.taskID,
@@ -627,12 +641,14 @@ const Tasks = (() => {
         _render();
 
         try {
-            // Preserve the existing delete write exactly (status 3).
+            // Delete = withdraw (status 4). There is no hard-delete; withdrawn
+            // tasks drop out of the normal list (see _render) but remain in the
+            // data, searchable by the Withdrawn filter.
             const objectInfo = _objectInfo({
                 TaskID: taskId,
                 TicketID: State.ticketId,
                 title: task.title || '',
-                status: 3,
+                status: 4,
             });
             const data = await API.post(
                 'TicketDetails/SaveTask',

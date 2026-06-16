@@ -81,13 +81,8 @@ const TaskPopulation = {
         const { done, status, dueLabel } = ctx;
         return `
             <div class="td-task-summary">
-                <div class="td-task-check">
-                    <input type="checkbox" id="task-check-${task.taskID}"
-                           aria-label="Mark task complete" ${done ? 'checked' : ''}>
-                    <label for="task-check-${task.taskID}" aria-hidden="true"></label>
-                </div>
                 <button type="button" class="td-task-open" aria-expanded="false">
-                    <span class="td-task-title">
+                    <span class="td-task-title${status === 4 ? ' is-withdrawn' : ''}">
                         ${task.important ? '<span class="td-task-star" title="Important" aria-label="Important">\u2605</span>' : ''}
                         ${TaskPopulation.esc(task.title || '(untitled task)')}
                     </span>

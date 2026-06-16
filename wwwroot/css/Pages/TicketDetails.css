@@ -1945,3 +1945,10 @@ body {
   background: rgba(127, 127, 127, 0.2);
   opacity: 1;
 }
+
+/* Withdrawn tasks: strike through the name (matches the completed-task
+   treatment). The .is-withdrawn class is set on the title span. */
+.td-task-title.is-withdrawn {
+  text-decoration: line-through;
+  color: var(--td-muted);
+}
