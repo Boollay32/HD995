@@ -93,7 +93,6 @@ class UserPage extends PageBase {
             search: ['userName', 'email', 'authority'],
 
             views: [
-                { id: 'all',    label: 'All',     filter: () => true },
                 { id: 'active', label: 'Active',  filter: r => !Number(r.locked) },
                 { id: 'locked', label: 'Locked',  warn: true, filter: r => { const l = Number(r.locked); return !!l && l !== 99; } },
                 { id: 'deactivated', label: 'Deactivated', filter: r => Number(r.locked) === 99 },
