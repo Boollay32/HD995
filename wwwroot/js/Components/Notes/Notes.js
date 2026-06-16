@@ -205,6 +205,37 @@ const Notes = (() => {
         }
     }
 
+    // Remove a single attachment from a saved note by re-saving the note with
+    // that attachment filtered out (body unchanged). The remaining attachments
+    // shift down automatically. Creator-only (gated where the button is added).
+    async function _removeNoteAttachment(note, index) {
+        const kept = (note.Attachments ?? [])
+            .filter((a, i) => i !== index && a && a.base64)
+            .map(a => ({
+                AttachmentName: a.name,
+                AttachmentByteArray: a.base64,
+                AttachmentImageType: 0,
+            }));
+        try {
+            const objectInfo = _buildObjectInfo({
+                TicketID: State.ticketId,
+                NoteID: note.NoteID,
+                noteDescription: note.Body ?? '',
+                visibleToClient: note.IsVisibleToClient ? '1' : '0',
+            });
+            const data = await API.post(
+                'TicketDetails/SaveNote',
+                API.authPayload({ objectInfo, attachments: kept, rfc: false })
+            );
+            if (!data) throw new Error('SaveNote returned null');
+            UI.toast?.('Attachment removed', 'success');
+            await _getNotes();
+        } catch (err) {
+            console.error('Notes._removeNoteAttachment:', err);
+            UI.toast?.('Failed to remove attachment', 'error');
+        }
+    }
+
     // -------------------------  Get notes  ------------------------- //
 
     async function _getNotes() {
@@ -344,7 +375,7 @@ const Notes = (() => {
         card.appendChild(_buildNoteBody(note));
 
         if (Array.isArray(note.Attachments) && note.Attachments.length > 0) {
-            card.appendChild(_buildNoteAttachments(note.Attachments));
+            card.appendChild(_buildNoteAttachments(note.Attachments, note));
         }
 
         return card;
@@ -414,11 +445,21 @@ const Notes = (() => {
         return body;
     }
 
-    function _buildNoteAttachments(attachments) {
+    function _buildNoteAttachments(attachments, note) {
         const wrap = document.createElement('div');
         wrap.className = 'td-note-attachments';
 
-        attachments.forEach(att => {
+        // The note's creator can remove an attachment. Removal re-saves the
+        // note with that attachment omitted: the SaveNote proc wipes and
+        // re-inserts all attachment slots each save, so the remaining ones
+        // simply shift down. No delete endpoint is needed.
+        const canRemove = note && !note._optimistic && note.OwnerID != null &&
+            Session.userID != null && note.OwnerID === Session.userID;
+
+        attachments.forEach((att, index) => {
+            const row = document.createElement('div');
+            row.className = 'td-note-file-row';
+
             const downloadable = !!att.base64;
             const el = document.createElement(downloadable ? 'a' : 'span');
             el.className = 'td-note-file';
@@ -435,7 +476,23 @@ const Notes = (() => {
                 <span class="td-file-name">${Format.escapeHtml(att.name)}</span>
                 ${att.size != null ? `<span class="td-file-size mono">${Format.fileSizeLabel(att.size)}</span>` : ''}
             `;
-            wrap.appendChild(el);
+            row.appendChild(el);
+
+            if (canRemove) {
+                const rm = document.createElement('button');
+                rm.type = 'button';
+                rm.className = 'td-note-file-remove';
+                rm.title = 'Remove attachment';
+                rm.setAttribute('aria-label', `Remove ${att.name}`);
+                rm.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" '
+                    + 'fill="none" stroke="currentColor" stroke-width="2.5" '
+                    + 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                    + '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+                rm.addEventListener('click', () => _removeNoteAttachment(note, index));
+                row.appendChild(rm);
+            }
+
+            wrap.appendChild(row);
         });
 
         return wrap;
