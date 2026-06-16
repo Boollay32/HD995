@@ -134,10 +134,10 @@ namespace HelpDeskNet8.Services
 
             for (int i = 1; i <= MAX_ATTACHMENTS; i++)
             {
-                var (byteArray, info, imageType) = GetAttachmentDetails(attachmentList, i - 1);
+                var (attachmentData, info, imageType) = GetAttachmentDetails(attachmentList, i - 1);
                 var attachmentParameters = new Dictionary<string, (SqlDbType Type, object Value)>
                 {
-                    { $"@Attachment{i}",          (SqlDbType.VarBinary, byteArray) },
+                    { $"@Attachment{i}",          (SqlDbType.VarChar, attachmentData) },
                     { $"@Attachment{i}Desc",       (SqlDbType.NVarChar,  info) },
                     { $"@Attachment{i}ImageType",  (SqlDbType.NVarChar,  imageType) }
                 };
@@ -174,18 +174,23 @@ namespace HelpDeskNet8.Services
         // Returns the attachment as a byte[] (decoded from the base64 wire
         // string) so it binds to the @Attachment{i} VarBinary parameter.
         // A null byte[] becomes DBNull via AddParameters for empty slots.
-        private static (byte[] ByteArray, string Info, int ImageType) GetAttachmentDetails(List<IAttachment> attachmentList, int index)
+        // The Attachment column is varchar(max): return the client's base64
+        // string for storage as-is (no decode). Storing decoded bytes via a
+        // VarBinary param corrupted non-text files, as SQL reinterpreted the
+        // binary through the column codepage. Base64 is ASCII and safe in
+        // varchar.
+        private static (string Data, string Info, int ImageType) GetAttachmentDetails(List<IAttachment> attachmentList, int index)
         {
             if (attachmentList.Count <= index) return (null, "", 0);
 
             try
             {
                 var attachment = attachmentList[index];
-                byte[] bytes = string.IsNullOrEmpty(attachment.AttachmentByteArray)
+                string data = string.IsNullOrEmpty(attachment.AttachmentByteArray)
                     ? null
-                    : Convert.FromBase64String(attachment.AttachmentByteArray);
+                    : attachment.AttachmentByteArray;
                 return (
-                    bytes,
+                    data,
                     attachment.AttachmentName,
                     (int)attachment.AttachmentImageType
                 );

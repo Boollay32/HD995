@@ -22,15 +22,25 @@ namespace HelpDeskNet8.Models.Attachments
         private static string ToBase64(object value)
         {
             if (value == null || value is System.DBNull) return null;
-            if (value is byte[] bytes) return bytes.Length > 0 ? System.Convert.ToBase64String(bytes) : null;
+            // The Attachment column is varchar(max) holding the base64 string
+            // exactly as it was stored, so return it as-is. (A byte[] branch is
+            // kept only in case a driver/provider ever surfaces the text column
+            // as bytes; legacy pre-fix rows that stored raw file text instead of
+            // base64 are recovered via Latin1 so they still open.)
             if (value is string s)
             {
-                // A string here is raw bytes surfaced as text, not base64.
-                // Latin1 maps each char 1:1 to a byte, recovering the
-                // original bytes; base64-encode those for the client.
                 if (string.IsNullOrEmpty(s)) return null;
+                // Base64 payloads are pure ASCII (A-Z a-z 0-9 + / =, optional
+                // whitespace). If it looks like base64 it already is -- return
+                // it. Otherwise it's a legacy raw-text row: recover its bytes.
+                string trimmed = s.Trim();
+                if (trimmed.Length > 0 &&
+                    System.Text.RegularExpressions.Regex.IsMatch(
+                        trimmed, "^[A-Za-z0-9+/\\r\\n\\t ]+={0,2}$"))
+                    return trimmed;
                 return System.Convert.ToBase64String(System.Text.Encoding.Latin1.GetBytes(s));
             }
+            if (value is byte[] bytes) return bytes.Length > 0 ? System.Convert.ToBase64String(bytes) : null;
             try { return System.Convert.ToBase64String((byte[])value); }
             catch { return null; }
         }
