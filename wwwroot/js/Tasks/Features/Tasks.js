@@ -189,13 +189,18 @@ const Tasks = (() => {
             return;
         }
 
-        // Withdrawn tasks (status 4) are hidden from the per-ticket list; they
-        // remain in the data and are reachable via the Withdrawn search filter.
-        const sorted = [...State.tasks]
-            .filter(t => H.statusOf(t) !== 4)
-            .sort((a, b) => {
-            const ad = H.isDone(a), bd = H.isDone(b);
-            if (ad !== bd) return ad ? 1 : -1;
+        // Closed tasks sort to the bottom: completed first, then withdrawn at the
+        // very end (both shown -- withdrawn appears crossed out). Open tasks keep
+        // their status/required-date ordering above them.
+        const closedRank = t => {
+            const s = H.statusOf(t);
+            if (s === 4) return 2;   // Withdrawn -- very bottom
+            if (s === 3) return 1;   // Complete -- below open
+            return 0;                // open
+        };
+        const sorted = [...State.tasks].sort((a, b) => {
+            const ar = closedRank(a), br = closedRank(b);
+            if (ar !== br) return ar - br;
             const as = H.statusOf(a), bs = H.statusOf(b);
             if (as !== bs) return as - bs;
             if (a.requiredDate && b.requiredDate) return new Date(a.requiredDate) - new Date(b.requiredDate);
