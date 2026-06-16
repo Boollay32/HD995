@@ -106,7 +106,10 @@ namespace HelpDeskNet8.Controllers.Tickets
                 return BadRequest(result.Error);
 
             // Notify on a ticket reply (RFC notes are internal-only, no routing).
-            if (!request.RFC)
+            // New notes only: editing an existing note (NoteID present) must not
+            // re-send the reply notification -- an edit is not a new reply.
+            bool isNewNote = !(note.NoteID.HasValue && note.NoteID.Value != 0);
+            if (!request.RFC && isNewNote)
                 _notificationService.Notify(note.TicketID ?? 0, NotificationType.NoteResponded, user);
 
             // Return updated notes so UI can re-render without a second call
