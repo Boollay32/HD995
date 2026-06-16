@@ -265,17 +265,62 @@ body {
   gap: 8px;
   margin-top: 8px;
 }
+/* Attachment tiles: collapsed to a square icon, expanding to reveal the name
+   on hover/focus — the same civic-warmth interaction as note and task
+   attachments. */
 .td-bubble-file {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 6px;
+  min-width: 30px;
+  max-width: 30px;
+  height: 30px;
+  padding: 0;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
   font-size: 0.71875rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: max-width 0.18s ease, background 0.15s ease;
+}
+.td-bubble-file .td-file-icon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+}
+.td-bubble-file:hover .td-file-icon,
+.td-bubble-file:focus-visible .td-file-icon {
+  width: auto;
+  margin-right: 2px;
+}
+.td-bubble-file .td-file-name {
+  max-width: 0;
+  opacity: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: max-width 0.18s ease, opacity 0.12s ease;
+}
+.td-bubble-file:hover,
+.td-bubble-file:focus-visible {
+  max-width: 300px;
+  padding: 0 9px;
+  justify-content: flex-start;
+}
+.td-bubble-file:hover .td-file-name,
+.td-bubble-file:focus-visible .td-file-name {
+  max-width: 200px;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-bubble-file,
+  .td-bubble-file .td-file-name { transition: none; }
 }
 .td-bubble-row--out .td-bubble-file {
   background: rgba(255, 255, 255, 0.18);
