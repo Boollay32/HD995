@@ -19,7 +19,7 @@
         string AssignedTechEmail { get; set; }
         string AuthorityName { get; set; }
         string Department { get; set; }
-        bool? Notify { get; set; }
+        string Notify { get; set; }
         bool? NotifyTech { get; set; }
         string IssueTypeDesc { get; set; }
         string Customer { get; set; }

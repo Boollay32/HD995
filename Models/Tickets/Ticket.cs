@@ -32,6 +32,7 @@ namespace HelpDeskNet8.Models.Tickets
         public string Notes { get; set; }
         public DateTime? NotesDate { get; set; }
         public string RaisedBy { get; set; }
+        public int? RaisedByID { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Authority { get; set; }
@@ -39,7 +40,7 @@ namespace HelpDeskNet8.Models.Tickets
         public string Priority { get; set; }
         public int? Category { get; set; }
         public string AssignedTech { get; set; }
-        public bool? Notify { get; set; }
+        public string Notify { get; set; }
         public bool? NotifyTech { get; set; }
         public int? TicketTypeID { get; set; }
         public string Customer { get; set; }
@@ -109,6 +110,7 @@ namespace HelpDeskNet8.Models.Tickets
                     Department = reader["departmentDesc"] as string,
                     Notes = reader["Notes"] as string,
                     RaisedBy = reader["RaisedBy"] as string,
+                    RaisedByID = reader["RaisedByID"] as int?,
                     Subject = reader["Subject"] as string,
                     UserName = reader["Client"] as string,
                     Email = reader["Email"] as string,
@@ -155,7 +157,7 @@ namespace HelpDeskNet8.Models.Tickets
                     CompleteDate = reader["CompleteDate"] as DateTime?,
                     IncidentStartDate = reader["IncidentStartDate"] as DateTime?,
                     BusinessImpact = reader["BusinessImpact"] as string,
-                    Notify = reader["Notify"] as bool?,
+                    Notify = reader["Notify"] as string,
                     NotifyTech = reader["NotifyTech"] as bool?,
                 };
 

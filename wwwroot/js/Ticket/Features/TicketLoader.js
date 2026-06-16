@@ -45,6 +45,7 @@ const TicketLoader = {
             }
             Topbar.populate(data);
             Fields.populate(data);
+            TicketLoader._clearNotificationIfMine(data);
             TicketLoader._delegateModules(data);
 
         } catch (err) {
@@ -61,6 +62,30 @@ const TicketLoader = {
 
         if (!data) throw new Error('GetTicketDetail returned null');
         return data;
+    },
+
+    // When the person who needs to act opens the ticket, clear its reply
+    // notification to '2' (no notification). notify '0' means the client
+    // responded and the assigned tech needs to act; notify '1' means an
+    // internal user responded and the requester needs to act. Clearing reuses
+    // the false-reply save (which now writes notify '2'). Silent + best-effort.
+    _clearNotificationIfMine(data) {
+        const notify = String(data.notify ?? '');
+        const viewerId = Number(Session.userId);
+        if (!Number.isFinite(viewerId)) return;
+
+        const viewerIsAssignedTech = Number(data.assignedTechID) === viewerId;
+        const viewerIsRequester = Number(data.raisedByID) === viewerId;
+
+        const needsClear =
+            (notify === '0' && viewerIsAssignedTech) ||
+            (notify === '1' && viewerIsRequester);
+        if (!needsClear) return;
+
+        // Fire-and-forget: don't block the page load on the clear.
+        try { Save?.markFalseReply?.(); } catch (err) {
+            console.error('TicketLoader._clearNotificationIfMine:', err);
+        }
     },
 
     _delegateModules(data) {

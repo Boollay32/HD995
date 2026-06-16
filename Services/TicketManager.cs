@@ -133,9 +133,15 @@ namespace HelpDeskNet8.Services
                     command.Parameters.Add(new SqlParameter("@StatusID", SqlDbType.Int) { Value = ToSqlValue(ticket.Status) });
                     command.Parameters.Add(new SqlParameter("@PriorityID", SqlDbType.Int) { Value = ToSqlValue(ticket.Priority) });
                     command.Parameters.Add(new SqlParameter("@CategoryID", SqlDbType.Int) { Value = ToSqlValue(ticket.Category) });
-                    command.Parameters.Add(new SqlParameter("@Notify", SqlDbType.Bit)
+                    // Notify is varchar(50) holding '0'/'1'/'2' (0 = client
+                    // responded/tech to act, 1 = internal responded/client to
+                    // act, 2 = no notification). A FalseReply clears it to '2'.
+                    // A normal save sends DBNull so ISNULL(@Notify, Notify) keeps
+                    // the existing value. (The proc's @Notify must be varchar(50),
+                    // not bit, or '2' can't be stored.)
+                    command.Parameters.Add(new SqlParameter("@Notify", SqlDbType.VarChar)
                     {
-                        Value = FalseReply ? false : ticket.Notify
+                        Value = FalseReply ? "2" : ToSqlValue(ticket.Notify)
                     });
                     command.Parameters.Add(new SqlParameter("@NotifyTech", SqlDbType.Bit)
                     {
