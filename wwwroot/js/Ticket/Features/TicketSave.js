@@ -116,6 +116,7 @@ const Save = {
         // select ('') uses the existing value instead of blanking it.
         return {
             TicketID: data.ticketID,
+            StatusID: document.getElementById('status')?.value || data.status,
             AssignedTechID: document.getElementById('assignedtech')?.value || data.assignedTechID,
             CategoryID: document.getElementById('category')?.value || data.category,
             SubCategoryID: document.getElementById('subcategory')?.value || '',
@@ -144,6 +145,7 @@ const Save = {
         // so it is not persisted yet — add both if you need it saved.
         const objectInfo = [
             `TicketID\`${payload.TicketID}`,
+            `status\`${payload.StatusID ?? ''}`,
             `assignedTechName\`${payload.AssignedTechID ?? ''}`,
             `category\`${payload.CategoryID ?? ''}`,
             `subcategory\`${payload.SubCategoryID ?? ''}`,
