@@ -14,6 +14,10 @@ namespace HelpDeskNet8.Controllers.Projects
         private readonly IProjectManager _projectManager = projectM;
         private readonly IAuthenticator _authenticator = auth;
 
+        // Create / edit / complete a project is Govtech-Admin only (level 2).
+        private bool IsGovtechAdmin(IUser user) =>
+            _authenticator.CheckAdmin(user) == Constants.AdminLevel.Admin;
+
         [HttpPost]
         public IActionResult GetProjects([FromBody] GetProjectsRequest request)
         {
@@ -32,6 +36,17 @@ namespace HelpDeskNet8.Controllers.Projects
 
             var result = _projectManager.GetProjectDetail(user, request.ProjectId);
             if (result == null) return NotFound();
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public IActionResult SaveProject([FromBody] SaveProjectRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null) return Unauthorized();
+            if (!IsGovtechAdmin(user)) return Forbid();
+
+            var result = _projectManager.SaveProject(user, request.Project);
             return Ok(result);
         }
     }

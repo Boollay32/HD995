@@ -163,3 +163,13 @@
     .pj-grid { grid-template-columns: 1fr; }
     .pj-head { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
+
+/* New-project button (admin only) */
+.pj-head-left { display: flex; align-items: center; gap: 14px; }
+.pj-new-btn {
+    font-size: 0.8125rem; font-weight: 600; color: #fff;
+    background: var(--accent); border: 1px solid var(--accent);
+    padding: 7px 14px; border-radius: 8px; cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.pj-new-btn:hover { background: var(--accent-strong); border-color: var(--accent-strong); }

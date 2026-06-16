@@ -16,6 +16,7 @@ class ProjectDetails extends PageBase {
             SetActivePage('ProjectsMenu');
             if (typeof UserPermissions === 'function') UserPermissions();
             this._wireBack();
+            await this._setupEdit();
             await this._load();
         } catch (error) {
             if (error.message !== 'Unauthorized') {
@@ -27,6 +28,23 @@ class ProjectDetails extends PageBase {
     _wireBack() {
         document.getElementById('pjd-back')
             ?.addEventListener('click', () => Nav.toProjectsPage());
+    }
+
+    async _setupEdit() {
+        // Only Govtech Admins (level 2) can edit a project.
+        try {
+            const level = await AdminContext.resolve();
+            if (level === 2) {
+                const btn = document.getElementById('pjd-edit');
+                if (btn) {
+                    btn.style.display = '';
+                    btn.addEventListener('click', () => {
+                        sessionStorage.setItem('EditProjectID', String(this.projectId));
+                        Nav.toProjectForm();
+                    });
+                }
+            }
+        } catch (err) { console.error('ProjectDetails._setupEdit:', err); }
     }
 
     async _load() {
