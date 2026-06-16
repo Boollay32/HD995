@@ -90,6 +90,7 @@ class TaskPage extends PageBase {
                 { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && KQisOpen(r) },
                 { id: 'imp',   label: 'Important',   warn: true, filter: r => r.important && KQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => KQisOpen(r) },
+                { id: 'wdn',   label: 'Withdrawn',   filter: r => r.status === 4 },
             ],
 
             filters: [
