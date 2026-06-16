@@ -78,12 +78,27 @@ class UserManager extends PageBase {
 
         if (isAdmin) {
             UI.showById('ResetUser-Button,DeleteUser-Button');
-            UI.enableById('UserPhone,AdminLevel,Locked');
+            UI.enableById('UserPhone,AdminLevel');
             this._setDeleteButtonLabel();
+            this._setupUnlockButton();
             this._wireDirtyTracking();
         } else {
             UI.hideById('ResetUser-Button,DeleteUser-Button,UpdateUser-Button');
-            UI.disableById('UserPhone,AdminLevel,Locked');
+            UI.disableById('UserPhone,AdminLevel');
+        }
+    }
+
+    // The account can only be UNLOCKED from the UI (the UserManage proc has
+    // no lock path). Show the Unlock button only for a genuinely locked
+    // account (locked === 1; not active 0, not deactivated 99).
+    _setupUnlockButton() {
+        const btn = document.getElementById('Unlock-Button');
+        if (!btn) return;
+        if (this.userLocked === 1) {
+            btn.style.display = '';
+            btn.addEventListener('click', () => userSave.unlockUser());
+        } else {
+            btn.style.display = 'none';
         }
     }
 
@@ -97,7 +112,7 @@ class UserManager extends PageBase {
     // loaded value (mirrors the ticket Details tab). Fields are already
     // populated (_loadUserData ran before _setupExtraControls).
     _wireDirtyTracking() {
-        const ids = ['UserPhone', 'AdminLevel', 'Locked'];
+        const ids = ['UserPhone', 'AdminLevel'];
         const els = ids.map(id => document.getElementById(id)).filter(Boolean);
         const saveBtn = document.getElementById('UpdateUser-Button');
         if (!saveBtn) return;
