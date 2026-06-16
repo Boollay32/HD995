@@ -128,6 +128,36 @@ const MessagesPanel = (() => {
         }
     }
 
+    // Remove one attachment from a saved message by re-saving with it filtered
+    // out (body unchanged). Sender-only (gated where the button is added).
+    async function _removeMessageAttachment(msg, index) {
+        const kept = (msg.Attachments ?? [])
+            .filter((a, i) => i !== index && a && a.base64)
+            .map(a => ({
+                AttachmentName: a.name,
+                AttachmentByteArray: a.base64,
+                AttachmentImageType: 0,
+            }));
+        try {
+            const objectInfo = [
+                `TicketID\`${State.ticketId}`,
+                `NoteID\`${msg.MessageID}`,
+                `noteDescription\`${msg.Body ?? ''}`,
+                'visibleToClient`1',
+            ].join('|');
+            const data = await API.post(
+                'TicketDetails/SaveNote',
+                API.authPayload({ objectInfo, attachments: kept, rfc: false })
+            );
+            if (!data) throw new Error('SaveNote returned null');
+            UI.toast?.('Attachment removed', 'success');
+            await load();
+        } catch (err) {
+            console.error('MessagesPanel._removeMessageAttachment:', err);
+            UI.toast?.('Failed to remove attachment', 'error');
+        }
+    }
+
     // -------------------------  Load  ------------------------- //
 
     async function load() {
@@ -235,7 +265,7 @@ const MessagesPanel = (() => {
             bubble.appendChild(body);
         }
         if (Array.isArray(msg.Attachments) && msg.Attachments.length > 0) {
-            bubble.appendChild(_buildBubbleAttachments(msg.Attachments));
+            bubble.appendChild(_buildBubbleAttachments(msg.Attachments, msg));
         }
         // Sender-only: edit your own message inline. Saved messages only
         // (MessageID present); optimistic bubbles have no id yet.
@@ -256,10 +286,19 @@ const MessagesPanel = (() => {
         return bubble;
     }
 
-    function _buildBubbleAttachments(attachments) {
+    function _buildBubbleAttachments(attachments, msg) {
         const wrap = document.createElement('div');
         wrap.className = 'td-bubble-attachments';
-        attachments.forEach(att => {
+
+        // The sender can remove an attachment from their own message. Removal
+        // re-saves the message with that attachment omitted (SaveNote wipes and
+        // re-inserts all slots, so the rest shift down) -- no delete endpoint.
+        const canRemove = msg && msg.MessageID != null && _isOutbound(msg);
+
+        attachments.forEach((att, index) => {
+            const row = document.createElement('div');
+            row.className = 'td-bubble-file-row';
+
             const downloadable = !!att.base64;
             const el = document.createElement(downloadable ? 'a' : 'span');
             el.className = 'td-bubble-file';
@@ -274,7 +313,23 @@ const MessagesPanel = (() => {
             el.innerHTML = `
                 <span class="td-file-icon" aria-hidden="true">${Format.fileIcon(att.name)}</span>
                 <span class="td-file-name">${Format.escapeHtml(att.name)}</span>`;
-            wrap.appendChild(el);
+            row.appendChild(el);
+
+            if (canRemove) {
+                const rm = document.createElement('button');
+                rm.type = 'button';
+                rm.className = 'td-bubble-file-remove';
+                rm.title = 'Remove attachment';
+                rm.setAttribute('aria-label', `Remove ${att.name}`);
+                rm.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" '
+                    + 'fill="none" stroke="currentColor" stroke-width="2.5" '
+                    + 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                    + '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+                rm.addEventListener('click', () => _removeMessageAttachment(msg, index));
+                row.appendChild(rm);
+            }
+
+            wrap.appendChild(row);
         });
         return wrap;
     }

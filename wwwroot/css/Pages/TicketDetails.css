@@ -1914,3 +1914,34 @@ body {
 .td-ed-row:has(.td-ed-title-static) {
   gap: 0;
 }
+
+/* Saved message-attachment row: tile + sender-only remove button. */
+.td-bubble-file-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.td-bubble-file-remove {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: currentColor;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+.td-bubble-file-row:hover .td-bubble-file-remove,
+.td-bubble-file-remove:focus-visible {
+  opacity: 0.85;
+}
+.td-bubble-file-remove:hover {
+  background: rgba(127, 127, 127, 0.2);
+  opacity: 1;
+}
