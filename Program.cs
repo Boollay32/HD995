@@ -1,6 +1,7 @@
 using HelpDeskNet8.Infrastructure;
 using HelpDeskNet8.Interfaces.Attachments;
 using HelpDeskNet8.Interfaces.Notes;
+using HelpDeskNet8.Interfaces.Projects;
 using HelpDeskNet8.Interfaces.RFCs;
 using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Tasks;
@@ -31,6 +32,7 @@ builder.Services.AddScoped<IAttachmentManager, AttachmentManager>();
 builder.Services.AddScoped<IRFCManager, RFCManager>();
 builder.Services.AddScoped<IReports, ReportManager>();
 builder.Services.AddScoped<ITaskManager, TaskManager>();
+builder.Services.AddScoped<IProjectManager, ProjectManager>();
 builder.Services.AddScoped<IMiscManager, MiscManager>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
