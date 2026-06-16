@@ -14,6 +14,7 @@ const NavBar = {
             'UsersMenu': () => Nav.toUserPage(),
             'RFCMenu': () => Nav.toRFC(),
             'StatsMenu': () => NavBar.stats(),
+            'ProjectsMenu': () => NavBar.projects(),
             'Logout-button': () => NavBar.startLogout(),
         };
 
@@ -34,6 +35,10 @@ const NavBar = {
         Nav.toStatsPage();
     },
 
+    projects() {
+        Nav.toProjectsPage();
+    },
+
     tickets() {
         Nav.toTicketPage();
     },
@@ -52,6 +57,7 @@ const NavBar = {
             'UserPage': 'UsersMenu',
             'RFC': 'RFCMenu',
             'StatsPage': 'StatsMenu',
+            'ProjectsPage': 'ProjectsMenu',
         };
         const id = map[pageName] ?? pageName;
         document.getElementById(id)?.classList.add('active');

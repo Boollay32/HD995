@@ -103,6 +103,11 @@ const Auth = {
             UI.hideById('StatsMenu');
         }
 
+        // Projects is Govtech-only (admin levels 1 and 2). Clients never see it.
+        if (![1, 2].includes(parseInt(adminId, 10))) {
+            UI.hideById('ProjectsMenu');
+        }
+
         if (config.extra) {
             this._applyExtraFunctionality();
             MakeDropDownsEditable();
