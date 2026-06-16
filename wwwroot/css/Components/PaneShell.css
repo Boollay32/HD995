@@ -459,6 +459,9 @@ html[data-theme="dark"] {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
+  /* stacked: the resize divider is meaningless when panes are
+     vertical, and as a 3rd grid child it mis-places into the flow. */
+  .td-shell[data-layout="both"] .td-divider { display: none; }
   .td-shell .td-pane--left {
     border-right: none;
     border-bottom: 1px solid var(--td-border);

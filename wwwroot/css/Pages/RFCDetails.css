@@ -91,6 +91,9 @@
 .rfc-notes-body .td-note-thread {
   flex: 1;
   min-height: 0;
+  max-height: none;   /* override the base 460px cap so the
+                         thread fills the column and the
+                         add-note bar sits at the bottom */
   overflow-y: auto;
 }
 .rfc-notes-body .td-note-compose {
