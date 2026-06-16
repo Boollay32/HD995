@@ -23,6 +23,7 @@ class CreateTicket extends PageBase {
 
             this._setupPageUI();
             this._setupEventListeners();
+            await this._setupProjectLock();
 
         } catch (error) {
             this.handleError('Error initializing create ticket');
@@ -30,6 +31,34 @@ class CreateTicket extends PageBase {
     }
 
     // -------------------------  Page UI  ------------------------- //
+
+    async _setupProjectLock() {
+        // When arriving from a project ("New ticket" inside a project), a
+        // ProjectID is in session. Show the locked Project field, stamp the
+        // hidden projectID input (flows into objectInfo -> Ticket.ProjectID),
+        // and display the project name. The key is cleared so a later manual
+        // ticket is not silently attached to the same project.
+        const projectId = sessionStorage.getItem('ProjectID');
+        if (!projectId) return;
+        sessionStorage.removeItem('ProjectID');
+
+        const input = document.getElementById('projectID');
+        const row = document.getElementById('ct-project-row');
+        const nameEl = document.getElementById('ct-project-name');
+        if (input) input.value = projectId;
+        if (row) row.style.display = '';
+
+        try {
+            const data = await API.post('Project/GetProjectDetail',
+                API.authPayload({ projectId: parseInt(projectId, 10) }));
+            if (nameEl) nameEl.textContent = (data && data.projectName)
+                ? data.projectName
+                : ('Project #' + projectId);
+        } catch (err) {
+            console.error('CreateTicket._setupProjectLock:', err);
+            if (nameEl) nameEl.textContent = 'Project #' + projectId;
+        }
+    }
 
     _setupPageUI() {
         SetActivePage('TicketMenu');

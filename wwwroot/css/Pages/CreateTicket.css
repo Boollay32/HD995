@@ -261,3 +261,14 @@
     overflow-y: visible;
   }
 }
+
+/* Locked project field on the create-ticket form (arriving from a project) */
+.ct-locked-field {
+    padding: 9px 12px;
+    font-size: 0.875rem;
+    color: var(--text);
+    background: var(--row-hover);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-weight: 500;
+}

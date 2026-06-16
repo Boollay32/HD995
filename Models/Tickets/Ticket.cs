@@ -80,6 +80,7 @@ namespace HelpDeskNet8.Models.Tickets
         public string eCaptureCategory { get; set; }
         public int? ProjectTypeID { get; set; }
         public string ProjectName { get; set; }
+        public int? ProjectID { get; set; }
         public string EmailCC { get; set; }
         public string FileName { get; set; }
         public DateTime? TargetDate { get; set; }
