@@ -1988,3 +1988,44 @@ body {
   text-decoration: line-through;
   color: var(--td-muted);
 }
+
+/* Additional Info (custom fields) -------------------------------------------
+   CustomFieldBuilder emits legacy .Detail-Div/.left/.right/.Name/.Value markup
+   (shared with CreateTicket). Inside the ticket-details workspace we restyle
+   those rows to match the Classification / Dates field layout (dt/dd + select)
+   so Additional Info reads consistently with the rest of the panel. */
+#CustomFields-Container .Detail-Div {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px 16px;
+  margin: 0;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--td-border-2, var(--border));
+}
+#CustomFields-Container .Detail-Div:last-child { border-bottom: 0; }
+#CustomFields-Container .Detail-Div .left { margin: 0; }
+#CustomFields-Container .Detail-Div .left .Name {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--td-muted, var(--muted));
+}
+#CustomFields-Container .Detail-Div .right { width: 100%; }
+/* Match the .td-select / .td-input look for the injected controls. */
+#CustomFields-Container .Detail-Div .Value {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  font: inherit;
+  color: var(--td-text, var(--text));
+  background: var(--td-surface, var(--panel));
+  border: 1px solid var(--td-border-2, var(--border));
+  border-radius: 7px;
+}
+#CustomFields-Container .Detail-Div .Value:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--row-hover);
+}
+#CustomFields-Container .Detail-Div textarea.Value { min-height: 64px; resize: vertical; }
