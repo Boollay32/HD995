@@ -68,7 +68,9 @@ class CustomFieldBuilder {
             } else if (el.tagName === 'INPUT' && el.type === 'checkbox') {
                 el.checked = (v === '1' || v.toLowerCase() === 'true');
             } else if (el.tagName === 'INPUT' && el.type === 'date') {
-                el.value = v.split('T')[0];
+                // 1900-01-01 is the proc's null-date placeholder
+                // (isnull(col, '') -> datetime epoch); leave the input blank.
+                el.value = v.startsWith('1900-01-01') ? '' : v.split('T')[0];
             } else if ('value' in el) {
                 el.value = v;
             }
