@@ -230,6 +230,7 @@ body {
   letter-spacing: 0.01em;
 }
 .td-bubble {
+  position: relative;
   max-width: 78%;
   padding: 10px 14px;
   font-size: 0.8125rem;
@@ -237,6 +238,41 @@ body {
   word-break: break-word;
   white-space: pre-wrap;
   box-shadow: 0 1px 2px rgba(20, 18, 15, 0.04), 0 6px 18px rgba(20, 18, 15, 0.05);
+}
+/* Message edit icon: top-right of the bubble, revealed on hover, styled to
+   match the attachment tiles (subtle surface + border). Out-bubbles have a
+   brand background, so the icon there uses a translucent light treatment. */
+.td-bubble-edit {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 6px;
+  background: var(--row-hover);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.td-bubble:hover .td-bubble-edit,
+.td-bubble-edit:focus-visible { opacity: 1; }
+.td-bubble-edit:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.td-bubble-edit:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* On the outbound (brand) bubble, give the resting icon a light translucent
+   look so it reads against the coloured background. */
+.td-bubble-row--out .td-bubble-edit {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+.td-bubble-row--out .td-bubble-edit:hover {
+  background: rgba(255, 255, 255, 0.30);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 .td-bubble-meta {
   display: flex;
