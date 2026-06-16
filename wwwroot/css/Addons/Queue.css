@@ -516,6 +516,44 @@
   gap: 8px;
 }
 
+/* ---- Preview drawer: labelled definition grid ---- */
+.qv-pv-dl {
+  display: grid;
+  grid-template-columns: minmax(84px, auto) 1fr;
+  gap: 9px 14px;
+  align-items: baseline;
+  margin: 0 0 6px;
+  font-size: 0.78125rem;
+}
+.qv-pv-dt {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.71875rem;
+  white-space: nowrap;
+}
+.qv-pv-dd {
+  color: var(--text);
+  min-width: 0;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+/* Header pills get a tiny caption so they are never unlabelled. */
+.qv-pv-chip {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.qv-pv-chip-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 /* HD32-THEME-LAYER v1 */
 /* =============================================================================
    Theme layer: white / grey / orange / black, light + dark.
