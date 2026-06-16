@@ -143,7 +143,7 @@ const Save = {
         // Keys must match TicketMapper.Map. NOTE: 'subcategory' is sent but the
         // mapper does not read it and the Ticket model has no SubCategory field,
         // so it is not persisted yet — add both if you need it saved.
-        const objectInfo = [
+        const parts = [
             `TicketID\`${payload.TicketID}`,
             `status\`${payload.StatusID ?? ''}`,
             `assignedTechName\`${payload.AssignedTechID ?? ''}`,
@@ -151,7 +151,25 @@ const Save = {
             `subcategory\`${payload.SubCategoryID ?? ''}`,
             `priority\`${payload.PriorityID ?? ''}`,
             `targetDate\`${payload.TargetDate ?? ''}`,
-        ].filter(s => !s.endsWith('`')).join('|');
+        ].filter(s => !s.endsWith('`'));
+
+        // Append custom-field values so edits to the Additional Info section
+        // persist. Each custom field built by CustomFieldBuilder has
+        // id === customFilterItem (the camelCase Ticket property name), so
+        // TicketMapper saves them by name — the same mechanism CreateTicket
+        // uses for custom fields on a new ticket.
+        const customContainer = document.querySelector('#CustomFields-Container')
+            || document.querySelector('#Custom-fields');
+        if (customContainer) {
+            for (const el of customContainer.querySelectorAll('input, select, textarea')) {
+                if (!el.id) continue;
+                const val = (el.type === 'checkbox') ? (el.checked ? '1' : '0') : el.value;
+                if (val === null || val === undefined || val === '') continue;
+                parts.push(`${el.id}\`${val}`);
+            }
+        }
+
+        const objectInfo = parts.join('|');
 
         const data = await API.post(
             'Ticket/SaveTicket',

@@ -132,7 +132,7 @@ const Fields = {
     populate(data) {
         // People
         Fields._setText('raisedby', data.raisedBy);
-        Fields._setText('authority', data.authority);
+        Fields._setText('authority', data.authorityName);
         Fields._setText('requesttype', data.requestType);
 
         // Dates (model fields are Created / CloseDate)
