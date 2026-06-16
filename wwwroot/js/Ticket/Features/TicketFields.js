@@ -150,6 +150,7 @@ const Fields = {
         // only applies when the value matches a loaded option; TicketSave
         // falls back to data.* on save, so a mismatch is harmless).
         Fields._setSelect('assignedtech', data.assignedTechID);
+        Fields._setSelect('status', data.status);
         Fields._setSelect('category', data.category);
         Fields._setSelect('priority', data.priority);
     },
