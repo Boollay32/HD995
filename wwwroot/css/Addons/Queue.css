@@ -642,3 +642,10 @@ html[data-theme="dark"]{
 .qv-table tbody tr:first-child td{ border-top:none; }
 
 /* light/dark toggle (injected into .qv-topbar by Theme.js) */
+
+/* "Your reply needed" dot: client replied + ticket assigned to this tech.
+   Stronger than the generic .qv-unread "awaiting reply" dot. */
+.qv-unread.qv-mine {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg, rgba(181,83,14,0.18));
+}

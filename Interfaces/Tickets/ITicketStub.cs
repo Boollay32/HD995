@@ -11,6 +11,7 @@
         string StatusDesc { get; set; }
         string Status { get; set; }
         string AssignedTech { get; set; }
+        int? AssignedTechID { get; set; }
         string Authority { get; set; }
     }
 }

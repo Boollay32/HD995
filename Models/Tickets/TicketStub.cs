@@ -40,6 +40,7 @@ namespace HelpDeskNet8.Models.Tickets
         public string Status { get; set; }
 
         public string AssignedTech { get; set; }
+        public int? AssignedTechID { get; set; }
 
         public string Authority { get; set; }
 
@@ -66,6 +67,7 @@ namespace HelpDeskNet8.Models.Tickets
                         UserName = (string)reader["Client"],
                         Status = (string)reader["StatusDesc"],
                         AssignedTech = reader["Assigned Tech"] is DBNull ? String.Empty : (string)reader["Assigned Tech"],
+                        AssignedTechID = reader["AssignedTechID"] as int?,
                         Authority = (string)reader["AuthorityAbbr"],
                         Priority = (string)reader["PriorityDesc"],
                         Notify = (string)reader["Notify"]
