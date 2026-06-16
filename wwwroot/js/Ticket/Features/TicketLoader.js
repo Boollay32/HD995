@@ -105,7 +105,13 @@ const TicketLoader = {
             const builder = new CustomFieldBuilder();
             // Pass the full ticket data so the builder can populate saved
             // custom-field values (field ids match the serialized field names).
-            builder.changeCustomFields(data.requestID, data);
+            // The custom-field <select>s are created here, AFTER the initial
+            // Dropdowns.load('Ticket') ran -- so they start empty. Re-run the
+            // dropdown load once they exist; _populateSelect skips already-filled
+            // selects, so only the new custom ones get their options.
+            Promise.resolve(builder.changeCustomFields(data.requestID, data))
+                .then(() => Dropdowns.load('Ticket'))
+                .catch(err => console.error('Custom-field dropdown load:', err));
         }
     }
 

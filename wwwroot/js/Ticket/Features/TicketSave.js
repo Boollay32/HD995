@@ -51,14 +51,6 @@ const FieldHandlers = {
     },
 
     _onCategoryChange() {
-        const categoryId = document.getElementById('category')?.value;
-        if (!categoryId) return;
-
-        // Delegate to existing subcategory loader
-        if (typeof LoadSubCategories !== 'undefined') {
-            LoadSubCategories(categoryId);
-        }
-
         Dirty.set(true);
     },
 
@@ -89,9 +81,6 @@ const FieldHandlers = {
         const catEl = document.getElementById('category');
         catEl?.addEventListener('change', FieldHandlers._onCategoryChange);
 
-        // Sub category
-        const subCatEl = document.getElementById('subcategory');
-        subCatEl?.addEventListener('change', FieldHandlers._onChange);
 
         // Priority
         const priorityEl = document.getElementById('priority');
@@ -119,7 +108,6 @@ const Save = {
             StatusID: document.getElementById('status')?.value || data.status,
             AssignedTechID: document.getElementById('assignedtech')?.value || data.assignedTechID,
             CategoryID: document.getElementById('category')?.value || data.category,
-            SubCategoryID: document.getElementById('subcategory')?.value || '',
             PriorityID: document.getElementById('priority')?.value || data.priority,
             TargetDate: document.getElementById('targetdate')?.value || data.targetDate,
             NewAssignedTech: sessionStorage.getItem(STORAGE_KEYS.NEW_ASSIGNED_TECH) ?? null,
@@ -140,15 +128,12 @@ const Save = {
     },
 
     async _post(payload, falseReply = false) {
-        // Keys must match TicketMapper.Map. NOTE: 'subcategory' is sent but the
-        // mapper does not read it and the Ticket model has no SubCategory field,
-        // so it is not persisted yet — add both if you need it saved.
+        // Keys must match TicketMapper.Map.
         const parts = [
             `TicketID\`${payload.TicketID}`,
             `status\`${payload.StatusID ?? ''}`,
             `assignedTechName\`${payload.AssignedTechID ?? ''}`,
             `category\`${payload.CategoryID ?? ''}`,
-            `subcategory\`${payload.SubCategoryID ?? ''}`,
             `priority\`${payload.PriorityID ?? ''}`,
             `targetDate\`${payload.TargetDate ?? ''}`,
         ].filter(s => !s.endsWith('`'));
