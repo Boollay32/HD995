@@ -16,6 +16,7 @@ class ProjectDetails extends PageBase {
             SetActivePage('ProjectsMenu');
             if (typeof UserPermissions === 'function') UserPermissions();
             this._wireBack();
+            this._wireNewTicket();
             await this._setupEdit();
             await this._load();
         } catch (error) {
@@ -28,6 +29,16 @@ class ProjectDetails extends PageBase {
     _wireBack() {
         document.getElementById('pjd-back')
             ?.addEventListener('click', () => Nav.toProjectsPage());
+    }
+
+    _wireNewTicket() {
+        // Add a ticket to this project: stamp the id and open the create page,
+        // which locks the project field and stores the FK (Stage 5 flow).
+        document.getElementById('pjd-new-ticket')
+            ?.addEventListener('click', () => {
+                sessionStorage.setItem('ProjectID', String(this.projectId));
+                Nav.toCreateTicket();
+            });
     }
 
     async _setupEdit() {
@@ -75,11 +86,7 @@ class ProjectDetails extends PageBase {
         set('pjd-name', p.projectName ?? '');
         document.title = `${p.projectName ?? 'Project'} - Govtech HelpDesk`;
 
-        const typeEl = document.getElementById('pjd-type');
-        if (typeEl) {
-            typeEl.textContent = p.projectType ?? '';
-            typeEl.className = `pj-type pj-type--${this._typeClass(p.projectType)}`;
-        }
+        set('pjd-type', p.projectType || '—');
         const statusEl = document.getElementById('pjd-status');
         if (statusEl) {
             statusEl.textContent = p.status ?? '';
