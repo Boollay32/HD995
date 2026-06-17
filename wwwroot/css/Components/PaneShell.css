@@ -141,6 +141,28 @@ html[data-theme="dark"] {
   flex-shrink: 0;
 }
 
+/* Linked-project chip in the ticket topbar (clickable -> opens the project).
+   Name is resolved live from tblTicket.ProjectID; reuses the info-pill tokens. */
+.td-meta-project {
+  border: 0;
+  font: inherit;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--td-info-bg);
+  color: var(--td-info);
+  max-width: 20vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: filter 0.12s ease;
+}
+
+.td-meta-project:hover,
+.td-meta-project:focus-visible {
+  filter: brightness(0.96);
+  text-decoration: underline;
+}
+
 .td-meta-pill.status-open {
   background: var(--td-info-bg);
   color: var(--td-info);
