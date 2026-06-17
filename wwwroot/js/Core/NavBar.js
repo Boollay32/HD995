@@ -15,6 +15,7 @@ const NavBar = {
             'RFCMenu': () => Nav.toRFC(),
             'StatsMenu': () => NavBar.stats(),
             'ProjectsMenu': () => NavBar.projects(),
+            'IncidentsMenu': () => NavBar.incidents(),
             'Logout-button': () => NavBar.startLogout(),
         };
 
@@ -37,6 +38,10 @@ const NavBar = {
 
     projects() {
         Nav.toProjectsPage();
+    },
+
+    incidents() {
+        Nav.toIncidentsPage();
     },
 
     tickets() {
