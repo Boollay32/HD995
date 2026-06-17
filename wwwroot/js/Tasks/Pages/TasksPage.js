@@ -87,10 +87,11 @@ class TaskPage extends PageBase {
 
             views: [
                 { id: 'mine',  label: 'My open',     filter: r => r.assignedTech === me && KQisOpen(r) },
-                { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && KQisOpen(r) },
-                { id: 'imp',   label: 'Important',   warn: true, filter: r => r.important && KQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => KQisOpen(r) },
+                { id: 'imp',   label: 'Important',   warn: true, filter: r => r.important && KQisOpen(r) },
+                { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && KQisOpen(r) },
                 { id: 'wdn',   label: 'Withdrawn',   filter: r => r.status === 4 },
+                { id: 'cmp',   label: 'Complete',    filter: r => r.status === 3 },
             ],
 
             filters: [
