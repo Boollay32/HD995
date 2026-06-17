@@ -138,6 +138,7 @@ namespace HelpDeskNet8.Models.Tickets
                     AssignedTechID = reader["AssignedTechID"] as int?,
                     AssignedTechEmail = reader["AssignedTechEmail"] as string,
                     AuthorityName = reader["AuthorityName"] as string,
+                    UserAuthorityID = reader["AuthorityID"] as int?,
                     ResourceRequired = reader["ResourceRequired"] as string,
                     WebCaptureImpact = reader["webCaptureImpact"] as string,
                     DateAssignedtoRelease = reader["DateAssignedtoRelease"] as DateTime?,
