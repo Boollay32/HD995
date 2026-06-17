@@ -42,6 +42,10 @@ window.onload = function () {
 
 // =============================  Login Functions  ============================= //
 
+// Captured at the first DEFAULT_PASSWORD response so the new-password submit
+// re-sends the user's actual default (e.g. "Helpdesk7741"), not a fixed string.
+let defaultPassword = "";
+
 async function Login(form, e) {
     ToggleWaiting();
 
@@ -53,7 +57,7 @@ async function Login(form, e) {
 
     if (NewPassForm[0].value !== "") {
         newpass = NewPassForm.pass1.value;
-        pass = "Helpdesk";
+        pass = defaultPassword || "Helpdesk";
     } else {
         pass = LoginForm.psw.value;
     }
@@ -86,6 +90,7 @@ async function Login(form, e) {
         sessionStorage.setItem("UserID", data.userID);
         sessionStorage.setItem("AuthorityID", data.authorityID);
 
+        if (data.status === LOGIN_STATUS.DEFAULT_PASSWORD) defaultPassword = pass;
         HandleStatusLogin(data.status);
 
     } catch (error) {

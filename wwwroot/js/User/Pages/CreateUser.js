@@ -92,10 +92,11 @@ class CreateUser extends PageBase {
 
     _handleCreateSuccess(data) {
         const raw = (typeof data === 'string') ? data.trim() : '';
-        // CreateUser returns the new user's PIN (numeric string). A non-numeric
-        // value is a backend message (e.g. validation) - show it as-is.
-        const message = /^\d+$/.test(raw)
-            ? `User created.\n\nPIN: ${raw}\n\nThe password has been set to: Helpdesk\n\nGive both to the new user. They'll be asked to set their own password the first time they log in.`
+        // CreateUser returns pin|tempPassword (pipe-delimited); a response with
+        // no pipe is a backend message (e.g. validation) and is shown as-is.
+        const [pin, tempPass] = raw.split('|');
+        const message = (/^\d+$/.test(pin) && tempPass)
+            ? `User created.\n\nPIN: ${pin}\n\nTemporary password: ${tempPass}\n\nGive both to the new user. They'll be asked to set a new password the first time they log in.`
             : (raw || 'User created.');
         BuildMessageBox(message, 'Users');
     }
