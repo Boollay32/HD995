@@ -81,6 +81,7 @@ namespace HelpDeskNet8.Models.Tickets
         public int? ProjectTypeID { get; set; }
         public string ProjectName { get; set; }
         public int? ProjectID { get; set; }
+        public string LinkedProjectName { get; set; }   // live project name, resolved by GetTicketDetail's join on ProjectID (display-only, never saved back)
         public string EmailCC { get; set; }
         public string FileName { get; set; }
         public DateTime? TargetDate { get; set; }
@@ -161,6 +162,16 @@ namespace HelpDeskNet8.Models.Tickets
                     Notify = reader["Notify"] as string,
                     NotifyTech = reader["NotifyTech"] as bool?,
                 };
+
+                // Linked project: live name resolved by GetTicketDetail's LEFT JOIN
+                // on tblTicket.ProjectID. Guarded so a not-yet-migrated proc (without
+                // the ProjectID / LinkedProjectName columns) still loads the ticket.
+                try
+                {
+                    newTicket.ProjectID = reader["ProjectID"] as int?;
+                    newTicket.LinkedProjectName = reader["LinkedProjectName"] as string;
+                }
+                catch { /* columns absent until the GetTicketDetail join is applied */ }
 
                 newTicket._originalTicket = (Ticket)newTicket.MemberwiseClone();
             }

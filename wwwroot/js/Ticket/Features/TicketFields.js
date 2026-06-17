@@ -120,6 +120,21 @@ const Topbar = {
             slaGroup.hidden = true;
         }
 
+        // Linked project — resolved live by GetTicketDetail's join on ProjectID.
+        // Shown only when the ticket belongs to a project; clicking opens it.
+        const projGroup = document.getElementById('meta-project-group');
+        const projEl = document.getElementById('meta-project');
+        if (projEl && data.projectID && data.linkedProjectName) {
+            projEl.textContent = data.linkedProjectName;
+            projEl.onclick = () => {
+                sessionStorage.setItem('ProjectID', String(data.projectID));
+                Nav.toProjectDetail();
+            };
+            if (projGroup) projGroup.hidden = false;
+        } else if (projGroup) {
+            projGroup.hidden = true;
+        }
+
         // Page title
         document.title = `#${data.ticketID} — ${data.subject ?? 'Ticket'}`;
     },
