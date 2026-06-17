@@ -25,7 +25,18 @@ window.onload = function () {
     document.getElementById("Login-Button")?.addEventListener("click", () => Login(document.getElementById("login")));
     document.getElementById("SecondWall-Submit")?.addEventListener("click", SecondWallAuth);
     document.getElementById("NewPass-Submit")?.addEventListener("click", () => SetNewPassword(document.getElementById("NewPass")));
-    document.getElementById("pass")?.addEventListener("keydown", e => { if (e.key === "Enter") Login(document.getElementById("login")); });    
+    document.getElementById("pass")?.addEventListener("keydown", e => { if (e.key === "Enter") Login(document.getElementById("login")); });
+
+    // Hold the eye button to reveal the password; release to hide again.
+    const peekBtn = document.getElementById("pass-peek");
+    const passField = document.getElementById("pass");
+    if (peekBtn && passField) {
+        const reveal  = () => { passField.type = "text";     peekBtn.classList.add("is-peeking"); };
+        const conceal = () => { passField.type = "password"; peekBtn.classList.remove("is-peeking"); };
+        peekBtn.addEventListener("pointerdown", e => { e.preventDefault(); reveal(); });
+        ["pointerup", "pointerleave", "pointercancel"].forEach(ev => peekBtn.addEventListener(ev, conceal));
+        window.addEventListener("blur", conceal);
+    }    
 };
 
 

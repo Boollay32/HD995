@@ -37,7 +37,14 @@
                 </div>
                 <div class="field">
                     <label for="pass">Password</label>
-                    <input id="pass" class="login-input" type="password" name="psw" placeholder="Your password" required autocomplete="off" />
+                    <div class="login-input-wrap">
+                        <input id="pass" class="login-input" type="password" name="psw" placeholder="Your password" required autocomplete="off" />
+                        <button type="button" id="pass-peek" class="login-peek" aria-label="Show password while held" title="Hold to show password" tabindex="-1">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 <button id="Login-Button" type="button" class="accept">Sign In</button>
 
