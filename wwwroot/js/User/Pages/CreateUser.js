@@ -91,9 +91,12 @@ class CreateUser extends PageBase {
     // -------------------------  Create Success  ------------------------- //
 
     _handleCreateSuccess(data) {
-        const message = (typeof data === 'string' && data.trim())
-            ? data.trim()
-            : 'User created.';
+        const raw = (typeof data === 'string') ? data.trim() : '';
+        // CreateUser returns the new user's PIN (numeric string). A non-numeric
+        // value is a backend message (e.g. validation) - show it as-is.
+        const message = /^\d+$/.test(raw)
+            ? `User created.\n\nPIN: ${raw}\n\nThe password has been set to: Helpdesk\n\nGive both to the new user. They'll be asked to set their own password the first time they log in.`
+            : (raw || 'User created.');
         BuildMessageBox(message, 'Users');
     }
 }
