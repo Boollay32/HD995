@@ -36,7 +36,7 @@ class ProjectDetails extends PageBase {
         // which locks the project field and stores the FK (Stage 5 flow).
         document.getElementById('pjd-new-ticket')
             ?.addEventListener('click', () => {
-                sessionStorage.setItem('ProjectID', String(this.projectId));
+                sessionStorage.setItem('NewTicketProjectID', String(this.projectId));
                 Nav.toCreateTicket();
             });
     }
