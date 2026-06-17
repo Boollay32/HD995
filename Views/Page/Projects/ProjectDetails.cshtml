@@ -22,9 +22,11 @@
                 <polyline points="12 19 5 12 12 5" />
             </svg>
         </button>
-        <span class="pjd-name" id="pjd-name">Project</span>
+        <span class="pjd-name-block">
+            <span class="pjd-cap">Project name</span>
+            <span class="pjd-name" id="pjd-name">Project</span>
+        </span>
         <span class="pjd-badges">
-            <span class="pj-type" id="pjd-type"></span>
             <span class="pj-status" id="pjd-status"></span>
         </span>
         <button type="button" id="pjd-edit" class="pjd-edit-btn" style="display:none">Edit</button>
@@ -33,8 +35,12 @@
     <div id="pjd-body">
 
         <section class="pjd-meta" aria-label="Project details">
-            <p class="pjd-desc" id="pjd-desc"></p>
+            <div class="pjd-desc-block">
+                <span class="pjd-cap">Description</span>
+                <p class="pjd-desc" id="pjd-desc"></p>
+            </div>
             <dl class="pjd-grid">
+                <div class="pjd-field"><dt>Type</dt><dd id="pjd-type"></dd></div>
                 <div class="pjd-field"><dt>Owner</dt><dd id="pjd-owner"></dd></div>
                 <div class="pjd-field"><dt>Created by</dt><dd id="pjd-created-by"></dd></div>
                 <div class="pjd-field"><dt>Created</dt><dd id="pjd-created"></dd></div>
@@ -46,6 +52,7 @@
 
         <div class="pjd-tickets-head">
             <h2>Tickets</h2>
+            <button type="button" class="pjd-newticket-btn" id="pjd-new-ticket">+ New ticket</button>
         </div>
 
         <p class="pjd-tickets-empty" id="pjd-tickets-empty">No tickets in this project yet.</p>
