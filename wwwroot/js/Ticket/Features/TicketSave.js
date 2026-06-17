@@ -89,6 +89,22 @@ const FieldHandlers = {
         // Target date
         const targetEl = document.getElementById('targetdate');
         targetEl?.addEventListener('change', FieldHandlers._onTargetDateChange);
+
+        // Blanket dirty-marking: any change to an editable control in the
+        // Details panel (Status + the four above + custom fields) flags the
+        // form dirty, so every field enables Save, not just the four with
+        // bespoke handlers. Scoped to #tabpanel-details so the note/message
+        // composers (in other panels) don't trigger it. #targetdate is
+        // skipped because its own handler validates before marking dirty.
+        const detailsPanel = document.getElementById('tabpanel-details');
+        if (detailsPanel) {
+            const markDirty = (e) => {
+                if (e.target.id === 'targetdate') return;
+                if (e.target.matches('input, select, textarea')) Dirty.set(true);
+            };
+            detailsPanel.addEventListener('change', markDirty);
+            detailsPanel.addEventListener('input', markDirty);
+        }
     },
 };
 
