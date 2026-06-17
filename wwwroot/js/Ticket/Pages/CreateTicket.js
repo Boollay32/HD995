@@ -24,6 +24,7 @@ class CreateTicket extends PageBase {
             this._setupPageUI();
             this._setupEventListeners();
             await this._setupProjectLock();
+            this._filterRequestTypes();
 
         } catch (error) {
             this.handleError('Error initializing create ticket');
@@ -38,9 +39,12 @@ class CreateTicket extends PageBase {
         // hidden projectID input (flows into objectInfo -> Ticket.ProjectID),
         // and display the project name. The key is cleared so a later manual
         // ticket is not silently attached to the same project.
-        const projectId = sessionStorage.getItem('ProjectID');
+        // Set only by a project's "+ New ticket" button (a dedicated key, so
+        // merely viewing a project never leaks into a queue-opened ticket).
+        const projectId = sessionStorage.getItem('NewTicketProjectID');
+        this._projectContext = !!projectId;
         if (!projectId) return;
-        sessionStorage.removeItem('ProjectID');
+        sessionStorage.removeItem('NewTicketProjectID');
 
         const input = document.getElementById('projectID');
         const row = document.getElementById('ct-project-row');
@@ -58,6 +62,33 @@ class CreateTicket extends PageBase {
             console.error('CreateTicket._setupProjectLock:', err);
             if (nameEl) nameEl.textContent = 'Project #' + projectId;
         }
+    }
+
+    // Shape the request-type dropdown by CONTEXT only. Authority (who may
+    // use a type at all) is enforced server-side in usp_Helpdesk_References_1,
+    // so this never widens access - it only hides types that do not belong on
+    // this form.
+    //   In-project create -> project request types only.
+    //   Main create       -> every type the server returned, minus project
+    //                         types and the retired 'Project Ticket' (13).
+    // Incident (8) is intentionally still allowed in main create until it
+    // gets its own section; Web Help Desk (9) stays as a client query. Adjust
+    // the two lists below if either decision changes.
+    _filterRequestTypes() {
+        const select = document.getElementById('requestType');
+        if (!select) return;
+
+        const PROJECT_TYPES = ['4', '5', '10', '11'];
+        const MAIN_EXCLUDE = [...PROJECT_TYPES, '13'];
+
+        const allowed = (value) => this._projectContext
+            ? PROJECT_TYPES.includes(value)
+            : !MAIN_EXCLUDE.includes(value);
+
+        for (const option of Array.from(select.options)) {
+            if (!allowed(option.value)) option.remove();
+        }
+        select.selectedIndex = -1;
     }
 
     _setupPageUI() {
