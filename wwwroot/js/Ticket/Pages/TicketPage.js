@@ -46,6 +46,7 @@ class TicketPage extends PageBase {
     async init() {
         if (!await this.checkAuth()) return;
         if (typeof SetActivePage === 'function') SetActivePage('TicketMenu');
+        if (typeof UserPermissions === 'function') UserPermissions();
 
         try {
             await this.waitForElement('queue-mount');
