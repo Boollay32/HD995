@@ -138,12 +138,12 @@ const Auth = {
         const page = window.location.pathname;
 
         const rfcOnlyPages = ['/RFC', '/RFCDetails', '/CreateRFC'];
-        const authorityPages = ['/TicketDetails', '/Tickets'];
+        const authorityPages = ['/TicketPage', '/TicketDetails', '/CreateTicket'];
 
         if (admin === 4 && !rfcOnlyPages.includes(page)) {
             if (loginPage !== '1') RFCView();
         } else if (admin === 0 && !authorityPages.includes(page)) {
-            window.location.href = '/Tickets';
+            window.location.href = '/TicketPage';
         } else {
             DisplayMenu();
         }
