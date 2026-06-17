@@ -73,8 +73,8 @@ class RFCPage extends PageBase {
 
             views: [
                 { id: 'mine',  label: 'My open',     filter: r => r.assignedTech === me && RQisOpen(r) },
-                { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && RQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => RQisOpen(r) },
+                { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && RQisOpen(r) },
             ],
 
             filters: [
