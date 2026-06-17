@@ -248,7 +248,7 @@ class CreateTicket extends PageBase {
 
     async _handleCreateSuccess(data, note, contactClient) {
         // Fix: named property — replaces magic array index data[1]
-        const newTicketId = data.id ?? data.ticketId;
+        const newTicketId = data.objectID ?? data.id ?? data.ticketId;
 
         // The description becomes the ticket's first, client-visible note,
         // carrying the attachments (shared SaveOriginalNote next to Composer).
