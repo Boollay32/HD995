@@ -103,9 +103,10 @@ const Auth = {
             UI.hideById('StatsMenu');
         }
 
-        // Projects is Govtech-only (admin levels 1 and 2). Clients never see it.
+        // Projects and Incidents are Govtech-only (admin levels 1 and 2). Clients never see them.
         if (![1, 2].includes(parseInt(adminId, 10))) {
             UI.hideById('ProjectsMenu');
+            UI.hideById('IncidentsMenu');
         }
 
         if (config.extra) {
