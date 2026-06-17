@@ -42,13 +42,16 @@ body {
 
 #Main-Div.main-section, #Main-Div {
     margin: 0 !important;
+    margin-top: 0 !important;            /* no navbar on login: drop .main-section's 80px top offset */
     padding: 24px !important;
     width: 100% !important;
     min-width: 0 !important;
-    min-height: 100vh;
+    height: 100vh !important;            /* drop .main-section's height: calc(100vh - 80px) */
+    min-height: 100vh !important;
     display: flex !important;
     align-items: center;
     justify-content: center;
+    overflow-y: auto;                    /* the page never scrolls; only this canvas, only if a stage is very tall */
     position: relative;
     box-sizing: border-box;
 }
@@ -112,6 +115,18 @@ body {
 }
 .login-input::placeholder { color: #a8a299; }
 .login-input:focus { border-color: var(--brand); background: #fff; box-shadow: 0 0 0 3px var(--brand-pale); }
+
+/* ---- hold-to-reveal password ---- */
+.login-input-wrap { position: relative; }
+.login-input-wrap .login-input { padding-right: 46px; }
+.login-peek {
+    position: absolute; top: 0; right: 0; height: 100%; width: 46px;
+    display: grid; place-items: center; padding: 0;
+    background: none; border: none; cursor: pointer; color: var(--muted);
+    transition: color .15s;
+}
+.login-peek:hover, .login-peek.is-peeking { color: var(--brand); }
+.login-peek svg { width: 18px; height: 18px; display: block; }
 
 /* ---- primary button (.accept is reused by Login.js) ---- */
 .accept {
