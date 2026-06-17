@@ -88,8 +88,6 @@ class TaskPage extends PageBase {
             views: [
                 { id: 'mine',  label: 'My open',     filter: r => r.assignedTech === me && KQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => KQisOpen(r) },
-                { id: 'imp',   label: 'Important',   warn: true, filter: r => r.important && KQisOpen(r) },
-                { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && KQisOpen(r) },
                 { id: 'wdn',   label: 'Withdrawn',   filter: r => r.status === 4 },
                 { id: 'cmp',   label: 'Complete',    filter: r => r.status === 3 },
             ],
@@ -103,7 +101,7 @@ class TaskPage extends PageBase {
                 {
                     key: 'title', label: 'Task', sortable: true,
                     sortValue: r => (r.title || '').toLowerCase(),
-                    render: r => `<div class="qv-subj">${r.important ? '<span title="Important" style="color:var(--accent)">\u2605</span>' : ''}<div><div class="s1">${KQesc(r.title)}</div><div class="s2"><span class="qv-ref">#${r.taskID}</span></div></div></div>`
+                    render: r => `<div class="qv-subj"><div><div class="s1">${KQesc(r.title)}</div><div class="s2"><span class="qv-ref">#${r.taskID}</span>${r.important ? '<span title="Important" style="color:var(--accent);margin-left:4px">\u2605</span>' : ''}</div></div></div>`
                 },
                 {
                     key: 'ticketID', label: 'Ticket', sortable: true,
