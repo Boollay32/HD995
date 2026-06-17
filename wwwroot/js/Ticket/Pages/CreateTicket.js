@@ -294,6 +294,14 @@ class CreateTicket extends PageBase {
             this._sendNotificationEmail('Ticket', 'CreatedFor', newTicketId);
         }
 
+        // Created inside a project: open the new ticket directly (same path
+        // the project ticket list uses) rather than returning to the queue.
+        if (this._projectContext) {
+            sessionStorage.setItem(STORAGE_KEYS.TICKET_ID, String(newTicketId));
+            Nav.toTicketDetails();
+            return;
+        }
+
         BuildMessageBox(`Created Ticket ${newTicketId}`, 'TicketPage');
     }
 }
