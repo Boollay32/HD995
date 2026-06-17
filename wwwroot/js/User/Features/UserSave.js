@@ -142,7 +142,12 @@ class UserSave extends PageBase {
                 API.authPayload({ userLogin })
             );
 
-            MessageBox.show(`Reset ${data}`, 'UserPage');
+            const raw = (typeof data === 'string') ? data.trim() : String(data ?? '');
+            const [pin, tempPass] = raw.split('|');
+            const msg = (/^\d+$/.test(pin) && tempPass)
+                ? `Password and PIN reset.\n\nNew PIN: ${pin}\n\nTemporary password: ${tempPass}\n\nGive both to the user. They'll be asked to set a new password on next login.`
+                : `Reset ${data}`;
+            MessageBox.show(msg, 'UserPage');
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
