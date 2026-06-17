@@ -47,6 +47,10 @@ namespace HelpDeskNet8.Controllers.Tickets
             var ticket = _ticketManager.GetTicketDetail(request.TicketId, user);
             if (ticket == null) return NotFound();
 
+            // IDOR guard: a non-Govtech caller may only open a ticket in their own authority.
+            if (user.AuthorityID != Constants.Authority.Govtech && ticket.UserAuthorityID != user.AuthorityID)
+                return NotFound();
+
             return Ok(ticket);
         }
 
@@ -59,6 +63,8 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (user == null) return Unauthorized();
 
             if (request.TicketId <= 0) return BadRequest("Invalid ticket ID.");
+
+            if (CannotSeeTicket(user, request.TicketId)) return NotFound();
 
             var notes = _noteManager.GetNotes(user, request.TicketId);
             return Ok(notes);
@@ -177,11 +183,21 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             if (request.TicketId <= 0) return BadRequest("Invalid ticket ID.");
 
+            if (CannotSeeTicket(user, request.TicketId)) return NotFound();
+
             var activity = _history.GetHistory(user, request.TicketId);
             return Ok(activity);
         }
 
         // -------------------------  Private helpers  ------------------------- //
+
+        // IDOR guard: non-Govtech callers may only act on tickets in their own authority.
+        private bool CannotSeeTicket(IUser user, int ticketId)
+        {
+            if (user.AuthorityID == Constants.Authority.Govtech) return false;
+            var t = _ticketManager.GetTicketDetail(ticketId, user);
+            return t == null || t.UserAuthorityID != user.AuthorityID;
+        }
 
         private static IEnumerable<IAttachment> _mapAttachments(
             IEnumerable<IAttachment>? attachments)
