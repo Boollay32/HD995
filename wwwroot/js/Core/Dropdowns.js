@@ -47,13 +47,15 @@ const Dropdowns = {
         // Skip if already populated
         if (el.options.length > 0) return;
 
-        const filterGroups = ['Ticket', 'RFC', 'Task'];
-
         for (const item of items) {
             const text = item.name ?? item.text ?? '';
             const value = item.id ?? item.value ?? '';
 
-            const skip = filterGroups.includes(group)
+            // The CR / non-CR status split only applies to Ticket statuses
+            // (tblStatus mixes both). RFC and Task have their own status
+            // tables and must never be CR-filtered, or their dropdowns come
+            // up empty.
+            const skip = group === 'Ticket'
                 && this._shouldSkipOption(text, tableName);
 
             if (!skip) {
