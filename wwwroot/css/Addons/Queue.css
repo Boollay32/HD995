@@ -565,7 +565,7 @@
    Every queue surface colour routes through a variable; [data-theme] flips them.
    ============================================================================= */
 :root, html[data-theme="light"]{
-  --bg:var(--canvas); --panel:#FFFFFF; --text:#33302C; --muted:#7A6E60;
+  --bg:var(--canvas); --panel:#FFFFFF; --text:#33302C; --muted:#675D50;
   --border:#E5D8C6; --row-border:#F0E4D4; --row-hover:#FBF6EF;
   --header-bg:#FBF6EF; --scrim:rgba(38,28,18,.30);
   --accent:#B5530E; --accent-strong:#964307; --accent-soft:#FDEFE0; --on-accent:#FFFFFF;

@@ -25,7 +25,7 @@ html[data-font="large"] { font-size: 125%; }
     /* Ink / text (warm) */
     --ink:      #33302C;
     --ink-soft: #55504A;
-    --muted:    #7A6E60;         /* body min: 4.97 on white, 4.62 on canvas */
+    --muted:    #675D50;         /* darkened for AA+ contrast: 6.45 white / 5.99 canvas / 5.65 paper-2 (was #7A6E60) */
 
     /* Surfaces / lines (warm cream) */
     --paper:   #FFFFFF;
