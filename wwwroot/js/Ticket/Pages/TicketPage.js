@@ -107,23 +107,8 @@ class TicketPage extends PageBase {
                     render: r => `<div class="qv-subj">${TQneedsMyReply(r) ? '<span class="qv-unread qv-mine" title="Client replied \u2013 your reply needed"></span>' : (r.notify === '0' ? '<span class="qv-unread" title="Awaiting reply"></span>' : '')}<div><div class="s1">${TQesc(r.subject)}</div><div class="s2"><span class="qv-ref">#${r.ticketID}</span></div></div></div>`
                 },
                 {
-                    key: 'userName', label: 'Client', sortable: true,
-                    sortValue: r => (r.userName || '').toLowerCase(),
-                    render: r => TQesc(r.userName)
-                },
-                {
-                    key: 'authority', label: 'Authority', sortable: true,
-                    sortValue: r => (r.authority || '').toLowerCase(),
-                    render: r => TQesc(r.authority)
-                },
-                {
                     key: 'requestType', label: 'Type',
                     render: r => `<span class="qv-badge">${TQesc(r.requestType)}</span>`
-                },
-                {
-                    key: 'priority', label: 'Priority', sortable: true,
-                    sortValue: r => TQ_PRIORITY_ORDER[r.priority] ?? 9,
-                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span>`
                 },
                 {
                     key: 'status', label: 'Status',
@@ -131,6 +116,21 @@ class TicketPage extends PageBase {
                         const c = TQ_STATUS_COLOR[r.status] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
                         return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${TQesc(r.status)}</span>`;
                     }
+                },
+                {
+                    key: 'priority', label: 'Priority', sortable: true,
+                    sortValue: r => TQ_PRIORITY_ORDER[r.priority] ?? 9,
+                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span>`
+                },
+                {
+                    key: 'authority', label: 'Authority', sortable: true,
+                    sortValue: r => (r.authority || '').toLowerCase(),
+                    render: r => TQesc(r.authority)
+                },
+                {
+                    key: 'userName', label: 'Client', sortable: true,
+                    sortValue: r => (r.userName || '').toLowerCase(),
+                    render: r => TQesc(r.userName)
                 },
                 {
                     key: 'assignedTech', label: 'Assignee',
