@@ -458,3 +458,14 @@
   align-items: center;
   justify-content: center;
 }
+
+/* ===== HD Issues 29 - Group-3 step 1: note composer footer (3c, 3d) ===== */
+/* 3d: footer now lives inside the bordered compose box; box becomes a column. */
+.td-note-compose { flex-direction: column; align-items: stretch; gap: 6px; }
+.td-note-compose-row { display: flex; align-items: flex-end; gap: 8px; }
+.td-note-compose .td-composer-footer { padding: 0 4px; }
+/* 3c: paperclip left, char count right (message composer keeps charcount left). */
+.td-note-compose .td-attach-btn { order: 1; }
+.td-note-compose .td-visibility-btn { order: 2; }
+.td-note-compose .td-composer-attachments { order: 3; }
+.td-note-compose .td-charcount { order: 4; flex: 0 0 auto; margin-left: auto; }
