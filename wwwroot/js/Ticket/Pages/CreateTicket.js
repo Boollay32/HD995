@@ -144,21 +144,8 @@ class CreateTicket extends PageBase {
         document.getElementById('requestDetail')
             ?.addEventListener('input', (e) => UI.autoGrow(e.target));
 
-        // Attachments: composer-style drop zone + click-to-browse + chips
-        const bin = document.getElementById('AttachBin');
-        const fileInput = document.getElementById('ct-file-input');
-        bin?.addEventListener('click', () => fileInput?.click());
-        bin?.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            bin.classList.add('is-dragover');
-        });
-        bin?.addEventListener('dragleave', () => bin.classList.remove('is-dragover'));
-        bin?.addEventListener('drop', (e) => {
-            e.preventDefault();
-            bin.classList.remove('is-dragover');
-            this._addFiles(e.dataTransfer?.files);
-        });
-        fileInput?.addEventListener('change', (e) => {
+        // Attachments: click the paperclip (td-attach-btn) to browse - no drag-drop.
+        document.getElementById('ct-file-input')?.addEventListener('change', (e) => {
             this._addFiles(e.target.files);
             e.target.value = '';
         });
