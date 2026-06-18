@@ -100,9 +100,13 @@ class ProjectDetails extends PageBase {
         set('pjd-completion', p.completionDate ? this._fmtDate(p.completionDate) : '—');
         set('pjd-desc', p.description || 'No description.');
 
-        const open = p.openTicketCount ?? 0;
-        const total = p.ticketCount ?? 0;
-        set('pjd-ticket-count', `${open} open / ${total} total`);
+        // 6a: open vs complete tickets, derived from the loaded ticket list
+        // so the breakdown matches the row states shown below (_isClosed =
+        // the page's "closed" notion: Complete/Resolved/Closed, statusID 3/5).
+        const tks = Array.isArray(p.tickets) ? p.tickets : [];
+        const completeTickets = tks.filter(t => this._isClosed(t.statusID, t.status)).length;
+        const openTickets = tks.length - completeTickets;
+        set('pjd-ticket-count', `${openTickets} open \u00b7 ${completeTickets} complete`);
     }
 
     _renderTickets(tickets) {

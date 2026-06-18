@@ -112,7 +112,13 @@ const Tabs = {
         Dom.tabs().forEach(tab => {
             tab.addEventListener('click', () => {
                 const name = tab.id.replace('tab-', '');
+                const reclick = State.activeTab === name;
                 Tabs.activate(name);
+                // 2d: re-clicking the already-active Tasks tab reloads its
+                // list and closes any open editor (unsaved-changes guarded).
+                if (reclick && name === TAB.TASKS && typeof Tasks !== 'undefined') {
+                    Tasks.reload?.();
+                }
             });
         });
     },

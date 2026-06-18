@@ -692,11 +692,20 @@ const Tasks = (() => {
         }, true);
     }
 
+    // 2d: re-clicking the active Tasks tab reloads the list and closes any
+    // open editor, guarding unsaved changes first.
+    async function _reload() {
+        if (!(await _guardLeave())) return;
+        if (State.openId !== null) _closeEditor();
+        await _getTasks();
+    }
+
     // -------------------------  Public API  ------------------------- //
 
     return {
         init,
         refresh: _getTasks,
+        reload: _reload,
     };
 
 })();
