@@ -1936,10 +1936,10 @@ body {
   justify-content: flex-end;
   flex-shrink: 0;
   background: var(--td-surface);
-  /* span the container's 16px padding so scrolled content slides
-     cleanly under the pinned button, then restore spacing */
-  margin: -16px -16px 0;
-  padding: 16px 16px 6px;
+  /* span only the side padding; no negative top margin - that left a sliver
+     above the pinned bar where scrolled content peeked through */
+  margin: 0 -16px;
+  padding: 4px 16px 6px;
 }
 .td-details-head {
   display: flex;
