@@ -141,5 +141,25 @@ namespace HelpDeskNet8.Controllers.Users
 
             return Ok(_userManager.GetUserEmailAddress(request.UserId, request.FirstName, request.LastName, request.AuthorityName));
         }
+
+        // Contact-client flow: a Govtech agent picks a client authority and the
+        // assigned-client dropdown is filled with that authority's users. Govtech
+        // (151) may read across authorities, so the requested authority is passed
+        // to usp_Helpdesk_GetUsers explicitly (the caller is not self-scoped here).
+        [HttpPost]
+        public IActionResult GetAuthorityClients([FromBody] GetAuthorityClientsRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null) return Unauthorized();
+            if (user.AuthorityID != Constants.Authority.Govtech) return StatusCode(403);
+
+            var dict = new Dictionary<string, string>
+            {
+                ["UserID"] = (user.UserID ?? 0).ToString(),
+                ["Authority"] = request.AuthorityId.ToString()
+            };
+
+            return Ok(_userManager.GetUsers(TypeCreator.Setup<Filter>(dict)));
+        }
     }
 }

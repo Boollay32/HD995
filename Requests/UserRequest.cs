@@ -46,4 +46,9 @@
         public string LastName { get; set; }
         public string AuthorityName { get; set; }
     }
+
+    public class GetAuthorityClientsRequest : AuthenticatedRequest
+    {
+        public int AuthorityId { get; set; }
+    }
 }
