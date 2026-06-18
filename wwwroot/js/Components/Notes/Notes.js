@@ -141,33 +141,90 @@ const Notes = (() => {
         if (!body) return;
         const original = note.Body ?? '';
 
+        // Edit mode lets the creator remove existing attachments (gated by
+        // .is-editing) and stage new ones below until Save.
+        card.classList.add('is-editing');
+        let pending = [];
+
         const wrap = document.createElement('div');
         wrap.className = 'td-note-editor';
         const ta = document.createElement('textarea');
         ta.className = 'td-note-edit-input';
         ta.value = original;
         ta.rows = Math.min(8, Math.max(2, original.split('\n').length));
+
+        const pendingWrap = document.createElement('div');
+        pendingWrap.className = 'td-note-edit-attachments';
+        const renderPending = () => {
+            pendingWrap.innerHTML = '';
+            pending.forEach((file, index) => {
+                const chip = document.createElement('div');
+                chip.className = 'td-attach-chip';
+                chip.dataset.index = index;
+                chip.innerHTML = `
+                    <span aria-hidden="true">${Format.fileIcon(file.name)}</span>
+                    <span class="td-chip-name">${Format.escapeHtml(file.name)}</span>
+                    <span class="td-chip-size mono">${Format.fileSizeLabel(file.size)}</span>
+                    <button type="button" aria-label="Remove ${Format.escapeHtml(file.name)}">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.5"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>`;
+                chip.querySelector('button')?.addEventListener('click', () => {
+                    pending.splice(index, 1);
+                    renderPending();
+                });
+                pendingWrap.appendChild(chip);
+            });
+        };
+
         const bar = document.createElement('div');
         bar.className = 'td-note-edit-actions';
+
+        const addLabel = document.createElement('label');
+        addLabel.className = 'td-note-edit-attach td-attach-btn';
+        addLabel.setAttribute('aria-label', 'Add attachment to note');
+        addLabel.title = 'Add attachment';
+        const addInput = document.createElement('input');
+        addInput.type = 'file';
+        addInput.className = 'sr-only';
+        addInput.multiple = true;
+        addInput.accept = '*/*';
+        addInput.addEventListener('change', () => {
+            if (addInput.files && addInput.files.length) {
+                pending = pending.concat(Array.from(addInput.files));
+                renderPending();
+            }
+            addInput.value = '';
+        });
+        addLabel.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" '
+            + 'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" '
+            + 'stroke-linejoin="round" aria-hidden="true">'
+            + '<path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>';
+        addLabel.appendChild(addInput);
+
         const save = document.createElement('button');
         save.type = 'button'; save.className = 'td-note-edit-save'; save.textContent = 'Save';
         const cancel = document.createElement('button');
         cancel.type = 'button'; cancel.className = 'td-note-edit-cancel'; cancel.textContent = 'Cancel';
-        bar.appendChild(save); bar.appendChild(cancel);
-        wrap.appendChild(ta); wrap.appendChild(bar);
+        bar.appendChild(addLabel); bar.appendChild(save); bar.appendChild(cancel);
+        wrap.appendChild(ta); wrap.appendChild(pendingWrap); wrap.appendChild(bar);
         body.replaceWith(wrap);
         ta.focus();
 
         const restore = () => {
+            card.classList.remove('is-editing');
             const fresh = _buildNoteBody({ Body: original });
             wrap.replaceWith(fresh);
         };
         cancel.addEventListener('click', restore);
         save.addEventListener('click', async () => {
             const text = ta.value.trim();
-            if (!text || text === original) { restore(); return; }
+            if (!text || (text === original && pending.length === 0)) { restore(); return; }
             save.disabled = cancel.disabled = true;
-            const ok = await _submitNoteEdit(note, text);
+            const ok = await _submitNoteEdit(note, text, pending);
             if (!ok) { save.disabled = cancel.disabled = false; }
         });
     }
@@ -175,7 +232,7 @@ const Notes = (() => {
     // Re-submit an existing note with new text. The proc updates in place
     // when NoteID is present; it also wipes + re-inserts attachments, so we
     // re-send the note's existing attachments to preserve them.
-    async function _submitNoteEdit(note, text) {
+    async function _submitNoteEdit(note, text, addedFiles = []) {
         try {
             const objectInfo = _buildObjectInfo({
                 TicketID: State.ticketId,
@@ -183,13 +240,15 @@ const Notes = (() => {
                 noteDescription: text,
                 visibleToClient: note.IsVisibleToClient ? '1' : '0',
             });
-            const attachments = (note.Attachments ?? [])
+            const existing = (note.Attachments ?? [])
                 .filter(a => a && a.base64)
                 .map(a => ({
                     AttachmentName: a.name,
                     AttachmentByteArray: a.base64,
                     AttachmentImageType: 0,
                 }));
+            const added = await Composer.encode(addedFiles);
+            const attachments = existing.concat(added);
             const data = await API.post(
                 'TicketDetails/SaveNote',
                 API.authPayload({ objectInfo, attachments, rfc: false })
