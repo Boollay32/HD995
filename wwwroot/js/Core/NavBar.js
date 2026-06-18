@@ -28,6 +28,8 @@ const NavBar = {
                 routes[id]();
             }
         });
+
+        NavBar._setupIndicator();
     },
 
     // -------------------------  Button Controllers  ------------------------- //
@@ -55,6 +57,35 @@ const NavBar = {
 
     // -------------------------  Display  ------------------------- //
 
+    _ind: null,
+
+    _setupIndicator() {
+        const menu = document.getElementById('navbar-menu');
+        if (!menu || menu.querySelector('.nav-ind')) return;
+        const ind = document.createElement('span');
+        ind.className = 'nav-ind';
+        ind.setAttribute('aria-hidden', 'true');
+        menu.appendChild(ind);
+        NavBar._ind = ind;
+
+        menu.addEventListener('mouseover', (e) => {
+            const a = e.target.closest('a');
+            if (a && a.parentElement === menu) NavBar._moveInd(a);
+        });
+        menu.addEventListener('mouseleave', () => NavBar._moveInd(menu.querySelector('a.active')));
+        window.addEventListener('resize', () => NavBar._moveInd(menu.querySelector('a.active')));
+        requestAnimationFrame(() => NavBar._moveInd(menu.querySelector('a.active')));
+    },
+
+    _moveInd(el) {
+        const ind = NavBar._ind;
+        if (!ind) return;
+        if (!el) { ind.style.width = '0px'; ind.style.opacity = '0'; return; }
+        ind.style.left = el.offsetLeft + 'px';
+        ind.style.width = el.offsetWidth + 'px';
+        ind.style.opacity = '1';
+    },
+
     setActivePage(pageName) {
         const map = {
             'TicketPage': 'TicketsMenu',
@@ -66,6 +97,7 @@ const NavBar = {
         };
         const id = map[pageName] ?? pageName;
         document.getElementById(id)?.classList.add('active');
+        NavBar._moveInd(document.getElementById('navbar-menu')?.querySelector('a.active'));
     },
 
     // -------------------------  Logout  ------------------------- //

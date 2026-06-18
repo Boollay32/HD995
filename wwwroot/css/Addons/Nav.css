@@ -190,3 +190,19 @@ footer {
         padding-bottom: 0;
     }
 }
+
+/* nav active indicator: sliding underline bar */
+nav.Nav-Bar #navbar-menu { position: relative; }
+nav.Nav-Bar #navbar-menu a.active { border-bottom-color: transparent; }
+nav.Nav-Bar #navbar-menu .nav-ind {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px 2px 0 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: left .28s cubic-bezier(.4,0,.2,1), width .28s cubic-bezier(.4,0,.2,1), opacity .2s ease;
+}
