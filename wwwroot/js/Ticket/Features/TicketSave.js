@@ -212,6 +212,12 @@ const Save = {
             Dirty.set(false);
             UI.toast?.('Ticket saved', 'success');
 
+            // brief success pulse on the Save button (point-of-action cue)
+            saveBtn.classList.remove('saved-flash');
+            void saveBtn.offsetWidth;
+            saveBtn.classList.add('saved-flash');
+            setTimeout(() => saveBtn.classList.remove('saved-flash'), 700);
+
             // Reflect the saved priority in the topbar pill
             Topbar.populate({
                 ...State.ticketData,

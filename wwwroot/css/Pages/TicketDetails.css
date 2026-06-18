@@ -2042,3 +2042,10 @@ body {
   box-shadow: 0 0 0 3px var(--row-hover);
 }
 #CustomFields-Container .Detail-Div textarea.Value { min-height: 64px; resize: vertical; }
+
+/* save success: brief ring pulse on the Save button (point-of-action cue) */
+@keyframes save-ring {
+  0% { box-shadow: 0 0 0 0 var(--accent); }
+  100% { box-shadow: 0 0 0 10px transparent; }
+}
+.saved-flash { animation: save-ring 0.6s ease; }
