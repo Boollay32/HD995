@@ -24,7 +24,8 @@ class CreateTicket extends PageBase {
             this._setupPageUI();
             this._setupEventListeners();
             await this._setupProjectLock();
-            this._filterRequestTypes();
+            const preselectedType = this._filterRequestTypes();
+            if (preselectedType) await this._onRequestTypeChange();
 
         } catch (error) {
             this.handleError('Error initializing create ticket');
@@ -64,7 +65,7 @@ class CreateTicket extends PageBase {
         }
     }
 
-    // Shape the request-type dropdown by CONTEXT only. Authority (who may
+    // Shape the request-type dropdown by CONTEXT and ROLE. Authority (who may
     // use a type at all) is enforced server-side in usp_Helpdesk_References_1,
     // so this never widens access - it only hides types that do not belong on
     // this form.
@@ -80,10 +81,15 @@ class CreateTicket extends PageBase {
         if (!select) return;
 
         const INCIDENT = '8';
+        const CONTACT_CLIENT = '12';
 
         // From the Incidents page "New ticket" -> lock this form to incidents only.
         const incidentContext = sessionStorage.getItem('NewTicketIncident') === '1';
         if (incidentContext) sessionStorage.removeItem('NewTicketIncident');
+
+        // Govtech (authority 151) raises only Contact Client tickets here; clients
+        // raise every other type but never Contact Client (that is Govtech-only).
+        const isGovtech = sessionStorage.getItem(STORAGE_KEYS.AUTHORITY_ID) === '151';
 
         const PROJECT_TYPES = ['4', '10', '11'];                  // Process Reports (5) belongs on the main form
         const MAIN_EXCLUDE = [...PROJECT_TYPES, '13', INCIDENT];  // main hides project types, retired 13, and incidents
@@ -91,12 +97,24 @@ class CreateTicket extends PageBase {
         const allowed = (value) =>
             incidentContext        ? value === INCIDENT
             : this._projectContext ? PROJECT_TYPES.includes(value)
-            : !MAIN_EXCLUDE.includes(value);
+            : isGovtech            ? value === CONTACT_CLIENT
+            : !MAIN_EXCLUDE.includes(value) && value !== CONTACT_CLIENT;
 
         for (const option of Array.from(select.options)) {
             if (!allowed(option.value)) option.remove();
         }
-        select.selectedIndex = incidentContext ? 0 : -1;
+
+        // Govtech main create is always Contact Client: preselect it and tell init
+        // to run its custom fields. Incident lock keeps its single option selected.
+        if (incidentContext) {
+            select.selectedIndex = 0;
+        } else if (isGovtech && !this._projectContext) {
+            select.value = CONTACT_CLIENT;
+            return CONTACT_CLIENT;
+        } else {
+            select.selectedIndex = -1;
+        }
+        return null;
     }
 
     _setupPageUI() {

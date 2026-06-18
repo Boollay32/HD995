@@ -162,7 +162,7 @@ namespace HelpDeskNet8.Services
                     command.Parameters.Add(new SqlParameter("@StatusID", SqlDbType.Int) { Value = Constants.TicketDefaults.StatusId });
                     command.Parameters.Add(new SqlParameter("@PriorityID", SqlDbType.Int) { Value = Constants.TicketDefaults.PriorityId });
                     command.Parameters.Add(new SqlParameter("@CategoryID", SqlDbType.Int) { Value = Constants.TicketDefaults.CategoryId });
-                    command.Parameters.Add(new SqlParameter("@RequestID", SqlDbType.Int) { Value = Convert.ToInt32(ticket.RequestType) });
+                    command.Parameters.Add(new SqlParameter("@RequestID", SqlDbType.Int) { Value = ticket.RequestID ?? 0 });
                     command.Parameters.Add(new SqlParameter("@CustomfieldsConfigDesc", SqlDbType.NVarChar) { Value = DBNull.Value });
 
                     bool notifyUser = user.AuthorityID == Constants.Authority.Govtech ||
