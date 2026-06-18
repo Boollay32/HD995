@@ -87,7 +87,7 @@ class TicketPage extends PageBase {
             search: ['subject', 'userName', 'ticketID'],
 
             views: [
-                { id: 'mine',  label: 'My open',     filter: r => r.assignedTech === me && TQisOpen(r) },
+                { id: 'mine',  label: 'My open',     filter: r => (r.assignedTech === me || r.userName === me) && TQisOpen(r) },
                 { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && TQisOpen(r) },
                 { id: 'reply', label: 'Needs reply', filter: r => r.notify === '0' && TQisOpen(r) },
                 { id: 'all',   label: 'All open',     filter: r => TQisOpen(r) },

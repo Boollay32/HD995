@@ -72,7 +72,7 @@ class RFCPage extends PageBase {
             search: ['title', 'createdBy', 'rfcID'],
 
             views: [
-                { id: 'mine',  label: 'My open',     filter: r => r.assignedTech === me && RQisOpen(r) },
+                { id: 'mine',  label: 'My open',     filter: r => (r.assignedTech === me || r.createdBy === me) && RQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => RQisOpen(r) },
                 { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && RQisOpen(r) },
             ],
