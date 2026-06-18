@@ -111,7 +111,7 @@ class TaskPage extends PageBase {
                 {
                     key: 'assignedTech', label: 'Assignee',
                     render: r => r.assignedTech
-                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${KQavColor(r.assignedTech)}">${KQinitials(r.assignedTech)}</span>${KQesc(r.assignedTech.split(' ')[0])}</span>`
+                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${KQavColor(r.assignedTech)}">${KQinitials(r.assignedTech)}</span>${KQesc(r.assignedTech)}</span>`
                         : '<span class="qv-unassigned">Unassigned</span>'
                 },
                 {
