@@ -18,7 +18,11 @@ const Nav = {
     toRFC() { Nav._navigate('/RFC'); },
     toRFCDetails() { Nav._navigate('/RFCDetails'); },
     toStats() { Nav._navigate('/Stats'); },
-    toTicketDetails() { Nav._navigate('/TicketDetails'); },
+    toTicketDetails() {
+        const here = window.location.pathname;
+        if (here && here !== '/TicketDetails') sessionStorage.setItem('TicketListReturn', here);
+        Nav._navigate('/TicketDetails');
+    },
     toUserPage() { Nav._navigate('/UserPage'); },
     toCreateUser() { Nav._navigate('/CreateUser'); },
     toStatsPage() { Nav._navigate('/StatsPage'); },

@@ -156,8 +156,11 @@ const BackButton = {
             sessionStorage.removeItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);
             sessionStorage.removeItem(STORAGE_KEYS.OLD_ASSIGNED_TECH);
 
-            // Return to the tickets list (My-open vs All is a client-side view there)
-            Nav.toTicketPage();
+            // Return to the list we came from (Incidents/Tasks/Projects/Tickets),
+            // not always the main Tickets queue.
+            const ret = sessionStorage.getItem('TicketListReturn') || '/TicketPage';
+            sessionStorage.removeItem('TicketListReturn');
+            Nav._navigate(ret);
         });
     },
 };
