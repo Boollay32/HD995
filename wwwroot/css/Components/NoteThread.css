@@ -438,3 +438,23 @@
   background: var(--danger-bg, rgba(200,40,40,0.12));
   color: var(--danger, #c33);
 }
+
+/* Group-2 chip standard: bigger rest square + centred icon that fills it + smooth grow (X unchanged) */
+.td-attach-chip {
+  min-width: 34px;
+  max-width: 34px;
+  height: 34px;
+  gap: 0;
+  transition: max-width 0.2s cubic-bezier(0.4, 0, 0.2, 1), padding 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s ease;
+}
+.td-attach-chip:hover,
+.td-attach-chip:focus-within {
+  gap: 5px;
+}
+.td-attach-chip > span[aria-hidden="true"] {
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
