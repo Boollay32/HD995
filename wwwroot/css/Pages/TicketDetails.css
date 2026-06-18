@@ -2114,3 +2114,133 @@ body {
   overflow-x: auto;
 }
 .td-pane-head--ws .td-collapse-btn { flex: 0 0 auto; }
+
+/* ═══════════  HD30-6 Overview band (Stage 2)  ═══════════ */
+/* Merged header band: flows directly under .td-topbar (no card/gap),    */
+/* sharing the app-shell banding. All selectors scoped to the ticket app. */
+#TicketDetails-App .td-overview {
+  flex-shrink: 0;
+  background: var(--td-panel);
+  border-bottom: 1px solid var(--td-border);
+}
+
+/* ---- control strip (tinted divider row: title + Save + collapse) ---- */
+#TicketDetails-App .td-ov-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px;
+  background: var(--td-surface);
+  border-bottom: 1px solid var(--td-border);
+}
+#TicketDetails-App .td-ov-title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--td-muted);
+}
+#TicketDetails-App .td-ov-spacer { flex: 1 1 auto; }
+
+/* Save (.td-btn-primary, keeps its colour) and collapse share one size. */
+#TicketDetails-App .td-ov-head .td-btn-primary,
+#TicketDetails-App .td-ov-collapse {
+  height: 30px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+#TicketDetails-App .td-ov-collapse {
+  color: var(--td-muted-2);
+  background: none;
+  border: 1px solid var(--td-border);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+#TicketDetails-App .td-ov-collapse:hover {
+  background: var(--td-panel);
+  color: var(--td-text);
+}
+#TicketDetails-App .td-ov-collapse svg { transition: transform 0.18s ease; }
+#TicketDetails-App .td-overview.is-collapsed .td-ov-collapse svg {
+  transform: rotate(180deg);
+}
+
+/* ---- expanded body ---- */
+#TicketDetails-App .td-ov-body { padding: 14px 18px 16px; }
+#TicketDetails-App .td-ov-group + .td-ov-group {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--td-border);
+}
+#TicketDetails-App .td-ov-grp-head {
+  margin: 0 0 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--td-muted);
+}
+#TicketDetails-App .td-ov-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px 22px;
+}
+#TicketDetails-App .td-ov-cell { min-width: 0; }
+#TicketDetails-App .td-ov-lbl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 3px;
+  font-size: 0.6875rem;
+  color: var(--td-muted);
+}
+#TicketDetails-App .td-ov-val {
+  font-size: 0.84375rem;
+  color: var(--td-text);
+}
+#TicketDetails-App .td-ov-cell .td-select,
+#TicketDetails-App .td-ov-cell .td-input { width: 100%; margin-top: 2px; }
+
+/* ---- timeline (Created -> First response -> Needed by -> Closed) ---- */
+#TicketDetails-App .td-ov-timeline {
+  display: flex;
+  align-items: flex-start;
+}
+#TicketDetails-App .td-ov-node { flex: 1 1 0; min-width: 0; }
+#TicketDetails-App .td-ov-arrow {
+  flex: 0 0 auto;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  color: var(--td-muted);
+}
+#TicketDetails-App .td-ov-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--td-border);
+  flex: 0 0 auto;
+}
+
+/* ---- slim summary (shown when collapsed) ---- */
+#TicketDetails-App .td-ov-slim {
+  display: none;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 9px 18px;
+  font-size: 0.8125rem;
+  color: var(--td-text);
+}
+#TicketDetails-App .td-ov-slim .td-ov-sep { color: var(--td-muted); }
+#TicketDetails-App .td-overview.is-collapsed .td-ov-body { display: none; }
+#TicketDetails-App .td-overview.is-collapsed .td-ov-slim { display: flex; }
+/* ═══════════  end HD30-6 Overview band  ═══════════ */
