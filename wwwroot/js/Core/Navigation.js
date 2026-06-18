@@ -26,7 +26,6 @@ const Nav = {
     toUserPage() { Nav._navigate('/UserPage'); },
     toCreateUser() { Nav._navigate('/CreateUser'); },
     toStatsPage() { Nav._navigate('/StatsPage'); },
-    toTaskDetails() { Nav._navigate('/TaskDetails'); },
 
     toUserDetails(username) {
         sessionStorage.setItem('ViewUserLogin', username);
@@ -46,5 +45,4 @@ function StatsView() { Nav.toStats(); }
 function TicketDetailsView() { Nav.toTicketDetails(); }
 function UserPageView() { Nav.toUserPage(); }
 function StatsPageView() { Nav.toStatsPage(); }
-function TaskDetailsView() { Nav.toTaskDetails(); }
 function UserDetailsView(username) { Nav.toUserDetails(username); }
