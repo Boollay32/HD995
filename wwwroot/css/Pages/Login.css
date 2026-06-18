@@ -43,14 +43,14 @@ body {
 #Main-Div.main-section, #Main-Div {
     margin: 0 !important;
     margin-top: 0 !important;            /* no navbar on login: drop .main-section's 80px top offset */
-    padding: 24px !important;
+    padding: 16px !important;
     width: 100% !important;
     min-width: 0 !important;
-    height: 100vh !important;            /* drop .main-section's height: calc(100vh - 80px) */
-    min-height: 100vh !important;
+    height: 100vh !important; height: 100dvh !important;   /* dynamic viewport so it never overflows one screen */
+    min-height: 100vh !important; min-height: 100dvh !important;
     display: flex !important;
-    align-items: center;
-    justify-content: center;
+    align-items: safe center;
+    justify-content: safe center;
     overflow-y: auto;                    /* the page never scrolls; only this canvas, only if a stage is very tall */
     position: relative;
     box-sizing: border-box;
@@ -88,13 +88,13 @@ body {
     border: 1px solid var(--line);
     border-radius: var(--r-lg);
     box-shadow: var(--shadow);
-    padding: 38px 34px 34px;
+    padding: 26px 32px 26px;
     box-sizing: border-box;
 }
 .auth-container.active { display: block; animation: login-rise .45s cubic-bezier(.2,.7,.2,1) both; }
 
 /* ---- brand lockup ---- */
-.brand { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-bottom: 26px; }
+.brand { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 18px; }
 .brand-mark {
     width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
     background: linear-gradient(150deg, #B5530E 0%, #964307 100%);
@@ -103,7 +103,7 @@ body {
 .brand-name { font-size: 0.84375rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 .brand-name b { color: var(--ink); }
 .stage-title { font-size: 1.4375rem; font-weight: 700; text-align: center; margin: 0 0 4px; letter-spacing: -.01em; color: var(--ink); }
-.stage-sub { font-size: 0.90625rem; color: var(--muted); text-align: center; margin: 0 0 24px; line-height: 1.5; }
+.stage-sub { font-size: 0.90625rem; color: var(--muted); text-align: center; margin: 0 0 16px; line-height: 1.5; }
 
 /* ---- fields ---- */
 .field { margin-bottom: 16px; text-align: left; }
