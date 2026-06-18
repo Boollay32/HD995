@@ -360,13 +360,12 @@ const Tasks = (() => {
             <div class="td-ed-row">
                 <label class="td-ed-label">Attachments</label>
                 <div class="td-att-wrap">
-                    <ul class="td-att-list" data-fld="attachments">${_attListHtml(atts)}</ul>
-                    <button type="button" class="td-att-add" data-att-add aria-label="Add attachment">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    <div class="td-att-chips" data-fld="attachments">${_attListHtml(atts)}</div>
+                    <button type="button" class="td-attach-btn" data-att-add aria-label="Add attachment">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48"/>
                         </svg>
-                        <span>Add file</span>
                     </button>
                     <input type="file" class="td-att-input" data-att-input multiple hidden>
                 </div>
@@ -404,7 +403,8 @@ const Tasks = (() => {
                 });
             });
             editor.querySelectorAll('[data-att-remove]').forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     editor._kept.splice(parseInt(btn.dataset.attRemove, 10), 1);
                     markDirty();
                     const ul = editor.querySelector('[data-fld="attachments"]');
