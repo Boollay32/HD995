@@ -101,7 +101,7 @@ class RFCPage extends PageBase {
                 {
                     key: 'assignedTech', label: 'Assignee',
                     render: r => r.assignedTech
-                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${RQavColor(r.assignedTech)}">${RQinitials(r.assignedTech)}</span>${RQesc(r.assignedTech.split(' ')[0])}</span>`
+                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${RQavColor(r.assignedTech)}">${RQinitials(r.assignedTech)}</span>${RQesc(r.assignedTech)}</span>`
                         : '<span class="qv-unassigned">Unassigned</span>'
                 },
                 {
