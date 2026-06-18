@@ -57,6 +57,7 @@ html[data-font="large"] { font-size: 125%; }
     --text: #33302C;
     --border: #E5D8C6;
     --row-hover: #FBF6EF;
+    --chip-bg: #F0E6D4;
     --canvas: #FBF6EF;       /* warm cream page background behind panels */
     --accent: #B5530E;           /* button orange: AA 4.99 with white text */
     --accent-strong: #964307;    /* hover: 6.77 with white text */
@@ -76,6 +77,7 @@ html[data-theme="dark"] {
     --text: #E8E0D6;         /* warm off-white: 11.33 on panel */
     --border: #544D45;
     --row-hover: #34302C;
+    --chip-bg: #3D362C;
     --canvas: #1E1B19;       /* darker warm canvas: sections lift */
     --accent: #F0843A;           /* bright orange; dark text on it: 6.39 */
     --accent-strong: #FF9A55;
