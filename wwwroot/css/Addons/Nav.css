@@ -26,12 +26,12 @@ nav.Nav-Bar {
     right: 0;
     height: 56px;
     background: var(--panel);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-strong);
     z-index: 1000;
     display: flex;
     align-items: center;
     padding: 0 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
 }
 
     nav.Nav-Bar #navbar-menu {
