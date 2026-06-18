@@ -71,9 +71,9 @@ class TaskPage extends PageBase {
             sessionStorage.setItem(STORAGE_KEYS.TD_ACTIVE_TAB, 'tasks');
             this.navigateToTicketDetails();
         } else {
-            // Orphan task with no ticket — fall back to the standalone editor.
-            this.saveTaskId(task.taskID);
-            window.location.href = '/Page/TaskDetails';
+            // Orphan task with no parent ticket: there is no standalone editor,
+            // so there is nothing to open — tell the user instead of 404ing.
+            UI.toast?.('This task is not linked to a ticket', 'warning');
         }
     }
 
