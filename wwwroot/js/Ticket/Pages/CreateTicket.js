@@ -44,6 +44,7 @@ class CreateTicket extends PageBase {
         // merely viewing a project never leaks into a queue-opened ticket).
         const projectId = sessionStorage.getItem('NewTicketProjectID');
         this._projectContext = !!projectId;
+        this._projectId = projectId;
         if (!projectId) return;
         sessionStorage.removeItem('NewTicketProjectID');
 
@@ -312,6 +313,12 @@ class CreateTicket extends PageBase {
         // the project ticket list uses) rather than returning to the queue.
         if (this._projectContext) {
             sessionStorage.setItem(STORAGE_KEYS.TICKET_ID, String(newTicketId));
+            // 6b: the new ticket's Back button should return to this project's
+            // details (via TicketListReturn), not the main queue.
+            if (this._projectId) {
+                sessionStorage.setItem('ProjectID', this._projectId);
+                sessionStorage.setItem('TicketListReturn', '/ProjectDetails');
+            }
             Nav.toTicketDetails();
             return;
         }

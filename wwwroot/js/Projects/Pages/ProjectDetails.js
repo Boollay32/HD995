@@ -142,6 +142,8 @@ class ProjectDetails extends PageBase {
     _openTicket(ticketId) {
         if (!Number.isFinite(ticketId)) return;
         sessionStorage.setItem(STORAGE_KEYS.TICKET_ID, String(ticketId));
+        // 6b: Back from a project ticket returns to this project, not the queue.
+        sessionStorage.setItem('TicketListReturn', '/ProjectDetails');
         Nav.toTicketDetails();
     }
 
