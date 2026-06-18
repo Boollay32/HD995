@@ -334,7 +334,7 @@ const Tasks = (() => {
                 <div class="td-ed-row">
                     <label class="td-ed-label">Completion date</label>
                     <input type="date" class="td-ed-input" data-fld="completed"
-                           value="${H.toInputDate(task.completed) || H.toInputDate(new Date())}">
+                           value="${H.toInputDate(task.completed) || (status === DONE ? H.toInputDate(new Date()) : '')}">
                 </div>
                 <div class="td-ed-row td-ed-important">
                     <button type="button" class="td-imp-pill" data-fld="important"
@@ -422,6 +422,17 @@ const Tasks = (() => {
             const lbl = impBtn.querySelector('span');
             if (lbl) lbl.textContent = on ? 'Important' : 'Mark as important';
             markDirty();
+        });
+
+        // 6d: when the task is switched to Complete, default the completion
+        // date to today (only if it has not already been given one).
+        const statusSel = editor.querySelector('[data-fld="status"]');
+        const completedInput = editor.querySelector('[data-fld="completed"]');
+        statusSel?.addEventListener('change', () => {
+            if (parseInt(statusSel.value, 10) === DONE && completedInput && !completedInput.value) {
+                completedInput.value = H.toInputDate(new Date());
+                markDirty();
+            }
         });
 
         // Add file: encode picked files and append to the kept list.
