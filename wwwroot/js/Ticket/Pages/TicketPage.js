@@ -104,7 +104,17 @@ class TicketPage extends PageBase {
                 {
                     key: 'subject', label: 'Ticket', sortable: true,
                     sortValue: r => (r.subject || '').toLowerCase(),
-                    render: r => `<div class="qv-subj">${TQneedsMyReply(r) ? '<span class="qv-unread qv-mine" title="Client replied \u2013 your reply needed"></span>' : (r.notify === '0' ? '<span class="qv-unread" title="Awaiting reply"></span>' : '')}<div><div class="s1">${TQesc(r.subject)}</div><div class="s2"><span class="qv-ref">#${r.ticketID}</span> · ${TQesc(r.userName)}</div></div></div>`
+                    render: r => `<div class="qv-subj">${TQneedsMyReply(r) ? '<span class="qv-unread qv-mine" title="Client replied \u2013 your reply needed"></span>' : (r.notify === '0' ? '<span class="qv-unread" title="Awaiting reply"></span>' : '')}<div><div class="s1">${TQesc(r.subject)}</div><div class="s2"><span class="qv-ref">#${r.ticketID}</span></div></div></div>`
+                },
+                {
+                    key: 'userName', label: 'Client', sortable: true,
+                    sortValue: r => (r.userName || '').toLowerCase(),
+                    render: r => TQesc(r.userName)
+                },
+                {
+                    key: 'authority', label: 'Authority', sortable: true,
+                    sortValue: r => (r.authority || '').toLowerCase(),
+                    render: r => TQesc(r.authority)
                 },
                 {
                     key: 'requestType', label: 'Type',
