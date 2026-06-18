@@ -27,6 +27,12 @@ const TicketLoader = {
 
             sessionStorage.setItem(STORAGE_KEYS.REQUEST_TYPE, data.requestID ?? 0);
 
+            // Project tickets and incidents (request type 8) get a Notes pane
+            // on the left (NotesPanel) in place of the client Messages thread,
+            // and drop the Workspace Notes tab. Decide before layout + restore.
+            State.notesLeft = !!data.projectID || Number(data.requestID) === 8;
+            if (State.notesLeft) NotesLeft.prepare();
+
             // Populate the Details-tab selects (assignedtech / category /
             // subcategory / priority). REQUEST_TYPE is set above so the
             // status CR-filter in Dropdowns can use it.
@@ -39,6 +45,7 @@ const TicketLoader = {
             // user has no saved pane preference and either they arrived on the
             // Tasks tab, or the ticket is internal (no client thread).
             if (State.layout === TDLAYOUT.BOTH
+                && !State.notesLeft
                 && !sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED)
                 && (State.activeTab === 'tasks' || Session.isInternal)) {
                 Collapse._shell?.collapse?.('left');
@@ -96,8 +103,12 @@ const TicketLoader = {
             return;
         }
 
-        if (typeof Notes !== 'undefined') Notes.init(ticketId);
-        if (typeof MessagesPanel !== 'undefined') MessagesPanel.init(ticketId, State.adminLevel);
+        if (State.notesLeft) {
+            NotesLeft.init(ticketId);
+        } else {
+            if (typeof Notes !== 'undefined') Notes.init(ticketId);
+            if (typeof MessagesPanel !== 'undefined') MessagesPanel.init(ticketId, State.adminLevel);
+        }
         if (typeof Tasks !== 'undefined') Tasks.init(ticketId);
         if (typeof Activity !== 'undefined') Activity.init(ticketId);
 
@@ -117,3 +128,57 @@ const TicketLoader = {
 
 };
 
+// -------------------------  Notes-on-left (project / incident)  ------------------------- //
+// Project tickets and incidents have no client thread, so the left pane becomes
+// a NotesPanel bound to the ticket's own internal notes, and the Workspace Notes
+// tab is dropped. prepare() does the DOM swap before layout/tab restore; init()
+// starts the panel after the fetch (skipping MessagesPanel + the right-tab Notes).
+const NotesLeft = {
+
+    prepare() {
+        // Left pane: hide Messages, reveal the Notes block, relabel.
+        document.getElementById('Messages-Thread')?.setAttribute('hidden', '');
+        document.getElementById('Messages-Compose')?.setAttribute('hidden', '');
+        document.getElementById('msg-scope-banner')?.setAttribute('hidden', '');
+        document.getElementById('td-left-notes')?.removeAttribute('hidden');
+
+        const title = document.querySelector('#pane-left .td-pane-title');
+        if (title) title.textContent = 'Notes';
+        const railLabel = document.querySelector('#rail-left .td-rail-label');
+        if (railLabel) railLabel.textContent = 'Notes';
+        document.getElementById('pane-left')?.setAttribute('aria-label', 'Notes');
+        document.getElementById('collapse-left')?.setAttribute('aria-label', 'Collapse notes pane');
+
+        // Drop the Workspace Notes tab + its panel.
+        document.getElementById('tab-notes')?.setAttribute('hidden', '');
+        document.getElementById('tabpanel-notes')?.setAttribute('hidden', '');
+
+        // Never restore onto the now-hidden Notes tab.
+        if (sessionStorage.getItem(STORAGE_KEYS.TD_ACTIVE_TAB) === 'notes') {
+            sessionStorage.setItem(STORAGE_KEYS.TD_ACTIVE_TAB, 'details');
+        }
+    },
+
+    init(ticketId) {
+        if (typeof NotesPanel === 'undefined') return;
+        NotesPanel.init({
+            ownerId: parseInt(ticketId, 10),
+            ownerField: 'TicketID',
+            getEndpoint: 'TicketDetails/GetNotes',
+            getPayloadKey: 'ticketId',
+            attachmentOwnerType: 0,
+            rfc: false,
+            extraSaveFields: { visibleToClient: '0' },
+            ids: {
+                thread: 'TicketNotes-Thread',
+                textarea: 'tnote-textarea',
+                sendBtn: 'tnote-send-btn',
+                charcount: 'tnote-charcount',
+                fileInput: 'tnote-file-input',
+                attachList: 'tnote-attachment-list',
+                composerDock: 'TicketNotes-Compose',
+            },
+        });
+    },
+
+};

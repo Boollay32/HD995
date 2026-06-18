@@ -6,6 +6,7 @@
 
 @section AddJSToHead {
     <script src="~/js/Components/CustomFields/CustomFieldBuilder.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Notes/NotesPanel.js" asp-append-version="true"></script>
     <script src="~/js/Components/Notes/Notes.js" asp-append-version="true"></script>
     <script src="~/js/Components/Messages/MessagePanel.js" asp-append-version="true"></script>
     <script src="~/js/Tasks/Features/TaskPopulation.js" asp-append-version="true"></script>
@@ -157,6 +158,44 @@
                         </label>
                     </div>
 
+                </div>
+
+                <!-- Notes pane (project / incident tickets; replaces Messages at runtime) -->
+                <div class="td-left-notes" id="td-left-notes" hidden>
+                    <div class="td-note-thread" id="TicketNotes-Thread" role="log"
+                         aria-live="polite" aria-label="Internal notes"></div>
+                    <div class="td-note-compose" id="TicketNotes-Compose">
+                        <textarea id="tnote-textarea"
+                                  class="td-note-input"
+                                  placeholder="Add an internal note…"
+                                  maxlength="2000"
+                                  rows="1"
+                                  aria-label="Note text"
+                                  aria-describedby="tnote-charcount"></textarea>
+                        <button type="button" class="td-note-add-btn" id="tnote-send-btn"
+                                aria-label="Save note" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="td-composer-footer">
+                        <span class="td-charcount mono" id="tnote-charcount" aria-live="polite">0 / 2000</span>
+                        <div class="td-composer-attachments" id="tnote-attachment-list"></div>
+                        <label class="td-attach-btn" aria-label="Add attachment to note">
+                            <input type="file" id="tnote-file-input" class="sr-only"
+                                   multiple accept="*/*"
+                                   aria-label="Attach file to note" />
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
+                            </svg>
+                        </label>
+                    </div>
                 </div>
 
             </div>
