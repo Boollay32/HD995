@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/css/Addons/Snow.css" asp-append-version="true">
     <link rel="stylesheet" type="text/css" href="/css/Addons/PopupWindows.css" asp-append-version="true">
     <link rel="stylesheet" type="text/css" href="/css/Pages/CreateTicket.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="/css/Components/NoteThread.css" asp-append-version="true">
 }
 
 @section AddJSToHead {
@@ -67,15 +68,16 @@
                 <div class="Detail-Div full ca-attach-row">
                     <div class="left"><label class="Name">Attachments</label></div>
                     <div class="right">
-                        <div id="AttachBin">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
-                            </svg>
-                            <span>Drag &amp; drop files or click to browse</span>
+                        <div class="td-composer-footer">
+                            <label class="td-attach-btn" aria-label="Add attachment">
+                                <input type="file" id="ct-file-input" class="sr-only" multiple accept="*/*" aria-label="Attach files" />
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                </svg>
+                            </label>
+                            <div class="td-composer-attachments" id="ct-attachment-list" aria-live="polite"></div>
                         </div>
-                        <input type="file" id="ct-file-input" multiple hidden aria-label="Attach files" />
-                        <div id="ct-attachment-list" aria-live="polite"></div>
                     </div>
                 </div>
 
