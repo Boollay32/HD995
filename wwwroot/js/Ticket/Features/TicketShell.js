@@ -48,9 +48,9 @@ const Tabs = {
     },
 
     restore() {
-        const saved = sessionStorage.getItem(STORAGE_KEYS.TD_ACTIVE_TAB);
-        const valid = Object.values(TAB).includes(saved);
-        Tabs.activate(valid ? saved : TAB.DETAILS);
+        // Always open a ticket on the Details tab; do not carry the
+        // last-used tab across tickets.
+        Tabs.activate(TAB.DETAILS);
     },
 
     // Returns ordered list of visible tab names
