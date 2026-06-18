@@ -34,7 +34,7 @@ const Session = {
 
 const State = {
     layout: TDLAYOUT.BOTH,
-    activeTab: TAB.NOTES,
+    activeTab: TAB.DETAILS,
     collapsed: { left: false, right: false },
     ticketData: null,
     adminLevel: 0,

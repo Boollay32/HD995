@@ -1934,7 +1934,14 @@ body {
   justify-content: space-between;
   gap: 10px;
   flex-shrink: 0;
-  padding-bottom: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--td-surface);
+  /* span the container's 16px padding so scrolled content can't
+     peek above or beside the pinned head, then restore spacing */
+  margin: -16px -16px 0;
+  padding: 16px 16px 8px;
   border-bottom: 1px solid var(--td-border-2);
 }
 .td-details-head .td-details-title {
