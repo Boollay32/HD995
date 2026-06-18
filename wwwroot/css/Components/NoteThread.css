@@ -469,3 +469,14 @@
 .td-note-compose .td-visibility-btn { order: 2; }
 .td-note-compose .td-composer-attachments { order: 3; }
 .td-note-compose .td-charcount { order: 4; flex: 0 0 auto; margin-left: auto; }
+
+/* ===== HD Issues 29 - Group-3 step 2: note edit-mode attachments (3a, 3b) ===== */
+/* 3a: existing-attachment remove-X is interactive only while editing the note. */
+.td-note-card:not(.is-editing) .td-note-file-row .td-note-file-remove {
+  opacity: 0;
+  pointer-events: none;
+}
+/* 3b: files staged while editing, shown as chips above the Save/Cancel bar. */
+.td-note-edit-attachments { display: flex; flex-wrap: wrap; gap: 6px; }
+.td-note-edit-attachments:empty { display: none; }
+.td-note-edit-attach { order: -1; margin-right: auto; }
