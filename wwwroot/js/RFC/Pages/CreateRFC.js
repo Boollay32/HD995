@@ -47,23 +47,9 @@ class CreateRFC extends PageBase {
             ?.addEventListener('click', () => this.submitRFC());
         Form.gateSubmit(this.formId, 'SubmitCreatedRFC');
 
-        // Attachments: drop zone + click-to-browse + square icon tiles
-        const bin = document.getElementById('AttachBin');
+        // Attachments: the paperclip label opens the native file picker; we
+        // just handle the picked files and render the shared td-attach-chip.
         const fileInput = document.getElementById('cr-file-input');
-        bin?.addEventListener('click', () => fileInput?.click());
-        bin?.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput?.click(); }
-        });
-        bin?.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            bin.classList.add('is-dragover');
-        });
-        bin?.addEventListener('dragleave', () => bin.classList.remove('is-dragover'));
-        bin?.addEventListener('drop', (e) => {
-            e.preventDefault();
-            bin.classList.remove('is-dragover');
-            this._addFiles(e.dataTransfer?.files);
-        });
         fileInput?.addEventListener('change', (e) => {
             this._addFiles(e.target.files);
             e.target.value = '';
@@ -94,33 +80,33 @@ class CreateRFC extends PageBase {
         const holder = document.getElementById('cr-attachment-list');
         if (!holder) return;
 
+        const fmtIcon = (typeof Format !== 'undefined' && Format.fileIcon)
+            ? n => Format.fileIcon(n) : () => '';
+        const fmtSize = (typeof Format !== 'undefined' && Format.fileSizeLabel)
+            ? b => Format.fileSizeLabel(b) : () => '';
+        const esc = (typeof Format !== 'undefined' && Format.escapeHtml)
+            ? s => Format.escapeHtml(s) : s => s;
+
         holder.replaceChildren();
         this.files.forEach((file, index) => {
-            const chip = document.createElement('span');
-            chip.className = 'ct-att-chip';
-            chip.tabIndex = 0;
-
-            const icon = document.createElement('span');
-            icon.className = 'ct-att-icon';
-            icon.setAttribute('aria-hidden', 'true');
-            icon.innerHTML = (typeof Format !== 'undefined' && Format.fileIcon)
-                ? Format.fileIcon(file.name) : '';
-
-            const name = document.createElement('span');
-            name.className = 'ct-att-name';
-            name.textContent = file.name;
-
-            const remove = document.createElement('button');
-            remove.type = 'button';
-            remove.className = 'ct-att-remove';
-            remove.setAttribute('aria-label', `Remove ${file.name}`);
-            remove.textContent = '\u00d7';
-            remove.addEventListener('click', () => {
+            const chip = document.createElement('div');
+            chip.className = 'td-attach-chip';
+            chip.dataset.index = index;
+            chip.innerHTML = `
+                <span aria-hidden="true">${fmtIcon(file.name)}</span>
+                <span class="td-chip-name">${esc(file.name)}</span>
+                <span class="td-chip-size mono">${fmtSize(file.size)}</span>
+                <button type="button" aria-label="Remove ${esc(file.name)}">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>`;
+            chip.querySelector('button')?.addEventListener('click', () => {
                 this.files.splice(index, 1);
                 this._renderAttachmentChips();
             });
-
-            chip.append(icon, name, remove);
             holder.appendChild(chip);
         });
     }
