@@ -125,7 +125,7 @@ class CustomFieldBuilder {
         select.className = 'Value';
         select.id = config.customFilterItem;
 
-        if (config.customFilterItem === 'authorityName') {
+        if (config.customFilterItem === 'Authority') {
             select.addEventListener('change', function () {
                 FindClients(this);
             });
@@ -194,9 +194,52 @@ function ChangeCustomFields(requestId) {
     customFieldBuilder.changeCustomFields(requestId);
 }
 
+// -------------------------  Contact Client  ------------------------- //
+
+// When the contact-client Authority dropdown changes, pull that authority's
+// users and fill the assigned-client dropdown (id="assignedClientID") with
+// their email addresses.
+async function FindClients(authoritySelect) {
+    const clientSelect = document.getElementById('assignedClientID');
+    if (!clientSelect) return;
+
+    const authorityId = parseInt(authoritySelect?.value, 10);
+    clientSelect.innerHTML = '';
+
+    const placeholder = (text) => {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = text;
+        opt.disabled = true;
+        opt.selected = true;
+        clientSelect.appendChild(opt);
+    };
+
+    if (!authorityId) { placeholder('Select an authority first'); return; }
+
+    try {
+        const clients = await API.post('User/GetAuthorityClients',
+            API.authPayload({ authorityId }));
+        const list = Array.isArray(clients) ? clients : [];
+        if (!list.length) { placeholder('No clients found'); return; }
+
+        placeholder('Select a client');
+        for (const c of list) {
+            const opt = document.createElement('option');
+            opt.value = c.userID ?? '';
+            opt.textContent = c.email || c.userName || ('User ' + (c.userID ?? ''));
+            clientSelect.appendChild(opt);
+        }
+    } catch (err) {
+        console.error('FindClients:', err);
+        placeholder('Could not load clients');
+    }
+}
+
 // -------------------------  Global  ------------------------- //
 
 if (typeof window !== 'undefined') {
     window.customFieldBuilder = customFieldBuilder;
     window.ChangeCustomFields = ChangeCustomFields;
+    window.FindClients = FindClients;
 }
