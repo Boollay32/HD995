@@ -31,6 +31,12 @@ namespace HelpDeskNet8.Services
         }
 
         public IEnumerable<ITicketStub> GetTickets(IUser user, IFilter filter, Int32 mytickets, int UTC)
+            => RunTicketRead("[dbo].[usp_Helpdesk_GetTickets]", user, filter, mytickets, UTC);
+
+        public IEnumerable<ITicketStub> GetIncidents(IUser user, IFilter filter, Int32 mytickets, int UTC)
+            => RunTicketRead("[dbo].[usp_Helpdesk_GetIncidents]", user, filter, mytickets, UTC);
+
+        private IEnumerable<ITicketStub> RunTicketRead(string proc, IUser user, IFilter filter, Int32 mytickets, int UTC)
         {
             if (filter == null)
             { filter = new Filter(); }
@@ -39,7 +45,7 @@ namespace HelpDeskNet8.Services
 
             using IDbCommand command = _connection.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "[dbo].[usp_Helpdesk_GetTickets]";
+            command.CommandText = proc;
 
             command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.NVarChar) { Value = user.UserID });
             command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
