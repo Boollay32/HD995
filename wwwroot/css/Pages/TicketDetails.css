@@ -2061,3 +2061,7 @@ body {
   color: var(--td-text);
   overflow-wrap: anywhere;
 }
+
+/* Group-2 step 2: task attachments use the standard chip + paperclip */
+.td-att-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.td-attach-chip--open { cursor: pointer; }

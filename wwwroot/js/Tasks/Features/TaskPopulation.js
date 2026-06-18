@@ -47,21 +47,21 @@ const TaskPopulation = {
     // -------------------------  HTML  ------------------------- //
 
     attListHtml(atts) {
-        return atts.length
-            ? atts.map((a, i) => {
-                const nm = TaskPopulation.esc(a.attachmentName || ('Attachment ' + (i + 1)));
-                const canOpen = !!a.attachmentByteArray;
-                const nameEl = canOpen
-                    ? `<button type="button" class="td-att-name td-att-open" data-att-open="${i}" title="Open ${nm}">${nm}</button>`
-                    : `<span class="td-att-name">${nm}</span>`;
-                return `
-                <li class="td-att" data-att="${i}">
-                    <span class="td-att-icon" aria-hidden="true">${Format.fileIcon(a.attachmentName || '')}</span>
-                    ${nameEl}
-                    <button type="button" class="td-att-remove" data-att-remove="${i}" aria-label="Remove attachment">&times;</button>
-                </li>`;
-            }).join('')
-            : '<li class="td-att-empty">No attachments</li>';
+        if (!atts.length) return '';
+        return atts.map((a, i) => {
+            const nm = TaskPopulation.esc(a.attachmentName || ('Attachment ' + (i + 1)));
+            const icon = Format.fileIcon(a.attachmentName || '');
+            const canOpen = !!a.attachmentByteArray;
+            const openAttr = canOpen ? ` data-att-open="${i}" title="Open ${nm}"` : '';
+            const openCls = canOpen ? ' td-attach-chip--open' : '';
+            return `<div class="td-attach-chip${openCls}" data-att="${i}"${openAttr}>` +
+                `<span aria-hidden="true">${icon}</span>` +
+                `<span class="td-chip-name">${nm}</span>` +
+                `<button type="button" data-att-remove="${i}" aria-label="Remove ${nm}">` +
+                `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>` +
+                `</button>` +
+                `</div>`;
+        }).join('');
     },
 
     emptyState() {
