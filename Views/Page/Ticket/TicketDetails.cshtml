@@ -213,23 +213,10 @@
             </div>
             <div class="td-pane-inner" id="pane-right-inner">
                 <!-- ── Pane Header ── -->
-                <div class="td-pane-head">
+                <div class="td-pane-head td-pane-head--ws">
                     <h2 class="td-pane-title">Workspace</h2>
-                    <button class="td-collapse-btn" id="collapse-right"
-                            aria-label="Collapse workspace pane"
-                            aria-expanded="true"
-                            aria-controls="pane-right"
-                            type="button">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.2"
-                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M9 18l6-6-6-6" />
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- ── Tabs ── -->
-                <div class="td-ws-tabs" role="tablist" aria-label="Workspace sections">
+                    <!-- tabs on the header row -->
+                    <div class="td-ws-tabs" role="tablist" aria-label="Workspace sections">
 
                     <button role="tab" id="tab-details" aria-selected="true"
                             aria-controls="tabpanel-details" type="button">
@@ -277,6 +264,19 @@
                         Activity
                     </button>
 
+                    </div>
+
+                    <button class="td-collapse-btn" id="collapse-right"
+                            aria-label="Collapse workspace pane"
+                            aria-expanded="true"
+                            aria-controls="pane-right"
+                            type="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 18l6-6-6-6" />
+                        </svg>
+                    </button>
                 </div>
 
                 <!-- ── Tab Panels ── -->
