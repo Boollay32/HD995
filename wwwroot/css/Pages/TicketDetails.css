@@ -2076,3 +2076,14 @@ body {
   justify-content: space-between;
   gap: 10px;
 }
+
+/* ===== HD Issues 29 - Group-4 (2a): attachment count on collapsed task rows ===== */
+.td-task-attach {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: "Spline Sans Mono", ui-monospace, monospace;
+  font-size: 0.65625rem;
+  color: var(--td-muted);
+}
+.td-task-attach svg { flex: none; }

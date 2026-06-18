@@ -78,7 +78,7 @@ const TaskPopulation = {
     },
 
     itemSummaryHtml(task, ctx) {
-        const { done, status, dueLabel } = ctx;
+        const { done, status, dueLabel, attachCount } = ctx;
         return `
             <div class="td-task-summary">
                 <button type="button" class="td-task-open" aria-expanded="false">
@@ -89,6 +89,11 @@ const TaskPopulation = {
                     <span class="td-task-meta">
                         <span class="td-task-status ${TaskPopulation.STATUS_CLASS[status] ?? ''}">${TaskPopulation.esc(TaskPopulation.STATUS_LABEL[status] ?? 'New')}</span>
                         <span class="td-task-due">${dueLabel}</span>
+                        ${attachCount ? `<span class="td-task-attach" title="${attachCount} attachment${attachCount === 1 ? '' : 's'}" aria-label="${attachCount} attachment${attachCount === 1 ? '' : 's'}">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                            </svg>${attachCount}</span>` : ''}
                         ${task.assignedTech ? `<span class="td-task-assignee">${TaskPopulation.esc(task.assignedTech)}</span>` : ''}
                     </span>
                 </button>
