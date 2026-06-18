@@ -71,24 +71,32 @@ class CreateTicket extends PageBase {
     //   In-project create -> project request types only.
     //   Main create       -> every type the server returned, minus project
     //                         types and the retired 'Project Ticket' (13).
-    // Incident (8) is intentionally still allowed in main create until it
-    // gets its own section; Web Help Desk (9) stays as a client query. Adjust
-    // the two lists below if either decision changes.
+    // Incident (8) now has its own Incidents page, so it is hidden from the
+    // main form; the Incidents "New ticket" button locks the form to it.
+    // Process Reports (5) is a main (client) type, not a project one. Web Help
+    // Desk (9) stays a client query. Adjust the lists below if these change.
     _filterRequestTypes() {
         const select = document.getElementById('requestType');
         if (!select) return;
 
-        const PROJECT_TYPES = ['4', '5', '10', '11'];
-        const MAIN_EXCLUDE = [...PROJECT_TYPES, '13'];
+        const INCIDENT = '8';
 
-        const allowed = (value) => this._projectContext
-            ? PROJECT_TYPES.includes(value)
+        // From the Incidents page "New ticket" -> lock this form to incidents only.
+        const incidentContext = sessionStorage.getItem('NewTicketIncident') === '1';
+        if (incidentContext) sessionStorage.removeItem('NewTicketIncident');
+
+        const PROJECT_TYPES = ['4', '10', '11'];                  // Process Reports (5) belongs on the main form
+        const MAIN_EXCLUDE = [...PROJECT_TYPES, '13', INCIDENT];  // main hides project types, retired 13, and incidents
+
+        const allowed = (value) =>
+            incidentContext        ? value === INCIDENT
+            : this._projectContext ? PROJECT_TYPES.includes(value)
             : !MAIN_EXCLUDE.includes(value);
 
         for (const option of Array.from(select.options)) {
             if (!allowed(option.value)) option.remove();
         }
-        select.selectedIndex = -1;
+        select.selectedIndex = incidentContext ? 0 : -1;
     }
 
     _setupPageUI() {

@@ -81,7 +81,7 @@ class IncidentPage extends PageBase {
         TQ_MY_ID = Number.isNaN(myId) ? null : myId;
         return {
             title: 'Incidents',
-            action: { label: '+ New Ticket', onClick: () => Nav.toCreateTicket() },
+            action: { label: '+ New Incident', onClick: () => { sessionStorage.setItem('NewTicketIncident', '1'); Nav.toCreateTicket(); } },
             fetch: () => this._fetch(),
             rowKey: r => r.ticketID,
             search: ['subject', 'userName', 'ticketID'],
