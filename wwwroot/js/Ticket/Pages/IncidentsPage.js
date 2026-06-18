@@ -61,9 +61,9 @@ class IncidentPage extends PageBase {
 
     // ---- Data: fetch the full permitted set; saved-views slice it client-side ----
     async _fetch() {
-        const data = await API.post('Ticket/GetTickets', API.authPayload({
+        const data = await API.post('Ticket/GetIncidents', API.authPayload({
             myTicket: 0,          // 0 = all the user may see; "My open" is a client-side view
-            filters: { requestType: 8 }
+            filters: {}
         }));
         return Array.isArray(data) ? data : [];
     }

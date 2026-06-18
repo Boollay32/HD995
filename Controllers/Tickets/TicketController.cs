@@ -41,6 +41,20 @@ namespace HelpDeskNet8.Controllers.Tickets
         }
 
         [HttpPost]
+        public IActionResult GetIncidents([FromBody] GetTicketsRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null) return Unauthorized();
+
+            // Incidents are Govtech-only; non-Govtech callers get an empty set.
+            if (user.AuthorityID != Constants.Authority.Govtech) return Ok(System.Array.Empty<object>());
+
+            Filter filter = TicketFilterMapper.Map(request.Filters);
+            var incidents = _ticketManager.GetIncidents(user, filter, request.MyTicket, request.UTC);
+            return Ok(incidents);
+        }
+
+        [HttpPost]
         public IActionResult SaveTicket([FromBody] SaveTicketRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
