@@ -2067,3 +2067,12 @@ body {
 /* Group-2 step 2: task attachments use the standard chip + paperclip */
 .td-att-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .td-attach-chip--open { cursor: pointer; }
+
+/* ===== HD Issues 29 - Group-4 (2c): important pill in the Title row ===== */
+/* Label left, the Mark-as-important pill right, on one line above the title. */
+.td-ed-title-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
