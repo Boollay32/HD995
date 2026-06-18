@@ -230,7 +230,8 @@ const Tasks = (() => {
 
         const dueLabel = task.requiredDate ? H.formatDate(task.requiredDate) : '\u2014';
 
-        item.innerHTML = TaskPopulation.itemSummaryHtml(task, { done, status, dueLabel });
+        const attachCount = Array.isArray(task.attachments) ? task.attachments.length : 0;
+        item.innerHTML = TaskPopulation.itemSummaryHtml(task, { done, status, dueLabel, attachCount });
 
         item.querySelector('.td-task-open')
             ?.addEventListener('click', () => _requestOpen(task.taskID));
