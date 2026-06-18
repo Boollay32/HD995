@@ -48,3 +48,10 @@ button.cancel {
   font-size: 1.25rem;
   min-width: 100px;
 }
+
+/* press feedback: subtle scale on click (added) */
+.accept:active,
+button.cancel:active,
+button#cancel:active {
+  transform: scale(0.97);
+}

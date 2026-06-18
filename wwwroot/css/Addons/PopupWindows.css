@@ -150,3 +150,9 @@
   position: relative;
   float: left;
 }
+
+/* MessageBox entrance: fade backdrop + pop dialog (mirrors Confirm) */
+@keyframes mb-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mb-dialog-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+#MessageBox-ScreenCover-Div { animation: mb-backdrop-in 0.16s ease both; }
+#MessageBox-ScreenCover-Div #MessageBox-Outer-Div { animation: mb-dialog-in 0.18s ease both; }
