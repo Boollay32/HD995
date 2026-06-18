@@ -654,3 +654,17 @@ html[data-theme="dark"]{
   background: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-bg, rgba(181,83,14,0.18));
 }
+
+/* loading shimmer: skeleton rows while the queue fetches */
+@keyframes qv-shimmer { 0% { background-position: -360px 0; } 100% { background-position: 360px 0; } }
+tr.qv-skel-row { pointer-events: none; }
+tr.qv-skel-row td { padding-top: 12px; padding-bottom: 12px; }
+.qv-skel {
+    display: inline-block;
+    width: 60%;
+    height: 11px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--row-hover) 0%, var(--border) 50%, var(--row-hover) 100%);
+    background-size: 720px 100%;
+    animation: qv-shimmer 1.25s linear infinite;
+}

@@ -367,7 +367,20 @@ class QueueView {
 
     // -------------------------  States / utils  ------------------------- //
 
-    _renderLoading() { this.$.tbody.innerHTML = `<tr class="qv-empty"><td colspan="99">Loading…</td></tr>`; }
+    _renderLoading() {
+        const cols = (this.cfg.columns || []).length || 6;
+        const hasSel = !!(this.cfg.bulk && this.cfg.bulk.length);
+        const widths = ['72%', '46%', '82%', '54%', '63%', '40%', '76%', '50%'];
+        let rows = '';
+        for (let r = 0; r < 8; r++) {
+            let cells = hasSel ? '<td class="qv-cell-select"></td>' : '';
+            for (let col = 0; col < cols; col++) {
+                cells += `<td><span class="qv-skel" style="width:${widths[(r + col) % widths.length]}"></span></td>`;
+            }
+            rows += `<tr class="qv-skel-row" aria-hidden="true">${cells}</tr>`;
+        }
+        this.$.tbody.innerHTML = rows;
+    }
     _renderError()   { this.$.tbody.innerHTML = `<tr class="qv-empty"><td colspan="99">Couldn't load. Please try again.</td></tr>`; }
     _esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 }
