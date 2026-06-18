@@ -50,7 +50,7 @@ const Tabs = {
     restore() {
         const saved = sessionStorage.getItem(STORAGE_KEYS.TD_ACTIVE_TAB);
         const valid = Object.values(TAB).includes(saved);
-        Tabs.activate(valid ? saved : TAB.NOTES);
+        Tabs.activate(valid ? saved : TAB.DETAILS);
     },
 
     // Returns ordered list of visible tab names

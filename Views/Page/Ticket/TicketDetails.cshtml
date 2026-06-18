@@ -193,16 +193,16 @@
                 <!-- ── Tabs ── -->
                 <div class="td-ws-tabs" role="tablist" aria-label="Workspace sections">
 
-                    <button role="tab" id="tab-notes" aria-selected="true"
-                            aria-controls="tabpanel-notes" type="button">
+                    <button role="tab" id="tab-details" aria-selected="true"
+                            aria-controls="tabpanel-details" type="button">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2.2"
                              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
                         </svg>
-                        Notes
-                        <span class="td-tab-pip mono hidden" id="notes-pip"></span>
+                        Details
                     </button>
 
                     <button role="tab" id="tab-tasks" aria-selected="false"
@@ -217,16 +217,16 @@
                         <span class="td-tab-pip mono hidden" id="tasks-pip"></span>
                     </button>
 
-                    <button role="tab" id="tab-details" aria-selected="false"
-                            aria-controls="tabpanel-details" type="button">
+                    <button role="tab" id="tab-notes" aria-selected="false"
+                            aria-controls="tabpanel-notes" type="button">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2.2"
                              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="12" y1="8" x2="12" y2="12" />
-                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
                         </svg>
-                        Details
+                        Notes
+                        <span class="td-tab-pip mono hidden" id="notes-pip"></span>
                     </button>
 
                     <button role="tab" id="tab-activity" aria-selected="false"
