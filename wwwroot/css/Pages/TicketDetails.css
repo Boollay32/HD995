@@ -223,6 +223,8 @@ body {
   justify-content: flex-start;
 }
 .td-bubble-sender {
+  display: inline-flex;
+  align-items: center;
   font-size: 0.65625rem;
   font-weight: 700;
   color: var(--td-muted);
