@@ -104,10 +104,11 @@ class CreateTicket extends PageBase {
             if (!allowed(option.value)) option.remove();
         }
 
-        // Govtech main create is always Contact Client: preselect it and tell init
-        // to run its custom fields. Incident lock keeps its single option selected.
+        // Govtech main create is always Contact Client; incident context locks to
+        // incidents. The preselected type is returned so init runs its custom fields.
         if (incidentContext) {
             select.selectedIndex = 0;
+            return INCIDENT;
         } else if (isGovtech && !this._projectContext) {
             select.value = CONTACT_CLIENT;
             return CONTACT_CLIENT;
