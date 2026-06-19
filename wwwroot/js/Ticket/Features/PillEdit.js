@@ -8,7 +8,8 @@
 
     var PAIRS = [
         { pill: 'meta-status',   select: 'status',   led: true,  cls: 'statusClass',   lbl: 'statusLabel' },
-        { pill: 'meta-priority', select: 'priority', led: false, cls: 'priorityClass', lbl: 'priorityLabel' }
+        { pill: 'meta-priority', select: 'priority', led: false, cls: 'priorityClass', lbl: 'priorityLabel' },
+        { pill: 'meta-category', select: 'category', led: false, cls: null,            lbl: null }
     ];
 
     function _close() {
@@ -32,7 +33,15 @@
         var pill = document.getElementById(pair.pill);
         var sel = document.getElementById(pair.select);
         if (!pill || !sel) return;
-        Topbar.renderPill(pill, Topbar[pair.cls](sel.value), Topbar[pair.lbl](sel.value), pair.led);
+        if (pair.cls && pair.lbl) {
+            Topbar.renderPill(pill, Topbar[pair.cls](sel.value), Topbar[pair.lbl](sel.value), pair.led);
+        } else {
+            // Plain pill (e.g. category): no colour class, just the selected label.
+            var opt = sel.options[sel.selectedIndex];
+            Topbar.renderPill(pill, '', opt ? opt.textContent : '', false);
+        }
+        // renderPill rewrites className, so re-assert the editable affordance.
+        pill.classList.add('td-meta-pill--editable');
     }
 
     function _open(pair) {
@@ -101,6 +110,10 @@
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); _open(pair); }
             });
             sel.addEventListener('change', function () { _renderPill(pair); });
+
+            // Initial render -- covers category (Topbar.populate paints only
+            // status/priority) and asserts the chevron affordance on all.
+            _renderPill(pair);
         });
     }
 

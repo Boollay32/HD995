@@ -2162,3 +2162,15 @@ body {
 .td-ed-foot-btns {
   align-items: center;
 }
+
+/* 1d/1g: dropdown affordance on editable meta pills (status/priority/category).
+   The pill is inline-flex with gap, so this chevron sits after the label. */
+#TicketDetails-App .td-meta-pill--editable::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4.5px solid currentColor;
+  opacity: 0.5;
+}
