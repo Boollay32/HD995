@@ -34,7 +34,7 @@ const FontSize = {
     set(v) { this.apply(v); },
 
     mount() {
-        const bar = document.querySelector('nav.Nav-Bar #navbar-logout');
+        const bar = document.querySelector('#qv-settings-panel [data-set-slot="font"]');
         if (!bar || bar.querySelector('.qv-font')) return !!bar;
         const wrap = document.createElement('div');
         wrap.className = 'qv-font';
@@ -45,7 +45,7 @@ const FontSize = {
             '" aria-label="' + s[0].toUpperCase() + s.slice(1) + ' text" title="' +
             s[0].toUpperCase() + s.slice(1) + '">A</button>'
         ).join('');
-        bar.insertBefore(wrap, bar.firstChild);
+        bar.appendChild(wrap);
         wrap.querySelectorAll('.qv-font-opt').forEach(b =>
             b.addEventListener('click', () => FontSize.set(b.dataset.size)));
         this.apply(this.initial());
