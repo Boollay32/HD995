@@ -53,6 +53,9 @@ const TicketLoader = {
             Topbar.populate(data);
             Fields.populate(data);
             window.PillEdit?.init?.();
+            // 1b: overview opens collapsed (after populate so the slim
+            // summary is filled, not blank).
+            window.OverviewPanel?.setCollapsed?.(true);
             TicketLoader._clearNotificationIfMine(data);
             TicketLoader._delegateModules(data);
 
