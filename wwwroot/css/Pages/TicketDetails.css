@@ -1594,6 +1594,7 @@ body {
 #tabpanel-tasks.is-composing .td-progress-track,
 #tabpanel-tasks.is-composing .td-tasks-bar,
 #tabpanel-tasks.is-composing .td-task-list,
+#tabpanel-tasks.is-composing .td-tasks-foot,
 #tabpanel-tasks.is-composing .td-add-task {
   display: none !important;
 }
@@ -2143,3 +2144,21 @@ body {
   border: 1px solid var(--td-border);
 }
 /* ═════  end HD30-6 Description editor  ═════ */
+
+/* ====================================================================
+   HD30 Task footer + Important relocation
+   Browsing: the Add-Task button lives in a solid bottom footer
+   (.td-tasks-foot) instead of the top bar. Editor: the Important pill
+   sits in the footer, grouped with Cancel/Save on the right.
+   ==================================================================== */
+.td-tasks-foot {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 10px;
+  border-top: 1px solid var(--td-border-2);
+}
+.td-ed-foot-btns {
+  align-items: center;
+}

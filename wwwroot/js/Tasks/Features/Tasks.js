@@ -312,14 +312,6 @@ const Tasks = (() => {
             <div class="td-ed-row">
                 <div class="td-ed-title-head">
                     <label class="td-ed-label">Title</label>
-                    <button type="button" class="td-imp-pill" data-fld="important"
-                            aria-pressed="${task.important ? 'true' : 'false'}">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M4 21V4a1 1 0 011-1h11l-2 4 2 4H5"/>
-                        </svg>
-                        <span>${task.important ? 'Important' : 'Mark as important'}</span>
-                    </button>
                 </div>
                 ${isNew
                     ? `<input type="text" class="td-ed-input" data-fld="title" maxlength="200"
@@ -373,6 +365,14 @@ const Tasks = (() => {
             <div class="td-ed-foot">
                 <span class="td-ed-dirty" hidden>Unsaved changes</span>
                 <div class="td-ed-foot-btns">
+                    <button type="button" class="td-imp-pill" data-fld="important"
+                            aria-pressed="${task.important ? 'true' : 'false'}">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 21V4a1 1 0 011-1h11l-2 4 2 4H5"/>
+                        </svg>
+                        <span>${task.important ? 'Important' : 'Mark as important'}</span>
+                    </button>
                     <button type="button" class="td-btn-ghost" data-act="cancel">${isNew ? 'Cancel' : 'Back to tasks'}</button>
                     <button type="button" class="td-btn-primary" data-act="save"${isNew ? '' : ' disabled'}>${isNew ? 'Add task' : 'Save changes'}</button>
                 </div>
