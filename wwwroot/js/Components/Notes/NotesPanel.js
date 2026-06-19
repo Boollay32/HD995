@@ -24,6 +24,7 @@ const NotesPanel = (() => {
     const State = {
         config: null,
         notes: [],
+        description: null,
     };
 
     const Dom = {
@@ -165,8 +166,19 @@ const NotesPanel = (() => {
             // GetRFCNotes does not return attachments; merge them in by noteID.
             data.forEach(n => { n.attachments = attMap.get(n.noteID) ?? n.attachments ?? []; });
 
-            State.notes = data;
-            _renderNotes(data);
+            // Messages mode keeps only client-visible items.
+            const filtered = State.config.filter ? data.filter(State.config.filter) : data;
+
+            State.notes = filtered;
+
+            // Messages mode pins the earliest item as the ticket Description
+            // (shown in the overview) and excludes it from the thread.
+            if (State.config.pinDescription) {
+                State.description = _pickOriginal(filtered.map(_normNote));
+                _renderDescription(State.description);
+            }
+
+            _renderNotes(filtered);
 
         } catch (err) {
             console.error('NotesPanel._getNotes:', err);
@@ -206,7 +218,12 @@ const NotesPanel = (() => {
 
         thread.innerHTML = '';
 
-        const list = (Array.isArray(notes) ? notes : []).map(_normNote);
+        let list = (Array.isArray(notes) ? notes : []).map(_normNote);
+
+        // In messages mode the description note lives in the overview, not the thread.
+        if (State.config.pinDescription && State.description) {
+            list = list.filter(n => n.NoteID !== State.description.NoteID);
+        }
 
         if (list.length === 0) {
             thread.appendChild(_buildEmptyState());
@@ -523,6 +540,185 @@ const NotesPanel = (() => {
             if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save'; }
             if (cancelBtn) cancelBtn.disabled = false;
             UI.toast?.('Failed to update note', 'error');
+        }
+    }
+
+    // -------------------------  Description (messages mode)  ------------------------- //
+    // When config.pinDescription is set, the earliest item is the ticket
+    // Description: shown in the overview (#ov-desc-*), excluded from the thread,
+    // and editable inline by its author. The description is itself a note, so
+    // its save is an ordinary note save (Note/SaveNote, NoteID present).
+
+    function _pickOriginal(notes) {
+        if (!Array.isArray(notes) || notes.length === 0) return null;
+        return notes.reduce((a, b) =>
+            new Date(a.CreatedDate) <= new Date(b.CreatedDate) ? a : b);
+    }
+
+    function _renderDescription(note) {
+        const group = document.getElementById('ov-desc-group');
+        if (!group) return;
+
+        const editing = group.querySelector('.td-ov-desc-editing');
+        if (editing) editing.remove();
+        const body = document.getElementById('ov-desc-body');
+        const atts = document.getElementById('ov-desc-atts');
+        if (body) body.style.display = '';
+        if (atts) atts.style.display = '';
+
+        if (!note) { group.hidden = true; return; }
+        group.hidden = false;
+
+        if (body) body.textContent = note.Body || '';
+        if (atts) {
+            atts.innerHTML = '';
+            if (Array.isArray(note.Attachments) && note.Attachments.length > 0) {
+                atts.appendChild(Attachments.render(note.Attachments, { canRemove: false, showSize: true }));
+            }
+        }
+
+        const editBtn = document.getElementById('ov-desc-edit');
+        if (editBtn) {
+            const canEdit = _canEdit(note);
+            editBtn.hidden = !canEdit;
+            editBtn.onclick = canEdit ? function () { _beginDescriptionEdit(note); } : null;
+        }
+    }
+
+    function _descChip(name, onRemove, isNew) {
+        const chip = document.createElement('span');
+        chip.className = 'td-ov-desc-chip' + (isNew ? ' is-new' : '');
+        const ic = document.createElement('span');
+        ic.className = 'td-file-icon';
+        ic.innerHTML = Format.fileIcon(name);
+        const nm = document.createElement('span');
+        nm.className = 'td-file-name';
+        nm.textContent = name;
+        const rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'td-ov-desc-chip-x';
+        rm.setAttribute('aria-label', 'Remove ' + name);
+        rm.textContent = '\u00d7';
+        rm.addEventListener('click', onRemove);
+        chip.appendChild(ic);
+        chip.appendChild(nm);
+        chip.appendChild(rm);
+        return chip;
+    }
+
+    function _beginDescriptionEdit(note) {
+        const group = document.getElementById('ov-desc-group');
+        if (!group || group.querySelector('.td-ov-desc-editing')) return;
+
+        const body = document.getElementById('ov-desc-body');
+        const atts = document.getElementById('ov-desc-atts');
+        const editBtn = document.getElementById('ov-desc-edit');
+        if (editBtn) editBtn.hidden = true;
+
+        const kept = (note.Attachments || []).slice();
+        const added = [];
+
+        const editor = document.createElement('div');
+        editor.className = 'td-ov-desc-editing';
+
+        const ta = document.createElement('textarea');
+        ta.className = 'td-ov-desc-input';
+        ta.value = note.Body || '';
+        ta.rows = Math.min(10, Math.max(2, (note.Body || '').split('\n').length));
+        editor.appendChild(ta);
+
+        const chips = document.createElement('div');
+        chips.className = 'td-ov-desc-chips';
+        editor.appendChild(chips);
+
+        const renderChips = function () {
+            chips.innerHTML = '';
+            kept.forEach(function (a, i) {
+                chips.appendChild(_descChip(a.name, function () { kept.splice(i, 1); renderChips(); }, false));
+            });
+            added.forEach(function (f, i) {
+                chips.appendChild(_descChip(f.name, function () { added.splice(i, 1); renderChips(); }, true));
+            });
+        };
+        renderChips();
+
+        const actions = document.createElement('div');
+        actions.className = 'td-ov-desc-actions';
+
+        const addLabel = document.createElement('label');
+        addLabel.className = 'td-ov-desc-add';
+        addLabel.textContent = 'Add file';
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.multiple = true;
+        fileInput.style.display = 'none';
+        fileInput.addEventListener('change', function () {
+            Array.prototype.forEach.call(fileInput.files, function (f) { added.push(f); });
+            fileInput.value = '';
+            renderChips();
+        });
+        addLabel.appendChild(fileInput);
+
+        const save = document.createElement('button');
+        save.type = 'button';
+        save.className = 'td-ov-desc-save';
+        save.textContent = 'Save';
+        const cancel = document.createElement('button');
+        cancel.type = 'button';
+        cancel.className = 'td-ov-desc-cancel';
+        cancel.textContent = 'Cancel';
+
+        actions.appendChild(addLabel);
+        actions.appendChild(save);
+        actions.appendChild(cancel);
+        editor.appendChild(actions);
+
+        if (body) body.style.display = 'none';
+        if (atts) atts.style.display = 'none';
+        group.appendChild(editor);
+        ta.focus();
+
+        cancel.addEventListener('click', function () { _renderDescription(note); });
+        save.addEventListener('click', async function () {
+            const text = ta.value.trim();
+            if (!text) { UI.toast?.('Description cannot be empty', 'warning'); return; }
+            save.disabled = cancel.disabled = true;
+            const ok = await _saveDescription(note, text, kept, added);
+            if (!ok) { save.disabled = cancel.disabled = false; }
+        });
+    }
+
+    async function _saveDescription(note, text, kept, added) {
+        try {
+            const keptMapped = (kept || [])
+                .filter(a => a && a.base64)
+                .map(a => ({
+                    AttachmentName: a.name,
+                    AttachmentByteArray: a.base64,
+                    AttachmentImageType: a.imageType ?? 0,
+                }));
+            const encoded = (added && added.length) ? await Composer.encode(added) : [];
+            const attachments = keptMapped.concat(encoded);
+
+            const objectInfo = _buildObjectInfo({
+                [State.config.ownerField]: State.config.ownerId,
+                NoteID: note.NoteID,
+                noteDescription: text,
+                ...State.config.extraSaveFields,
+            });
+
+            const data = await API.post(
+                'Note/SaveNote',
+                API.authPayload({ objectInfo, attachments, rfc: State.config.rfc })
+            );
+            if (!data) throw new Error('SaveNote returned null');
+            UI.toast?.('Description updated', 'success');
+            await _getNotes();
+            return true;
+        } catch (err) {
+            console.error('NotesPanel._saveDescription:', err);
+            UI.toast?.('Failed to update description', 'error');
+            return false;
         }
     }
 
