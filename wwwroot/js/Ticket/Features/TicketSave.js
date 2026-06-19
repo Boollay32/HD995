@@ -14,10 +14,8 @@ const Dirty = {
         const saveBtn = Dom.saveBtn();
         if (!saveBtn) return;
 
-        // On the Details tab the button is always visible but DISABLED
-        // until something changes; other tabs hide it (nothing to save).
-        const onDetails = State.activeTab === TAB.DETAILS;
-        saveBtn.hidden = !onDetails;
+        // Save lives in the Overview band: always present, greyed until dirty.
+        saveBtn.hidden = false;
         saveBtn.disabled = !isDirty;
         saveBtn.textContent = 'Save Changes';
         saveBtn.classList.toggle('is-dirty', isDirty);
