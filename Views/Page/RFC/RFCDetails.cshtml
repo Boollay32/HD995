@@ -26,7 +26,8 @@
 
 <div class="td-app rfc-app" id="RFCDetails-App">
 
-    @* ---- Topbar ---- *@
+    @* ---- Header panel: topbar + overview (mirrors Ticket Details) ---- *@
+    <div class="td-header-panel">
     <header class="td-topbar" role="banner">
         <button type="button" class="td-back" id="Back-Button" style="display:none" aria-label="Back to RFCs">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -40,16 +41,108 @@
             <span class="td-tid mono">RFC <a id="RFCID"></a></span>
         </div>
 
-        <div class="td-topbar-meta">
-            <span class="td-meta-pill" id="rfc-topbar-status" hidden></span>
+        <div class="td-topbar-meta" id="Topbar-Meta">
+            <div class="td-meta-group">
+                <span class="td-meta-cap">Status</span>
+                <div class="td-meta-pill" id="meta-status"></div>
+            </div>
+            <div class="td-meta-group">
+                <span class="td-meta-cap">Priority</span>
+                <div class="td-meta-pill" id="meta-priority"></div>
+            </div>
+            <div class="td-meta-group">
+                <span class="td-meta-cap">Target</span>
+                <div class="td-meta-pill" id="meta-target"></div>
+            </div>
         </div>
 
         <div class="td-spacer"></div>
 
         <div class="td-topbar-actions">
             <button type="button" class="td-btn-primary" id="Save-Button" disabled>Save Changes</button>
+            <button type="button" class="td-ov-collapse" id="ov-collapse"
+                    aria-label="Collapse overview" aria-expanded="true"
+                    aria-controls="RFC-Overview">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 15l-6-6-6 6" />
+                </svg>
+            </button>
         </div>
     </header>
+
+    <section class="td-overview" id="RFC-Overview" aria-label="RFC overview">
+
+        <label class="td-details-subject Value" id="Title"></label>
+
+        <div class="td-ov-body">
+
+            @* --- General Information --- *@
+            <div class="td-ov-group">
+                <div class="td-ov-grp-head">General Information</div>
+                <div class="td-ov-grid">
+                    <div class="td-ov-cell">
+                        <span class="td-ov-lbl">Originator</span>
+                        <label class="Value td-ov-val" id="changeRequestOriginator"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <span class="td-ov-lbl">Originator Email</span>
+                        <label class="Value td-ov-val" id="originatorEmail"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <label class="td-ov-lbl" for="assignedTechName">Assigned Tech</label>
+                        <select class="Value td-select" id="assignedTechName"></select>
+                    </div>
+                    <div class="td-ov-cell">
+                        <label class="td-ov-lbl" for="assignedTechEmail">Assigned Tech Email</label>
+                        <input class="Value td-input" id="assignedTechEmail" disabled />
+                    </div>
+                </div>
+            </div>
+
+            @* --- Schedule --- *@
+            <div class="td-ov-group">
+                <div class="td-ov-grp-head">Schedule</div>
+                <div class="td-ov-grid">
+                    <div class="td-ov-cell">
+                        <span class="td-ov-lbl">Created</span>
+                        <label class="Value td-ov-val" id="changeRequestCreateDate"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <label class="td-ov-lbl" for="TargetDate">Target Date</label>
+                        <input type="date" class="Value td-input" id="TargetDate" required />
+                    </div>
+                    <div class="td-ov-cell" id="CompletedDate-Cell">
+                        <label class="td-ov-lbl" for="CompletedDate">Completion Date</label>
+                        <input type="date" class="Value td-input" id="CompletedDate" disabled />
+                    </div>
+                </div>
+            </div>
+
+            @* --- Description --- *@
+            <div class="td-ov-group">
+                <div class="td-ov-grp-head">Description</div>
+                <textarea class="Value rfc-ov-desc" id="Description" required maxlength="2000"></textarea>
+            </div>
+        </div>
+
+        @* slim summary (shown when the overview is collapsed) *@
+        <div class="td-ov-slim" id="ov-slim" aria-hidden="true">
+            <span><span class="td-ov-slim-lbl">Originator</span> <span class="Field-Value" id="ov-slim-originator"></span></span>
+            <span class="td-ov-sep">|</span>
+            <span><span class="td-ov-slim-lbl">Assigned</span> <span class="Field-Value" id="ov-slim-assigned"></span></span>
+            <span class="td-ov-sep">|</span>
+            <span><span class="td-ov-slim-lbl">Target</span> <span class="Field-Value mono" id="ov-slim-target"></span></span>
+        </div>
+
+        @* hidden source selects for the editable Status / Priority pills (Stage 3 RFCPillEdit reads these) *@
+        <div id="rfc-meta-selects" hidden>
+            <select class="Value td-select" id="rfcStatus" required></select>
+            <select class="Value td-select" id="priority" required></select>
+        </div>
+    </section>
+    </div>
 
     @* ---- Shell: Notes (left) / Workspace (right) ---- *@
     <div class="td-shell" id="RFC-Shell" data-layout="both" role="main">
@@ -133,66 +226,6 @@
 
                 <div class="dform rfc-ws">
                     <form id="UpdateRFC">
-
-                        @* --- General Information --- *@
-                        <div id="Details">
-                            <div class="Group-Header">
-                                <div class="left">
-                                    <label class="Name">General Information</label>
-                                </div>
-                            </div>
-                            <div class="rfc-grid">
-                                <div class="rfc-cell">
-                                    <span class="rfc-cell-label">Title</span>
-                                    <label class="Value rfc-cell-value rfc-title-1line" id="Title"></label>
-                                </div>
-                                <div class="rfc-cell">
-                                    <span class="rfc-cell-label">Date Created</span>
-                                    <label class="Value rfc-cell-value" id="changeRequestCreateDate"></label>
-                                </div>
-
-                                <div class="rfc-cell">
-                                    <span class="rfc-cell-label">Originator</span>
-                                    <label class="Value rfc-cell-value" id="changeRequestOriginator"></label>
-                                </div>
-                                <div class="rfc-cell">
-                                    <span class="rfc-cell-label">Originator Email</span>
-                                    <label class="Value rfc-cell-value" id="originatorEmail"></label>
-                                </div>
-
-                                <div class="rfc-cell">
-                                    <label class="rfc-cell-label" for="assignedTechName">Assigned Tech</label>
-                                    <select class="Value rfc-cell-control" id="assignedTechName"></select>
-                                </div>
-                                <div class="rfc-cell">
-                                    <label class="rfc-cell-label" for="assignedTechEmail">Assigned Tech Email</label>
-                                    <input class="Value rfc-cell-control" id="assignedTechEmail" disabled />
-                                </div>
-
-                                <div class="rfc-cell">
-                                    <label class="rfc-cell-label" for="rfcStatus">Status</label>
-                                    <select class="Value rfc-cell-control" id="rfcStatus" required></select>
-                                </div>
-                                <div class="rfc-cell">
-                                    <label class="rfc-cell-label" for="priority">Priority</label>
-                                    <select class="Value rfc-cell-control" id="priority" required></select>
-                                </div>
-
-                                <div class="rfc-cell">
-                                    <label class="rfc-cell-label" for="TargetDate">Target Date</label>
-                                    <input type="date" class="Value rfc-cell-control" id="TargetDate" required />
-                                </div>
-                                <div class="rfc-cell">
-                                    <label class="rfc-cell-label" for="CompletedDate">Completion Date</label>
-                                    <input type="date" class="Value rfc-cell-control" id="CompletedDate" disabled />
-                                </div>
-
-                                <div class="rfc-cell rfc-cell--full">
-                                    <label class="rfc-cell-label" for="Description">Description</label>
-                                    <textarea class="Value rfc-cell-control rfc-desc" id="Description" required maxlength="2000"></textarea>
-                                </div>
-                            </div>
-                        </div>
 
                         @* --- Extended Information --- *@
                         <div id="Extended-Information">
