@@ -71,6 +71,8 @@ class RFCPage extends PageBase {
             rowKey: r => r.rfcID,
             search: ['title', 'createdBy', 'rfcID'],
 
+            action: { label: '+ New RFC', onClick: () => Nav.toCreateRFC() },
+
             views: [
                 { id: 'mine',  label: 'My open',     filter: r => (r.assignedTech === me || r.createdBy === me) && RQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => RQisOpen(r) },
