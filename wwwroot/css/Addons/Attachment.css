@@ -88,3 +88,107 @@
 .Attachment-Icon .attachment-remove:hover {
   filter: brightness(1.08);
 }
+
+/* ====================================================================
+   HD30 Canonical attachment component
+   The single attachment layout used across messages, notes, tasks,
+   description and compose forms (window.Attachments.render). A fixed-size
+   file-icon tile that never resizes or reflows; hovering reveals a popout
+   with the filename (+ size when known). Saved files download on click.
+   A circular remove badge sits on the tile's top-right corner, revealed on
+   hover and rendered only when the parent item is editable (canRemove).
+   ==================================================================== */
+.td-attach-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 18px;
+  margin-top: 8px;
+}
+.td-attach {
+  position: relative;
+  display: inline-flex;
+}
+.td-attach-tile {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--td-surface, var(--row-hover, #f1f1f1));
+  border: 1px solid var(--td-border, var(--border, #d9d9d9));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.0625rem;
+  line-height: 1;
+  color: var(--td-muted-2, var(--muted, #6a6a6a));
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.td-attach-tile:hover {
+  border-color: var(--td-border-2, var(--border-strong, #b9b9b9));
+  color: var(--td-text, var(--text, #1c1c1c));
+}
+.td-attach-pop {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--td-text, #1c1c1c);
+  color: var(--td-panel, #ffffff);
+  font-size: 0.6875rem;
+  padding: 5px 9px;
+  border-radius: 7px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  z-index: 5;
+}
+.td-attach-pop::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--td-text, #1c1c1c);
+}
+.td-attach-pop-sz {
+  opacity: 0.6;
+  margin-left: 6px;
+}
+.td-attach:hover .td-attach-pop {
+  opacity: 1;
+}
+.td-attach-x {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1px solid var(--td-border-2, var(--border-strong, #b9b9b9));
+  background: var(--td-panel, #ffffff);
+  color: var(--td-muted, var(--muted, #6a6a6a));
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0;
+  transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  z-index: 6;
+}
+.td-attach.is-removable:hover .td-attach-x {
+  opacity: 1;
+}
+.td-attach-x:hover {
+  background: #fbeaea;
+  color: #b3261e;
+  border-color: #b3261e;
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-attach-pop,
+  .td-attach-x,
+  .td-attach-tile { transition: none; }
+}
