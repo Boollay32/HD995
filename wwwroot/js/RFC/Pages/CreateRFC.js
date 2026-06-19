@@ -48,7 +48,7 @@ class CreateRFC extends PageBase {
         Form.gateSubmit(this.formId, 'SubmitCreatedRFC');
 
         // Attachments: the paperclip label opens the native file picker; we
-        // just handle the picked files and render the shared td-attach-chip.
+        // just handle the picked files and render the shared attachment tiles.
         const fileInput = document.getElementById('cr-file-input');
         fileInput?.addEventListener('change', (e) => {
             this._addFiles(e.target.files);
