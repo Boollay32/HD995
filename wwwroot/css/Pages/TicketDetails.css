@@ -1838,16 +1838,6 @@ body {
 
 /* Left-pane Notes (project / incident tickets): fill the pane like Messages,
    overriding the tab thread's max-height so it grows to fill the pane. */
-#td-left-notes {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-#td-left-notes .td-note-thread {
-  max-height: none;
-  padding: 16px 16px 8px;
-}
 
 /* item 6: Workspace tabs share the pane header row (reclaims the tabs row). */
 .td-pane-head--ws .td-pane-title { flex: 0 0 auto; }

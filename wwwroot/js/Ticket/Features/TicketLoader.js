@@ -140,11 +140,15 @@ const TicketLoader = {
 const NotesLeft = {
 
     prepare() {
-        // Left pane: hide Messages, reveal the Notes block, relabel.
-        document.getElementById('Messages-Thread')?.setAttribute('hidden', '');
-        document.getElementById('Messages-Compose')?.setAttribute('hidden', '');
+        // Project/incident tickets reuse the Messages dock as an internal
+        // Notes pane (one shared td-composer-dock; NotesPanel is a singleton,
+        // so only one of Messages/Notes initialises per page). Relabel + retune
+        // the composer copy rather than swapping in a separate block.
         document.getElementById('msg-scope-banner')?.setAttribute('hidden', '');
-        document.getElementById('td-left-notes')?.removeAttribute('hidden');
+
+        const ta = document.getElementById('msg-textarea');
+        if (ta) { ta.placeholder = 'Add an internal note'; ta.setAttribute('aria-label', 'Note text'); }
+        document.getElementById('msg-send-btn')?.setAttribute('aria-label', 'Save note');
 
         const title = document.querySelector('#pane-left .td-pane-title');
         if (title) title.textContent = 'Notes';
@@ -174,13 +178,13 @@ const NotesLeft = {
             rfc: false,
             extraSaveFields: { visibleToClient: '0' },
             ids: {
-                thread: 'TicketNotes-Thread',
-                textarea: 'tnote-textarea',
-                sendBtn: 'tnote-send-btn',
-                charcount: 'tnote-charcount',
-                fileInput: 'tnote-file-input',
-                attachList: 'tnote-attachment-list',
-                composerDock: 'TicketNotes-Compose',
+                thread: 'Messages-Thread',
+                textarea: 'msg-textarea',
+                sendBtn: 'msg-send-btn',
+                charcount: 'msg-charcount',
+                fileInput: 'msg-file-input',
+                attachList: 'msg-attachment-list',
+                composerDock: 'Messages-Compose',
             },
         });
     },
