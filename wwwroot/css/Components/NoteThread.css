@@ -279,3 +279,19 @@
 .td-note-edit-attachments { display: flex; flex-wrap: wrap; gap: 6px; }
 .td-note-edit-attachments:empty { display: none; }
 .td-note-edit-attach { order: -1; margin-right: auto; }
+
+/* ===== Visibility indicator (unified messages/notes item) ===== */
+.td-note-visibility {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 99px;
+  white-space: nowrap;
+  background: var(--row-hover);
+}
+.td-note-visibility svg { width: 11px; height: 11px; flex-shrink: 0; }
+.td-note-visibility.is-internal { color: var(--muted); }
+.td-note-visibility.is-client { color: var(--accent-strong); }
