@@ -2244,3 +2244,14 @@ body {
 #TicketDetails-App .td-overview.is-collapsed .td-ov-body { display: none; }
 #TicketDetails-App .td-overview.is-collapsed .td-ov-slim { display: flex; }
 /* ═══════════  end HD30-6 Overview band  ═══════════ */
+
+/* ═════  HD30-6 Description block (Stage 3)  ═════ */
+#TicketDetails-App .td-ov-desc-body {
+  font-size: 0.84375rem;
+  line-height: 1.55;
+  color: var(--td-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+#TicketDetails-App .td-ov-desc-atts { margin-top: 8px; }
+/* ═════  end HD30-6 Description block  ═════ */
