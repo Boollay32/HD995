@@ -49,6 +49,13 @@ const API = {
                 throw new Error(`HTTP error: ${response.status}`);
             }
 
+            // DEV ONLY: the server reports would-be mail recipients in this
+            // header (no real SMTP send locally); absent/ignored in production.
+            const mailPreview = response.headers.get('X-Mail-Preview');
+            if (mailPreview && window.MailPreview) {
+                window.MailPreview.show(mailPreview);
+            }
+
             // Some endpoints return a plain string (Ok(string) -> text/plain);
             // an unconditional .json() throws on those even when the call worked.
             const contentType = response.headers.get('content-type') ?? '';
