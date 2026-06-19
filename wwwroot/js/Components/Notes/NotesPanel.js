@@ -291,8 +291,6 @@ const NotesPanel = (() => {
         author.textContent = note.AuthorName ?? 'Unknown';
         head.appendChild(author);
 
-        head.appendChild(_buildVisibilityBadge(note));
-
         const time = document.createElement('span');
         time.className = 'td-note-time';
         time.textContent = Format.formatDateTime(note.CreatedDate);
@@ -319,23 +317,6 @@ const NotesPanel = (() => {
         }
 
         return head;
-    }
-
-    // Visible/internal indicator -- driven by the item's own visibleToClient
-    // key. Every item carries it, so one component renders messages (client-
-    // visible) and notes (internal) identically, set apart only by this tag.
-    function _buildVisibilityBadge(note) {
-        const isClient = note.VisibleToClient === true;
-        const badge = document.createElement('span');
-        badge.className = 'td-note-visibility ' + (isClient ? 'is-client' : 'is-internal');
-        badge.title = isClient
-            ? 'Visible to the client'
-            : 'Internal only -- not visible to the client';
-        badge.innerHTML = isClient ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
-        const label = document.createElement('span');
-        label.textContent = isClient ? 'Client' : 'Internal';
-        badge.appendChild(label);
-        return badge;
     }
 
     function _buildNoteBody(note) {
