@@ -305,10 +305,6 @@ class CreateTicket extends PageBase {
             UI.toast?.('Ticket created, but saving the first note failed', 'warning');
         }
 
-        if (contactClient) {
-            this._sendNotificationEmail('Ticket', 'CreatedFor', newTicketId);
-        }
-
         // Created inside a project: open the new ticket directly (same path
         // the project ticket list uses) rather than returning to the queue.
         if (this._projectContext) {
