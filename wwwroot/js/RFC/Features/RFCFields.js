@@ -12,8 +12,10 @@
 class RFCPopulator {
     constructor(data) {
         this.data = data;
-        this.formFields = document.getElementById('UpdateRFC')
-            ?.getElementsByClassName('Value') ?? [];
+        // After the overhaul, general-info fields live in the header panel
+        // (outside #UpdateRFC); Extended Information stays in the form. Read
+        // .Value document-wide so all fields populate. Save already does this.
+        this.formFields = document.getElementsByClassName('Value');
     }
 
     // -------------------------  Public  ------------------------- //
