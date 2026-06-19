@@ -33,6 +33,7 @@
 <div class="td-app" id="TicketDetails-App">
 
     <!-- ═══════════════════  TOPBAR  ═══════════════════ -->
+    <div class="td-header-panel">
     <header class="td-topbar" role="banner" id="Detail-Header">
 
         <button class="td-back" id="Back-Button" aria-label="Back to ticket list" type="button">
@@ -78,16 +79,6 @@
             <button type="button" class="td-btn-ghost hidden" id="FalseReply">
                 Hide Notification
             </button>
-        </div>
-
-    </header>
-
-    <!-- OVERVIEW -->
-    <section class="td-overview" id="Ticket-Overview" aria-label="Ticket overview">
-
-        <div class="td-ov-head">
-            <span class="td-ov-title">Overview</span>
-            <span class="td-ov-spacer"></span>
             <button type="button" class="td-btn-primary" id="Save-Button" disabled>Save Changes</button>
             <button type="button" class="td-ov-collapse" id="ov-collapse"
                     aria-label="Collapse overview" aria-expanded="true"
@@ -99,6 +90,13 @@
                 </svg>
             </button>
         </div>
+
+    </header>
+
+    <!-- OVERVIEW -->
+    <section class="td-overview" id="Ticket-Overview" aria-label="Ticket overview">
+
+        <h2 class="td-details-subject" id="subject"></h2>
 
         <div class="td-ov-body">
 
@@ -177,6 +175,7 @@
         </div>
 
     </section>
+    </div>
 
 
     <!-- ═══════════════════  SHELL  ═══════════════════ -->
@@ -510,10 +509,6 @@
                     <div role="tabpanel" id="tabpanel-details"
                          aria-labelledby="tab-details"
                          class="td-ws-inner" hidden>
-
-                        <div class="td-details-head">
-                            <h2 class="td-details-subject" id="subject"></h2>
-                        </div>
 
                         <!-- Status / Priority / Category dropdown sources.
                              Hidden <select>s populated by Dropdowns.load; the save
