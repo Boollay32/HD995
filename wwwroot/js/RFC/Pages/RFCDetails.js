@@ -48,7 +48,6 @@ class RFCDetails extends PageBase {
         if (data) {
             FillRFCDetails(data);
             this._saveAssignedTech();
-            this._updateStatusPill();
         }
     }
 
@@ -81,6 +80,12 @@ class RFCDetails extends PageBase {
         );
 
         SetCurrentAssignedTech('assignedTechName');
+
+        // Editable Status/Priority pills + overview collapse, now that the
+        // dropdowns are loaded and the fields are populated.
+        RFCPillEdit.init();
+        RFCOverview.init();
+        this._syncTargetPill();
     }
 
     _setupBackButton() {
@@ -96,6 +101,10 @@ class RFCDetails extends PageBase {
     _setupEventListeners() {
         document.getElementById('rfcStatus')?.addEventListener('change', e => {
             this._handleStatusChange(e.target);
+        });
+
+        document.getElementById('TargetDate')?.addEventListener('change', () => {
+            this._syncTargetPill();
         });
 
         // Save (RFCSave was previously unwired)
@@ -129,33 +138,26 @@ class RFCDetails extends PageBase {
     _handleStatusChange(statusSelect) {
         const selectedText = statusSelect.options[statusSelect.selectedIndex]?.innerText;
         const completedDate = document.getElementById('CompletedDate');
-        const completedDateRow = completedDate?.parentElement?.parentElement;
+        const completedDateRow = document.getElementById('CompletedDate-Cell');
 
         if (!completedDate || !completedDateRow) return;
 
         const isComplete = selectedText === 'Complete';
 
-        completedDateRow.style.display = isComplete ? 'block' : 'none';
+        completedDateRow.style.display = isComplete ? '' : 'none';
         completedDate.disabled = !isComplete;
         completedDate.required = isComplete;
 
         if (!isComplete) completedDate.value = '';
-
-        this._updateStatusPill();
     }
 
     // -------------------------  Topbar pill  ------------------------- //
 
-    _updateStatusPill() {
-        const pill = document.getElementById('rfc-topbar-status');
-        const select = document.getElementById('rfcStatus');
-        if (!pill || !select) return;
-
-        const label = select.selectedIndex >= 0
-            ? select.options[select.selectedIndex].innerText
-            : '';
-        pill.textContent = label;
-        pill.hidden = !label;
+    _syncTargetPill() {
+        const pill = document.getElementById('meta-target');
+        const input = document.getElementById('TargetDate');
+        if (!pill) return;
+        pill.textContent = (input && input.value) ? input.value : '';
     }
 }
 
