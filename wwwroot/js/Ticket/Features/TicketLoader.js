@@ -211,6 +211,7 @@ const MessagesLeft = {
             extraSaveFields: { visibleToClient: '1' },
             filter: n => n.visibleToClient === true,
             pinDescription: true,
+            noun: 'message',
             scope: Number(adminLevel) >= 1
                 ? { banner: 'msg-scope-banner', dismiss: 'msg-scope-dismiss', dismissKey: 'td-msg-scope-dismissed' }
                 : null,

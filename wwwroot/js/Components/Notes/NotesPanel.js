@@ -251,9 +251,12 @@ const NotesPanel = (() => {
     }
 
     function _buildEmptyState() {
+        // Empty-state noun follows the parent dock (messages vs notes);
+        // defaults to 'note' (NotesLeft / RFC). MessagesLeft sets noun: 'message'.
+        const noun = (State.config && State.config.noun) || 'note';
         const div = document.createElement('div');
         div.className = 'td-thread-empty';
-        div.setAttribute('aria-label', 'No notes yet');
+        div.setAttribute('aria-label', `No ${noun}s yet`);
         div.innerHTML = `
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="1.5"
@@ -264,7 +267,7 @@ const NotesPanel = (() => {
                 <line x1="16" y1="17" x2="8" y2="17"/>
                 <polyline points="10 9 9 9 8 9"/>
             </svg>
-            <p>No notes yet.<br>Add the first note below.</p>
+            <p>No ${noun}s yet.<br>Add the first ${noun} below.</p>
         `;
         return div;
     }
