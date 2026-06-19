@@ -103,22 +103,6 @@
 }
 
 /* ---- note attachments (download links) ---- */
-.td-note-attachments { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.td-note-file {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  border-radius: 6px;
-  background: var(--row-hover);
-  border: 1px solid var(--border);
-  font-size: 0.71875rem;
-  font-weight: 600;
-  color: var(--muted);
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-.td-note-file:hover { background: var(--row-hover); }
 
 /* ---- composer ---- */
 .td-note-compose {
@@ -179,66 +163,10 @@
 .td-charcount.is-near-limit { color: var(--warn); }
 .td-charcount.is-at-limit { color: var(--danger); font-weight: 700; }
 .td-composer-attachments { display: flex; flex-wrap: nowrap; gap: 4px; min-width: 0; }
-.td-attach-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: var(--chip-bg);
-  border: 1px solid var(--border);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--muted);
-  min-width: 0;
-  flex: 0 1 auto;
-  max-width: 200px;
-  transition: max-width 0.18s ease, background 0.15s ease;
-}
-.td-attach-chip span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Collapsed-to-icon: the filename and size spans hide, leaving the file
    icon + remove button (a compact "icon" pill), so 5 chips fit on one line. */
-.td-attach-chip .td-chip-name,
-.td-attach-chip .td-chip-size {
-  max-width: 0;
-  opacity: 0;
-  transition: max-width 0.18s ease, opacity 0.12s ease, margin 0.18s ease;
-}
 /* Hovered or keyboard-focused chip expands to reveal the full filename. */
-.td-attach-chip:hover,
-.td-attach-chip:focus-within {
-  max-width: 260px;
-  background: var(--panel);
-  flex-shrink: 0;
-}
-.td-attach-chip:hover .td-chip-name,
-.td-attach-chip:focus-within .td-chip-name {
-  max-width: 180px;
-  opacity: 1;
-}
-.td-attach-chip:hover .td-chip-size,
-.td-attach-chip:focus-within .td-chip-size {
-  max-width: 70px;
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .td-attach-chip,
-  .td-attach-chip .td-chip-name,
-  .td-attach-chip .td-chip-size { transition: none; }
-}
-.td-attach-chip button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--muted);
-  display: grid;
-  place-items: center;
-  padding: 0;
-  flex-shrink: 0;
-  transition: color 0.15s ease;
-}
-.td-attach-chip button:hover { color: var(--danger); }
 .td-attach-btn {
   width: 26px;
   height: 26px;
@@ -324,140 +252,15 @@
    ============================================================================ */
 
 /* -- composer chips: square by default -- */
-.td-attach-chip {
-  min-width: 26px;
-  max-width: 26px;
-  height: 26px;
-  padding: 0;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-}
-.td-attach-chip > button {
-  display: none;
-  flex-shrink: 0;
-}
-.td-attach-chip:hover,
-.td-attach-chip:focus-within {
-  max-width: 280px;
-  padding: 0 8px;
-  justify-content: flex-start;
-}
-.td-attach-chip:hover > button,
-.td-attach-chip:focus-within > button {
-  display: inline-flex;
-}
 
 /* -- saved note attachments: same squares, still download on click -- */
-.td-note-file {
-  min-width: 30px;
-  max-width: 30px;
-  height: 30px;
-  padding: 0;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  transition: max-width 0.18s ease, background 0.15s ease;
-}
 /* Icon fills the collapsed square tile. */
-.td-note-file .td-file-icon {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  line-height: 1;
-}
 /* When expanded, the icon shrinks back to its natural width on the left. */
-.td-note-file:hover .td-file-icon,
-.td-note-file:focus-visible .td-file-icon {
-  width: auto;
-  margin-right: 2px;
-}
-.td-note-file .td-file-name,
-.td-note-file .td-file-size {
-  max-width: 0;
-  opacity: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: max-width 0.18s ease, opacity 0.12s ease;
-}
-.td-note-file:hover,
-.td-note-file:focus-visible {
-  max-width: 300px;
-  padding: 0 9px;
-  justify-content: flex-start;
-}
-.td-note-file:hover .td-file-name,
-.td-note-file:focus-visible .td-file-name {
-  max-width: 200px;
-  opacity: 1;
-}
-.td-note-file:hover .td-file-size,
-.td-note-file:focus-visible .td-file-size {
-  max-width: 70px;
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .td-note-file,
-  .td-note-file .td-file-name,
-  .td-note-file .td-file-size { transition: none; }
-}
 
 /* Saved-attachment row: the attachment tile plus a creator-only remove
    button. */
-.td-note-file-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-.td-note-file-remove {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--muted);
-  border-radius: 6px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
-}
-.td-note-file-row:hover .td-note-file-remove,
-.td-note-file-remove:focus-visible {
-  opacity: 1;
-}
-.td-note-file-remove:hover {
-  background: var(--danger-bg, rgba(200,40,40,0.12));
-  color: var(--danger, #c33);
-}
 
 /* Group-2 chip standard: bigger rest square + centred icon that fills it + smooth grow (X unchanged) */
-.td-attach-chip {
-  min-width: 34px;
-  max-width: 34px;
-  height: 34px;
-  gap: 0;
-  transition: max-width 0.2s cubic-bezier(0.4, 0, 0.2, 1), padding 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s ease;
-}
-.td-attach-chip:hover,
-.td-attach-chip:focus-within {
-  gap: 5px;
-}
-.td-attach-chip > span[aria-hidden="true"] {
-  font-size: 22px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 /* ===== HD Issues 29 - Group-3 step 1: note composer footer (3c, 3d) ===== */
 /* 3d: footer now lives inside the bordered compose box; box becomes a column. */
@@ -472,10 +275,6 @@
 
 /* ===== HD Issues 29 - Group-3 step 2: note edit-mode attachments (3a, 3b) ===== */
 /* 3a: existing-attachment remove-X is interactive only while editing the note. */
-.td-note-card:not(.is-editing) .td-note-file-row .td-note-file-remove {
-  opacity: 0;
-  pointer-events: none;
-}
 /* 3b: files staged while editing, shown as chips above the Save/Cancel bar. */
 .td-note-edit-attachments { display: flex; flex-wrap: wrap; gap: 6px; }
 .td-note-edit-attachments:empty { display: none; }
