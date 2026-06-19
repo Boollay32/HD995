@@ -237,27 +237,14 @@ const Composer = (() => {
 
         function _renderChips() {
             if (!attachList) return;
-            attachList.innerHTML = '';
-            pendingFiles.forEach((file, i) => attachList.appendChild(_buildChip(file, i)));
-        }
-
-        function _buildChip(file, index) {
-            const chip = document.createElement('div');
-            chip.className = 'td-attach-chip';
-            chip.dataset.index = index;
-            chip.innerHTML = `
-                <span aria-hidden="true">${Format.fileIcon(file.name)}</span>
-                <span class="td-chip-name">${Format.escapeHtml(file.name)}</span>
-                <span class="td-chip-size mono">${Format.fileSizeLabel(file.size)}</span>
-                <button type="button" aria-label="Remove ${Format.escapeHtml(file.name)}" data-index="${index}">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2.5"
-                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                </button>`;
-            chip.querySelector('button')?.addEventListener('click', () => _remove(index));
-            return chip;
+            // Canonical attachment tiles (icon + hover popout + corner remove
+            // badge) via the shared Attachments component. Pending files carry no
+            // base64 yet, so they are not downloadable; they are removable.
+            attachList.replaceChildren(Attachments.render(pendingFiles, {
+                canRemove: true,
+                onRemove: (file, index) => _remove(index),
+                showSize: true,
+            }));
         }
 
         function _clearFiles() {
