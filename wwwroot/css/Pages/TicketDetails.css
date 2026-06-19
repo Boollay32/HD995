@@ -297,85 +297,9 @@ body {
 .td-bubble-status.read {
   color: var(--brand);
 }
-.td-bubble-attachments {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
-}
 /* Attachment tiles: collapsed to a square icon, expanding to reveal the name
    on hover/focus — the same civic-warmth interaction as note and task
    attachments. */
-.td-bubble-file {
-  display: inline-flex;
-  align-items: center;
-  min-width: 30px;
-  max-width: 30px;
-  height: 30px;
-  padding: 0;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  font-size: 0.71875rem;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: max-width 0.18s ease, background 0.15s ease;
-}
-.td-bubble-file .td-file-icon {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  line-height: 1;
-}
-.td-bubble-file:hover .td-file-icon,
-.td-bubble-file:focus-visible .td-file-icon {
-  width: auto;
-  margin-right: 2px;
-}
-.td-bubble-file .td-file-name {
-  max-width: 0;
-  opacity: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: max-width 0.18s ease, opacity 0.12s ease;
-}
-.td-bubble-file:hover,
-.td-bubble-file:focus-visible {
-  max-width: 300px;
-  padding: 0 9px;
-  justify-content: flex-start;
-}
-.td-bubble-file:hover .td-file-name,
-.td-bubble-file:focus-visible .td-file-name {
-  max-width: 200px;
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .td-bubble-file,
-  .td-bubble-file .td-file-name { transition: none; }
-}
-.td-bubble-row--out .td-bubble-file {
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-.td-bubble-row--out .td-bubble-file:hover {
-  background: rgba(255, 255, 255, 0.28);
-}
-.td-bubble-row--in .td-bubble-file {
-  background: var(--td-panel);
-  color: var(--td-muted-2);
-  border: 1px solid var(--td-border);
-}
-.td-bubble-row--in .td-bubble-file:hover {
-  background: var(--td-border-2);
-}
 .td-date-divider {
   display: flex;
   align-items: center;
@@ -1525,69 +1449,6 @@ body {
   accent-color: var(--brand);
   cursor: pointer;
 }
-.td-att-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.td-att {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  background: var(--td-panel);
-  border: 1px solid var(--td-border-2);
-  border-radius: 6px;
-  padding: 6px 8px 6px 11px;
-  font-size: 0.71875rem;
-}
-.td-att-name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--td-muted-2);
-}
-.td-att-open {
-  appearance: none;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.td-att-open:hover,
-.td-att-open:focus-visible {
-  color: var(--accent);
-  text-decoration: underline;
-}
-.td-att-remove {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  border: none;
-  background: none;
-  color: var(--td-muted);
-  font-size: 1.0625rem;
-  line-height: 1;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-.td-att-remove:hover {
-  background: var(--td-danger-bg);
-  color: var(--td-danger);
-}
-.td-att-empty {
-  font-size: 0.65625rem;
-  color: var(--td-muted);
-  font-style: italic;
-}
 .td-ed-foot {
   display: flex;
   align-items: center;
@@ -1758,94 +1619,11 @@ body {
 /* ============================================================================
    Task attachments as square icon tiles (hover/focus expands to the name).
    ============================================================================ */
-.td-att-list {
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.td-att {
-  min-width: 30px;
-  max-width: 30px;
-  height: 30px;
-  padding: 0;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  transition: max-width 0.18s ease, background 0.15s ease;
-}
-.td-att-icon {
-  flex-shrink: 0;
-  font-size: 0.8125rem;
-  line-height: 1;
-}
-.td-att .td-att-name {
-  max-width: 0;
-  opacity: 0;
-  transition: max-width 0.18s ease, opacity 0.12s ease;
-}
-.td-att .td-att-remove {
-  display: none;
-}
-.td-att:hover,
-.td-att:focus-within {
-  max-width: 300px;
-  padding: 0 5px 0 8px;
-  justify-content: flex-start;
-}
-.td-att:hover .td-att-name,
-.td-att:focus-within .td-att-name {
-  max-width: 200px;
-  opacity: 1;
-}
-.td-att:hover .td-att-remove,
-.td-att:focus-within .td-att-remove {
-  display: inline-flex;
-}
-.td-att-list .td-att-empty {
-  align-self: center;
-}
-@media (prefers-reduced-motion: reduce) {
-  .td-att,
-  .td-att .td-att-name { transition: none; }
-}
 
 /* ============================================================================
    Message-bubble attachments as square icon tiles (hover/focus -> full name),
    consistent with composer chips and note/task attachments.
    ============================================================================ */
-.td-bubble-file {
-  min-width: 30px;
-  max-width: 30px;
-  height: 30px;
-  padding: 0;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-  transition: max-width 0.18s ease, background 0.15s ease;
-}
-.td-bubble-file .td-file-name {
-  max-width: 0;
-  opacity: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: max-width 0.18s ease, opacity 0.12s ease;
-}
-.td-bubble-file:hover,
-.td-bubble-file:focus-visible {
-  max-width: 280px;
-  padding: 0 9px;
-  justify-content: flex-start;
-}
-.td-bubble-file:hover .td-file-name,
-.td-bubble-file:focus-visible .td-file-name {
-  max-width: 220px;
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .td-bubble-file,
-  .td-bubble-file .td-file-name { transition: none; }
-}
 
 /* ============================================================================
    Tasks tab: progress + Add Task on one row, important pill, tighter editor so
@@ -1901,7 +1679,6 @@ body {
   align-items: center;
   gap: 5px;
 }
-.td-att-wrap .td-att-list { flex: 0 1 auto; }
 .td-att-add {
   display: inline-flex;
   align-items: center;
@@ -1967,35 +1744,6 @@ body {
 }
 
 /* Saved message-attachment row: tile + sender-only remove button. */
-.td-bubble-file-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-.td-bubble-file-remove {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  border: none;
-  background: none;
-  color: currentColor;
-  border-radius: 6px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s ease, background 0.15s ease;
-}
-.td-bubble-file-row:hover .td-bubble-file-remove,
-.td-bubble-file-remove:focus-visible {
-  opacity: 0.85;
-}
-.td-bubble-file-remove:hover {
-  background: rgba(127, 127, 127, 0.2);
-  opacity: 1;
-}
 
 /* Withdrawn tasks: strike through the name (matches the completed-task
    treatment). The .is-withdrawn class is set on the title span. */
@@ -2066,7 +1814,6 @@ body {
 
 /* Group-2 step 2: task attachments use the standard chip + paperclip */
 .td-att-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.td-attach-chip--open { cursor: pointer; }
 
 /* ===== HD Issues 29 - Group-4 (2c): important pill in the Title row ===== */
 /* Label left, the Mark-as-important pill right, on one line above the title. */
