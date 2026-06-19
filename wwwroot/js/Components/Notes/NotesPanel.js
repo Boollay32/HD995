@@ -301,30 +301,10 @@ const NotesPanel = (() => {
     }
 
     function _buildNoteAttachments(attachments) {
-        const wrap = document.createElement('div');
-        wrap.className = 'td-note-attachments';
-
-        attachments.forEach(att => {
-            const downloadable = !!att.base64;
-            const el = document.createElement(downloadable ? 'a' : 'span');
-            el.className = 'td-note-file';
-            if (downloadable) {
-                el.href = '#';
-                el.setAttribute('aria-label', `Download ${att.name}`);
-                el.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    Composer.download(att.name, att.base64);
-                });
-            }
-            el.innerHTML = `
-                <span class="td-file-icon" aria-hidden="true">${Format.fileIcon(att.name)}</span>
-                <span class="td-file-name">${Format.escapeHtml(att.name)}</span>
-                ${att.size != null ? `<span class="td-file-size mono">${Format.fileSizeLabel(att.size)}</span>` : ''}
-            `;
-            wrap.appendChild(el);
-        });
-
-        return wrap;
+        // Canonical rendering via the shared Attachments component. Note display
+        // is read-only here (removal happens through the note editor), so no
+        // remove badge.
+        return Attachments.render(attachments, { canRemove: false, showSize: true });
     }
 
     // -------------------------  Edit own note  ------------------------- //
@@ -350,7 +330,7 @@ const NotesPanel = (() => {
         body.hidden = true;
         // Hide the card's static attachment list; the editor shows an editable
         // copy below instead.
-        const staticAtts = card.querySelector('.td-note-attachments');
+        const staticAtts = card.querySelector('.td-attach-list');
         if (staticAtts) staticAtts.hidden = true;
 
         // Working attachment set. The save proc REPLACES a note's attachments
@@ -472,7 +452,7 @@ const NotesPanel = (() => {
             body.textContent = note.Body ?? '';
             body.hidden = false;
         }
-        const staticAtts = card.querySelector('.td-note-attachments');
+        const staticAtts = card.querySelector('.td-attach-list');
         if (staticAtts) staticAtts.hidden = false;
     }
 
