@@ -52,6 +52,7 @@ const TicketLoader = {
             }
             Topbar.populate(data);
             Fields.populate(data);
+            window.PillEdit?.init?.();
             TicketLoader._clearNotificationIfMine(data);
             TicketLoader._delegateModules(data);
 
