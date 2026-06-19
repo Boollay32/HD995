@@ -35,6 +35,7 @@ builder.Services.AddScoped<ITaskManager, TaskManager>();
 builder.Services.AddScoped<IProjectManager, ProjectManager>();
 builder.Services.AddScoped<IMiscManager, MiscManager>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IMailPreviewSink, MailPreviewSink>();
 
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddSingleton<JavaScriptSnippet>();
@@ -47,6 +48,12 @@ if (!builder.Environment.IsDevelopment())
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<AuthenticateActionFilter>();
+    if (builder.Environment.IsDevelopment())
+    {
+        // DEV ONLY: surface would-be email recipients via a response header
+        // instead of sending (local SMTP is unavailable). See MailPreviewSink.
+        options.Filters.Add<MailPreviewResultFilter>();
+    }
 });
 builder.Services.AddScoped<AuthenticateActionFilter>();
 

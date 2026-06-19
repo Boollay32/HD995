@@ -19,12 +19,14 @@ namespace HelpDeskNet8.Services
         private readonly ITicketManager _ticketManager;
         private readonly IMiscManager _miscManager;
         private readonly IRFCManager _rfcManager;
+        private readonly IMailPreviewSink _preview;
 
-        public NotificationService(ITicketManager ticketManager, IMiscManager miscManager, IRFCManager rfcManager)
+        public NotificationService(ITicketManager ticketManager, IMiscManager miscManager, IRFCManager rfcManager, IMailPreviewSink preview)
         {
             _ticketManager = ticketManager;
             _miscManager = miscManager;
             _rfcManager = rfcManager;
+            _preview = preview;
         }
 
         public void Notify(int ticketId, NotificationType type, IUser user)
@@ -41,6 +43,12 @@ namespace HelpDeskNet8.Services
 
                 string subject = BuildSubject(type, ticketId);
                 string body = BuildBody(type, ticketId);
+
+                if (_preview.Enabled)
+                {
+                    _preview.Add(PointLabel(type), new[] { recipient }, subject);
+                    return;
+                }
 
                 _miscManager.SendMailMessage(FromAddress, new[] { recipient }, subject, body);
             }
@@ -70,6 +78,12 @@ namespace HelpDeskNet8.Services
 
                 string subject = BuildSubject(type, rfcId);
                 string body = BuildBody(type, rfcId);
+
+                if (_preview.Enabled)
+                {
+                    _preview.Add(PointLabel(type), recipients, subject);
+                    return;
+                }
 
                 _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
             }
@@ -115,6 +129,21 @@ namespace HelpDeskNet8.Services
         {
             return ticket.RequestID.HasValue
                 && System.Array.IndexOf(InternalRequestTypes, ticket.RequestID.Value) >= 0;
+        }
+
+        // Friendly label for the dev mail-preview popup ("at each point").
+        private static string PointLabel(NotificationType type)
+        {
+            return type switch
+            {
+                NotificationType.TaskSaved => "Task saved",
+                NotificationType.NoteResponded => "Reply added",
+                NotificationType.TicketResponded => "Ticket reply saved",
+                NotificationType.TicketAssigned => "Assigned tech changed",
+                NotificationType.RFCResponded => "RFC updated",
+                NotificationType.RFCAssigned => "RFC assigned",
+                _ => "Notification",
+            };
         }
 
         private static string BuildSubject(NotificationType type, int ticketId)
