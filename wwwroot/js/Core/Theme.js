@@ -32,13 +32,13 @@ const Theme = {
     },
 
     mount() {
-        const bar = document.querySelector('nav.Nav-Bar #navbar-logout');
+        const bar = document.querySelector('#qv-settings-panel [data-set-slot="theme"]');
         if (!bar || bar.querySelector('.qv-theme')) return !!bar;   // done (or nothing to mount into)
         const wrap = document.createElement('label');
         wrap.className = 'qv-theme';
         wrap.innerHTML = '<span class="qv-theme-lbl"></span>' +
             '<button type="button" class="qv-sw" role="switch" aria-label="Toggle dark mode"><span class="qv-knob"></span></button>';
-        bar.insertBefore(wrap, bar.firstChild);
+        bar.appendChild(wrap);
         wrap.querySelector('.qv-sw').addEventListener('click', () => Theme.toggle());
         this.apply(document.documentElement.getAttribute('data-theme') || this.initial());
         return true;

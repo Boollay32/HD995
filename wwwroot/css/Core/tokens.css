@@ -212,3 +212,12 @@ textarea.field-invalid {
     background: var(--row-hover);
     color: var(--muted);
 }
+
+/* ===== Tab highlight (keyboard focus outline) ===== */
+/* OFF by default: the focus rings show only when the user enables them in
+   Settings (data-tabfocus="on" on <html>). :is(#_, *) keeps this matching
+   every element while lifting specificity above every page-level
+   :focus-visible rule -- including id-scoped ones -- so none leak through. */
+html:not([data-tabfocus="on"]) :focus-visible:is(#_, *) {
+    outline: none !important;
+}
