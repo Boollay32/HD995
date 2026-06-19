@@ -8,7 +8,6 @@
     <script src="~/js/Components/CustomFields/CustomFieldBuilder.js" asp-append-version="true"></script>
     <script src="~/js/Components/Notes/NotesPanel.js" asp-append-version="true"></script>
     <script src="~/js/Components/Notes/Notes.js" asp-append-version="true"></script>
-    <script src="~/js/Components/Messages/MessagePanel.js" asp-append-version="true"></script>
     <script src="~/js/Tasks/Features/TaskPopulation.js" asp-append-version="true"></script>
     <script src="~/js/Tasks/Features/Tasks.js" asp-append-version="true"></script>
     <script src="~/js/Components/Activity/Activity.js" asp-append-version="true"></script>
@@ -208,7 +207,7 @@
                 </div>
 
                 <!-- ── Thread ── -->
-                <!-- scope reminder (Govtech only; shown/dismissed by MessagesPanel.js) -->
+                <!-- scope reminder (Govtech only; shown/dismissed by NotesPanel in messages mode) -->
                 <div class="td-scope-note td-scope-note--msg" id="msg-scope-banner" hidden>
                     <button type="button" class="td-scope-dismiss"
                             id="msg-scope-dismiss" aria-label="Dismiss reminder">&times;</button>
@@ -216,7 +215,7 @@
                 </div>
 
                 <div class="td-thread" id="Messages-Thread" role="log" aria-live="polite" aria-label="Message thread">
-                    <!-- bubbles injected by MessagesPanel.js -->
+                    <!-- items injected by NotesPanel in messages mode -->
                 </div>
 
                 <!-- ── Composer ── -->
