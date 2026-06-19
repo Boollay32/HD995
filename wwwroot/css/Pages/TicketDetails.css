@@ -2175,3 +2175,10 @@ body {
   border-top: 4.5px solid currentColor;
   opacity: 0.5;
 }
+
+/* 1c: labels on the collapsed slim overview summary */
+#TicketDetails-App .td-ov-slim-lbl {
+  color: var(--td-muted);
+  font-weight: 600;
+  margin-right: 1px;
+}
