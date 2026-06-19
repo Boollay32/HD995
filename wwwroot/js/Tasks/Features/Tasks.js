@@ -95,7 +95,6 @@ const Tasks = (() => {
             }));
     }
 
-    const _attListHtml = TaskPopulation.attListHtml;
 
     // -------------------------  Init  ------------------------- //
 
@@ -361,7 +360,7 @@ const Tasks = (() => {
             <div class="td-ed-row">
                 <label class="td-ed-label">Attachments</label>
                 <div class="td-att-wrap">
-                    <div class="td-att-chips" data-fld="attachments">${_attListHtml(atts)}</div>
+                    <div class="td-att-chips" data-fld="attachments"></div>
                     <button type="button" class="td-attach-btn" data-att-add aria-label="Add attachment">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -396,24 +395,26 @@ const Tasks = (() => {
             el.addEventListener('change', markDirty);
         });
 
-        const wireAttRemoves = () => {
-            editor.querySelectorAll('[data-att-open]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const a = editor._kept[parseInt(btn.dataset.attOpen, 10)];
-                    if (a && a.attachmentByteArray) Composer.download(a.attachmentName, a.attachmentByteArray);
-                });
-            });
-            editor.querySelectorAll('[data-att-remove]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    editor._kept.splice(parseInt(btn.dataset.attRemove, 10), 1);
-                    markDirty();
-                    const ul = editor.querySelector('[data-fld="attachments"]');
-                    if (ul) { ul.innerHTML = _attListHtml(editor._kept); wireAttRemoves(); }
-                });
-            });
+        const attHolder = editor.querySelector('[data-fld="attachments"]');
+        const renderAtts = () => {
+            if (!attHolder) return;
+            // Canonical attachment tiles via the shared Attachments component.
+            // _kept is camelCase; map to the component's {name, base64} shape.
+            // Items carry base64 -> download on click; corner badge removes
+            // (the editor is edit mode, so canRemove:true).
+            attHolder.replaceChildren(Attachments.render(
+                editor._kept.map(a => ({ name: a.attachmentName, base64: a.attachmentByteArray })),
+                {
+                    canRemove: true,
+                    onRemove: (att, idx) => {
+                        editor._kept.splice(idx, 1);
+                        markDirty();
+                        renderAtts();
+                    },
+                }
+            ));
         };
-        wireAttRemoves();
+        renderAtts();
 
         // Important pill: toggle aria-pressed + label.
         const impBtn = editor.querySelector('.td-imp-pill');
@@ -452,8 +453,7 @@ const Tasks = (() => {
                     attachmentByteArray: a.AttachmentByteArray,
                     attachmentImageType: a.AttachmentImageType ?? 0,
                 }));
-                const ul = editor.querySelector('[data-fld="attachments"]');
-                if (ul) { ul.innerHTML = _attListHtml(editor._kept); wireAttRemoves(); }
+                renderAtts();
                 markDirty();
             } catch (e) {
                 UI.toast?.('Could not attach file', 'warning');
