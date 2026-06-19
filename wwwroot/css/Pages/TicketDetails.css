@@ -1878,7 +1878,8 @@ body {
   align-items: center;
   gap: 10px;
   padding: 6px 18px;
-  background: var(--td-surface);
+  /* 1b: match the panel so topbar/overview read as one section */
+  background: var(--td-panel);
   border-bottom: 1px solid var(--td-border);
 }
 #TicketDetails-App .td-ov-title {
