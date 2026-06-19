@@ -170,6 +170,8 @@ const MessagesPanel = (() => {
                 n.attachments = attMap.get(n.noteID) ?? n.attachments ?? [];
             });
             State.messages = _visibleNotes(data);
+            State.description = _pickOriginal(State.messages);
+            _renderDescription(State.description);
             _renderThread(State.messages);
             _scrollToBottom(false);
         } catch (err) {
@@ -180,13 +182,46 @@ const MessagesPanel = (() => {
 
     // -------------------------  Render  ------------------------- //
 
+    // The original (first) message is the ticket Description (shown in the
+    // overview), identified by earliest date rather than array position so it
+    // is robust to whatever order GetNotes returns.
+    function _pickOriginal(msgs) {
+        if (!Array.isArray(msgs) || msgs.length === 0) return null;
+        return msgs.reduce((a, b) =>
+            new Date(a.CreatedDate) <= new Date(b.CreatedDate) ? a : b);
+    }
+
+    function _renderDescription(msg) {
+        const group = document.getElementById('ov-desc-group');
+        if (!group) return;
+        if (!msg) { group.hidden = true; return; }
+        group.hidden = false;
+
+        const body = document.getElementById('ov-desc-body');
+        if (body) body.textContent = msg.Body || '';
+
+        const atts = document.getElementById('ov-desc-atts');
+        if (atts) {
+            atts.innerHTML = '';
+            if (Array.isArray(msg.Attachments) && msg.Attachments.length > 0) {
+                atts.appendChild(_buildBubbleAttachments(msg.Attachments, msg));
+            }
+        }
+    }
+
     function _renderThread(messages) {
         const thread = Dom.thread();
         if (!thread) return;
 
         thread.innerHTML = '';
 
-        if (messages.length === 0) {
+        // The original (first) message renders as the Description in the
+        // overview, so it is excluded from the thread here.
+        const list = State.description
+            ? (Array.isArray(messages) ? messages : []).filter(m => m !== State.description)
+            : (Array.isArray(messages) ? messages : []);
+
+        if (list.length === 0) {
             thread.appendChild(_buildEmptyState());
             return;
         }
@@ -194,7 +229,7 @@ const MessagesPanel = (() => {
         const fragment = document.createDocumentFragment();
         let lastKey = null;
 
-        messages.forEach(msg => {
+        list.forEach(msg => {
             const key = Format.dateKey(msg.CreatedDate);
             if (key !== lastKey) {
                 fragment.appendChild(_buildDateDivider(msg.CreatedDate));
