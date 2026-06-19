@@ -389,28 +389,16 @@ const NotesPanel = (() => {
         editor.appendChild(bar);
 
         function renderChips() {
-            attachWrap.innerHTML = '';
-            working.forEach((att, idx) => {
-                const chip = document.createElement('div');
-                chip.className = 'td-attach-chip';
-                const sizeLabel = att.size != null
-                    ? `<span class="mono">${Format.fileSizeLabel(att.size)}</span>` : '';
-                chip.innerHTML = `
-                    <span aria-hidden="true">${Format.fileIcon(att.name)}</span>
-                    <span title="${Format.escapeHtml(att.name)}">${Format.escapeHtml(att.name)}</span>
-                    ${sizeLabel}
-                    <button type="button" aria-label="Remove ${Format.escapeHtml(att.name)}">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    </button>`;
-                chip.querySelector('button').addEventListener('click', () => {
+            // Canonical attachment tiles via the shared Attachments component.
+            attachWrap.replaceChildren(Attachments.render(working, {
+                canRemove: true,
+                onRemove: (att, idx) => {
                     working.splice(idx, 1);
                     attachmentsDirty = true;
                     renderChips();
-                });
-                attachWrap.appendChild(chip);
-            });
+                },
+                showSize: true,
+            }));
         }
 
         fileInput.addEventListener('change', (e) => {
