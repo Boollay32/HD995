@@ -505,56 +505,18 @@ const Notes = (() => {
     }
 
     function _buildNoteAttachments(attachments, note) {
-        const wrap = document.createElement('div');
-        wrap.className = 'td-note-attachments';
-
-        // The note's creator can remove an attachment. Removal re-saves the
-        // note with that attachment omitted: the SaveNote proc wipes and
-        // re-inserts all attachment slots each save, so the remaining ones
-        // simply shift down. No delete endpoint is needed.
-        const canRemove = note && !note._optimistic && note.OwnerID != null &&
-            Session.userID != null && note.OwnerID === Session.userID;
-
-        attachments.forEach((att, index) => {
-            const row = document.createElement('div');
-            row.className = 'td-note-file-row';
-
-            const downloadable = !!att.base64;
-            const el = document.createElement(downloadable ? 'a' : 'span');
-            el.className = 'td-note-file';
-            if (downloadable) {
-                el.href = '#';
-                el.setAttribute('aria-label', `Download ${att.name}`);
-                el.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    Composer.download(att.name, att.base64);
-                });
-            }
-            el.innerHTML = `
-                <span class="td-file-icon" aria-hidden="true">${Format.fileIcon(att.name)}</span>
-                <span class="td-file-name">${Format.escapeHtml(att.name)}</span>
-                ${att.size != null ? `<span class="td-file-size mono">${Format.fileSizeLabel(att.size)}</span>` : ''}
-            `;
-            row.appendChild(el);
-
-            if (canRemove) {
-                const rm = document.createElement('button');
-                rm.type = 'button';
-                rm.className = 'td-note-file-remove';
-                rm.title = 'Remove attachment';
-                rm.setAttribute('aria-label', `Remove ${att.name}`);
-                rm.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" '
-                    + 'fill="none" stroke="currentColor" stroke-width="2.5" '
-                    + 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-                    + '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-                rm.addEventListener('click', () => _removeNoteAttachment(note, index));
-                row.appendChild(rm);
-            }
-
-            wrap.appendChild(row);
+        // Canonical rendering via the shared Attachments component. The note's
+        // creator can remove an attachment; removal re-saves the note with that
+        // attachment omitted (SaveNote wipes and re-inserts all slots each save,
+        // so the rest shift down) -- no delete endpoint. The remove badge is
+        // hover-revealed and only rendered when removable.
+        const canRemove = !!(note && !note._optimistic && note.OwnerID != null &&
+            Session.userID != null && note.OwnerID === Session.userID);
+        return Attachments.render(attachments, {
+            canRemove: canRemove,
+            onRemove: (att, index) => _removeNoteAttachment(note, index),
+            showSize: true,
         });
-
-        return wrap;
     }
 
     // -------------------------  Scope reminder  ------------------------- //
