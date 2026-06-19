@@ -108,7 +108,7 @@ const TicketLoader = {
             NotesLeft.init(ticketId);
         } else {
             if (typeof Notes !== 'undefined') Notes.init(ticketId);
-            if (typeof MessagesPanel !== 'undefined') MessagesPanel.init(ticketId, State.adminLevel);
+            MessagesLeft.init(ticketId, State.adminLevel);
         }
         if (typeof Tasks !== 'undefined') Tasks.init(ticketId);
         if (typeof Activity !== 'undefined') Activity.init(ticketId);
@@ -133,7 +133,7 @@ const TicketLoader = {
 // Project tickets and incidents have no client thread, so the left pane becomes
 // a NotesPanel bound to the ticket's own internal notes, and the Workspace Notes
 // tab is dropped. prepare() does the DOM swap before layout/tab restore; init()
-// starts the panel after the fetch (skipping MessagesPanel + the right-tab Notes).
+// starts the panel after the fetch (skipping the client Messages pane + the right-tab Notes).
 const NotesLeft = {
 
     prepare() {
@@ -178,6 +178,43 @@ const NotesLeft = {
                 fileInput: 'tnote-file-input',
                 attachList: 'tnote-attachment-list',
                 composerDock: 'TicketNotes-Compose',
+            },
+        });
+    },
+
+};
+
+
+// Client-ticket left pane: the shared NotesPanel in messages mode -- GetNotes
+// filtered to client-visible items, the earliest pinned as the overview
+// Description, new items sent client-visible. Replaces the old MessagePanel so
+// messages and notes share one component. The Govtech-only scope banner is
+// passed (and thus shown) only at adminLevel >= 1.
+const MessagesLeft = {
+
+    init(ticketId, adminLevel) {
+        if (typeof NotesPanel === 'undefined') return;
+        NotesPanel.init({
+            ownerId: parseInt(ticketId, 10),
+            ownerField: 'TicketID',
+            getEndpoint: 'TicketDetails/GetNotes',
+            getPayloadKey: 'ticketId',
+            attachmentOwnerType: 0,
+            rfc: false,
+            extraSaveFields: { visibleToClient: '1' },
+            filter: n => n.visibleToClient === true,
+            pinDescription: true,
+            scope: Number(adminLevel) >= 1
+                ? { banner: 'msg-scope-banner', dismiss: 'msg-scope-dismiss', dismissKey: 'td-msg-scope-dismissed' }
+                : null,
+            ids: {
+                thread: 'Messages-Thread',
+                textarea: 'msg-textarea',
+                sendBtn: 'msg-send-btn',
+                charcount: 'msg-charcount',
+                fileInput: 'msg-file-input',
+                attachList: 'msg-attachment-list',
+                composerDock: 'Messages-Compose',
             },
         });
     },
