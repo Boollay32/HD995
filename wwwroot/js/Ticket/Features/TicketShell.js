@@ -39,9 +39,8 @@ const Tabs = {
     applySaveVisibility() {
         const saveBtn = Dom.saveBtn();
         if (!saveBtn) return;
-        // Always present on Details (greyed until dirty); hidden elsewhere.
-        const onDetails = State.activeTab === TAB.DETAILS;
-        saveBtn.hidden = !onDetails;
+        // Save lives in the Overview band: always present, greyed until dirty.
+        saveBtn.hidden = false;
         saveBtn.disabled = !State.isDirty;
         saveBtn.textContent = 'Save Changes';
         saveBtn.classList.toggle('is-dirty', State.isDirty);

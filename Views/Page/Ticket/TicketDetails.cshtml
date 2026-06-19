@@ -18,6 +18,7 @@
     <script src="~/js/Components/Shell/PaneShell.js" asp-append-version="true"></script>
     <script src="~/js/Ticket/Features/TicketShell.js" asp-append-version="true"></script>
     <script src="~/js/Ticket/Pages/TicketDetails.js" asp-append-version="true"></script>
+    <script src="~/js/Ticket/Features/OverviewPanel.js" asp-append-version="true"></script>
 }
 
 @section AddCSSToHead {
@@ -76,6 +77,98 @@
         </div>
 
     </header>
+
+    <!-- OVERVIEW -->
+    <section class="td-overview" id="Ticket-Overview" aria-label="Ticket overview">
+
+        <div class="td-ov-head">
+            <span class="td-ov-title">Overview</span>
+            <span class="td-ov-spacer"></span>
+            <button type="button" class="td-btn-primary" id="Save-Button" disabled>Save Changes</button>
+            <button type="button" class="td-ov-collapse" id="ov-collapse"
+                    aria-label="Collapse overview" aria-expanded="true"
+                    aria-controls="Ticket-Overview">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 15l-6-6-6 6" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="td-ov-body">
+
+            <div class="td-ov-group">
+                <h3 class="td-ov-grp-head">Origin</h3>
+                <div class="td-ov-grid">
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">Request type</div>
+                        <label class="Field-Value" id="requesttype"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">Category</div>
+                        <select id="category" class="td-select" aria-label="Category"></select>
+                    </div>
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">From</div>
+                        <label class="Field-Value" id="raisedby"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">Authority</div>
+                        <label class="Field-Value" id="authority"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">Assigned to</div>
+                        <select id="assignedtech" class="td-select" aria-label="Assigned technician"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="td-ov-group">
+                <h3 class="td-ov-grp-head">Timeline</h3>
+                <div class="td-ov-timeline">
+                    <div class="td-ov-node">
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Created</div>
+                        <label class="Field-Value mono" id="created"></label>
+                    </div>
+                    <div class="td-ov-arrow">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+                    </div>
+                    <div class="td-ov-node">
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>First response</div>
+                        <label class="Field-Value" id="ov-first-response">&mdash;</label>
+                    </div>
+                    <div class="td-ov-arrow">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+                    </div>
+                    <div class="td-ov-node">
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Needed by</div>
+                        <input type="date" id="targetdate" class="td-input" aria-label="Target date" />
+                    </div>
+                    <div class="td-ov-arrow">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+                    </div>
+                    <div class="td-ov-node">
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Closed</div>
+                        <label class="Field-Value mono" id="closed"></label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="td-ov-slim" id="ov-slim" aria-hidden="true">
+            <span class="Field-Value" id="ov-slim-type"></span>
+            <span class="td-ov-sep">&middot;</span>
+            <span class="Field-Value" id="ov-slim-from"></span>
+            <span class="td-ov-sep">&rarr;</span>
+            <span class="Field-Value" id="ov-slim-assigned"></span>
+            <span class="td-ov-sep">&middot;</span>
+            <span>Needed by <span class="Field-Value mono" id="ov-slim-needed"></span></span>
+        </div>
+
+    </section>
+
 
     <!-- ═══════════════════  SHELL  ═══════════════════ -->
     <div class="td-shell" id="TD-Shell" role="main">
@@ -444,53 +537,14 @@
                          aria-labelledby="tab-details"
                          class="td-ws-inner" hidden>
 
-                        <div class="td-details-save-row">
-                            <button type="button" class="td-btn-primary" id="Save-Button" hidden disabled>
-                                Save Changes
-                            </button>
-                        </div>
-
                         <div class="td-details-head">
                             <h2 class="td-details-subject" id="subject"></h2>
-                        </div>
-
-                        <!-- Group: People -->
-                        <div class="td-field-group">
-                            <h3 class="td-grp-head">People</h3>
-                            <dl class="td-dl">
-                                <div class="td-field">
-                                    <dt>Raised By</dt>
-                                    <dd><label class="Field-Value" id="raisedby"></label></dd>
-                                </div>
-                                <div class="td-field">
-                                    <dt>Assigned Tech</dt>
-                                    <dd>
-                                        <select id="assignedtech" class="td-select"
-                                                aria-label="Assigned technician"></select>
-                                    </dd>
-                                </div>
-                                <div class="td-field">
-                                    <dt>Authority</dt>
-                                    <dd><label class="Field-Value" id="authority"></label></dd>
-                                </div>
-                            </dl>
                         </div>
 
                         <!-- Group: Classification -->
                         <div class="td-field-group">
                             <h3 class="td-grp-head">Classification</h3>
                             <dl class="td-dl">
-                                <div class="td-field">
-                                    <dt>Request Type</dt>
-                                    <dd><label class="Field-Value" id="requesttype"></label></dd>
-                                </div>
-                                <div class="td-field">
-                                    <dt>Category</dt>
-                                    <dd>
-                                        <select id="category" class="td-select"
-                                                aria-label="Category"></select>
-                                    </dd>
-                                </div>
                                 <div class="td-field">
                                     <dt>Status</dt>
                                     <dd>
@@ -504,28 +558,6 @@
                                         <select id="priority" class="td-select"
                                                 aria-label="Priority"></select>
                                     </dd>
-                                </div>
-                            </dl>
-                        </div>
-
-                        <!-- Group: Dates -->
-                        <div class="td-field-group">
-                            <h3 class="td-grp-head">Dates</h3>
-                            <dl class="td-dl">
-                                <div class="td-field">
-                                    <dt>Created</dt>
-                                    <dd><label class="Field-Value mono" id="created"></label></dd>
-                                </div>
-                                <div class="td-field">
-                                    <dt>Target Date</dt>
-                                    <dd>
-                                        <input type="date" id="targetdate" class="td-input"
-                                               aria-label="Target date" />
-                                    </dd>
-                                </div>
-                                <div class="td-field">
-                                    <dt>Closed</dt>
-                                    <dd><label class="Field-Value mono" id="closed"></label></dd>
                                 </div>
                             </dl>
                         </div>
