@@ -474,51 +474,17 @@ const MessagesPanel = (() => {
     }
 
     function _buildBubbleAttachments(attachments, msg) {
-        const wrap = document.createElement('div');
-        wrap.className = 'td-bubble-attachments';
-
-        // The sender can remove an attachment from their own message. Removal
-        // re-saves the message with that attachment omitted (SaveNote wipes and
-        // re-inserts all slots, so the rest shift down) -- no delete endpoint.
-        const canRemove = msg && msg.MessageID != null && _isOutbound(msg);
-
-        attachments.forEach((att, index) => {
-            const row = document.createElement('div');
-            row.className = 'td-bubble-file-row';
-
-            const downloadable = !!att.base64;
-            const el = document.createElement(downloadable ? 'a' : 'span');
-            el.className = 'td-bubble-file';
-            if (downloadable) {
-                el.href = '#';
-                el.setAttribute('aria-label', `Download ${att.name}`);
-                el.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    Composer.download(att.name, att.base64);
-                });
-            }
-            el.innerHTML = `
-                <span class="td-file-icon" aria-hidden="true">${Format.fileIcon(att.name)}</span>
-                <span class="td-file-name">${Format.escapeHtml(att.name)}</span>`;
-            row.appendChild(el);
-
-            if (canRemove) {
-                const rm = document.createElement('button');
-                rm.type = 'button';
-                rm.className = 'td-bubble-file-remove';
-                rm.title = 'Remove attachment';
-                rm.setAttribute('aria-label', `Remove ${att.name}`);
-                rm.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" '
-                    + 'fill="none" stroke="currentColor" stroke-width="2.5" '
-                    + 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-                    + '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-                rm.addEventListener('click', () => _removeMessageAttachment(msg, index));
-                row.appendChild(rm);
-            }
-
-            wrap.appendChild(row);
+        // Canonical rendering lives in the shared Attachments component (fixed icon
+        // tile + hover popout + corner remove badge). The sender can remove an
+        // attachment from their own message; removal re-saves the message with that
+        // attachment omitted (SaveNote wipes and re-inserts all slots, so the rest
+        // shift down) -- no delete endpoint. The badge is revealed on hover and only
+        // rendered when removable.
+        const canRemove = !!(msg && msg.MessageID != null && _isOutbound(msg));
+        return Attachments.render(attachments, {
+            canRemove: canRemove,
+            onRemove: (att, index) => _removeMessageAttachment(msg, index),
         });
-        return wrap;
     }
 
     function _buildBubbleMeta(msg) {
