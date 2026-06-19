@@ -156,28 +156,15 @@ const Notes = (() => {
         const pendingWrap = document.createElement('div');
         pendingWrap.className = 'td-note-edit-attachments';
         const renderPending = () => {
-            pendingWrap.innerHTML = '';
-            pending.forEach((file, index) => {
-                const chip = document.createElement('div');
-                chip.className = 'td-attach-chip';
-                chip.dataset.index = index;
-                chip.innerHTML = `
-                    <span aria-hidden="true">${Format.fileIcon(file.name)}</span>
-                    <span class="td-chip-name">${Format.escapeHtml(file.name)}</span>
-                    <span class="td-chip-size mono">${Format.fileSizeLabel(file.size)}</span>
-                    <button type="button" aria-label="Remove ${Format.escapeHtml(file.name)}">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.5"
-                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                    </button>`;
-                chip.querySelector('button')?.addEventListener('click', () => {
+            // Canonical attachment tiles via the shared Attachments component.
+            pendingWrap.replaceChildren(Attachments.render(pending, {
+                canRemove: true,
+                onRemove: (file, index) => {
                     pending.splice(index, 1);
                     renderPending();
-                });
-                pendingWrap.appendChild(chip);
-            });
+                },
+                showSize: true,
+            }));
         };
 
         const bar = document.createElement('div');
