@@ -86,3 +86,98 @@
 }
 .td-pill-pop-item:hover { background: var(--td-surface); }
 .td-pill-pop-item.is-current { font-weight: 600; color: var(--brand); }
+
+
+/* ---- Overview panel (HD33 4b stage 2) ----
+   The .td-ov-* overview rules that were byte-identical across both
+   detail pages. The .td-ov-collapse* family is deliberately NOT here:
+   its base rule genuinely differs between the pages (RFC lacks the
+   colour/border), and sharing only its :hover/svg children would let
+   the page-specific ID-scoped base override them. Those stay per-page. */
+.td-app .td-overview {
+  flex-shrink: 0;
+  background: var(--td-panel);
+}
+.td-app .td-ov-body {
+  padding: 5px 16px 11px;
+}
+.td-app .td-ov-group + .td-ov-group {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--td-border);
+}
+.td-app .td-ov-grp-head {
+  margin: 0 0 5px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--td-muted);
+}
+.td-app .td-ov-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 7px 20px;
+}
+.td-app .td-ov-cell {
+  min-width: 0;
+}
+.td-app .td-ov-lbl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 1px;
+  font-size: 0.6875rem;
+  color: var(--td-muted);
+}
+.td-app .td-ov-val {
+  font-size: 0.84375rem;
+  color: var(--td-text);
+}
+.td-app .td-ov-cell .td-select, .td-ov-cell .td-input {
+  width: 100%;
+  margin-top: 1px;
+}
+.td-app .td-ov-timeline {
+  display: flex;
+  align-items: flex-start;
+}
+.td-app .td-ov-node {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.td-app .td-ov-arrow {
+  flex: 0 0 auto;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  color: var(--td-muted);
+}
+.td-app .td-ov-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--td-border);
+  flex: 0 0 auto;
+}
+.td-app .td-ov-slim {
+  display: none;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 9px 18px;
+  font-size: 0.8125rem;
+  color: var(--td-text);
+}
+.td-app .td-ov-slim .td-ov-sep {
+  color: var(--td-muted);
+}
+.td-app .td-ov-slim-lbl {
+  color: var(--td-muted);
+  font-weight: 600;
+  margin-right: 1px;
+}
+.td-app .td-overview > .td-details-subject {
+  padding: 9px 16px 3px;
+}
