@@ -419,3 +419,34 @@
   border-color: var(--brand);
   box-shadow: 0 0 0 3px var(--brand-pale);
 }
+
+/* Pill popover -- ported from TicketDetails.css so the editable Status/
+   Priority pills on RFC details have a styled chooser (the RFC page does
+   not load TicketDetails.css). The popover is appended to the app root by
+   RFCPillEdit, so it is not scoped to a container. */
+.td-pill-pop {
+  position: fixed;
+  z-index: 1000;
+  min-width: 150px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--td-panel);
+  border: 1px solid var(--td-border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.td-pill-pop-item {
+  text-align: left;
+  font: inherit;
+  font-size: 0.8125rem;
+  color: var(--td-text);
+  background: none;
+  border: none;
+  border-radius: 7px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.td-pill-pop-item:hover { background: var(--td-surface); }
+.td-pill-pop-item.is-current { font-weight: 600; color: var(--brand); }

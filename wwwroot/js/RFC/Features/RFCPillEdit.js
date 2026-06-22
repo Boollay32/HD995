@@ -12,13 +12,39 @@
         { pill: 'meta-priority', select: 'priority'  }
     ];
 
+    // Map an option's label to the colour class PaneShell.css provides
+    // (status-open/pending/resolved/closed, priority-high/medium/low).
+    // Derived from the label text so it tracks the real DB values.
+    function _colourClass(kind, label) {
+        var t = String(label || '').trim().toLowerCase();
+        if (kind === 'meta-status') {
+            if (t.indexOf('open') === 0 || t === 'new') return 'status-open';
+            if (t.indexOf('progress') !== -1 || t === 'pending' || t === 'active') return 'status-pending';
+            if (t.indexOf('resolv') !== -1 || t.indexOf('solv') !== -1 || t === 'complete') return 'status-resolved';
+            if (t.indexOf('closed') !== -1 || t.indexOf('withdrawn') !== -1 || t.indexOf('reject') !== -1) return 'status-closed';
+            return 'status-open';
+        }
+        if (t.indexOf('high') !== -1 || t.indexOf('urgent') !== -1) return 'priority-high';
+        if (t.indexOf('low') !== -1) return 'priority-low';
+        return 'priority-medium';
+    }
+
     function _renderPill(pair) {
         var pill = document.getElementById(pair.pill);
         var sel = document.getElementById(pair.select);
         if (!pill || !sel) return;
         var opt = sel.options[sel.selectedIndex];
-        pill.className = 'td-meta-pill td-meta-pill--editable';
-        pill.textContent = opt ? opt.textContent : '';
+        var label = opt ? opt.textContent : '';
+        var colour = _colourClass(pair.pill, label);
+        var led = pair.pill === 'meta-status' ? '<span class="td-led" aria-hidden="true"></span>' : '';
+        pill.className = 'td-meta-pill td-meta-pill--editable ' + colour;
+        pill.innerHTML = led + _esc(label);
+    }
+
+    function _esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
     }
 
     function _close() {
