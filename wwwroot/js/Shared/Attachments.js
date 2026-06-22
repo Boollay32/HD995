@@ -33,7 +33,7 @@
         pop.className = 'td-attach-pop';
         pop.appendChild(document.createTextNode(name));
         const size = _size(it);
-        if (opts.showSize !== false && size != null && window.Format && Format.fileSizeLabel) {
+        if (opts.showSize !== false && size != null && typeof Format !== 'undefined' && Format.fileSizeLabel) {
             const sz = document.createElement('span');
             sz.className = 'td-attach-pop-sz';
             sz.textContent = Format.fileSizeLabel(size);
@@ -44,7 +44,7 @@
         // Tile: the file icon. An anchor when the file can be downloaded.
         const tile = document.createElement(downloadable ? 'a' : 'span');
         tile.className = 'td-attach-tile';
-        tile.innerHTML = (window.Format && Format.fileIcon) ? Format.fileIcon(name) : '';
+        tile.innerHTML = (typeof Format !== 'undefined' && Format.fileIcon) ? Format.fileIcon(name) : '';
         if (downloadable) {
             tile.href = '#';
             tile.setAttribute('aria-label', 'Download ' + name);
