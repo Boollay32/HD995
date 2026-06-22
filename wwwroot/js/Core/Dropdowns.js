@@ -4,7 +4,7 @@ const Dropdowns = {
 
     // Some markup ids predate the proc column names; when a response key
     // has no directly-matching element, try its legacy alias.
-    _ID_ALIASES: { assignedTechName: 'assignedtech', department: 'Department' },
+    _ID_ALIASES: { assignedTechName: 'assignedtech', department: 'Department', status: 'rfcStatus' },
 
     // -------------------------  Load  ------------------------- //
 

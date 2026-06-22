@@ -27,8 +27,11 @@ const Tabs = {
             }
         });
 
-        // Persist active tab in session
-        sessionStorage.setItem(STORAGE_KEYS.TD_ACTIVE_TAB, name);
+        // NOTE: we deliberately do NOT persist the active tab to session on
+        // every switch. TD_ACTIVE_TAB is a one-shot "open this ticket on this
+        // tab" signal set only by the Tasks queue; persisting it here leaked the
+        // last-used tab onto the NEXT ticket opened from the queue (HD34 1a).
+        // The live tab is held in State.activeTab (in-memory) for this page.
 
         // The Save button belongs to the Details tab: show it only there,
         // and only when there are unsaved changes. Dirty state is preserved

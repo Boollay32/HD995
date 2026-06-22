@@ -181,3 +181,15 @@
 .td-app .td-overview > .td-details-subject {
   padding: 9px 16px 3px;
 }
+
+
+/* ---- Thin gap below the overview / collapsed slim bar (HD34 1c) ----
+   .td-app is transparent over the textured page background (the same backdrop
+   the header-panel's margin already reveals). A small margin below the overview
+   lets that backdrop show through between the overview panel (or, when collapsed,
+   its slim bar) and the workspace shell -- a little breathing room. The slim bar
+   lives inside .td-overview, so this one rule covers both states. Shared by both
+   detail pages. */
+.td-app .td-overview {
+  margin-bottom: 6px;
+}

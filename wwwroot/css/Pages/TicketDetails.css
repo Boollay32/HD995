@@ -479,6 +479,28 @@ body {
   color: var(--td-warn);
   flex-shrink: 0;
 }
+/* Scope-reminder text fills the row; the dismiss button is pinned to the right
+   as a distinct, clickable target (HD34 1b -- it had no styling, so it was hard
+   to hit). */
+.td-scope-note .td-scope-text { flex: 1; min-width: 0; }
+.td-scope-dismiss {
+  flex-shrink: 0;
+  margin-left: auto;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--td-warn);
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+}
+.td-scope-dismiss:hover { background: var(--td-warn-2); color: var(--td-text); }
 .td-note-thread {
   flex: 1;
   min-height: 0;

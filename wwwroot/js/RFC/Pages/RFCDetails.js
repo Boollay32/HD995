@@ -28,7 +28,9 @@ class RFCDetails extends PageBase {
 
     _initSessionStorage() {
         const rfcIdEl = document.getElementById('RFCID');  // Fix: null guard
-        if (rfcIdEl) rfcIdEl.innerText = this.rfcId;
+        // Prefix with # to match the ticket header style ("Ticket #123" ->
+        // "RFC #123"). HD34 4c.
+        if (rfcIdEl) rfcIdEl.innerText = '#' + this.rfcId;
     }
 
 
@@ -170,30 +172,35 @@ class RFCDetails extends PageBase {
 const rfcDetails = new RFCDetails();  // Fix: stored — accessible externally
 
 RFCDetails.prototype._wireRfcDirty = function () {
-    const ids = ['assignedTechName', 'rfcStatus', 'priority', 'TargetDate', 'Description'];
-    const els = ids.map(id => document.getElementById(id)).filter(Boolean);
     const saveBtn = document.getElementById('Save-Button');
     if (!saveBtn) return;
-    // Baseline lives on the instance so it can be (re)captured AFTER the
-    // RFC data populates the fields -- otherwise it captures empty values
-    // and dirty detection is unreliable. See _rfcDirtyResetBaseline().
-    this._rfcDirtyEls = els;
-    this._rfcDirtyBaseline = els.map(el => el.value);
+    // Watch every editable .Value control -- the main fields AND the Extended
+    // Information fields -- rather than a hardcoded id list, so the extended
+    // section also activates Save (HD34 4b). Elements + baseline are collected
+    // after the data populates, via _rfcDirtyResetBaseline().
+    this._rfcDirtyEls = [];
+    this._rfcDirtyBaseline = [];
     const refresh = () => {
         const dirty = this._rfcDirtyEls.some((el, i) => el.value !== this._rfcDirtyBaseline[i]);
         saveBtn.disabled = !dirty;
     };
-    els.forEach(el => {
-        el.addEventListener('input', refresh);
-        el.addEventListener('change', refresh);
-    });
+    // Delegated listeners at the document level (capture phase), so every
+    // .Value control dirties the form -- including the general-info fields in
+    // the header panel AND the Extended Information fields in the form. This
+    // mirrors RFCSave/RFCFields, which also read .Value document-wide.
+    document.addEventListener('input', refresh, true);
+    document.addEventListener('change', refresh, true);
     saveBtn.disabled = true;
 };
 
-// Re-capture the dirty baseline from the now-populated fields, so 'Save
-// Changes' activates only on a real edit. Called after the RFC data loads.
+// Re-collect the editable controls and capture their baseline from the now-
+// populated fields, so 'Save Changes' activates only on a real edit. Called
+// after the RFC data loads.
 RFCDetails.prototype._rfcDirtyResetBaseline = function () {
-    if (!this._rfcDirtyEls) return;
+    // Document-wide .Value (matching RFCSave/RFCFields): general-info fields
+    // are in the header panel, Extended Information is in the form.
+    this._rfcDirtyEls = Array.from(document.getElementsByClassName('Value'))
+        .filter(el => 'value' in el);
     this._rfcDirtyBaseline = this._rfcDirtyEls.map(el => el.value);
     const saveBtn = document.getElementById('Save-Button');
     if (saveBtn) saveBtn.disabled = true;
