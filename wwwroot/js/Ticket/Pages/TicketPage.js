@@ -128,7 +128,7 @@ class TicketPage extends PageBase {
                     render: r => TQesc(r.authority)
                 },
                 {
-                    key: 'userName', label: 'Client', sortable: true,
+                    key: 'userName', label: 'Originator', sortable: true,
                     sortValue: r => (r.userName || '').toLowerCase(),
                     render: r => TQesc(r.userName)
                 },

@@ -116,8 +116,17 @@ const Topbar = {
         // SLA pill — the model has no dedicated SLA field, so we treat the
         // target date as the due date. Swap to data.estimatedCompletionDate
         // if that is your real SLA source.
+        //
+        // The proc returns 1900-01-01 for a null target date (datetime epoch),
+        // which is a TRUTHY string -- so `if (data.targetDate)` alone treated it
+        // as a real due date and rendered "Breached 1108647h ago" on brand-new
+        // tickets (HD35 B5). Guard the sentinel the same way the target-date
+        // input and the overview date already do, and show that the ticket is
+        // awaiting its first response instead of a bogus breach.
         const slaGroup = document.getElementById('meta-sla-group');
-        if (data.targetDate) {
+        const hasRealTarget = data.targetDate
+            && !String(data.targetDate).startsWith('1900-01-01');
+        if (hasRealTarget) {
             if (slaGroup) slaGroup.hidden = false;
             Topbar.renderPill(
                 Dom.metaSla(),
@@ -126,7 +135,14 @@ const Topbar = {
                 false,
             );
         } else if (slaGroup) {
-            slaGroup.hidden = true;
+            // No real target date yet: a new ticket waiting on first response.
+            slaGroup.hidden = false;
+            Topbar.renderPill(
+                Dom.metaSla(),
+                'sla-ok',
+                'Awaiting first response',
+                false,
+            );
         }
 
         // Linked project — resolved live by GetTicketDetail's join on ProjectID.

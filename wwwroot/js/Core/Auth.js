@@ -82,11 +82,19 @@ const Auth = {
     // -------------------------  Admin Abilities  ------------------------- //
 
     setAdminAbilities(adminId) {
+        // restrict = the menu item ids to HIDE for that admin level. (These were
+        // previously 'subnav-*' ids that don't exist in the nav, so nothing was
+        // hidden -- clients wrongly saw Tasks + RFC. Use the real *Menu ids. HD35 B6.)
+        // Projects/Incidents/Stats are also enforced by the explicit hideById calls below.
         const ADMIN_CONFIG = {
-            0: { restrict: 'subnav-users,subnav-tasks,subnav-rfc,subnav-bugs,subnav-admin', extra: false }, // Authority - tickets only
-            1: { restrict: 'subnav-admin', extra: true },                                                    // Standard Govtech - everything except admin
-            2: { restrict: '', extra: true },                                                                 // Admin Govtech - everything
-            4: { restrict: 'subnav-tickets,subnav-users,subnav-tasks,subnav-bugs,subnav-admin', extra: false } // RFC Only
+            // Authority (client): Tickets + Users only.
+            0: { restrict: 'TasksMenu,ProjectsMenu,RFCMenu,IncidentsMenu,StatsMenu', extra: false },
+            // Standard Govtech: everything except Stats (Stats is level 2 only, handled below).
+            1: { restrict: '', extra: true },
+            // Admin Govtech: everything.
+            2: { restrict: '', extra: true },
+            // RFC Only: just RFC (+ the account/logout chrome).
+            4: { restrict: 'TicketsMenu,TasksMenu,ProjectsMenu,IncidentsMenu,UsersMenu,StatsMenu', extra: false }
         };
 
         const config = ADMIN_CONFIG[adminId] ?? {
