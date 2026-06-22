@@ -39,6 +39,10 @@ const State = {
     ticketData: null,
     adminLevel: 0,
     isDirty: false,
+    // HD35 B4/B7: a client (adminLevel < 1) gets the Workspace Details tab
+    // (read-only) alongside Messages, with the other tabs hidden. Set in
+    // PaneLayout.resolve; consumed by TicketLoader (tabs + field lockdown).
+    clientView: false,
 };
 
 
@@ -96,7 +100,15 @@ const PaneLayout = {
         const isAdmin = adminLevel >= 1;
         const { isInternal } = Session;
 
-        if (!isAdmin) return TDLAYOUT.LEFT_ONLY;
+        // HD35 B4/B7: clients are NO LONGER LEFT_ONLY. They get BOTH panes so
+        // the Workspace Details tab (with the Extended Information they
+        // submitted) is visible -- but read-only, and with only that tab.
+        // clientView drives the tab-hiding + field lockdown in TicketLoader.
+        if (!isAdmin) {
+            State.clientView = true;
+            return TDLAYOUT.BOTH;
+        }
+        State.clientView = false;
         // Internal tickets keep the Messages pane PRESENT (started collapsed
         // to its rail by TicketLoader) rather than hidden, so the rail is
         // always visible even when there is no client thread.

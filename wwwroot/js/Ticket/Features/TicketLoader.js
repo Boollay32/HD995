@@ -39,6 +39,19 @@ const TicketLoader = {
             await Dropdowns.load('Ticket');
 
             PaneLayout.init(adminLevel);
+
+            // HD35 B7: a client sees ONLY the Details tab. Hide Tasks/Notes/
+            // Activity (buttons + panels) before Tabs.restore() so the tab
+            // machinery treats them as absent (Tabs._visibleTabs ignores
+            // [hidden]); Details stays the active tab.
+            if (State.clientView) {
+                ['tab-tasks', 'tab-notes', 'tab-activity',
+                 'tabpanel-tasks', 'tabpanel-notes', 'tabpanel-activity']
+                    .forEach(function (id) {
+                        document.getElementById(id)?.setAttribute('hidden', '');
+                    });
+            }
+
             Tabs.restore();
 
             // Start Messages collapsed to its rail (still reachable) when the
@@ -52,7 +65,10 @@ const TicketLoader = {
             }
             Topbar.populate(data);
             Fields.populate(data);
-            window.PillEdit?.init?.();
+            // HD35 B4: in client view, PillEdit makes ONLY the status pill
+            // interactive (Resolved-only); priority/category become plain
+            // labels. Internal view is unchanged (all pills editable).
+            window.PillEdit?.init?.({ clientView: State.clientView });
             // 1b: overview opens collapsed (after populate so the slim
             // summary is filled, not blank).
             window.OverviewPanel?.setCollapsed?.(true);
@@ -126,6 +142,19 @@ const TicketLoader = {
             // selects, so only the new custom ones get their options.
             Promise.resolve(builder.changeCustomFields(data.requestID, data))
                 .then(() => Dropdowns.load('Ticket'))
+                .then(() => {
+                    // HD35 B4: the Extended Information inputs are read-only for
+                    // a client. Disable them HERE (not earlier) because the
+                    // custom fields are built asynchronously above -- doing it
+                    // before this resolves would find no fields to disable.
+                    if (State.clientView) {
+                        var cf = document.getElementById('CustomFields-Container');
+                        if (cf) {
+                            cf.querySelectorAll('input, select, textarea')
+                                .forEach(function (el) { el.setAttribute('disabled', ''); });
+                        }
+                    }
+                })
                 .catch(err => console.error('Custom-field dropdown load:', err));
         }
     }

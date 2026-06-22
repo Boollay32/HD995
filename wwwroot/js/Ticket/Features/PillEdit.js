@@ -28,7 +28,7 @@
         if (p && !p.contains(e.target)) _close();
     }
 
-    function _renderPill(pair) {
+    function _renderPill(pair, opts) {
         if (typeof Topbar === 'undefined') return;
         var pill = document.getElementById(pair.pill);
         var sel = document.getElementById(pair.select);
@@ -40,8 +40,11 @@
             var opt = sel.options[sel.selectedIndex];
             Topbar.renderPill(pill, '', opt ? opt.textContent : '', false);
         }
-        // renderPill rewrites className, so re-assert the editable affordance.
-        pill.classList.add('td-meta-pill--editable');
+        // renderPill rewrites className, so re-assert the editable affordance --
+        // unless this is a read-only (plain) pill in client view. HD35 B4.
+        if (!(opts && opts.plain)) {
+            pill.classList.add('td-meta-pill--editable');
+        }
     }
 
     function _open(pair) {
@@ -56,8 +59,17 @@
         pop.className = 'td-pill-pop';
         pop.setAttribute('role', 'listbox');
 
+        // HD35 B4: client status pill -> offer only the current value and
+        // "Resolved". (pill._clientView is set in init only for the status
+        // pill in client view; all other pills are unaffected.)
+        var clientStatus = pill._clientView === true;
         Array.prototype.forEach.call(sel.options, function (o) {
             if (!o.value) return;
+            if (clientStatus
+                && String(o.value) !== String(sel.value)
+                && (o.textContent || '').trim().toLowerCase() !== 'resolved') {
+                return;
+            }
             var item = document.createElement('button');
             item.type = 'button';
             item.className = 'td-pill-pop-item'
@@ -93,13 +105,27 @@
         }, 0);
     }
 
-    function init() {
+    // HD35 B4: opts.clientView -> only the STATUS pill is interactive, and its
+    // popover offers only the current value + "Resolved" (see _open). The
+    // priority/category pills render as plain, non-editable labels. With no
+    // opts (internal), every pill is editable exactly as before.
+    function init(opts) {
+        var clientView = !!(opts && opts.clientView);
         PAIRS.forEach(function (pair) {
             var pill = document.getElementById(pair.pill);
             var sel = document.getElementById(pair.select);
             if (!pill || !sel || pill._pillBound) return;
 
+            // In client view, only 'status' is interactive; the rest are
+            // rendered as read-only labels (no binding, no editable class).
+            var interactive = !clientView || pair.pill === 'meta-status';
+            if (!interactive) {
+                _renderPill(pair, { plain: true });
+                return;
+            }
+
             pill._pillBound = true;
+            pill._clientView = clientView; // status pill in client view -> Resolved-only
             pill.setAttribute('role', 'button');
             pill.setAttribute('tabindex', '0');
             pill.setAttribute('aria-haspopup', 'listbox');
