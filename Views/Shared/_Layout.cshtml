@@ -7,6 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} - Govtech HelpDesk" : "Govtech HelpDesk")</title>
 
+    @* Anti-flash theme: set data-theme synchronously, before any CSS
+       paints, so switching pages does not flash light then snap to dark.
+       Mirrors Theme.initial() (key hd32-theme, else OS preference). *@
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('hd32-theme');
+                if (t !== 'light' && t !== 'dark') {
+                    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+                }
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {}
+        })();
+    </script>
+
     @* -------------------------  CSS  ------------------------- *@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
