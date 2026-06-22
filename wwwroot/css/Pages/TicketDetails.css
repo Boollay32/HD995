@@ -110,6 +110,13 @@ body {
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
   position: relative;
 }
+/* [hidden] guard: inline-flex above beats the UA [hidden] rule, so a tab
+   hidden by JS (e.g. Notes tab on project/incident tickets, where notes
+   live in the left pane) would still show. Hide it explicitly. */
+.td-ws-tabs [role="tab"][hidden] {
+  display: none;
+}
+
 .td-ws-tabs [role="tab"] svg {
   flex-shrink: 0;
 }

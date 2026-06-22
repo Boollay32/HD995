@@ -9,6 +9,17 @@
 
 const Topbar = {
 
+    // Resolve a select's option label by value (the authoritative DB text).
+    _optionText(selectId, value) {
+        const sel = document.getElementById(selectId);
+        if (!sel || !sel.options || sel.options.length === 0) return '';
+        const v = String(value);
+        for (let i = 0; i < sel.options.length; i++) {
+            if (String(sel.options[i].value) === v) return sel.options[i].textContent.trim();
+        }
+        return '';
+    },
+
     statusClass(statusId) {
         const map = {
             1: 'status-open',
@@ -20,13 +31,13 @@ const Topbar = {
     },
 
     statusLabel(statusId) {
-        const map = {
-            1: 'Open',
-            2: 'Pending',
-            3: 'Resolved',
-            4: 'Closed',
-        };
-        return map[statusId] ?? 'Unknown';
+        // Prefer the live <select> option text (the real DB label) so the
+        // pill always matches what was chosen. Fall back to a static map
+        // only if the option isn't available yet.
+        const fromSelect = Topbar._optionText('status', statusId);
+        if (fromSelect) return fromSelect;
+        const map = { 1: 'Open', 3: 'Closed', 5: 'Solved' };
+        return map[statusId] ?? '';
     },
 
     priorityClass(priorityId) {
@@ -39,12 +50,10 @@ const Topbar = {
     },
 
     priorityLabel(priorityId) {
-        const map = {
-            1: 'Low',
-            2: 'Medium',
-            3: 'High',
-        };
-        return map[priorityId] ?? 'Low';
+        const fromSelect = Topbar._optionText('priority', priorityId);
+        if (fromSelect) return fromSelect;
+        const map = { 1: 'Low', 2: 'Medium', 3: 'High' };
+        return map[priorityId] ?? '';
     },
 
     slaClass(slaDate) {

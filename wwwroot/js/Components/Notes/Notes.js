@@ -28,6 +28,7 @@ const Notes = (() => {
         visibilityBtn: () => document.getElementById('note-visibility-btn'),
         scopeNote: () => document.getElementById('note-scope-banner'),
         scopeDismiss: () => document.getElementById('note-scope-dismiss'),
+        scopeText: () => document.getElementById('note-scope-text'),
     };
 
     const Session = {
@@ -515,14 +516,17 @@ const Notes = (() => {
         const banner = Dom.scopeNote();
         if (!banner) return;
         if (sessionStorage.getItem(SCOPE_DISMISS_KEY) === '1') {
-            banner.remove();
+            banner.setAttribute('hidden', '');
             return;
         }
-        banner.removeAttribute('hidden');
-        Dom.scopeDismiss()?.addEventListener('click', () => {
-            sessionStorage.setItem(SCOPE_DISMISS_KEY, '1');
-            banner.remove();
-        });
+        const btn = Dom.scopeDismiss();
+        if (btn && !btn._dismissBound) {
+            btn._dismissBound = true;
+            btn.addEventListener('click', () => {
+                sessionStorage.setItem(SCOPE_DISMISS_KEY, '1');
+                banner.setAttribute('hidden', '');
+            });
+        }
     }
 
     // -------------------------  Scope banner  ------------------------- //
@@ -531,7 +535,8 @@ const Notes = (() => {
         const banner = Dom.scopeNote();
         if (!banner) return;
 
-        if (!Session.isAdmin) {
+        // Stay hidden for non-admins, or if the user dismissed it this session.
+        if (!Session.isAdmin || sessionStorage.getItem(SCOPE_DISMISS_KEY) === '1') {
             banner.setAttribute('hidden', '');
             return;
         }
@@ -543,9 +548,15 @@ const Notes = (() => {
     function _updateScopeBanner() {
         const banner = Dom.scopeNote();
         if (!banner) return;
-
+        // If dismissed this session, keep it hidden and don't repaint.
+        if (sessionStorage.getItem(SCOPE_DISMISS_KEY) === '1') {
+            banner.setAttribute('hidden', '');
+            return;
+        }
+        // Write into the inner span so the dismiss button (its sibling) survives.
+        const target = Dom.scopeText() || banner;
         const isClient = State.visibility === VISIBILITY.CLIENT;
-        banner.innerHTML = `
+        target.innerHTML = `
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2.2"
                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
