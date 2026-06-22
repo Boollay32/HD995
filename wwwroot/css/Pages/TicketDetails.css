@@ -1834,10 +1834,6 @@ body {
 /* ═══════════  HD30-6 Overview band (Stage 2)  ═══════════ */
 /* Merged header band: flows directly under .td-topbar (no card/gap),    */
 /* sharing the app-shell banding. All selectors scoped to the ticket app. */
-#TicketDetails-App .td-overview {
-  flex-shrink: 0;
-  background: var(--td-panel);
-}
 
 /* ---- control strip (tinted divider row: title + Save + collapse) ---- */
 #TicketDetails-App .td-ov-title {
@@ -1880,74 +1876,10 @@ body {
 }
 
 /* ---- expanded body ---- */
-#TicketDetails-App .td-ov-body { padding: 5px 16px 11px; }
-#TicketDetails-App .td-ov-group + .td-ov-group {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--td-border);
-}
-#TicketDetails-App .td-ov-grp-head {
-  margin: 0 0 5px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--td-muted);
-}
-#TicketDetails-App .td-ov-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 7px 20px;
-}
-#TicketDetails-App .td-ov-cell { min-width: 0; }
-#TicketDetails-App .td-ov-lbl {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 1px;
-  font-size: 0.6875rem;
-  color: var(--td-muted);
-}
-#TicketDetails-App .td-ov-val {
-  font-size: 0.84375rem;
-  color: var(--td-text);
-}
-#TicketDetails-App .td-ov-cell .td-select,
-#TicketDetails-App .td-ov-cell .td-input { width: 100%; margin-top: 1px; }
 
 /* ---- timeline (Created -> First response -> Needed by -> Closed) ---- */
-#TicketDetails-App .td-ov-timeline {
-  display: flex;
-  align-items: flex-start;
-}
-#TicketDetails-App .td-ov-node { flex: 1 1 0; min-width: 0; }
-#TicketDetails-App .td-ov-arrow {
-  flex: 0 0 auto;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  color: var(--td-muted);
-}
-#TicketDetails-App .td-ov-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--td-border);
-  flex: 0 0 auto;
-}
 
 /* ---- slim summary (shown when collapsed) ---- */
-#TicketDetails-App .td-ov-slim {
-  display: none;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 9px 18px;
-  font-size: 0.8125rem;
-  color: var(--td-text);
-}
-#TicketDetails-App .td-ov-slim .td-ov-sep { color: var(--td-muted); }
 #TicketDetails-App .td-overview.is-collapsed .td-ov-body { display: none; }
 #TicketDetails-App .td-overview.is-collapsed .td-ov-slim { display: flex; }
 /* ═══════════  end HD30-6 Overview band  ═══════════ */
@@ -2094,11 +2026,6 @@ body {
    The pill is inline-flex with gap, so this chevron sits after the label. */
 
 /* 1c: labels on the collapsed slim overview summary */
-#TicketDetails-App .td-ov-slim-lbl {
-  color: var(--td-muted);
-  font-weight: 600;
-  margin-right: 1px;
-}
 
 /* HD34: detached header panel + topbar tint + persistent title */
 #TicketDetails-App .td-header-panel {
@@ -2127,7 +2054,4 @@ body {
   border-radius: 8px;
   box-sizing: border-box;
   cursor: pointer;
-}
-#TicketDetails-App .td-overview > .td-details-subject {
-  padding: 9px 16px 3px;
 }

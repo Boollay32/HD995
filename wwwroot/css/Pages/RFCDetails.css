@@ -182,10 +182,6 @@
    HD-RFC overhaul -- ticket overview/panel styling, re-scoped
    to #RFCDetails-App. Ported from TicketDetails.css (Stage 1).
    ========================================================== */
-#RFCDetails-App .td-overview {
-  flex-shrink: 0;
-  background: var(--td-panel);
-}
 #RFCDetails-App .td-ov-collapse {
   height: 30px;
   padding: 0 12px;
@@ -209,89 +205,11 @@
 #RFCDetails-App .td-ov-collapse[aria-expanded="false"] svg {
   transform: rotate(180deg);
 }
-#RFCDetails-App .td-ov-body {
-  padding: 5px 16px 11px;
-}
-#RFCDetails-App .td-ov-group + .td-ov-group {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--td-border);
-}
-#RFCDetails-App .td-ov-grp-head {
-  margin: 0 0 5px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--td-muted);
-}
-#RFCDetails-App .td-ov-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 7px 20px;
-}
-#RFCDetails-App .td-ov-cell {
-  min-width: 0;
-}
-#RFCDetails-App .td-ov-lbl {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 1px;
-  font-size: 0.6875rem;
-  color: var(--td-muted);
-}
-#RFCDetails-App .td-ov-val {
-  font-size: 0.84375rem;
-  color: var(--td-text);
-}
-#RFCDetails-App .td-ov-cell .td-select, #RFCDetails-App .td-ov-cell .td-input {
-  width: 100%; margin-top: 1px;
-}
-#RFCDetails-App .td-ov-timeline {
-  display: flex;
-  align-items: flex-start;
-}
-#RFCDetails-App .td-ov-node {
-  flex: 1 1 0; min-width: 0;
-}
-#RFCDetails-App .td-ov-arrow {
-  flex: 0 0 auto;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  color: var(--td-muted);
-}
-#RFCDetails-App .td-ov-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--td-border);
-  flex: 0 0 auto;
-}
-#RFCDetails-App .td-ov-slim {
-  display: none;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 9px 18px;
-  font-size: 0.8125rem;
-  color: var(--td-text);
-}
-#RFCDetails-App .td-ov-slim .td-ov-sep {
-  color: var(--td-muted);
-}
 #RFCDetails-App .td-overview.is-collapsed .td-ov-body {
   display: none;
 }
 #RFCDetails-App .td-overview.is-collapsed .td-ov-slim {
   display: flex;
-}
-#RFCDetails-App .td-ov-slim-lbl {
-  color: var(--td-muted);
-  font-weight: 600;
-  margin-right: 1px;
 }
 #RFCDetails-App .td-header-panel {
   flex-shrink: 0;
@@ -319,9 +237,6 @@
   border-radius: 8px;
   box-sizing: border-box;
   cursor: pointer;
-}
-#RFCDetails-App .td-overview > .td-details-subject {
-  padding: 9px 16px 3px;
 }
 
 /* ===== RFC overhaul S2: base control styles (ported from TicketDetails.css,
