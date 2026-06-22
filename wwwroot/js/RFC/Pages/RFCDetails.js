@@ -86,6 +86,10 @@ class RFCDetails extends PageBase {
         RFCPillEdit.init();
         RFCOverview.init();
         this._syncTargetPill();
+
+        // Fields are now populated -- capture the dirty baseline here so
+        // Save activates only when the user actually changes something.
+        this._rfcDirtyResetBaseline();
     }
 
     _setupBackButton() {
@@ -170,9 +174,13 @@ RFCDetails.prototype._wireRfcDirty = function () {
     const els = ids.map(id => document.getElementById(id)).filter(Boolean);
     const saveBtn = document.getElementById('Save-Button');
     if (!saveBtn) return;
-    const baseline = els.map(el => el.value);
+    // Baseline lives on the instance so it can be (re)captured AFTER the
+    // RFC data populates the fields -- otherwise it captures empty values
+    // and dirty detection is unreliable. See _rfcDirtyResetBaseline().
+    this._rfcDirtyEls = els;
+    this._rfcDirtyBaseline = els.map(el => el.value);
     const refresh = () => {
-        const dirty = els.some((el, i) => el.value !== baseline[i]);
+        const dirty = this._rfcDirtyEls.some((el, i) => el.value !== this._rfcDirtyBaseline[i]);
         saveBtn.disabled = !dirty;
     };
     els.forEach(el => {
@@ -180,6 +188,15 @@ RFCDetails.prototype._wireRfcDirty = function () {
         el.addEventListener('change', refresh);
     });
     saveBtn.disabled = true;
+};
+
+// Re-capture the dirty baseline from the now-populated fields, so 'Save
+// Changes' activates only on a real edit. Called after the RFC data loads.
+RFCDetails.prototype._rfcDirtyResetBaseline = function () {
+    if (!this._rfcDirtyEls) return;
+    this._rfcDirtyBaseline = this._rfcDirtyEls.map(el => el.value);
+    const saveBtn = document.getElementById('Save-Button');
+    if (saveBtn) saveBtn.disabled = true;
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
