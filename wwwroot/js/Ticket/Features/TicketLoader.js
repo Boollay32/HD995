@@ -44,7 +44,12 @@ const TicketLoader = {
             // Start Messages collapsed to its rail (still reachable) when the
             // user has no saved pane preference and either they arrived on the
             // Tasks tab, or the ticket is internal (no client thread).
-            if (State.layout === TDLAYOUT.BOTH
+            // HD35 B4/B7: never auto-collapse Messages for a client -- the
+            // conversation is their primary pane. (Clients now get layout=BOTH,
+            // so without this guard an internal-request-type ticket would trip
+            // the Session.isInternal branch and collapse their Messages pane.)
+            if (!State.clientView
+                && State.layout === TDLAYOUT.BOTH
                 && !State.notesLeft
                 && !sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED)
                 && (State.activeTab === 'tasks' || Session.isInternal)) {
