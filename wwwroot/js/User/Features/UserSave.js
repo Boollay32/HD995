@@ -39,7 +39,19 @@ class UserSave extends PageBase {
             const userLogin = document.getElementById('UserEmail')?.innerText;
             // ManageUserRequest declares these as C# strings; STJ rejects JSON
             // numbers for string props (400), so send the raw select values.
-            const unlockUser = document.getElementById('Locked')?.value || '0';
+            //
+            // NOTE (lock state, unresolved): this used to read
+            //   document.getElementById('Locked')?.value
+            // but the Locked <select> no longer exists (the UI is now a
+            // read-only label + a separate Unlock button), so that lookup was
+            // dead and always yielded '0'. We keep sending '0' here to preserve
+            // the existing behaviour exactly -- but '0' means UNLOCK in
+            // usp_Helpdesk_UserManage @UnlockUser, so saving a phone/admin edit
+            // on a LOCKED user still silently unlocks them. KNOWN ISSUE: a real
+            // fix needs a non-zero "leave lock state alone" value, which depends
+            // on the proc's @UnlockUser truth table (omitting the field doesn't
+            // help -- the controller defaults empty -> 0). Not fixed here.
+            const unlockUser = '0';
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
             await API.post('User/ManageUser', API.authPayload({
