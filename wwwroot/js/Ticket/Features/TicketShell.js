@@ -47,8 +47,18 @@ const Tabs = {
     },
 
     restore() {
-        // Always open a ticket on the Details tab; do not carry the
-        // last-used tab across tickets.
+        // Default: open a ticket on the Details tab, and don't carry the
+        // last-used tab across tickets. EXCEPTION: when something opened the
+        // ticket with an explicit target tab (e.g. the Tasks queue opens a
+        // task on its parent ticket's Tasks tab), honour it once, then clear
+        // the key so it doesn't persist to the next ticket.
+        const requested = sessionStorage.getItem(STORAGE_KEYS.TD_ACTIVE_TAB);
+        sessionStorage.removeItem(STORAGE_KEYS.TD_ACTIVE_TAB);
+        if (requested && requested !== TAB.DETAILS
+            && Tabs._visibleTabs().includes(requested)) {
+            Tabs.activate(requested);
+            return;
+        }
         Tabs.activate(TAB.DETAILS);
     },
 
