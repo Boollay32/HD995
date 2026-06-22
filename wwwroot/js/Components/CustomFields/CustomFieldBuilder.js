@@ -33,20 +33,30 @@ class CustomFieldBuilder {
             || document.querySelector('#CustomFields-Container');
         if (!customDiv) return;
 
+        // On the ticket DETAIL page the overview panel at the top already
+        // shows Authority, the assigned client, and the needed-by/target date.
+        // Don't repeat those in the Extended Information section below.
+        // (The create form, #Custom-fields, still needs them.)
+        const isDetail = customDiv.id === 'CustomFields-Container';
+        const OVERVIEW_FIELDS = new Set(['Authority', 'assignedClientID', 'targetDate', 'neededBy']);
+        const fields = isDetail
+            ? data.filter(f => !OVERVIEW_FIELDS.has(f.customFilterItem))
+            : data;
+
         // Clear any previously-built rows (class .Detail-Div, scoped to this
         // container) before rebuilding.
         for (const el of customDiv.querySelectorAll('.Detail-Div')) {
             el.remove();
         }
 
-        for (const fieldConfig of data) {
+        for (const fieldConfig of fields) {
             this._buildCustomField(fieldConfig, customDiv);
         }
 
         // Populate saved values, if supplied. Each field element id ===
         // customFilterItem, which matches the serialized ticket field name
         // (camelCase), so values[id] is the saved value for that field.
-        if (values) this._applyCustomValues(data, values);
+        if (values) this._applyCustomValues(fields, values);
     }
 
     // Set the saved value into each built custom field. Handles inputs,
