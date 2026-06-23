@@ -98,6 +98,11 @@ namespace HelpDeskNet8.Services
         {
             switch (type)
             {
+                // A new ticket was created -> notify the helpdesk inbox (the
+                // shared FromAddress), NOT the originator. HD35 B1/B3.
+                case NotificationType.TicketCreated:
+                    return FromAddress;
+
                 // A task was saved -> the ticket's assigned tech is notified.
                 case NotificationType.TaskSaved:
                     return ticket.AssignedTechEmail;
@@ -136,6 +141,7 @@ namespace HelpDeskNet8.Services
         {
             return type switch
             {
+                NotificationType.TicketCreated => "New ticket",
                 NotificationType.TaskSaved => "Task saved",
                 NotificationType.NoteResponded => "Reply added",
                 NotificationType.TicketResponded => "Ticket reply saved",
@@ -150,6 +156,7 @@ namespace HelpDeskNet8.Services
         {
             return type switch
             {
+                NotificationType.TicketCreated => $"New Ticket {ticketId}",
                 NotificationType.TaskSaved => $"Updated Task on Ticket {ticketId}",
                 NotificationType.NoteResponded => $"Responded Ticket {ticketId}",
                 NotificationType.TicketResponded => $"Responded Ticket {ticketId}",
@@ -166,6 +173,8 @@ namespace HelpDeskNet8.Services
         {
             string message = type switch
             {
+                NotificationType.TicketCreated =>
+                    $"A new Ticket {ticketId} has been raised. Please review it in the helpdesk.",
                 NotificationType.TaskSaved =>
                     $"A task on Ticket {ticketId} has been updated. It may require your attention, please review.",
                 NotificationType.NoteResponded =>

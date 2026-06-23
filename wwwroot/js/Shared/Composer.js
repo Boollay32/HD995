@@ -324,8 +324,12 @@ async function SaveOriginalNote(files, isRfc, note, id) {
     const fileList = (files && typeof files.length === 'number') ? files : [];
     const attachments = await Composer.encode(fileList);
 
+    // isOriginal: this note IS the ticket/RFC's opening description, not a
+    // reply -- so the server must NOT email the originator a "Responded"
+    // notification for it. (It routes a new-ticket notice to the helpdesk
+    // instead.) HD35 B1/B3.
     return API.post(
         isRfc ? 'Note/SaveNote' : 'TicketDetails/SaveNote',
-        API.authPayload({ objectInfo, attachments, rfc: !!isRfc })
+        API.authPayload({ objectInfo, attachments, rfc: !!isRfc, isOriginal: true })
     );
 }

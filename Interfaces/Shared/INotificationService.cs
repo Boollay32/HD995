@@ -9,6 +9,10 @@ namespace HelpDeskNet8.Interfaces.Shared
         // A task on the ticket was created, updated, or completed.
         TaskSaved,
 
+        // A brand-new ticket was created (its opening description note).
+        // Routes to the helpdesk inbox, not the originator. HD35 B1/B3.
+        TicketCreated,
+
         // A note/reply was added to the ticket.
         NoteResponded,
 
