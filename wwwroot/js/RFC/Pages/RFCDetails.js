@@ -38,8 +38,12 @@ class RFCDetails extends PageBase {
     // -------------------------  Load Data  ------------------------- //
 
     async _loadRFCData() {
+        // HD36 3a: load the dropdowns FIRST so #rfcStatus / #priority have their
+        // <option>s before _getRFCDetails() selects the RFC's values. Previously
+        // these raced in one Promise.all, so the status/priority pills rendered
+        // blank when the details fetch won (setSelectByName found no options).
+        await Dropdowns.load('RFC');
         await Promise.all([
-            Dropdowns.load('RFC'),
             RFCNotes.init(this.rfcId),
             this._getRFCDetails()
         ]);
