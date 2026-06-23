@@ -38,6 +38,10 @@ class UserPage extends PageBase {
     async init() {
         if (!await this.checkAuth()) return;
         if (typeof SetActivePage === 'function') SetActivePage('UserMenu');
+        // HD37 2a: gate the nav menu like every other queue page. Without this
+        // the menu's permission check never runs here, so the post-HD36
+        // default-hide left the menu permanently blank on the Users page.
+        if (typeof UserPermissions === 'function') UserPermissions();
 
         try {
             await this.waitForElement('queue-mount');
