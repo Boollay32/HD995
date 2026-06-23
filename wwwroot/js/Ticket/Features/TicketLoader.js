@@ -159,6 +159,20 @@ const TicketLoader = {
                                 .forEach(function (el) { el.setAttribute('disabled', ''); });
                         }
                     }
+
+                    // HD36 1d: when Extended Information is empty there is nothing
+                    // to show in the group -- hide it. And for a client (whose
+                    // Details tab is the only Workspace tab), an empty group means
+                    // the whole Workspace is empty, so collapse to Messages only.
+                    var cfContainer = document.getElementById('CustomFields-Container');
+                    var isEmpty = !cfContainer || cfContainer.children.length === 0;
+                    if (isEmpty) {
+                        document.getElementById('CustomFields-Group')
+                            ?.setAttribute('hidden', '');
+                        if (State.clientView) {
+                            PaneLayout.apply(TDLAYOUT.LEFT_ONLY);
+                        }
+                    }
                 })
                 .catch(err => console.error('Custom-field dropdown load:', err));
         }
