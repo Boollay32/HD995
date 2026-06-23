@@ -40,23 +40,15 @@ class UserSave extends PageBase {
             // ManageUserRequest declares these as C# strings; STJ rejects JSON
             // numbers for string props (400), so send the raw select values.
             //
-            // NOTE (lock state, unresolved): this used to read
-            //   document.getElementById('Locked')?.value
-            // but the Locked <select> no longer exists (the UI is now a
-            // read-only label + a separate Unlock button), so that lookup was
-            // dead and always yielded '0'. We keep sending '0' here to preserve
-            // the existing behaviour exactly -- but '0' means UNLOCK in
-            // usp_Helpdesk_UserManage @UnlockUser, so saving a phone/admin edit
-            // on a LOCKED user still silently unlocks them. KNOWN ISSUE: a real
-            // fix needs a non-zero "leave lock state alone" value, which depends
-            // on the proc's @UnlockUser truth table (omitting the field doesn't
-            // help -- the controller defaults empty -> 0). Not fixed here.
-            const unlockUser = '0';
+            // Lock state: the main Save must NOT touch it. usp_Helpdesk_UserManage
+            // unlocks on ANY @UnlockUser value (including 0) and only leaves the
+            // lock alone when @UnlockUser is NULL -- so we OMIT unlockUser here.
+            // (The controller now maps an absent value to NULL, not 0.) Only the
+            // dedicated Unlock button sends a value. HD35 locked-user fix.
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
             await API.post('User/ManageUser', API.authPayload({
                 userLogin,
-                unlockUser,
                 adminLevelId,
                 phone
             }));
@@ -88,9 +80,10 @@ class UserSave extends PageBase {
             const phone = document.getElementById('UserPhone')?.value;
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
+            // Reactivating a deactivated account must not also clear a lock;
+            // omit unlockUser so @UnlockUser arrives NULL. HD35 locked-user fix.
             await API.post('User/ManageUser', API.authPayload({
                 userLogin,
-                unlockUser: '0',
                 adminLevelId,
                 phone
             }));
@@ -115,9 +108,11 @@ class UserSave extends PageBase {
             const phone = document.getElementById('UserPhone')?.value;
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
+            // Send a value (any non-null works; '1' = "do unlock") so the proc
+            // clears the lock. HD35 locked-user fix.
             await API.post('User/ManageUser', API.authPayload({
                 userLogin,
-                unlockUser: '0',
+                unlockUser: '1',
                 adminLevelId,
                 phone
             }));

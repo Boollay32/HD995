@@ -127,7 +127,9 @@ namespace HelpDeskNet8.Controllers.Users
             if (user == null) return Unauthorized();
             if (!IsGovtechAdmin(user)) return StatusCode(403);
 
-            int unlockUserInt = string.IsNullOrEmpty(request.UnlockUser) ? 0 : Convert.ToInt32(request.UnlockUser);
+            // @UnlockUser must be NULL (not 0) when no unlock is intended -- the
+            // proc unlocks on ANY value, including 0. HD35 locked-user fix.
+            int? unlockUserInt = string.IsNullOrEmpty(request.UnlockUser) ? (int?)null : Convert.ToInt32(request.UnlockUser);
             int adminLevelIdInt = string.IsNullOrEmpty(request.AdminLevelId) ? 0 : Convert.ToInt32(request.AdminLevelId);
 
             return Ok(_userManager.ManageUser(request.UserLogin, user.UserLogin, unlockUserInt, adminLevelIdInt, request.Phone));

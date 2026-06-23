@@ -273,7 +273,7 @@ namespace HelpDeskNet8.Services
             return updated;
         }
 
-        public string ManageUser(string userLogin, string adminUserLogin, int unlockUser, int adminLevelID, string phone)
+        public string ManageUser(string userLogin, string adminUserLogin, int? unlockUser, int adminLevelID, string phone)
         {
             string updated = string.Empty;
 
@@ -284,7 +284,8 @@ namespace HelpDeskNet8.Services
 
                 command.Parameters.Add(new SqlParameter("@UserLogin", SqlDbType.NVarChar) { Value = userLogin });
                 command.Parameters.Add(new SqlParameter("@AdminUserLogin", SqlDbType.NVarChar) { Value = adminUserLogin });
-                command.Parameters.Add(new SqlParameter("@UnlockUser", SqlDbType.Int) { Value = unlockUser });
+                // null => @UnlockUser = NULL => proc leaves the lock state alone.
+                command.Parameters.Add(new SqlParameter("@UnlockUser", SqlDbType.Int) { Value = (object)unlockUser ?? DBNull.Value });
                 command.Parameters.Add(new SqlParameter("@AdminLevelID", SqlDbType.Int) { Value = adminLevelID });
                 command.Parameters.Add(new SqlParameter("@UserPhone", SqlDbType.NVarChar) { Value = phone });
 

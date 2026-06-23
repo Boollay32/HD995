@@ -18,6 +18,6 @@ namespace HelpDeskNet8.Interfaces.Users
 
         int UpdateUser(string UserLogin, string Phone);
 
-        string ManageUser(string UserLogin, string AdminUserLogin, Int32 UnlockUser, Int32 AdminLevelID, string Phone);
+        string ManageUser(string UserLogin, string AdminUserLogin, int? UnlockUser, Int32 AdminLevelID, string Phone);
     }
 }
