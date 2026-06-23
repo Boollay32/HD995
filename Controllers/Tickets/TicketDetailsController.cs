@@ -114,9 +114,17 @@ namespace HelpDeskNet8.Controllers.Tickets
             // Notify on a ticket reply (RFC notes are internal-only, no routing).
             // New notes only: editing an existing note (NoteID present) must not
             // re-send the reply notification -- an edit is not a new reply.
+            // The OPENING note (IsOriginal) is the creation description, not a
+            // reply: it must NOT email the originator. Instead notify the
+            // helpdesk that a new ticket was raised. HD35 B1/B3.
             bool isNewNote = !(note.NoteID.HasValue && note.NoteID.Value != 0);
             if (!request.RFC && isNewNote)
-                _notificationService.Notify(note.TicketID ?? 0, NotificationType.NoteResponded, user);
+            {
+                if (request.IsOriginal)
+                    _notificationService.Notify(note.TicketID ?? 0, NotificationType.TicketCreated, user);
+                else
+                    _notificationService.Notify(note.TicketID ?? 0, NotificationType.NoteResponded, user);
+            }
 
             // Return updated notes so UI can re-render without a second call
             var notes = _noteManager.GetNotes(user, note.TicketID ?? 0);
