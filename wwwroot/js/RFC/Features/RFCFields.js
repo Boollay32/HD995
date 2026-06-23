@@ -59,6 +59,14 @@ class RFCPopulator {
     // -------------------------  RFC-specific  ------------------------- //
 
     _normalizeFieldName(fieldId) {
+        // HD37: some select ids don't match their data key. The status select
+        // is 'rfcStatus' but the data key is 'status' (RFCSave.js aliases the
+        // same way for saving). Without this the status pill stays blank.
+        const KEY_ALIASES = { rfcStatus: 'status' };
+        if (KEY_ALIASES[fieldId] && this.data[KEY_ALIASES[fieldId]] !== undefined) {
+            return KEY_ALIASES[fieldId];
+        }
+
         // RFC fields are prefixed with 'changeRequest'
         const prefixed = `changeRequest${fieldId}`;
         if (this.data[prefixed]) return prefixed;
