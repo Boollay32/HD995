@@ -219,3 +219,21 @@ function DisplayExtraGovtechFunctionality() { Auth._applyExtraFunctionality(); }
 // -------------------------  Init Activity Listeners  ------------------------- //
 
 Auth.initActivityListeners();
+
+// HD37 2a: safety net for the nav menu. The menu items are hidden until
+// #navbar-menu gets `.perms-ready` (added by checkPermissions). If a page
+// never runs the permission check, the menu would stay blank -- so once the
+// DOM is ready, reveal it on the next tick if nothing has marked it ready.
+// Pages that DO gate add the class first, so this never causes a flash.
+(function revealMenuFallback() {
+    function arm() {
+        setTimeout(function () {
+            document.getElementById('navbar-menu')?.classList.add('perms-ready');
+        }, 0);
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', arm);
+    } else {
+        arm();
+    }
+})();
