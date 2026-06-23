@@ -72,8 +72,8 @@ const Format = (() => {
         const map = {
             pdf: '📄', doc: '📝', docx: '📝',
             xls: '📊', xlsx: '📊',
-            png: '🖼️', jpg: '🖼️', jpeg: '🖼️', gif: '🖼️', webp: '🖼️',
-            zip: '🗜️', rar: '🗜️',
+            png: '📷', jpg: '📷', jpeg: '📷', gif: '📷', webp: '📷',
+            zip: '📦', rar: '📦',
             mp4: '🎬', mov: '🎬',
             mp3: '🎵',
             txt: '📃',
