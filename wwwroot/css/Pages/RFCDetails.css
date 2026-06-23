@@ -293,3 +293,50 @@
    Priority pills on RFC details have a styled chooser (the RFC page does
    not load TicketDetails.css). The popover is appended to the app root by
    RFCPillEdit, so it is not scoped to a container. */
+
+/* HD36 3b: Workspace "Details" tab header, mirrored from the ticket
+   Workspace (the RFC page does not load TicketDetails.css). Scoped to
+   #RFCDetails-App. A single, always-selected, static tab. */
+#RFCDetails-App .td-ws-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--td-border-2);
+  background: var(--td-surface);
+}
+#RFCDetails-App .td-ws-tabs [role="tab"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "Spline Sans", system-ui, sans-serif;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  color: var(--td-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 7px 10px 9px;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  position: relative;
+}
+#RFCDetails-App .td-ws-tabs [role="tab"] svg { flex-shrink: 0; }
+#RFCDetails-App .td-ws-tabs [role="tab"][aria-selected="true"] {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+  background: var(--td-panel);
+}
+#RFCDetails-App .td-pane-head--ws .td-pane-title { flex: 0 0 auto; }
+#RFCDetails-App .td-pane-head--ws .td-ws-tabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  align-self: stretch;
+  align-items: flex-end;
+  padding: 0;
+  border-bottom: none;
+  background: none;
+  overflow-x: auto;
+}
+#RFCDetails-App .td-pane-head--ws .td-collapse-btn { flex: 0 0 auto; }
