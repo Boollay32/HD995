@@ -193,6 +193,10 @@ footer {
 
 /* nav active indicator: sliding underline bar */
 nav.Nav-Bar #navbar-menu { position: relative; }
+/* HD36: hide the menu items until permissions resolve, so the gated
+   items never flash in before checkPermissions() can hide them. The
+   .perms-ready class is added (in a finally) once the check has run. */
+nav.Nav-Bar #navbar-menu:not(.perms-ready) a { display: none; }
 nav.Nav-Bar #navbar-menu a.active { border-bottom-color: transparent; }
 nav.Nav-Bar #navbar-menu .nav-ind {
     position: absolute;
