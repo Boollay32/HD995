@@ -42,17 +42,15 @@
 .td-attach-pop {
   position: absolute;
   bottom: calc(100% + 8px);
-  /* HD36 1b: anchor the popup's LEFT edge to the tile (was centered, which
-     spilled long names off-screen left). It now grows rightward into the
-     pane. Cap the width + allow wrapping so very long names stay on-screen. */
+  /* HD37 1b: anchor the popup's LEFT edge to the tile (in line with the icon)
+     so it grows rightward into the pane instead of spilling off-screen left,
+     and keep it HORIZONTAL on one line (nowrap -- the HD36 wrap made it go
+     vertical). */
   left: 0;
-  max-width: min(260px, 80vw);
-  white-space: normal;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
   background: var(--td-text, #1c1c1c);
   color: var(--td-panel, #ffffff);
   font-size: 0.6875rem;
-  line-height: 1.3;
   padding: 5px 9px;
   border-radius: 7px;
   opacity: 0;
