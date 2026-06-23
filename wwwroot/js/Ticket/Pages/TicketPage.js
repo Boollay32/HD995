@@ -71,6 +71,10 @@ class TicketPage extends PageBase {
     // ---- Open a ticket: reuse the existing session + navigation flow ----
     _open(row) {
         this.saveTicketId(row.ticketID);
+        // HD35 1a: a normal ticket open must start on Details. Only the Tasks
+        // queue sets TD_ACTIVE_TAB; clear any leftover here so a stale 'tasks'
+        // request from an earlier task-queue open can't open this ticket on Tasks.
+        sessionStorage.removeItem(STORAGE_KEYS.TD_ACTIVE_TAB);
         this.navigateToTicketDetails();
     }
 
