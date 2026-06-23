@@ -479,6 +479,13 @@ body {
   color: var(--td-warn);
   flex-shrink: 0;
 }
+/* HD36 1c: display:flex above beats the UA [hidden] rule, so the banner
+   showed even with the `hidden` attribute -- and a client (whose scope
+   config is null) then saw an internal-only reminder it could not dismiss.
+   Guard it like .td-ws-inner[hidden] so `hidden` actually hides it. */
+.td-scope-note[hidden] {
+  display: none;
+}
 /* Scope-reminder text fills the row; the dismiss button is pinned to the right
    as a distinct, clickable target (HD34 1b -- it had no styling, so it was hard
    to hit). */
