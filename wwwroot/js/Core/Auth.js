@@ -76,6 +76,12 @@ const Auth = {
             this.checkLimitedUserPerms(adminId);
         } catch (error) {
             console.error('Error checking permissions:', error);
+        } finally {
+            // HD36: reveal the menu now that gating has run (the restricted
+            // items already have inline display:none and stay hidden). In a
+            // finally so a null/failed CheckAdmin still shows the menu rather
+            // than leaving it permanently blank.
+            document.getElementById('navbar-menu')?.classList.add('perms-ready');
         }
     },
 
