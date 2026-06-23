@@ -51,6 +51,8 @@
     border-radius: 12px;
     padding: 16px 18px;
     margin: 14px 0 22px;
+    /* HD36 4a: match the ticket overview panel's floating-panel look. */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 .pjd-desc {
     color: var(--text);
