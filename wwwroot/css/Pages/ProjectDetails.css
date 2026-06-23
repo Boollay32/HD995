@@ -63,7 +63,11 @@
 .pjd-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px 24px;
+    gap: 0 24px;
+}
+.pjd-grid .pjd-field {
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
 }
 .pjd-field { display: flex; flex-direction: column; gap: 3px; }
 .pjd-field dt {
@@ -182,7 +186,9 @@
     color: var(--muted);
     margin-bottom: 3px;
 }
-.pjd-desc-block { margin-bottom: 14px; }
+/* HD37 4a: separators between grouped items, matching the ticket overview
+   (.td-ov-group + .td-ov-group border-top). */
+.pjd-desc-block { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
 .pjd-desc-block .pjd-desc { margin: 0; }
 
 /* Add-ticket-to-project button */
