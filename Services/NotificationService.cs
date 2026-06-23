@@ -38,19 +38,32 @@ namespace HelpDeskNet8.Services
                 ITicket ticket = _ticketManager.GetTicketDetail(ticketId, user);
                 if (ticket == null) return;
 
-                string recipient = ResolveRecipient(type, ticket);
-                if (string.IsNullOrWhiteSpace(recipient)) return;
+                // C2/C3: an event can notify several parties (e.g. assign ->
+                // tech + client; message -> client + tech). Exclude the acting
+                // user (the author) so a sender is never emailed their own
+                // action. UserLogin is the user's email; UserEmail as a backup.
+                string authorEmail = !string.IsNullOrWhiteSpace(user?.UserLogin)
+                    ? user.UserLogin
+                    : user?.UserEmail;
+
+                string[] recipients = ResolveRecipients(type, ticket)
+                    .Where(e => !string.IsNullOrWhiteSpace(e))
+                    .Where(e => string.IsNullOrWhiteSpace(authorEmail)
+                        || !string.Equals(e, authorEmail, System.StringComparison.OrdinalIgnoreCase))
+                    .Distinct(System.StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+                if (recipients.Length == 0) return;
 
                 string subject = BuildSubject(type, ticketId);
                 string body = BuildBody(type, ticketId);
 
                 if (_preview.Enabled)
                 {
-                    _preview.Add(PointLabel(type), new[] { recipient }, subject);
+                    _preview.Add(PointLabel(type), recipients, subject);
                     return;
                 }
 
-                _miscManager.SendMailMessage(FromAddress, new[] { recipient }, subject, body);
+                _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
             }
             catch
             {
@@ -93,35 +106,38 @@ namespace HelpDeskNet8.Services
             }
         }
 
-        // The recipient rules. One arm per NotificationType.
-        private static string ResolveRecipient(NotificationType type, ITicket ticket)
+        // The recipient rules. One arm per NotificationType. Returns the full
+        // set for the event; Notify() then drops blanks + the author + dupes.
+        private static string[] ResolveRecipients(NotificationType type, ITicket ticket)
         {
             switch (type)
             {
                 // A new ticket was created -> notify the helpdesk inbox (the
                 // shared FromAddress), NOT the originator. HD35 B1/B3.
                 case NotificationType.TicketCreated:
-                    return FromAddress;
+                    return new[] { FromAddress };
 
                 // A task was saved -> the ticket's assigned tech is notified.
                 case NotificationType.TaskSaved:
-                    return ticket.AssignedTechEmail;
+                    return new[] { ticket.AssignedTechEmail };
 
-                // A note was added -> an internal ticket notifies the assigned
-                // tech; a client ticket notifies the client (originator).
+                // C3: a message/note was added -> notify BOTH the client
+                // (originator) and the assigned tech. Notify() removes the
+                // author, so the sender is never emailed their own message.
                 case NotificationType.NoteResponded:
-                    return IsInternal(ticket) ? ticket.AssignedTechEmail : ticket.Email;
+                    return new[] { ticket.Email, ticket.AssignedTechEmail };
 
-                // A ticket reply -> same routing as a note reply.
+                // A ticket reply -> same routing as a note reply (C3).
                 case NotificationType.TicketResponded:
-                    return IsInternal(ticket) ? ticket.AssignedTechEmail : ticket.Email;
+                    return new[] { ticket.Email, ticket.AssignedTechEmail };
 
-                // The assigned tech was changed -> notify the new tech.
+                // C2: the assigned tech was changed -> notify the new tech AND
+                // the client who raised the ticket.
                 case NotificationType.TicketAssigned:
-                    return ticket.AssignedTechEmail;
+                    return new[] { ticket.AssignedTechEmail, ticket.Email };
 
                 default:
-                    return null;
+                    return System.Array.Empty<string>();
             }
         }
 
