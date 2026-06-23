@@ -216,8 +216,25 @@
                 <span class="td-rail-label">Workspace</span>
             </div>
             <div class="td-pane-inner" id="pane-right-inner">
-                <div class="td-pane-head">
+                <div class="td-pane-head td-pane-head--ws">
                     <h2 class="td-pane-title">Workspace</h2>
+                    @* HD36 3b: a single static "Details" tab for visual parity
+                       with the ticket Workspace. RFC has only Extended Information
+                       to show, so there is no switching machinery -- the tab is
+                       always selected. *@
+                    <div class="td-ws-tabs" role="tablist" aria-label="Workspace sections">
+                        <button role="tab" id="rfc-tab-details" aria-selected="true"
+                                type="button">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            Details
+                        </button>
+                    </div>
                     <button type="button" class="td-collapse-btn" id="collapse-right"
                             aria-expanded="true" aria-controls="pane-right" aria-label="Collapse workspace pane">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
