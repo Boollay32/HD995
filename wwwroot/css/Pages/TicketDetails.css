@@ -159,17 +159,20 @@ body {
   gap: 12px;
   animation: rise 0.25s ease both;
   scrollbar-width: thin;
-  scrollbar-color: var(--td-border) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 .td-ws-inner::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
 }
 .td-ws-inner::-webkit-scrollbar-track {
   background: transparent;
 }
 .td-ws-inner::-webkit-scrollbar-thumb {
-  background: var(--td-border);
+  background: var(--scroll-thumb);
   border-radius: 99px;
+}
+.td-ws-inner::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
 }
 .td-ws-inner[hidden] {
   display: none;
@@ -184,17 +187,20 @@ body {
   flex-direction: column;
   gap: 12px;
   scrollbar-width: thin;
-  scrollbar-color: var(--td-border) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 .td-thread::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
 }
 .td-thread::-webkit-scrollbar-track {
   background: transparent;
 }
 .td-thread::-webkit-scrollbar-thumb {
-  background: var(--td-border);
+  background: var(--scroll-thumb);
   border-radius: 99px;
+}
+.td-thread::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
 }
 .td-bubble-row {
   display: flex;
@@ -373,7 +379,7 @@ body {
   max-height: 160px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--td-border) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 .td-composer-input::placeholder {
   color: var(--td-muted);
@@ -518,7 +524,7 @@ body {
   gap: 12px;
   padding-bottom: 8px;
   scrollbar-width: thin;
-  scrollbar-color: var(--td-border) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 .td-note-card.is-visible-to-client {
   border-left: 3px solid var(--brand);
@@ -597,17 +603,20 @@ body {
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--td-border) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 .td-task-list::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
 }
 .td-task-list::-webkit-scrollbar-track {
   background: transparent;
 }
 .td-task-list::-webkit-scrollbar-thumb {
-  background: var(--td-border);
+  background: var(--scroll-thumb);
   border-radius: 99px;
+}
+.td-task-list::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
 }
 .td-task-item {
   display: flex;
@@ -1012,17 +1021,20 @@ body {
   flex-direction: column;
   gap: 16px;
   scrollbar-width: thin;
-  scrollbar-color: var(--td-border) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 .td-overlay-body::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
 }
 .td-overlay-body::-webkit-scrollbar-track {
   background: transparent;
 }
 .td-overlay-body::-webkit-scrollbar-thumb {
-  background: var(--td-border);
+  background: var(--scroll-thumb);
   border-radius: 99px;
+}
+.td-overlay-body::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
 }
 .td-overlay-foot {
   display: flex;

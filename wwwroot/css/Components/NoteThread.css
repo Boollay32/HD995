@@ -42,11 +42,12 @@
   gap: 12px;
   padding-bottom: 8px;
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
-.td-note-thread::-webkit-scrollbar { width: 5px; }
+.td-note-thread::-webkit-scrollbar { width: 8px; }
 .td-note-thread::-webkit-scrollbar-track { background: transparent; }
-.td-note-thread::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+.td-note-thread::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 99px; }
+.td-note-thread::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); }
 
 /* ---- empty state ---- */
 .td-thread-empty {
@@ -133,7 +134,7 @@
   max-height: 140px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 .td-note-input::placeholder { color: var(--muted); }
 .td-note-add-btn {
