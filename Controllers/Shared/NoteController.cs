@@ -15,18 +15,18 @@ namespace HelpDeskNet8.Controllers.Shared
         private readonly IAuthenticator _authenticator = auth;
 
         [HttpPost]
-        public IActionResult GetNotes([FromBody] GetNotesRequest request)
+        public async Task<IActionResult> GetNotes([FromBody] GetNotesRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = _notesManager.GetNotes(user, request.TicketId);
+            var result = await _notesManager.GetNotes(user, request.TicketId);
             return Ok(result);
         }
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public IActionResult SaveNote([FromBody] SaveNoteRequest request)
+        public async Task<IActionResult> SaveNote([FromBody] SaveNoteRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -34,17 +34,17 @@ namespace HelpDeskNet8.Controllers.Shared
             INote note = NoteMapper.Map(request.ObjectInfo);
             if (note == null) return BadRequest("Invalid note data.");
 
-            var result = _notesManager.SaveNote(note, request.Attachments, user.UserID, request.RFC, request.UTC);
+            var result = await _notesManager.SaveNote(note, request.Attachments, user.UserID, request.RFC, request.UTC);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult GetRFCNotes([FromBody] GetRFCNotesRequest request)
+        public async Task<IActionResult> GetRFCNotes([FromBody] GetRFCNotesRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = _notesManager.GetRFCNotes(user, request.RFCId);
+            var result = await _notesManager.GetRFCNotes(user, request.RFCId);
             return Ok(result);
         }
     }

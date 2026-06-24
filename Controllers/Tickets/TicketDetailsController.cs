@@ -57,7 +57,7 @@ namespace HelpDeskNet8.Controllers.Tickets
         // -------------------------  Notes  ------------------------- //
 
         [HttpPost]
-        public IActionResult GetNotes([FromBody] GetNotesRequest request)
+        public async Task<IActionResult> GetNotes([FromBody] GetNotesRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -66,12 +66,12 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             if (CannotSeeTicket(user, request.TicketId)) return NotFound();
 
-            var notes = _noteManager.GetNotes(user, request.TicketId);
+            var notes = await _noteManager.GetNotes(user, request.TicketId);
             return Ok(notes);
         }
 
         [HttpPost]
-        public IActionResult SaveNote([FromBody] SaveNoteRequest request)
+        public async Task<IActionResult> SaveNote([FromBody] SaveNoteRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -87,7 +87,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             // affordance for non-creators, but that is UX only, not security.
             if (note.NoteID.HasValue && note.NoteID.Value != 0)
             {
-                var existing = _noteManager.GetNotes(user, note.TicketID ?? 0)
+                var existing = (await _noteManager.GetNotes(user, note.TicketID ?? 0))
                     .FirstOrDefault(n => n.NoteID == note.NoteID.Value);
                 if (existing == null)
                     return NotFound("Note not found.");
@@ -101,7 +101,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             note.NotesUserID = user.UserID;
             note.AuthorityID = user.AuthorityID;
 
-            var result = _noteManager.SaveNote(
+            var result = await _noteManager.SaveNote(
                 note,
                 attachments,
                 user.UserID,
@@ -127,7 +127,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             }
 
             // Return updated notes so UI can re-render without a second call
-            var notes = _noteManager.GetNotes(user, note.TicketID ?? 0);
+            var notes = await _noteManager.GetNotes(user, note.TicketID ?? 0);
             return Ok(notes);
         }
 
