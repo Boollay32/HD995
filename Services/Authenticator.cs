@@ -131,32 +131,6 @@ namespace HelpDeskNet8.Services
             return adminLevel;
         }
 
-
-        public async Task Logout(int userID)
-        {
-            using (SqlCommand command = _connection.CreateCommand())
-            {
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "[dbo].[usp_Helpdesk_DeleteSession]";
-                command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = userID });
-
-                await _connection.OpenAsync();
-                try
-                {
-                    await command.ExecuteNonQueryAsync();
-                }
-                catch (Exception ex)
-                {
-                    AppLogger.Error(nameof(Authenticator), ex);
-                }
-                finally
-                {
-                    if (_connection.State == ConnectionState.Open)
-                        await _connection.CloseAsync();
-                }
-            }
-        }
-
         public async Task<AuthResult> SecondWallAuth(string email, int pin, int UTC)
         {
             using (SqlCommand command = _connection.CreateCommand())

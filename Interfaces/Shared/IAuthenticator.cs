@@ -15,9 +15,6 @@ namespace HelpDeskNet8.Interfaces.Shared
         // Fix: nullable return — null = token invalid/expired
         Task<IUser?> AuthenticateByToken(string username, string token, int UTC);
 
-        Task Logout(int userID);
-
-
         // Fix: AuthResult — strongly typed — replaces List<object>
         Task<AuthResult> SecondWallAuth(string email, int pin, int UTC);
 
