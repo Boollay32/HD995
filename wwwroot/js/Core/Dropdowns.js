@@ -120,7 +120,4 @@ if (typeof window !== 'undefined') {
 
 // -------------------------  Legacy Wrappers  ------------------------- //
 
-function GetAllDropDownlists(userName, token, group) { Dropdowns.load(group); }
-function GetRFCDropDownlists(userName, token, group) { Dropdowns.load(group); }
-function HandleDropdownList(data, group) { Dropdowns._populate(data, group); }
 function CRorNonCROption(text, tableName) { return Dropdowns._shouldSkipOption(text, tableName); }
