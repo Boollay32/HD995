@@ -45,7 +45,7 @@ class ProjectsPage extends PageBase {
                     btn.style.display = '';
                     btn.addEventListener('click', () => {
                         sessionStorage.removeItem('EditProjectID');
-                        Nav.toProjectForm();
+                        Router.toProjectForm();
                     });
                 }
             }
@@ -124,7 +124,7 @@ class ProjectsPage extends PageBase {
     _open(projectId) {
         if (!Number.isFinite(projectId)) return;
         sessionStorage.setItem('ProjectID', String(projectId));
-        Nav.toProjectDetail();
+        Router.toProjectDetail();
     }
 
     _renderError() {

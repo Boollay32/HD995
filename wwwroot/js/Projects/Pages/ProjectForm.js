@@ -95,7 +95,7 @@ class ProjectForm extends PageBase {
                 const id = result.objectID;
                 sessionStorage.setItem('ProjectID', String(id));
                 sessionStorage.removeItem('EditProjectID');
-                Nav.toProjectDetail();
+                Router.toProjectDetail();
             } else {
                 // Server rule (e.g. completion gate) blocked it.
                 UI.toast?.(result?.error || 'Could not save the project.');
@@ -112,9 +112,9 @@ class ProjectForm extends PageBase {
         sessionStorage.removeItem('EditProjectID');
         if (this.isEdit) {
             sessionStorage.setItem('ProjectID', String(this.editId));
-            Nav.toProjectDetail();
+            Router.toProjectDetail();
         } else {
-            Nav.toProjectsPage();
+            Router.toProjectsPage();
         }
     }
 

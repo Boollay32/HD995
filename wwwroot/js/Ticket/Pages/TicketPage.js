@@ -85,7 +85,7 @@ class TicketPage extends PageBase {
         TQ_MY_ID = Number.isNaN(myId) ? null : myId;
         return {
             title: 'Tickets',
-            action: { label: '+ New Ticket', onClick: () => Nav.toCreateTicket() },
+            action: { label: '+ New Ticket', onClick: () => Router.toCreateTicket() },
             fetch: () => this._fetch(),
             rowKey: r => r.ticketID,
             search: ['subject', 'userName', 'ticketID'],

@@ -178,7 +178,7 @@ const BackButton = {
             // not always the main Tickets queue.
             const ret = sessionStorage.getItem('TicketListReturn') || '/TicketPage';
             sessionStorage.removeItem('TicketListReturn');
-            Nav._navigate(ret);
+            Router._navigate(ret);
         });
     },
 };

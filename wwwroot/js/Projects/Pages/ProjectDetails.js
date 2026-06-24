@@ -28,7 +28,7 @@ class ProjectDetails extends PageBase {
 
     _wireBack() {
         document.getElementById('pjd-back')
-            ?.addEventListener('click', () => Nav.toProjectsPage());
+            ?.addEventListener('click', () => Router.toProjectsPage());
     }
 
     _wireNewTicket() {
@@ -37,7 +37,7 @@ class ProjectDetails extends PageBase {
         document.getElementById('pjd-new-ticket')
             ?.addEventListener('click', () => {
                 sessionStorage.setItem('NewTicketProjectID', String(this.projectId));
-                Nav.toCreateTicket();
+                Router.toCreateTicket();
             });
     }
 
@@ -51,7 +51,7 @@ class ProjectDetails extends PageBase {
                     btn.style.display = '';
                     btn.addEventListener('click', () => {
                         sessionStorage.setItem('EditProjectID', String(this.projectId));
-                        Nav.toProjectForm();
+                        Router.toProjectForm();
                     });
                 }
             }
@@ -144,7 +144,7 @@ class ProjectDetails extends PageBase {
         sessionStorage.setItem(STORAGE_KEYS.TICKET_ID, String(ticketId));
         // 6b: Back from a project ticket returns to this project, not the queue.
         sessionStorage.setItem('TicketListReturn', '/ProjectDetails');
-        Nav.toTicketDetails();
+        Router.toTicketDetails();
     }
 
     _renderError(msg) {

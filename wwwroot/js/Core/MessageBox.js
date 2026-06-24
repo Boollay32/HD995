@@ -101,13 +101,13 @@ const MessageBox = {
 
         // Route map — replaces eval()
         const ROUTES = {
-            'TicketPage': () => Nav.toTicketPage(),
-            'TicketDetails': () => Nav.toTicketDetails(),
-            'RFC': () => Nav.toRFCPage(),
-            'RFCDetails': () => Nav.toRFCDetails(),
-            'UserDetails': () => Nav.toUserDetails(),
-            'Users': () => Nav.toUserPage(),
-            'UserPage': () => Nav.toUserPage(),   // alias used by UserSave
+            'TicketPage': () => Router.toTicketPage(),
+            'TicketDetails': () => Router.toTicketDetails(),
+            'RFC': () => Router.toRFCPage(),
+            'RFCDetails': () => Router.toRFCDetails(),
+            'UserDetails': () => Router.toUserDetails(),
+            'Users': () => Router.toUserPage(),
+            'UserPage': () => Router.toUserPage(),   // alias used by UserSave
             'Index': () => { sessionStorage.clear(); window.open('.', '_self', false); }
         };
 

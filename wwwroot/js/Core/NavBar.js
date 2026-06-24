@@ -11,8 +11,8 @@ const NavBar = {
         const routes = {
             'TicketsMenu': () => NavBar.tickets(),
             'TasksMenu': () => NavBar.tasks(),
-            'UsersMenu': () => Nav.toUserPage(),
-            'RFCMenu': () => Nav.toRFC(),
+            'UsersMenu': () => Router.toUserPage(),
+            'RFCMenu': () => Router.toRFC(),
             'StatsMenu': () => NavBar.stats(),
             'ProjectsMenu': () => NavBar.projects(),
             'IncidentsMenu': () => NavBar.incidents(),
@@ -35,23 +35,23 @@ const NavBar = {
     // -------------------------  Button Controllers  ------------------------- //
 
     stats() {
-        Nav.toStatsPage();
+        Router.toStatsPage();
     },
 
     projects() {
-        Nav.toProjectsPage();
+        Router.toProjectsPage();
     },
 
     incidents() {
-        Nav.toIncidentsPage();
+        Router.toIncidentsPage();
     },
 
     tickets() {
-        Nav.toTicketPage();
+        Router.toTicketPage();
     },
 
     tasks() {
-        Nav.toTasksPage();
+        Router.toTasksPage();
     },
 
 

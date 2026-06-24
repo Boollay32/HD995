@@ -153,7 +153,7 @@ const Topbar = {
             projEl.textContent = data.linkedProjectName;
             projEl.onclick = () => {
                 sessionStorage.setItem('ProjectID', String(data.projectID));
-                Nav.toProjectDetail();
+                Router.toProjectDetail();
             };
             if (projGroup) projGroup.hidden = false;
         } else if (projGroup) {
