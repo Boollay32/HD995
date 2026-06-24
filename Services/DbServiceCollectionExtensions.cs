@@ -24,7 +24,11 @@ namespace HelpDeskNet8.Services
                 throw new ArgumentNullException(nameof(services));
             }
 
-            services.TryAdd(ServiceDescriptor.Scoped<IDbConnection>(sp => new SqlConnection(connectionstring)));
+            // Transient (not Scoped): each manager gets its OWN SqlConnection. A single
+            // shared per-request connection is unsafe now the data layer is async -- any
+            // concurrent use (e.g. Task.WhenAll across two managers) corrupts one SqlConnection
+            // (MARS is off). Per-manager connections are pooled, so the cost is negligible.
+            services.TryAdd(ServiceDescriptor.Transient<IDbConnection>(sp => new SqlConnection(connectionstring)));
 
             return services;
         }
