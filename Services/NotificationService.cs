@@ -74,13 +74,13 @@ namespace HelpDeskNet8.Services
         // RFC notifications. Internal-only: both reply and assign go to the
         // assigned tech + the originator. Recipients are identical for both
         // types; the type only selects the wording.
-        public void NotifyRFC(int rfcId, NotificationType type)
+        public async Task NotifyRFC(int rfcId, NotificationType type)
         {
             try
             {
                 if (rfcId <= 0) return;
 
-                IRFC rfc = _rfcManager.GetRFCDetail(rfcId);
+                IRFC rfc = await _rfcManager.GetRFCDetail(rfcId);
                 if (rfc == null) return;
 
                 string[] recipients = new[] { rfc.AssignedTechEmail, rfc.OriginatorEmail }

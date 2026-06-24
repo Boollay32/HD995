@@ -12,14 +12,15 @@ namespace HelpDeskNet8.Services
     {
         private readonly IDbConnection _connection = connection;
 
-        public IEnumerable<IRFCStub> GetRFCs(int? CRUserID, IFilter filter)
+        public async Task<IEnumerable<IRFCStub>> GetRFCs(int? CRUserID, IFilter filter)
         {
             if (filter == null)
                 filter = new Filter();
 
             var RFCList = new RFCListItem();
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_RFCGet]";
@@ -34,12 +35,12 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@ChangeRequestStatusID", SqlDbType.NVarChar) { Value = SqlValue.OrNull(filter.Status) });
                 command.Parameters.Add(new SqlParameter("@ChangeRequestPriorityID", SqlDbType.NVarChar) { Value = SqlValue.OrNull(filter.Priority) });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             RFCList.Add(RFCStub.FromReader(reader));
                         }
@@ -53,26 +54,27 @@ namespace HelpDeskNet8.Services
                 }
                 finally
                 {
-                    _connection.Close();
+                    await conn.CloseAsync();
                 }
             }
         }
 
-        public IRFC GetRFCDetail(int? RFCID)
+        public async Task<IRFC> GetRFCDetail(int? RFCID)
         {
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_RFCGetDetail]";
                 command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = SqlValue.OrNull(RFCID) });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
                     IRFC rfc = null;
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                             rfc = RFC.FromReader(reader);
                     }
                     return rfc;
@@ -84,14 +86,15 @@ namespace HelpDeskNet8.Services
                 }
                 finally
                 {
-                    _connection.Close();
+                    await conn.CloseAsync();
                 }
             }
         }
 
-        public List<object> SaveRFC(int UserID, IRFC rfc, int UTC)
+        public async Task<List<object>> SaveRFC(int UserID, IRFC rfc, int UTC)
         {
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_RFCManage]";
@@ -116,19 +119,19 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@ApprovedBy", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.ApprovedBy) });
                 command.Parameters.Add(new SqlParameter("@ApprovalDate", SqlDbType.DateTime) { Value = SqlValue.OrNull(rfc.ApprovalDate) });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 var result = new List<Object>();
                 try
                 {
                     if (rfc.ChangeRequestID != 0)
                     {
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
                         result.Add("Update");
                         result.Add(rfc.ChangeRequestID);
                     }
                     else
                     {
-                        int newRFCID = (int)command.ExecuteScalar();
+                        int newRFCID = (int)await command.ExecuteScalarAsync();
                         result.Add("Created");
                         result.Add(newRFCID);
                     }
@@ -140,7 +143,7 @@ namespace HelpDeskNet8.Services
                 }
                 finally
                 {
-                    _connection.Close();
+                    await conn.CloseAsync();
                 }
                 return result;
             }
