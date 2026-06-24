@@ -63,7 +63,7 @@ namespace HelpDeskNet8.Services
                     return;
                 }
 
-                _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
+                await _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
             }
             catch
             {
@@ -98,7 +98,7 @@ namespace HelpDeskNet8.Services
                     return;
                 }
 
-                _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
+                await _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
             }
             catch
             {

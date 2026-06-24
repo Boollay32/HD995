@@ -39,12 +39,12 @@ namespace HelpDeskNet8.Controllers.Shared
         }
 
         [HttpPost]
-        public IActionResult GetFilterItems([FromBody] GetFilterItemsRequest request)
+        public async Task<IActionResult> GetFilterItems([FromBody] GetFilterItemsRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var filterTable = _miscManager.GetFilterItems(request.Group);
+            var filterTable = await _miscManager.GetFilterItems(request.Group);
 
             var result = filterTable.AsEnumerable()
                 .Select(row => filterTable.Columns.Cast<DataColumn>()
@@ -90,13 +90,13 @@ namespace HelpDeskNet8.Controllers.Shared
         }
 
         [HttpPost]
-        public IActionResult SendMailMessage([FromBody] SendMailMessageRequest request)
+        public async Task<IActionResult> SendMailMessage([FromBody] SendMailMessageRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
             string[] recipients = request.To.Split(',');
-            var result = _miscManager.SendMailMessage(request.From, recipients, request.Subject, request.Body);
+            var result = await _miscManager.SendMailMessage(request.From, recipients, request.Subject, request.Body);
 
             if (result[0]?.ToString() == "Error")
                 return BadRequest(result);
