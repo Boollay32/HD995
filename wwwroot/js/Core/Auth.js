@@ -104,7 +104,7 @@ const Auth = {
         };
 
         const config = ADMIN_CONFIG[adminId] ?? {
-            restrict: 'subnav-users,subnav-tasks,subnav-rfc,subnav-bugs,subnav-admin',
+            restrict: 'TicketsMenu,TasksMenu,ProjectsMenu,RFCMenu,IncidentsMenu,UsersMenu,StatsMenu',
             extra: false
         };
 
