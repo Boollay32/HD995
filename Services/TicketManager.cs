@@ -285,47 +285,6 @@ namespace HelpDeskNet8.Services
         {
             return value.HasValue && value.Value != DateTime.MinValue ? (object)value.Value : DBNull.Value;
         }
-
-        public async Task<DataTable> GetStats(int ID, IUser user)
-        {
-            var conn = (SqlConnection)_connection;
-            try
-            {
-                DataTable StatsTable = new DataTable();
-
-                using (SqlCommand command = conn.CreateCommand())
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "[dbo].[usp_Helpdesk_GetTicketDetail]";
-
-                    command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ID });
-                    command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = user.UserID });
-
-                    await conn.OpenAsync();
-
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            StatsTable.Load(await command.ExecuteReaderAsync());
-                        }
-                    }
-                    await conn.CloseAsync();
-                    return StatsTable;
-                }
-            }
-
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"[{GetType().Name}] {ex.Message}");
-            }
-            finally
-            {
-                await conn.CloseAsync();
-            }
-
-            return null;
-        }
     }
 }
 
