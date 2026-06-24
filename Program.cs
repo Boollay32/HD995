@@ -96,17 +96,25 @@ app.Use(async (context, next) =>
     headers["X-Frame-Options"] = "SAMEORIGIN";
     headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
 
+    // Per-request CSP nonce: lets the one remaining inline script (the
+    // Application Insights snippet) execute without 'unsafe-inline'. Exposed
+    // via HttpContext.Items so _Layout can stamp nonce="..." on that <script>.
+    var nonceBytes = new byte[16];
+    System.Security.Cryptography.RandomNumberGenerator.Fill(nonceBytes);
+    var cspNonce = Convert.ToBase64String(nonceBytes);
+    context.Items["csp-nonce"] = cspNonce;
+
     // Content-Security-Policy, scoped to what the app loads. Shipped
     // REPORT-ONLY: violations are logged to the browser console but nothing
     // is blocked. Once verified clean for normal use, switch the header name
     // below to "Content-Security-Policy" (without -Report-Only) to enforce.
     headers["Content-Security-Policy-Report-Only"] =
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline'; " +
+        "script-src 'self' 'nonce-" + cspNonce + "' https://js.monitor.azure.com; " +
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
         "font-src 'self' https://fonts.gstatic.com; " +
         "img-src 'self' data:; " +
-        "connect-src 'self'; " +
+        "connect-src 'self' https://*.applicationinsights.azure.com https://*.in.applicationinsights.azure.com https://*.livediagnostics.monitor.azure.com https://*.monitor.azure.com https://dc.services.visualstudio.com; " +
         "object-src 'none'; " +
         "frame-ancestors 'self'; " +
         "base-uri 'self'; " +

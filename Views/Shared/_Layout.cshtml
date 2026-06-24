@@ -72,7 +72,7 @@
         @RenderSection("AddJSToHead", required: false)
     }
 
-    @Html.Raw(JavaScriptSnippet.FullScript)
+    <script nonce="@(Context.Items["csp-nonce"] as string)">@Html.Raw(JavaScriptSnippet.ScriptBody)</script>
 </head>
 
 <body id="Main-Body">
