@@ -154,3 +154,9 @@ if (typeof window !== 'undefined') {
     window.userManager = userManager;
 }
 
+// Form submit is a no-op (was inline onsubmit="return false"; moved
+// out so script-src can later drop 'unsafe-inline').
+document.addEventListener('DOMContentLoaded', function () {
+    var f = document.getElementById('User-Form');
+    if (f) f.addEventListener('submit', function (e) { e.preventDefault(); });
+});
