@@ -126,13 +126,13 @@ namespace HelpDeskNet8.Services
 
             var parameters = new Dictionary<string, (SqlDbType Type, object Value)>
             {
-                { "@ProjectID",     (SqlDbType.Int,      (object)project.ProjectID ?? DBNull.Value) },
+                { "@ProjectID",     (SqlDbType.Int,      SqlValue.OrNull(project.ProjectID)) },
                 { "@ProjectName",   (SqlDbType.VarChar,  project.ProjectName) },
                 { "@ProjectTypeID", (SqlDbType.Int,      project.ProjectTypeID) },
                 { "@StatusID",      (SqlDbType.Int,      project.StatusID) },
-                { "@Description",   (SqlDbType.VarChar,  (object)project.Description ?? DBNull.Value) },
+                { "@Description",   (SqlDbType.VarChar,  SqlValue.OrNull(project.Description)) },
                 { "@OwnerID",       (SqlDbType.Int,      project.OwnerID) },
-                { "@TargetDate",    (SqlDbType.DateTime, (object)project.TargetDate ?? DBNull.Value) },
+                { "@TargetDate",    (SqlDbType.DateTime, SqlValue.OrNull(project.TargetDate)) },
                 { "@UserID",        (SqlDbType.Int,      user.UserID) }
             };
             AddParameters(command, parameters);

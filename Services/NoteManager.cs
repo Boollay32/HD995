@@ -85,22 +85,22 @@ namespace HelpDeskNet8.Services
             if (rfc)
             {
                 command.CommandText = "[dbo].[usp_Helpdesk_RFCManageNotes]";
-                command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = (object)note.RFCID ?? DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestNotesID", SqlDbType.Int) { Value = (object)note.NoteID ?? DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = SqlValue.OrNull(note.RFCID) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestNotesID", SqlDbType.Int) { Value = SqlValue.OrNull(note.NoteID) });
                 command.Parameters.Add(new SqlParameter("@ChangeRequestNotes", SqlDbType.NVarChar) { Value = note.NoteDescription });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestNotesUserID", SqlDbType.Int) { Value = (object)userID ?? DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestNotesUserID", SqlDbType.Int) { Value = SqlValue.OrNull(userID) });
             }
             else
             {
                 command.CommandText = "[dbo].[usp_Helpdesk_Ticket_ManageNotes]";
-                command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = (object)note.TicketID ?? DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@NoteID", SqlDbType.Int) { Value = (object)note.NoteID ?? DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = SqlValue.OrNull(note.TicketID) });
+                command.Parameters.Add(new SqlParameter("@NoteID", SqlDbType.Int) { Value = SqlValue.OrNull(note.NoteID) });
                 command.Parameters.Add(new SqlParameter("@Notes", SqlDbType.NVarChar) { Value = note.NoteDescription });
-                command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = (object)userID ?? DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = SqlValue.OrNull(userID) });
             }
 
             command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
-            command.Parameters.Add(new SqlParameter("@VisibleToClient", SqlDbType.Bit) { Value = (object)note.VisibleToClient ?? DBNull.Value });
+            command.Parameters.Add(new SqlParameter("@VisibleToClient", SqlDbType.Bit) { Value = SqlValue.OrNull(note.VisibleToClient) });
 
             var attachmentList = attachments.ToList();
 

@@ -3,6 +3,7 @@ using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Shared;
 using HelpDeskNet8.Models.Users;
 using HelpDeskNet8.Utilities;
+using HelpDeskNet8.Infrastructure;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -285,7 +286,7 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@UserLogin", SqlDbType.NVarChar) { Value = userLogin });
                 command.Parameters.Add(new SqlParameter("@AdminUserLogin", SqlDbType.NVarChar) { Value = adminUserLogin });
                 // null => @UnlockUser = NULL => proc leaves the lock state alone.
-                command.Parameters.Add(new SqlParameter("@UnlockUser", SqlDbType.Int) { Value = (object)unlockUser ?? DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@UnlockUser", SqlDbType.Int) { Value = SqlValue.OrNull(unlockUser) });
                 command.Parameters.Add(new SqlParameter("@AdminLevelID", SqlDbType.Int) { Value = adminLevelID });
                 command.Parameters.Add(new SqlParameter("@UserPhone", SqlDbType.NVarChar) { Value = phone });
 
