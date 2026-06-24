@@ -22,12 +22,12 @@ namespace HelpDeskNet8.Controllers.Authenticator
         }
 
         [HttpPost]
-        public IActionResult CheckAdmin([FromBody] AuthenticatedRequest request)
+        public async Task<IActionResult> CheckAdmin([FromBody] AuthenticatedRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            return Ok(_authenticator.CheckAdmin(user));
+            return Ok(await _authenticator.CheckAdmin(user));
         }
     }
 }

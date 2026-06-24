@@ -15,12 +15,12 @@ namespace HelpDeskNet8.Services
         public int StatusCode { get; private set; }
         public string? StatusText { get; private set; }
 
-        public IUser? AuthenticateByPassword(string username, string password,
+        public async Task<IUser?> AuthenticateByPassword(string username, string password,
             int UTC, string? newPassword = null)
         {
             IUser? user = null;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            using (SqlCommand command = _connection.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_Login]";
@@ -30,12 +30,12 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@UserPasswordChanged", SqlDbType.NVarChar) { Value = (object?)newPassword ?? DBNull.Value });
                 command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
 
-                _connection.Open();
+                await _connection.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             user = User.FromReader(reader);
                             StatusCode = (int)reader["ResponseCode"];
@@ -52,7 +52,7 @@ namespace HelpDeskNet8.Services
                 {
                     // Fix: always close — was missing entirely
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await _connection.CloseAsync();
                 }
             }
 
@@ -96,11 +96,11 @@ namespace HelpDeskNet8.Services
             return user?.UserID != null ? user : null;
         }
 
-        public int CheckAdmin(IUser user)
+        public async Task<int> CheckAdmin(IUser user)
         {
             int adminLevel = 0;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            using (SqlCommand command = _connection.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_AdminAccessCheck]";
@@ -109,11 +109,11 @@ namespace HelpDeskNet8.Services
                 try
                 {
                     if (_connection.State != ConnectionState.Open)
-                        _connection.Open();
+                        await _connection.OpenAsync();
 
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                             adminLevel = Convert.ToInt32(reader[0]);
                     }
                 }
@@ -124,7 +124,7 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await _connection.CloseAsync();
                 }
             }
 
@@ -132,18 +132,18 @@ namespace HelpDeskNet8.Services
         }
 
 
-        public void Logout(int userID)
+        public async Task Logout(int userID)
         {
-            using (IDbCommand command = _connection.CreateCommand())
+            using (SqlCommand command = _connection.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_DeleteSession]";
                 command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = userID });
 
-                _connection.Open();
+                await _connection.OpenAsync();
                 try
                 {
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
                 }
                 catch (Exception ex)
                 {
@@ -152,14 +152,14 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await _connection.CloseAsync();
                 }
             }
         }
 
-        public AuthResult SecondWallAuth(string email, int pin, int UTC)
+        public async Task<AuthResult> SecondWallAuth(string email, int pin, int UTC)
         {
-            using (IDbCommand command = _connection.CreateCommand())
+            using (SqlCommand command = _connection.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[usp_Helpdesk_LoginPart2]";
@@ -167,12 +167,12 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@UserPIN", SqlDbType.Int) { Value = pin });
                 command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
 
-                _connection.Open();
+                await _connection.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             int returnCode = (int)reader["ReturnCode"];
                             string token = reader["ResponseToken"] as string ?? string.Empty;
@@ -195,7 +195,7 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await _connection.CloseAsync();
                 }
             }
 
