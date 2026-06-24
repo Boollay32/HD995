@@ -20,13 +20,14 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
-        public IEnumerable<ITask> GetTasks(IUser user, IFilter filter, int UTC)
+        public async Task<IEnumerable<ITask>> GetTasks(IUser user, IFilter filter, int UTC)
         {
             filter ??= new Filter();
 
             var taskList = new TaskList();
 
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[dbo].[usp_Helpdesk_GetTasks]";
 
@@ -48,16 +49,16 @@ namespace HelpDeskNet8.Services
             };
             AddParameters(command, parameters);
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
-                using IDataReader reader = command.ExecuteReader();
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
 
                 AppLogger.Debug(nameof(TaskManager), $"FieldCount: {reader.FieldCount}");
                 for (int i = 0; i < reader.FieldCount; i++)
                     AppLogger.Debug(nameof(TaskManager), $"Column[{i}]: {reader.GetName(i)}");
 
-                while (reader.Read())
+                while (await reader.ReadAsync())
                     if (TaskStub.FromReader(reader) is TaskStub mappedTask)
                         taskList.Add(mappedTask);
 
@@ -69,27 +70,28 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return taskList;
         }
 
-        public IEnumerable<ITask> GetTaskDetail(IUser user, int taskID)
+        public async Task<IEnumerable<ITask>> GetTaskDetail(IUser user, int taskID)
         {
             var taskList = new TaskList();
 
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[dbo].[usp_Helpdesk_GetTaskDetail]";
             command.Parameters.Add(new SqlParameter("@TaskID", SqlDbType.Int) { Value = taskID });
             command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = user.UserID });
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
-                using IDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                     if (TaskStub.FromReader(reader) is TaskStub mappedTask)
                         taskList.Add(mappedTask);
             }
@@ -99,15 +101,16 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return taskList;
         }
 
-        public SaveResult SaveTask(ITask task, IEnumerable<IAttachment> attachments, int? userID, int UTC)
+        public async Task<SaveResult> SaveTask(ITask task, IEnumerable<IAttachment> attachments, int? userID, int UTC)
         {
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[dbo].[usp_Helpdesk_ManageTask]";
             command.CommandTimeout = 60;
@@ -144,19 +147,19 @@ namespace HelpDeskNet8.Services
                 AddParameters(command, attachmentParameters);
             }
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
                 bool isUpdate = task.TaskID.HasValue && task.TaskID != 0;
 
                 if (isUpdate)
                 {
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
                     return SaveResult.Updated(task.TaskID);
                 }
                 else
                 {
-                    int newTaskID = (int)command.ExecuteScalar();
+                    int newTaskID = (int)await command.ExecuteScalarAsync();
                     return SaveResult.Created(newTaskID);
                 }
             }
@@ -167,7 +170,7 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
         }
 
