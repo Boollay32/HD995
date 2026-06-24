@@ -25,5 +25,14 @@ namespace HelpDeskNet8.Infrastructure
             SameSite = SameSiteMode.Strict,
             Path = "/"
         };
+
+        /// <summary>Clears the session cookie (matching attributes so the browser drops it).</summary>
+        public static void Delete(HttpResponse response) =>
+            response.Cookies.Delete(Name, new CookieOptions
+            {
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/"
+            });
     }
 }
