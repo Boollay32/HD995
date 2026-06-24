@@ -85,98 +85,6 @@
 
     </header>
 
-    <!-- OVERVIEW -->
-    <section class="td-overview" id="Ticket-Overview" aria-label="Ticket overview">
-                <button type="button" class="td-ov-collapse" id="ov-collapse"
-                    aria-label="Collapse overview" aria-expanded="true"
-                    aria-controls="Ticket-Overview">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2.2"
-                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M18 15l-6-6-6 6" />
-                </svg>
-            </button>
-
-        <span class="td-ov-lbl td-subject-lbl">Title</span>
-        <h2 class="td-details-subject" id="subject"></h2>
-
-        <div class="td-ov-body">
-
-            <div class="td-ov-group">
-                <h3 class="td-ov-grp-head">Origin</h3>
-                <div class="td-ov-grid">
-                    <div class="td-ov-cell">
-                        <div class="td-ov-lbl">Request type</div>
-                        <label class="Field-Value" id="requesttype"></label>
-                    </div>
-                    <div class="td-ov-cell">
-                        <div class="td-ov-lbl">From</div>
-                        <label class="Field-Value" id="raisedby"></label>
-                    </div>
-                    <div class="td-ov-cell">
-                        <div class="td-ov-lbl">Authority</div>
-                        <label class="Field-Value" id="authority"></label>
-                    </div>
-                    <div class="td-ov-cell">
-                        <div class="td-ov-lbl">Assigned to</div>
-                        <select id="assignedtech" class="td-select" aria-label="Assigned technician"></select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="td-ov-group">
-                <h3 class="td-ov-grp-head">Timeline</h3>
-                <div class="td-ov-timeline">
-                    <div class="td-ov-node">
-                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Created</div>
-                        <label class="Field-Value mono" id="created"></label>
-                    </div>
-                    <div class="td-ov-arrow">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
-                    </div>
-                    <div class="td-ov-node">
-                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>First response</div>
-                        <label class="Field-Value" id="ov-first-response">&mdash;</label>
-                    </div>
-                    <div class="td-ov-arrow">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
-                    </div>
-                    <div class="td-ov-node">
-                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Needed by</div>
-                        <input type="date" id="targetdate" class="td-input" aria-label="Target date" />
-                    </div>
-                    <div class="td-ov-arrow">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
-                    </div>
-                    <div class="td-ov-node">
-                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Closed</div>
-                        <label class="Field-Value mono" id="closed"></label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="td-ov-group" id="ov-desc-group" hidden>
-                <div class="td-ov-desc-head">
-                    <h3 class="td-ov-grp-head">Description</h3>
-                    <button type="button" class="td-ov-desc-edit" id="ov-desc-edit" hidden>Edit</button>
-                </div>
-                <div class="td-ov-desc-body" id="ov-desc-body"></div>
-                <div class="td-ov-desc-atts" id="ov-desc-atts"></div>
-            </div>
-
-        </div>
-
-        <div class="td-ov-slim" id="ov-slim" aria-hidden="true">
-            <span><span class="td-ov-slim-lbl">Type</span> <span class="Field-Value" id="ov-slim-type"></span></span>
-            <span class="td-ov-sep">&middot;</span>
-            <span><span class="td-ov-slim-lbl">From</span> <span class="Field-Value" id="ov-slim-from"></span></span>
-            <span class="td-ov-sep">&rarr;</span>
-            <span><span class="td-ov-slim-lbl">Assigned</span> <span class="Field-Value" id="ov-slim-assigned"></span></span>
-            <span class="td-ov-sep">&middot;</span>
-            <span><span class="td-ov-slim-lbl">Needed by</span> <span class="Field-Value mono" id="ov-slim-needed"></span></span>
-        </div>
-
-    </section>
     </div>
 
 
@@ -277,6 +185,99 @@
                 <span class="td-rail-label">Workspace</span>
             </div>
             <div class="td-pane-inner" id="pane-right-inner">
+                <!-- OVERVIEW (moved into workspace column - HD38 #5) -->
+    <section class="td-overview" id="Ticket-Overview" aria-label="Ticket overview">
+                <button type="button" class="td-ov-collapse" id="ov-collapse"
+                    aria-label="Collapse overview" aria-expanded="true"
+                    aria-controls="Ticket-Overview">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 15l-6-6-6 6" />
+                </svg>
+            </button>
+
+        <span class="td-ov-lbl td-subject-lbl">Title</span>
+        <h2 class="td-details-subject" id="subject"></h2>
+
+        <div class="td-ov-body">
+
+            <div class="td-ov-group">
+                <h3 class="td-ov-grp-head">Origin</h3>
+                <div class="td-ov-grid">
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">Request type</div>
+                        <label class="Field-Value" id="requesttype"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">From</div>
+                        <label class="Field-Value" id="raisedby"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">Authority</div>
+                        <label class="Field-Value" id="authority"></label>
+                    </div>
+                    <div class="td-ov-cell">
+                        <div class="td-ov-lbl">Assigned to</div>
+                        <select id="assignedtech" class="td-select" aria-label="Assigned technician"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="td-ov-group">
+                <h3 class="td-ov-grp-head">Timeline</h3>
+                <div class="td-ov-timeline">
+                    <div class="td-ov-node">
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Created</div>
+                        <label class="Field-Value mono" id="created"></label>
+                    </div>
+                    <div class="td-ov-arrow">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+                    </div>
+                    <div class="td-ov-node">
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>First response</div>
+                        <label class="Field-Value" id="ov-first-response">&mdash;</label>
+                    </div>
+                    <div class="td-ov-arrow">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+                    </div>
+                    <div class="td-ov-node">
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Needed by</div>
+                        <input type="date" id="targetdate" class="td-input" aria-label="Target date" />
+                    </div>
+                    <div class="td-ov-arrow">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+                    </div>
+                    <div class="td-ov-node">
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Closed</div>
+                        <label class="Field-Value mono" id="closed"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="td-ov-group" id="ov-desc-group" hidden>
+                <div class="td-ov-desc-head">
+                    <h3 class="td-ov-grp-head">Description</h3>
+                    <button type="button" class="td-ov-desc-edit" id="ov-desc-edit" hidden>Edit</button>
+                </div>
+                <div class="td-ov-desc-body" id="ov-desc-body"></div>
+                <div class="td-ov-desc-atts" id="ov-desc-atts"></div>
+            </div>
+
+        </div>
+
+        <div class="td-ov-slim" id="ov-slim" aria-hidden="true">
+            <span><span class="td-ov-slim-lbl">Type</span> <span class="Field-Value" id="ov-slim-type"></span></span>
+            <span class="td-ov-sep">&middot;</span>
+            <span><span class="td-ov-slim-lbl">From</span> <span class="Field-Value" id="ov-slim-from"></span></span>
+            <span class="td-ov-sep">&rarr;</span>
+            <span><span class="td-ov-slim-lbl">Assigned</span> <span class="Field-Value" id="ov-slim-assigned"></span></span>
+            <span class="td-ov-sep">&middot;</span>
+            <span><span class="td-ov-slim-lbl">Needed by</span> <span class="Field-Value mono" id="ov-slim-needed"></span></span>
+        </div>
+
+    </section>
+
                 <!-- ── Pane Header ── -->
                 <div class="td-pane-head td-pane-head--ws">
                     <h2 class="td-pane-title">Workspace</h2>

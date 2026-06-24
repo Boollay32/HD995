@@ -2137,3 +2137,11 @@ body {
   background: var(--scroll-thumb);
   border-radius: 99px;
 }
+
+/* ===== HD38 #5: overview relocated into the workspace column =====
+   It now sits at the top of the right pane, above the tabs: drop the
+   backdrop gap below it and add a divider against the tab row. */
+#TicketDetails-App .td-overview {
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--td-border);
+}
