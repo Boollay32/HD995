@@ -24,23 +24,24 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
-        public DataTable GetFilterItems(String Group)
+        public async Task<DataTable> GetFilterItems(String Group)
         {
 
             DataTable FilterTable = new DataTable();
+            var conn = (SqlConnection)_connection;
             try
             {
-                using (IDbCommand command = _connection.CreateCommand())
+                using (SqlCommand command = conn.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[usp_Helpdesk_GetFilter]";
                     command.Parameters.Add(new SqlParameter("@FilterGroup", SqlDbType.NVarChar) { Value = Group });
 
-                    _connection.Open();
+                    await conn.OpenAsync();
 
-                    FilterTable.Load(command.ExecuteReader());
+                    FilterTable.Load(await command.ExecuteReaderAsync());
 
-                    _connection.Close();
+                    await conn.CloseAsync();
                     return FilterTable;
                 }
             }
@@ -50,13 +51,13 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return null;
         }
 
-        public List<Object> SendMailMessage(string from, string[] recepients, string subject, string body)
+        public async Task<List<Object>> SendMailMessage(string from, string[] recepients, string subject, string body)
         {
             // Instantiate a new instance of MailMessage
             MailMessage mMailMessage = new MailMessage();
@@ -95,7 +96,7 @@ namespace HelpDeskNet8.Services
             Exception Exeption = null;
             try
             {
-                mSmtpClient.Send(mMailMessage);
+                await mSmtpClient.SendMailAsync(mMailMessage);
                 Result.Add("Success");
                 Result.Add("Email Sent");
 
