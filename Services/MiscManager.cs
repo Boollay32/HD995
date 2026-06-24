@@ -110,7 +110,6 @@ namespace HelpDeskNet8.Services
                 }
 
                 Result.Clear();
-                _connection.Close();
                 Result.Add("Error");
                 Result.Add(Exeption);
             }

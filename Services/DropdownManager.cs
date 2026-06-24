@@ -46,9 +46,9 @@ namespace HelpDeskNet8.Services
                         }
                     }
                     catch (Exception ex)
-{
-    AppLogger.Error(nameof(DropdownManager), ex);
-}
+                    {
+                        AppLogger.Error(nameof(DropdownManager), ex);
+                    }
 
                 }
                 await conn.CloseAsync();
@@ -79,9 +79,9 @@ namespace HelpDeskNet8.Services
                 }
             }
             catch (Exception ex)
-{
-    AppLogger.Error(nameof(DropdownManager), ex);
-}
+            {
+                AppLogger.Error(nameof(DropdownManager), ex);
+            }
 
             await conn.CloseAsync();
 
