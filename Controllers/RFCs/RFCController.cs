@@ -24,7 +24,7 @@ namespace HelpDeskNet8.Controllers
             _authenticator.CheckAdmin(user) != Constants.AdminLevel.Authority;
 
         [HttpPost]
-        public IActionResult GetRFCs([FromBody] GetRFCsRequest request)
+        public async Task<IActionResult> GetRFCs([FromBody] GetRFCsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -41,23 +41,23 @@ namespace HelpDeskNet8.Controllers
             }
 
             Filter filter = TypeCreator.Setup<Filter>(filterDict);
-            var result = _changeRequestManager.GetRFCs(user.UserID, filter);
+            var result = await _changeRequestManager.GetRFCs(user.UserID, filter);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult GetRFCDetail([FromBody] GetRFCDetailRequest request)
+        public async Task<IActionResult> GetRFCDetail([FromBody] GetRFCDetailRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
             if (!IsInternal(user)) return StatusCode(403);
 
-            var result = _changeRequestManager.GetRFCDetail(request.RFCId);
+            var result = await _changeRequestManager.GetRFCDetail(request.RFCId);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult SaveRFC([FromBody] SaveRFCRequest request)
+        public async Task<IActionResult> SaveRFC([FromBody] SaveRFCRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -80,8 +80,8 @@ namespace HelpDeskNet8.Controllers
             PopulateObject(rfc, rfcBuild);
 
             List<object> result = rfc.ChangeRequestID != 0
-                ? _changeRequestManager.SaveRFC((int)user.UserID, rfc.GetChanges(), request.UTC)
-                : _changeRequestManager.SaveRFC((int)user.UserID, rfc, request.UTC);
+                ? await _changeRequestManager.SaveRFC((int)user.UserID, rfc.GetChanges(), request.UTC)
+                : await _changeRequestManager.SaveRFC((int)user.UserID, rfc, request.UTC);
 
             if (result[0]?.ToString() == "Error") return BadRequest(result);
 
@@ -92,7 +92,7 @@ namespace HelpDeskNet8.Controllers
                 NotificationType rfcType = result[0]?.ToString() == "Created"
                     ? NotificationType.RFCAssigned
                     : NotificationType.RFCResponded;
-                _notificationService.NotifyRFC(savedRfcId, rfcType);
+                await _notificationService.NotifyRFC(savedRfcId, rfcType);
             }
 
             return Ok(result);

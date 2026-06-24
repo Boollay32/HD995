@@ -5,10 +5,10 @@ namespace HelpDeskNet8.Interfaces.RFCs
 
     public interface IRFCManager
     {
-        IEnumerable<IRFCStub> GetRFCs(int? CRUserID, IFilter IF);
+        Task<IEnumerable<IRFCStub>> GetRFCs(int? CRUserID, IFilter IF);
 
-        IRFC GetRFCDetail(int? RFCID);
+        Task<IRFC> GetRFCDetail(int? RFCID);
 
-        List<Object> SaveRFC(int CRUserID, IRFC RFC, int UTC);
+        Task<List<Object>> SaveRFC(int CRUserID, IRFC RFC, int UTC);
     }
 }

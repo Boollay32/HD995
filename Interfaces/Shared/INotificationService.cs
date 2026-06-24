@@ -38,6 +38,6 @@ namespace HelpDeskNet8.Interfaces.Shared
 
         // RFCs are internal-only; recipients come from the RFC itself, so no
         // IUser is needed for scoping.
-        void NotifyRFC(int rfcId, NotificationType type);
+        Task NotifyRFC(int rfcId, NotificationType type);
     }
 }
