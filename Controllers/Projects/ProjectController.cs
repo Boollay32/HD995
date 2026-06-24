@@ -19,34 +19,34 @@ namespace HelpDeskNet8.Controllers.Projects
             _authenticator.CheckAdmin(user) == Constants.AdminLevel.Admin;
 
         [HttpPost]
-        public IActionResult GetProjects([FromBody] GetProjectsRequest request)
+        public async Task<IActionResult> GetProjects([FromBody] GetProjectsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = _projectManager.GetProjects(user, request.StatusId);
+            var result = await _projectManager.GetProjects(user, request.StatusId);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult GetProjectDetail([FromBody] GetProjectDetailRequest request)
+        public async Task<IActionResult> GetProjectDetail([FromBody] GetProjectDetailRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = _projectManager.GetProjectDetail(user, request.ProjectId);
+            var result = await _projectManager.GetProjectDetail(user, request.ProjectId);
             if (result == null) return NotFound();
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult SaveProject([FromBody] SaveProjectRequest request)
+        public async Task<IActionResult> SaveProject([FromBody] SaveProjectRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
             if (!IsGovtechAdmin(user)) return Forbid();
 
-            var result = _projectManager.SaveProject(user, request.Project);
+            var result = await _projectManager.SaveProject(user, request.Project);
             return Ok(result);
         }
     }

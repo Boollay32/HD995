@@ -17,11 +17,12 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
-        public IEnumerable<IProjectStub> GetProjects(IUser user, int? statusId)
+        public async Task<IEnumerable<IProjectStub>> GetProjects(IUser user, int? statusId)
         {
             var projects = new ProjectList();
 
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[dbo].[usp_Helpdesk_GetProjects]";
 
@@ -31,11 +32,11 @@ namespace HelpDeskNet8.Services
             };
             AddParameters(command, parameters);
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
-                using IDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                     if (ProjectStub.FromReader(reader) is ProjectStub mapped)
                         projects.Add(mapped);
             }
@@ -45,17 +46,18 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return projects;
         }
 
-        public IProject GetProjectDetail(IUser user, int projectId)
+        public async Task<IProject> GetProjectDetail(IUser user, int projectId)
         {
             Project project = null;
 
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[dbo].[usp_Helpdesk_GetProjectDetail]";
 
@@ -65,18 +67,18 @@ namespace HelpDeskNet8.Services
             };
             AddParameters(command, parameters);
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
-                using IDataReader reader = command.ExecuteReader();
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
 
                 // Result set 1: the project header.
-                if (reader.Read())
+                if (await reader.ReadAsync())
                     project = MapHeader(reader);
 
                 // Result set 2: the project's tickets.
-                if (project != null && reader.NextResult())
-                    while (reader.Read())
+                if (project != null && await reader.NextResultAsync())
+                    while (await reader.ReadAsync())
                         if (ProjectTicketStub.FromReader(reader) is ProjectTicketStub t)
                             project.Tickets.Add(t);
             }
@@ -86,7 +88,7 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return project;
@@ -118,9 +120,10 @@ namespace HelpDeskNet8.Services
             };
         }
 
-        public SaveResult SaveProject(IUser user, SaveProjectModel project)
+        public async Task<SaveResult> SaveProject(IUser user, SaveProjectModel project)
         {
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[dbo].[usp_Helpdesk_SaveProject]";
 
@@ -137,14 +140,14 @@ namespace HelpDeskNet8.Services
             };
             AddParameters(command, parameters);
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
                 // The proc returns one row: (ProjectID, Error). ProjectID = -1
                 // with an Error message means a rule (e.g. the completion gate)
                 // blocked the save.
-                using IDataReader reader = command.ExecuteReader();
-                if (reader.Read())
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
                 {
                     int projectId = reader["ProjectID"] is int id ? id : 0;
                     string error = reader["Error"] as string;
@@ -166,7 +169,7 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
         }
 

@@ -6,8 +6,8 @@ namespace HelpDeskNet8.Interfaces.Projects
 {
     public interface IProjectManager
     {
-        IEnumerable<IProjectStub> GetProjects(IUser user, int? statusId);
-        IProject GetProjectDetail(IUser user, int projectId);
-        SaveResult SaveProject(IUser user, SaveProjectModel project);
+        Task<IEnumerable<IProjectStub>> GetProjects(IUser user, int? statusId);
+        Task<IProject> GetProjectDetail(IUser user, int projectId);
+        Task<SaveResult> SaveProject(IUser user, SaveProjectModel project);
     }
 }
