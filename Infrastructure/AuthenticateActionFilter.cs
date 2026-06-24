@@ -20,8 +20,13 @@ namespace HelpDeskNet8.Infrastructure
                 .OfType<AuthenticatedRequest>()
                 .First();
 
+            // Phase A: prefer the httpOnly session cookie; fall back to the body
+            // token so pre-migration clients (and stale tabs mid-deploy) keep working.
+            string? cookieToken = context.HttpContext.Request.Cookies[SessionCookie.Name];
+            string token = !string.IsNullOrEmpty(cookieToken) ? cookieToken : request.Token;
+
             IUser? user = _authenticator.AuthenticateByToken(
-                request.UserName, request.Token, request.UTC);
+                request.UserName, token, request.UTC);
 
             if (user == null)
             {
