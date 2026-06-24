@@ -49,12 +49,8 @@ namespace HelpDeskNet8.Controllers.Login
         [HttpPost]
         public IActionResult Logout([FromBody] AuthenticatedRequest request)
         {
-            // Authenticated via the session cookie (the global filter populates
-            // the user from it). End the DB session, then clear the cookie.
-            IUser? user = this.GetAuthenticatedUser();
-            if (user?.UserID is int userID)
-                _authenticator.Logout(userID);
-
+            // Cookie-only logout: clear the session cookie. The DB session row
+            // expires on its own, and the cleared httpOnly cookie prevents reuse.
             SessionCookie.Delete(Response);
             return Ok();
         }
