@@ -16,9 +16,10 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
-        public object GetHistory(IUser user, int TicketID)
+        public async Task<object> GetHistory(IUser user, int TicketID)
         {
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
 
@@ -26,15 +27,15 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = TicketID });
                 command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = user.UserID });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
 
                         this.Clear();
 
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             var newitem = HistoryListItem.FromReader(reader);
                             if (newitem != null)
@@ -43,7 +44,7 @@ namespace HelpDeskNet8.Services
                             }
                         }
                     }
-                    _connection.Close();
+                    await conn.CloseAsync();
                 }
                 catch (Exception ex)
                 {
@@ -51,7 +52,7 @@ namespace HelpDeskNet8.Services
                 }
                 finally
                 {
-                    _connection.Close();
+                    await conn.CloseAsync();
                 }
             }
 
