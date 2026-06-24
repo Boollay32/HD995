@@ -34,7 +34,7 @@ namespace HelpDeskNet8.Interfaces.Shared
     // never break the originating save, so implementations swallow their errors.
     public interface INotificationService
     {
-        void Notify(int ticketId, NotificationType type, IUser user);
+        Task Notify(int ticketId, NotificationType type, IUser user);
 
         // RFCs are internal-only; recipients come from the RFC itself, so no
         // IUser is needed for scoping.
