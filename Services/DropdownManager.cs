@@ -17,9 +17,10 @@ namespace HelpDeskNet8.Services
         }
 
 
-        public IEnumerable<DropdownListItem> GetDropDowns(IUser user, int Filter, string Group)
+        public async Task<IEnumerable<DropdownListItem>> GetDropDowns(IUser user, int Filter, string Group)
         {
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_References_1]";
@@ -27,14 +28,14 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@Filter", SqlDbType.Int) { Value = Filter });
                 command.Parameters.Add(new SqlParameter("@Group", SqlDbType.NVarChar) { Value = Group });
 
-                _connection.Open();
+                await conn.OpenAsync();
 
-                using (IDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     this.Clear();
                     try
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             var newitem = DropdownListItem.FromReader(reader);
                             if (newitem != null)
@@ -49,29 +50,30 @@ namespace HelpDeskNet8.Services
 }
 
                 }
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return this;
         }
 
-        public DataTable GetCustomFields(IUser user, int requestID)
+        public async Task<DataTable> GetCustomFields(IUser user, int requestID)
         {
 
             DataTable CustomFieldsTable = new DataTable();
+            var conn = (SqlConnection)_connection;
             try
             {
-                using (IDbCommand command = _connection.CreateCommand())
+                using (SqlCommand command = conn.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[usp_Helpdesk_GetCustomFields]";
                     command.Parameters.Add(new SqlParameter("@CustomFilterGroup", SqlDbType.Int) { Value = requestID });
 
-                    _connection.Open();
+                    await conn.OpenAsync();
 
-                    CustomFieldsTable.Load(command.ExecuteReader());
+                    CustomFieldsTable.Load(await command.ExecuteReaderAsync());
 
-                    _connection.Close();
+                    await conn.CloseAsync();
                     return CustomFieldsTable;
                 }
             }
@@ -80,7 +82,7 @@ namespace HelpDeskNet8.Services
     Console.Error.WriteLine($"[{GetType().Name}] {ex.Message}");
 }
 
-            _connection.Close();
+            await conn.CloseAsync();
 
             return null;
         }

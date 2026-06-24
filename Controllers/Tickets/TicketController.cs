@@ -103,12 +103,12 @@ namespace HelpDeskNet8.Controllers.Tickets
         }
 
         [HttpPost]
-        public IActionResult ChangeCustomFields([FromBody] ChangeCustomFieldsRequest request)
+        public async Task<IActionResult> ChangeCustomFields([FromBody] ChangeCustomFieldsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            DataTable customFields = _dropDown.GetCustomFields(user, request.RequestId);
+            DataTable customFields = await _dropDown.GetCustomFields(user, request.RequestId);
 
             // ToListOfDictionaries keys are the DataTable column names (PascalCase), and
             // System.Text.Json's camelCase policy does not rename dictionary keys -- so the
