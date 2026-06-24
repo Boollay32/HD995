@@ -154,8 +154,7 @@ function CreateDynamicTable(data) {
     const headRow = document.querySelector('#Table-Header tr') || document.querySelector('#Table thead tr');
     const body = document.getElementById('Table-Body') || document.querySelector('#Table tbody');
     if (!headRow || !body) return;
-    const esc = v => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const cols = Object.keys(data[0]);
-    headRow.innerHTML = cols.map(c => `<th>${esc(c)}</th>`).join('');
-    body.innerHTML = data.map(r => `<tr>${cols.map(c => `<td>${esc(r[c])}</td>`).join('')}</tr>`).join('');
+    headRow.innerHTML = cols.map(c => `<th>${Format.escapeHtml(c)}</th>`).join('');
+    body.innerHTML = data.map(r => `<tr>${cols.map(c => `<td>${Format.escapeHtml(r[c])}</td>`).join('')}</tr>`).join('');
 }

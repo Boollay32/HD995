@@ -7,11 +7,6 @@
 // -------------------------  Presentation helpers  ------------------------- //
 
 const UQ_ROLE_LABELS = { '0': 'Authority', '1': 'Govtech', '2': 'Admin', '4': 'RFC only' };
-const UQ_AV_PALETTE = ['#5A6470', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
-
-const UQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const UQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
-const UQavColor = n => { let h = 0; for (const c of (n || '')) h = c.charCodeAt(0) + ((h << 5) - h); return UQ_AV_PALETTE[Math.abs(h) % UQ_AV_PALETTE.length]; };
 const UQrole = v => UQ_ROLE_LABELS[String(v ?? '').trim()] ?? (v || '—');
 // locked: 0/empty = active, 99 = deactivated, anything else = locked
 const UQstatus = r => {
@@ -111,16 +106,16 @@ class UserPage extends PageBase {
                 {
                     key: 'userName', label: 'Name', sortable: true,
                     sortValue: r => (r.userName || '').toLowerCase(),
-                    render: r => `<div class="qv-assignee"><span class="qv-av" style="background:${UQavColor(r.userName)}">${UQinitials(r.userName)}</span><div><div class="s1">${UQesc(r.userName)}</div>${r.email ? `<div class="s2">${UQesc(r.email)}</div>` : ''}</div></div>`
+                    render: r => `<div class="qv-assignee"><span class="qv-av" style="background:${UI.avatarColor(r.userName)}">${Format.initials(r.userName)}</span><div><div class="s1">${Format.escapeHtml(r.userName)}</div>${r.email ? `<div class="s2">${Format.escapeHtml(r.email)}</div>` : ''}</div></div>`
                 },
                 {
                     key: 'authority', label: 'Authority', sortable: true,
                     sortValue: r => (r.authority || '').toLowerCase(),
-                    render: r => `<span class="qv-badge">${UQesc(r.authority)}</span>`
+                    render: r => `<span class="qv-badge">${Format.escapeHtml(r.authority)}</span>`
                 },
                 {
                     key: 'adminLevel', label: 'Role',
-                    render: r => `<span class="qv-prio">${UQesc(UQrole(r.adminLevel))}</span>`
+                    render: r => `<span class="qv-prio">${Format.escapeHtml(UQrole(r.adminLevel))}</span>`
                 },
                 {
                     key: 'lastLoginDate', label: 'Last login', sortable: true,
@@ -135,19 +130,19 @@ class UserPage extends PageBase {
 
             defaultSort: { key: 'userName', dir: 1 },
 
-            previewHeader: r => `<div class="qv-pv-tid">${UQesc(r.authority)}</div><div class="qv-pv-title">${UQesc(r.userName)}</div>
-                <div class="qv-pv-meta"><span class="qv-pv-chip"><span class="qv-pv-chip-label">Role</span><span class="qv-badge">${UQesc(UQrole(r.adminLevel))}</span></span></div>`,
+            previewHeader: r => `<div class="qv-pv-tid">${Format.escapeHtml(r.authority)}</div><div class="qv-pv-title">${Format.escapeHtml(r.userName)}</div>
+                <div class="qv-pv-meta"><span class="qv-pv-chip"><span class="qv-pv-chip-label">Role</span><span class="qv-badge">${Format.escapeHtml(UQrole(r.adminLevel))}</span></span></div>`,
             preview: r => {
                 const s = UQstatus(r);
                 return `<h3 class="qv-pv-h">Contact</h3>
                     <div class="qv-pv-dl">
-                      <span class="qv-pv-dt">Email</span><span class="qv-pv-dd">${r.email ? UQesc(r.email) : '\u2014'}</span>
-                      <span class="qv-pv-dt">Phone</span><span class="qv-pv-dd">${r.phone ? UQesc(r.phone) : '\u2014'}</span>
+                      <span class="qv-pv-dt">Email</span><span class="qv-pv-dd">${r.email ? Format.escapeHtml(r.email) : '\u2014'}</span>
+                      <span class="qv-pv-dt">Phone</span><span class="qv-pv-dd">${r.phone ? Format.escapeHtml(r.phone) : '\u2014'}</span>
                     </div>
                     <h3 class="qv-pv-h">Account</h3>
                     <div class="qv-pv-dl">
                       <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${s.color};background:${s.bg}">${s.label}</span></span>
-                      <span class="qv-pv-dt">Role</span><span class="qv-pv-dd">${UQesc(UQrole(r.adminLevel))}</span>
+                      <span class="qv-pv-dt">Role</span><span class="qv-pv-dd">${Format.escapeHtml(UQrole(r.adminLevel))}</span>
                       <span class="qv-pv-dt">Last login</span><span class="qv-pv-dd">${UQdate(r.lastLoginDate)}</span>
                     </div>`;
             },
