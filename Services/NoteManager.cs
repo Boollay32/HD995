@@ -18,21 +18,22 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
-        public IEnumerable<INote> GetNotes(IUser user, int ticketID)
+        public async Task<IEnumerable<INote>> GetNotes(IUser user, int ticketID)
         {
             var noteList = new NoteList();
 
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[dbo].[usp_Helpdesk_GetNotesDetail]";
             command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ticketID });
             command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = user.UserID });
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
-                using IDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                     noteList.Add((NoteStub)NoteStub.FromReader(reader));
             }
             catch (Exception ex)
@@ -41,27 +42,28 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return noteList;
         }
 
-        public IEnumerable<INote> GetRFCNotes(IUser user, int rfcID)
+        public async Task<IEnumerable<INote>> GetRFCNotes(IUser user, int rfcID)
         {
             var noteList = new NoteList();
 
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = "[dbo].[usp_Helpdesk_RFCGetNotesDetail]";
             command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = rfcID });
             command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = user.UserID });
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
-                using IDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                     noteList.Add((NoteStub)NoteStub.FromReader(reader));
             }
             catch (Exception ex)
@@ -70,15 +72,16 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return noteList;
         }
 
-        public SaveResult SaveNote(INote note, IEnumerable<IAttachment> attachments, int? userID, bool rfc, int UTC)
+        public async Task<SaveResult> SaveNote(INote note, IEnumerable<IAttachment> attachments, int? userID, bool rfc, int UTC)
         {
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandTimeout = 60;
 
@@ -135,10 +138,10 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter($"@Attachment{i}ImageType", SqlDbType.NVarChar) { Value = imageType });
             }
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
-                command.ExecuteNonQuery();
+                await command.ExecuteNonQueryAsync();
                 bool isUpdate = note.NoteID.HasValue && note.NoteID != 0;
                 return isUpdate ? SaveResult.Updated(note.NoteID) : SaveResult.Created(note.NoteID ?? 0);
             }
@@ -149,7 +152,7 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
         }
     }

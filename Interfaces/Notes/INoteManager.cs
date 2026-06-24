@@ -6,8 +6,8 @@ namespace HelpDeskNet8.Interfaces.Notes
 {
     public interface INoteManager
     {
-        IEnumerable<INote> GetNotes(IUser user, int ticketID);
-        IEnumerable<INote> GetRFCNotes(IUser user, int rfcID);
-        SaveResult SaveNote(INote note, IEnumerable<IAttachment> attachments, int? userID, bool rfc, int UTC);
+        Task<IEnumerable<INote>> GetNotes(IUser user, int ticketID);
+        Task<IEnumerable<INote>> GetRFCNotes(IUser user, int rfcID);
+        Task<SaveResult> SaveNote(INote note, IEnumerable<IAttachment> attachments, int? userID, bool rfc, int UTC);
     }
 }
