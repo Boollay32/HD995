@@ -14,6 +14,7 @@ namespace HelpDeskNet8.Controllers.Login
         private readonly IAuthenticator _authenticator = auth;
 
         [HttpPost]
+        [IgnoreAntiforgeryToken] // pre-auth login step; CSRF here is low-value, exemption avoids lockout risk
         public IActionResult PostLogin([FromBody] PostLoginRequest request)
         {
             IUser? user = _authenticator.AuthenticateByPassword(
@@ -28,6 +29,7 @@ namespace HelpDeskNet8.Controllers.Login
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken] // pre-auth login step (see PostLogin)
         public IActionResult SecondWallAuth([FromBody] SecondWallAuthRequest request)
         {
             AuthResult result = _authenticator.SecondWallAuth(

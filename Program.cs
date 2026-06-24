@@ -40,6 +40,9 @@ builder.Services.AddScoped<IMailPreviewSink, MailPreviewSink>();
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddSingleton<JavaScriptSnippet>();
 
+// CSRF: validate the anti-forgery token sent as a header by CSRF.js on POSTs.
+builder.Services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
+
 if (!builder.Environment.IsDevelopment())
 {
     builder.Services.Configure<MvcOptions>(o => o.Filters.Add(new RequireHttpsAttribute()));
@@ -48,6 +51,8 @@ if (!builder.Environment.IsDevelopment())
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<AuthenticateActionFilter>();
+    // Enforce anti-forgery on all unsafe (POST/PUT/PATCH/DELETE) requests.
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
     if (builder.Environment.IsDevelopment())
     {
         // DEV ONLY: surface would-be email recipients via a response header
