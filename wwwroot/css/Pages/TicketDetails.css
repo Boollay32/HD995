@@ -1506,17 +1506,15 @@ body {
 #TicketDetails-App .td-shell { --shell-cols: 3fr; --shell-cols-r: 7fr; }
 
 /* ============================================================================
-   Wide workspace (Messages collapsed, or workspace-only layout): the open
-   task editor reflows into a 2x2 grid -- Title across the top, then Details /
-   Description / Progress log / Attachments as four boxes, footer across the
-   bottom. Same :has() mechanism as the collapse track rules.
+   Wide workspace (Messages collapsed, or workspace-only layout): keep the open
+   task editor as a tight single-column stack (HD38) rather than spreading into
+   a 2x2 grid -- condensed, footer pulled up close under the fields.
    ============================================================================ */
 .td-shell:has(.td-pane--left.is-collapsed) .td-task-editor,
 .td-shell[data-layout="right-only"] .td-task-editor {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px 22px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .td-shell:has(.td-pane--left.is-collapsed) .td-task-editor > .td-ed-row:first-child,
 .td-shell[data-layout="right-only"] .td-task-editor > .td-ed-row:first-child,
@@ -2120,3 +2118,22 @@ body {
   transform: translateY(-50%);
 }
 #TicketDetails-App .td-overview.is-collapsed > .td-ov-slim { padding-right: 50px; }
+
+/* ===== HD38 ticket-details fixes ===== */
+
+/* #1 Notes-Compose flush to the bottom of the notes panel (was a gap from the
+   tab panel's bottom padding sitting under the composer). */
+#TicketDetails-App #tabpanel-notes { padding-bottom: 0; }
+
+/* #4 "Title" label aligned with the subject and the Origin group below it
+   (the label had no left padding; subject + body sit at 16px). */
+#TicketDetails-App .td-subject-lbl { padding-left: 16px; }
+
+/* #3 Activity tab scrollbar: make it visible and ~50% wider than the default
+   8px workspace scrollbar. */
+#TicketDetails-App #tabpanel-activity { scrollbar-width: auto; }
+#TicketDetails-App #tabpanel-activity::-webkit-scrollbar { width: 12px; }
+#TicketDetails-App #tabpanel-activity::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 99px;
+}
