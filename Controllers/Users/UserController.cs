@@ -52,16 +52,16 @@ namespace HelpDeskNet8.Controllers.Users
         }
 
         [HttpPost]
-        public IActionResult GetUsers([FromBody] GetUsersRequest request)
+        public async Task<IActionResult> GetUsers([FromBody] GetUsersRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            return Ok(_userManager.GetUsers(ScopedFilter(user, IsGovtechAdmin(user), request.Filters)));
+            return Ok(await _userManager.GetUsers(ScopedFilter(user, IsGovtechAdmin(user), request.Filters)));
         }
 
         [HttpPost]
-        public IActionResult GetUserDetail([FromBody] GetUserDetailRequest request)
+        public async Task<IActionResult> GetUserDetail([FromBody] GetUserDetailRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -70,58 +70,58 @@ namespace HelpDeskNet8.Controllers.Users
             // list — the same scoped query GetUsers runs — so scope is defined once.
             if (!IsGovtechAdmin(user))
             {
-                var visible = _userManager.GetUsers(ScopedFilter(user, false, null));
+                var visible = await _userManager.GetUsers(ScopedFilter(user, false, null));
                 if (!visible.Any(u => u.UserID == request.UserId))
                     return StatusCode(403);
             }
 
-            return Ok(_userManager.GetUserDetail(request.UserId));
+            return Ok(await _userManager.GetUserDetail(request.UserId));
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] CreateUserRequest request)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
             if (!IsGovtechAdmin(user)) return StatusCode(403);
 
-            return Ok(_userManager.CreateUser(
+            return Ok(await _userManager.CreateUser(
                 request.UserLogin, request.FirstName, request.LastName,
                 request.Phone, request.AuthorityId, request.Department, request.UTC));
         }
 
         [HttpPost]
-        public IActionResult DeleteUser([FromBody] UserLoginRequest request)
+        public async Task<IActionResult> DeleteUser([FromBody] UserLoginRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
             if (!IsGovtechAdmin(user)) return StatusCode(403);
 
-            return Ok(_userManager.DeleteUser(user.UserLogin, request.UserLogin));
+            return Ok(await _userManager.DeleteUser(user.UserLogin, request.UserLogin));
         }
 
         [HttpPost]
-        public IActionResult ResetUser([FromBody] UserLoginRequest request)
+        public async Task<IActionResult> ResetUser([FromBody] UserLoginRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
             if (!IsGovtechAdmin(user)) return StatusCode(403);
 
-            return Ok(_userManager.ResetUser(request.UserLogin));
+            return Ok(await _userManager.ResetUser(request.UserLogin));
         }
 
         [HttpPost]
-        public IActionResult UpdateUser([FromBody] UpdateUserRequest request)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
             if (!IsGovtechAdmin(user)) return StatusCode(403);
 
-            return Ok(_userManager.UpdateUser(request.UserLogin, request.Phone));
+            return Ok(await _userManager.UpdateUser(request.UserLogin, request.Phone));
         }
 
         [HttpPost]
-        public IActionResult ManageUser([FromBody] ManageUserRequest request)
+        public async Task<IActionResult> ManageUser([FromBody] ManageUserRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -132,16 +132,16 @@ namespace HelpDeskNet8.Controllers.Users
             int? unlockUserInt = string.IsNullOrEmpty(request.UnlockUser) ? (int?)null : Convert.ToInt32(request.UnlockUser);
             int adminLevelIdInt = string.IsNullOrEmpty(request.AdminLevelId) ? 0 : Convert.ToInt32(request.AdminLevelId);
 
-            return Ok(_userManager.ManageUser(request.UserLogin, user.UserLogin, unlockUserInt, adminLevelIdInt, request.Phone));
+            return Ok(await _userManager.ManageUser(request.UserLogin, user.UserLogin, unlockUserInt, adminLevelIdInt, request.Phone));
         }
 
         [HttpPost]
-        public IActionResult GetUserEmailAddress([FromBody] GetUserEmailAddressRequest request)
+        public async Task<IActionResult> GetUserEmailAddress([FromBody] GetUserEmailAddressRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            return Ok(_userManager.GetUserEmailAddress(request.UserId, request.FirstName, request.LastName, request.AuthorityName));
+            return Ok(await _userManager.GetUserEmailAddress(request.UserId, request.FirstName, request.LastName, request.AuthorityName));
         }
 
         // Contact-client flow: a Govtech agent picks a client authority and the
@@ -149,7 +149,7 @@ namespace HelpDeskNet8.Controllers.Users
         // (151) may read across authorities, so the requested authority is passed
         // to usp_Helpdesk_GetUsers explicitly (the caller is not self-scoped here).
         [HttpPost]
-        public IActionResult GetAuthorityClients([FromBody] GetAuthorityClientsRequest request)
+        public async Task<IActionResult> GetAuthorityClients([FromBody] GetAuthorityClientsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -161,7 +161,7 @@ namespace HelpDeskNet8.Controllers.Users
                 ["Authority"] = request.AuthorityId.ToString()
             };
 
-            return Ok(_userManager.GetUsers(TypeCreator.Setup<Filter>(dict)));
+            return Ok(await _userManager.GetUsers(TypeCreator.Setup<Filter>(dict)));
         }
     }
 }

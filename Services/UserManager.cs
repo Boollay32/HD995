@@ -13,7 +13,7 @@ namespace HelpDeskNet8.Services
     {
         private readonly IDbConnection _connection = connection;
 
-        public IEnumerable<IUserStub> GetUsers(IFilter filter)
+        public async Task<IEnumerable<IUserStub>> GetUsers(IFilter filter)
         {
             filter ??= new Filter();
             var userList = new UserList();
@@ -21,7 +21,8 @@ namespace HelpDeskNet8.Services
             if (filter.Deactivated == 1)
                 filter.Locked = 99;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_GetUsers]";
@@ -38,12 +39,12 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@DepartmentID", SqlDbType.Int) { Value = filter.DepartmentID });
                 command.Parameters.Add(new SqlParameter("@LockedStatus", SqlDbType.Int) { Value = filter.Locked });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                             userList.Add(UserStub.FromReader(reader));
                     }
                 }
@@ -54,29 +55,30 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
 
             return userList;
         }
 
-        public IUser? GetUserDetail(int userID)
+        public async Task<IUser?> GetUserDetail(int userID)
         {
             IUser? newUser = null;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_GetUserDetail]";
                 command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = userID });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read() && reader["UserID"] != DBNull.Value)
+                        if (await reader.ReadAsync() && reader["UserID"] != DBNull.Value)
                         {
                             newUser = new User
                             {
@@ -99,18 +101,19 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
 
             return newUser;
         }
 
-        public string CreateUser(string userLogin, string fName, string sName, string phone, int authority, int department, int utc)
+        public async Task<string> CreateUser(string userLogin, string fName, string sName, string phone, int authority, int department, int utc)
         {
             string result = string.Empty;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[usp_Helpdesk_AddUser]";
@@ -123,10 +126,10 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@DepartmentID", SqlDbType.Int) { Value = department });
                 command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = utc });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    result = (string)command.ExecuteScalar();
+                    result = (string)await command.ExecuteScalarAsync();
                 }
                 catch (Exception ex)
                 {
@@ -135,18 +138,19 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
 
             return result;
         }
 
-        public string DeleteUser(string adminUser, string userLogin)
+        public async Task<string> DeleteUser(string adminUser, string userLogin)
         {
             string result = string.Empty;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[usp_Helpdesk_UserDelete]";
@@ -154,10 +158,10 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@UserLogin", SqlDbType.NVarChar) { Value = userLogin });
                 command.Parameters.Add(new SqlParameter("@AdminUserLogin", SqlDbType.NVarChar) { Value = adminUser });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    result = (string)command.ExecuteScalar();
+                    result = (string)await command.ExecuteScalarAsync();
                 }
                 catch (Exception ex)
                 {
@@ -166,27 +170,28 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
 
             return result;
         }
 
-        public string ResetUser(string userLogin)
+        public async Task<string> ResetUser(string userLogin)
         {
             string pin = string.Empty;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[usp_Helpdesk_ResetUser]";
                 command.Parameters.Add(new SqlParameter("@UserLogin", SqlDbType.NVarChar) { Value = userLogin });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    pin = (string)command.ExecuteScalar();
+                    pin = (string)await command.ExecuteScalarAsync();
                 }
                 catch (Exception ex)
                 {
@@ -195,18 +200,19 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
 
             return pin;
         }
 
-        public string GetUserEmailAddress(int userID, string userFirstName, string userLastName, string authorityName)
+        public async Task<string> GetUserEmailAddress(int userID, string userFirstName, string userLastName, string authorityName)
         {
             string message = string.Empty;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[usp_Helpdesk_GetEmailAddress]";
@@ -216,12 +222,12 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@UserLastName", SqlDbType.NVarChar) { Value = string.IsNullOrWhiteSpace(userLastName) ? (object)DBNull.Value : userLastName });
                 command.Parameters.Add(new SqlParameter("@Authority", SqlDbType.NVarChar) { Value = string.IsNullOrWhiteSpace(authorityName) ? (object)DBNull.Value : authorityName });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                             message = reader["EMailAddress"] as string ?? string.Empty;
                     }
                 }
@@ -232,18 +238,19 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
 
             return message;
         }
 
-        public int UpdateUser(string userLogin, string phone)
+        public async Task<int> UpdateUser(string userLogin, string phone)
         {
             int updated = 0;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[usp_Helpdesk_UpdateUser]";
@@ -251,12 +258,12 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@UserLogin", SqlDbType.NVarChar) { Value = userLogin });
                 command.Parameters.Add(new SqlParameter("@UserPhone", SqlDbType.NVarChar) { Value = phone });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                             updated = (int)reader["AdminCheck"];
                     }
                 }
@@ -267,18 +274,19 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
 
             return updated;
         }
 
-        public string ManageUser(string userLogin, string adminUserLogin, int? unlockUser, int adminLevelID, string phone)
+        public async Task<string> ManageUser(string userLogin, string adminUserLogin, int? unlockUser, int adminLevelID, string phone)
         {
             string updated = string.Empty;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[usp_Helpdesk_UserManage]";
@@ -290,10 +298,10 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@AdminLevelID", SqlDbType.Int) { Value = adminLevelID });
                 command.Parameters.Add(new SqlParameter("@UserPhone", SqlDbType.NVarChar) { Value = phone });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    updated = (string)command.ExecuteScalar();
+                    updated = (string)await command.ExecuteScalarAsync();
                 }
                 catch (Exception ex)
                 {
@@ -302,7 +310,7 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
 
