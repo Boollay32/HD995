@@ -15,8 +15,8 @@ namespace HelpDeskNet8.Controllers.Projects
         private readonly IAuthenticator _authenticator = auth;
 
         // Create / edit / complete a project is Govtech-Admin only (level 2).
-        private bool IsGovtechAdmin(IUser user) =>
-            _authenticator.CheckAdmin(user) == Constants.AdminLevel.Admin;
+        private async Task<bool> IsGovtechAdmin(IUser user) =>
+            await _authenticator.CheckAdmin(user) == Constants.AdminLevel.Admin;
 
         [HttpPost]
         public async Task<IActionResult> GetProjects([FromBody] GetProjectsRequest request)
@@ -44,7 +44,7 @@ namespace HelpDeskNet8.Controllers.Projects
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
-            if (!IsGovtechAdmin(user)) return Forbid();
+            if (!await IsGovtechAdmin(user)) return Forbid();
 
             var result = await _projectManager.SaveProject(user, request.Project);
             return Ok(result);

@@ -15,9 +15,9 @@ namespace HelpDeskNet8.Controllers.Login
 
         [HttpPost]
         [IgnoreAntiforgeryToken] // pre-auth login step; CSRF here is low-value, exemption avoids lockout risk
-        public IActionResult PostLogin([FromBody] PostLoginRequest request)
+        public async Task<IActionResult> PostLogin([FromBody] PostLoginRequest request)
         {
-            IUser? user = _authenticator.AuthenticateByPassword(
+            IUser? user = await _authenticator.AuthenticateByPassword(
                 request.UserName, request.Password, request.UTC, request.NewPassword);
 
             return Ok(new TransferObject
@@ -30,9 +30,9 @@ namespace HelpDeskNet8.Controllers.Login
 
         [HttpPost]
         [IgnoreAntiforgeryToken] // pre-auth login step (see PostLogin)
-        public IActionResult SecondWallAuth([FromBody] SecondWallAuthRequest request)
+        public async Task<IActionResult> SecondWallAuth([FromBody] SecondWallAuthRequest request)
         {
-            AuthResult result = _authenticator.SecondWallAuth(
+            AuthResult result = await _authenticator.SecondWallAuth(
                 request.Email, request.Pin, request.UTC);
 
             if (result.IsSuccess && !string.IsNullOrEmpty(result.Token))

@@ -17,8 +17,8 @@ namespace HelpDeskNet8.Controllers.Users
         // Full access (view every authority + edit) belongs to Govtech admins.
         // Admin-level legend (usp_Helpdesk_AdminAccessCheck): 0 = authority/client,
         // 1 = standard Govtech, 2 = admin, 4 = RFC-only. Level 2 is the admin tier.
-        private bool IsGovtechAdmin(IUser user) =>
-            _authenticator.CheckAdmin(user) == Constants.AdminLevel.Admin;
+        private async Task<bool> IsGovtechAdmin(IUser user) =>
+            await _authenticator.CheckAdmin(user) == Constants.AdminLevel.Admin;
 
         // The filter a caller is allowed to use: non-admins are pinned to their own
         // authority no matter what the request asked for. Uses the existing
@@ -57,7 +57,7 @@ namespace HelpDeskNet8.Controllers.Users
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            return Ok(await _userManager.GetUsers(ScopedFilter(user, IsGovtechAdmin(user), request.Filters)));
+            return Ok(await _userManager.GetUsers(ScopedFilter(user, await IsGovtechAdmin(user), request.Filters)));
         }
 
         [HttpPost]
@@ -68,7 +68,7 @@ namespace HelpDeskNet8.Controllers.Users
 
             // A non-admin may only open a user that appears in their own authority's
             // list — the same scoped query GetUsers runs — so scope is defined once.
-            if (!IsGovtechAdmin(user))
+            if (!await IsGovtechAdmin(user))
             {
                 var visible = await _userManager.GetUsers(ScopedFilter(user, false, null));
                 if (!visible.Any(u => u.UserID == request.UserId))
@@ -83,7 +83,7 @@ namespace HelpDeskNet8.Controllers.Users
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
-            if (!IsGovtechAdmin(user)) return StatusCode(403);
+            if (!await IsGovtechAdmin(user)) return StatusCode(403);
 
             return Ok(await _userManager.CreateUser(
                 request.UserLogin, request.FirstName, request.LastName,
@@ -95,7 +95,7 @@ namespace HelpDeskNet8.Controllers.Users
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
-            if (!IsGovtechAdmin(user)) return StatusCode(403);
+            if (!await IsGovtechAdmin(user)) return StatusCode(403);
 
             return Ok(await _userManager.DeleteUser(user.UserLogin, request.UserLogin));
         }
@@ -105,7 +105,7 @@ namespace HelpDeskNet8.Controllers.Users
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
-            if (!IsGovtechAdmin(user)) return StatusCode(403);
+            if (!await IsGovtechAdmin(user)) return StatusCode(403);
 
             return Ok(await _userManager.ResetUser(request.UserLogin));
         }
@@ -115,7 +115,7 @@ namespace HelpDeskNet8.Controllers.Users
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
-            if (!IsGovtechAdmin(user)) return StatusCode(403);
+            if (!await IsGovtechAdmin(user)) return StatusCode(403);
 
             return Ok(await _userManager.UpdateUser(request.UserLogin, request.Phone));
         }
@@ -125,7 +125,7 @@ namespace HelpDeskNet8.Controllers.Users
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
-            if (!IsGovtechAdmin(user)) return StatusCode(403);
+            if (!await IsGovtechAdmin(user)) return StatusCode(403);
 
             // @UnlockUser must be NULL (not 0) when no unlock is intended -- the
             // proc unlocks on ANY value, including 0. HD35 locked-user fix.
