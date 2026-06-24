@@ -54,7 +54,7 @@ class UserPage extends PageBase {
         const adminId = await API.post('Authenticator/CheckAdmin', API.authPayload());
         const cfg = this._config();
         if (parseInt(adminId, 10) === 2) {
-            cfg.action = { label: '+ New User', onClick: () => Nav.toCreateUser() };
+            cfg.action = { label: '+ New User', onClick: () => Router.toCreateUser() };
         }
         this.queue = new QueueView('#queue-mount', cfg);
         await this.queue.load();

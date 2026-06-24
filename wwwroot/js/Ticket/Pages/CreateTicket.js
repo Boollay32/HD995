@@ -290,7 +290,7 @@ class CreateTicket extends PageBase {
                 sessionStorage.setItem('ProjectID', this._projectId);
                 sessionStorage.setItem('TicketListReturn', '/ProjectDetails');
             }
-            Nav.toTicketDetails();
+            Router.toTicketDetails();
             return;
         }
 
