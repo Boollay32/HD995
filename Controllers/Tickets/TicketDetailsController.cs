@@ -134,7 +134,7 @@ namespace HelpDeskNet8.Controllers.Tickets
         // -------------------------  Tasks  ------------------------- //
 
         [HttpPost]
-        public IActionResult GetTasks([FromBody] GetTasksRequest request)
+        public async Task<IActionResult> GetTasks([FromBody] GetTasksRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -142,12 +142,12 @@ namespace HelpDeskNet8.Controllers.Tickets
             // Reuse TicketFilterMapper — same Dictionary<string,string> pattern
             var filter = TicketFilterMapper.Map(request.Filters);
 
-            var tasks = _taskManager.GetTasks(user, filter, UTC: 0);
+            var tasks = await _taskManager.GetTasks(user, filter, UTC: 0);
             return Ok(tasks);
         }
 
         [HttpPost]
-        public IActionResult SaveTask([FromBody] SaveTaskRequest request)
+        public async Task<IActionResult> SaveTask([FromBody] SaveTaskRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -163,7 +163,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             // Stamp server-side user
             task.UserID = user.UserID;
 
-            var result = _taskManager.SaveTask(
+            var result = await _taskManager.SaveTask(
                 task,
                 attachments,
                 user.UserID,
@@ -177,7 +177,7 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             // Return updated task list scoped to same ticket
             var filter = new Filter { TicketID = task.TicketID };
-            var tasks = _taskManager.GetTasks(user, filter, UTC: 0);
+            var tasks = await _taskManager.GetTasks(user, filter, UTC: 0);
             return Ok(tasks);
         }
 
