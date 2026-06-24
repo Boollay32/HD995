@@ -61,6 +61,9 @@ const Auth = {
     // -------------------------  User Permissions  ------------------------- //
 
     async checkPermissions() {
+        // Claim the menu synchronously so revealMenuFallback backs off and lets
+        // the (async) gating below do the reveal -- prevents the all-items flash.
+        Auth._gatingMenu = true;
         try {
             const adminId = await API.post('Authenticator/CheckAdmin', {
                 userName: sessionStorage.getItem(STORAGE_KEYS.USER_NAME),
@@ -150,7 +153,7 @@ const Auth = {
         const page = window.location.pathname;
 
         const rfcOnlyPages = ['/RFC', '/RFCDetails', '/CreateRFC'];
-        const authorityPages = ['/TicketPage', '/TicketDetails', '/CreateTicket'];
+        const authorityPages = ['/TicketPage', '/TicketDetails', '/CreateTicket', '/UserPage', '/UserDetails'];
 
         if (admin === 4 && !rfcOnlyPages.includes(page)) {
             if (loginPage !== '1') RFCView();
@@ -225,7 +228,11 @@ Auth.initActivityListeners();
 (function revealMenuFallback() {
     function arm() {
         setTimeout(function () {
-            document.getElementById('navbar-menu')?.classList.add('perms-ready');
+            // Only reveal if no page claimed the menu via checkPermissions; a
+            // gating page reveals itself after hiding its restricted items.
+            if (!Auth._gatingMenu) {
+                document.getElementById('navbar-menu')?.classList.add('perms-ready');
+            }
         }, 0);
     }
     if (document.readyState === 'loading') {
