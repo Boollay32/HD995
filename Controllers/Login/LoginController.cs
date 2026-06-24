@@ -43,5 +43,18 @@ namespace HelpDeskNet8.Controllers.Login
 
             return result.IsSuccess ? Ok(result) : Unauthorized(result.Error);
         }
+
+        [HttpPost]
+        public IActionResult Logout([FromBody] AuthenticatedRequest request)
+        {
+            // Authenticated via the session cookie (the global filter populates
+            // the user from it). End the DB session, then clear the cookie.
+            IUser? user = this.GetAuthenticatedUser();
+            if (user?.UserID is int userID)
+                _authenticator.Logout(userID);
+
+            SessionCookie.Delete(Response);
+            return Ok();
+        }
     }
 }

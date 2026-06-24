@@ -25,7 +25,6 @@ const Session = {
     get userId() { return sessionStorage.getItem(STORAGE_KEYS.USER_ID); },
     get ticketId() { return sessionStorage.getItem(STORAGE_KEYS.TICKET_ID); },
     get requestTypeId() { return parseInt(sessionStorage.getItem(STORAGE_KEYS.REQUEST_TYPE) ?? '0', 10); },
-    get token() { return sessionStorage.getItem(STORAGE_KEYS.TOKEN); },
     get isInternal() { return INTERNAL_REQUEST_TYPES.includes(Session.requestTypeId); }
 };
 

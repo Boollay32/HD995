@@ -7,7 +7,6 @@ const STORAGE_KEYS = {
     USER_NAME: 'UserName',
     USER_ID: 'UserID',
     AUTHORITY_ID: 'AuthorityID',
-    TOKEN: 'Token',
     STATUS: 'Status',
 
     // -------------------------  Login  ------------------------- //

@@ -108,8 +108,17 @@ const NavBar = {
             message: 'Are you sure you want to log out?',
             confirmText: 'Log out',
         });
-        // Same logout path as before: clear the session and reload.
-        if (ok) MessageBox.okayButtonPress('Index');
+        if (!ok) return;
+        // Tell the server to end the DB session and clear the httpOnly cookie,
+        // then clear client state and reload. Best-effort: a dead session just 401s.
+        try {
+            await fetch('/api/Login/Logout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(API.authPayload())
+            });
+        } catch { /* ignore -- log out client-side regardless */ }
+        MessageBox.okayButtonPress('Index');
     },
 
     // -------------------------  Z-Index  ------------------------- //
