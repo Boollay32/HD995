@@ -149,3 +149,7 @@ function PushBackNav() { NavBar.pushBack(); }
 // items stay hidden - toggled separately in Auth.setAdminAbilities). Was an
 // undefined global that threw inside Auth.checkLimitedUserPerms.
 function DisplayMenu() { const nav = document.getElementById('nav'); if (nav) nav.style.display = ''; }
+
+// Self-initialise on DOM ready (moved out of the _Layout inline
+// <script> so script-src can later drop 'unsafe-inline').
+document.addEventListener('DOMContentLoaded', () => NavBar.init());

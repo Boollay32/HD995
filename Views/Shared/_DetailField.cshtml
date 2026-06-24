@@ -18,7 +18,7 @@
                 @(Model.Required ? "required" : "")
                 maxlength="@Model.MaxLength"
                 placeholder="@Model.Placeholder"
-                onchange="@Model.OnChange"></textarea>
+                ></textarea>
         break;
 
             case "select":
@@ -26,7 +26,7 @@
                         id="@Model.FieldId"
                         @(Model.Required  ? "required"  : "")
                         @(Model.Disabled  ? "disabled"  : "")
-                        onchange="@Model.OnChange">
+                        >
                     @foreach (var option in Model.Options)
                     {
                         <option value="@option.Value"
@@ -42,7 +42,7 @@
                        class="Value"
                        id="@Model.FieldId"
                        @(Model.Disabled  ? "disabled"  : "")
-                       onchange="@Model.OnChange" />
+                        />
                 break;
 
             case "date":
@@ -51,7 +51,7 @@
                        id="@Model.FieldId"
                        @(Model.Required  ? "required"  : "")
                        @(Model.Disabled  ? "disabled"  : "")
-                       onchange="@Model.OnChange" />
+                        />
                 break;
 
             default: @* input *@
@@ -60,7 +60,7 @@
                        @(Model.Required  ? "required"  : "")
                        @(Model.Disabled  ? "disabled"  : "")
                        placeholder="@Model.Placeholder"
-                       onchange="@Model.OnChange" />
+                        />
                 break;
         }
     </div>

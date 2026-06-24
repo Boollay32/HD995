@@ -21,7 +21,7 @@
                     <button type="button"
                             id="Copy-Reference-Button"
                             class="accept"
-                            onclick="navigator.clipboard.writeText(document.getElementById('Request-Id').innerText)">
+                            >
                         Copy
                     </button>
                 </p>
@@ -35,10 +35,11 @@
             <a href="/" class="accept">Return to Home</a>
             <button type="button"
                     class="cancel"
-                    onclick="history.back()">
+                    id="Go-Back-Button">
                 Go Back
             </button>
         </div>
 
     </div>
 </div>
+<script src="~/js/Core/ErrorPage.js" asp-append-version="true"></script>
