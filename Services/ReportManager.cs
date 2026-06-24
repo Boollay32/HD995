@@ -18,22 +18,23 @@ namespace HelpDeskNet8.Services
         // be serialised by System.Text.Json (DataColumn.DataType is a System.Type, which
         // throws NotSupportedException -> HTTP 500), and the Stats page's CreateDynamicTable
         // expects an array of row objects keyed by column name -- exactly this shape.
-        public List<Dictionary<string, object>> GetStats(Int32 StatsID)
+        public async Task<List<Dictionary<string, object>>> GetStats(Int32 StatsID)
         {
             var rows = new List<Dictionary<string, object>>();
 
+            var conn = (SqlConnection)_connection;
             try
             {
-                using (IDbCommand command = _connection.CreateCommand())
+                using (SqlCommand command = conn.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[usp_Helpdesk_TicketStats]";
                     command.Parameters.Add(new SqlParameter("@ReportNo", SqlDbType.Int) { Value = StatsID });
-                    _connection.Open();
+                    await conn.OpenAsync();
 
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             var row = new Dictionary<string, object>();
                             for (int i = 0; i < reader.FieldCount; i++)
@@ -50,7 +51,7 @@ namespace HelpDeskNet8.Services
             finally
             {
                 if (_connection.State == ConnectionState.Open)
-                    _connection.Close();
+                    await conn.CloseAsync();
             }
 
             return rows;
