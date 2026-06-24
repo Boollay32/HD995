@@ -15,22 +15,22 @@ namespace HelpDeskNet8.Controllers.Tickets
         private readonly IAuthenticator _authenticator = auth;
               
         [HttpPost]
-        public IActionResult GetAttachmentsNotes([FromBody] GetAttachmentsNotesRequest request)
+        public async Task<IActionResult> GetAttachmentsNotes([FromBody] GetAttachmentsNotesRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = _attachmentManager.GetAttachmentsNotes(user, request.TicketId, request.RFC);
+            var result = await _attachmentManager.GetAttachmentsNotes(user, request.TicketId, request.RFC);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult GetAttachmentsTasks([FromBody] GetAttachmentsTasksRequest request)
+        public async Task<IActionResult> GetAttachmentsTasks([FromBody] GetAttachmentsTasksRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = _attachmentManager.GetAttachmentsTasks(user, request.TicketId);
+            var result = await _attachmentManager.GetAttachmentsTasks(user, request.TicketId);
             return Ok(result);
         }
     }

@@ -15,11 +15,12 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
-        public IEnumerable<IAttachment> GetAttachmentsNotes(IUser user, int ticketID, int rfc)
+        public async Task<IEnumerable<IAttachment>> GetAttachmentsNotes(IUser user, int ticketID, int rfc)
         {
             var attachments = new AttachmentList();
+            var conn = (SqlConnection)_connection;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
 
@@ -35,12 +36,12 @@ namespace HelpDeskNet8.Services
                     command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ticketID });
                 }
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                             attachments.Add((AttachmentStub)AttachmentStub.FromReader(reader));
                     }
                 }
@@ -50,30 +51,31 @@ namespace HelpDeskNet8.Services
                 }
                 finally
                 {
-                    _connection.Close();
+                    await conn.CloseAsync();
                 }
             }
 
             return attachments;
         }
 
-        public IEnumerable<IAttachment> GetAttachmentsTasks(IUser user, int ticketID)
+        public async Task<IEnumerable<IAttachment>> GetAttachmentsTasks(IUser user, int ticketID)
         {
             var attachments = new AttachmentList();
+            var conn = (SqlConnection)_connection;
 
-            using (IDbCommand command = _connection.CreateCommand())
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_GetAttachmentsTasks]";
                 command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = user.UserID });
                 command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ticketID });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                             attachments.Add((AttachmentStub)AttachmentStub.FromReader(reader));
                     }
                 }
@@ -83,7 +85,7 @@ namespace HelpDeskNet8.Services
                 }
                 finally
                 {
-                    _connection.Close();
+                    await conn.CloseAsync();
                 }
             }
 
