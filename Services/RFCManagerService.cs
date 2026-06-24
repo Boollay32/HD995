@@ -2,6 +2,7 @@
 using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Models.RFCs;
 using HelpDeskNet8.Models.Shared;
+using HelpDeskNet8.Infrastructure;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -23,15 +24,15 @@ namespace HelpDeskNet8.Services
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_RFCGet]";
 
-                command.Parameters.Add(new SqlParameter("@ChangeRequestUserID", SqlDbType.Int) { Value = CRUserID ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = filter.RFCID ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestTitle", SqlDbType.NVarChar) { Value = filter.Title ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestAssignedTo", SqlDbType.NVarChar) { Value = filter.AssignedTechName ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestCreatedBy", SqlDbType.NVarChar) { Value = filter.CreatedByTech ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestCreateDate", SqlDbType.DateTime) { Value = filter.CreateDate ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestCreateDateTo", SqlDbType.DateTime) { Value = filter.DateTo ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestStatusID", SqlDbType.NVarChar) { Value = filter.Status ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestPriorityID", SqlDbType.NVarChar) { Value = filter.Priority ?? (object)DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestUserID", SqlDbType.Int) { Value = SqlValue.OrNull(CRUserID) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = SqlValue.OrNull(filter.RFCID) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestTitle", SqlDbType.NVarChar) { Value = SqlValue.OrNull(filter.Title) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestAssignedTo", SqlDbType.NVarChar) { Value = SqlValue.OrNull(filter.AssignedTechName) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestCreatedBy", SqlDbType.NVarChar) { Value = SqlValue.OrNull(filter.CreatedByTech) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestCreateDate", SqlDbType.DateTime) { Value = SqlValue.OrNull(filter.CreateDate) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestCreateDateTo", SqlDbType.DateTime) { Value = SqlValue.OrNull(filter.DateTo) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestStatusID", SqlDbType.NVarChar) { Value = SqlValue.OrNull(filter.Status) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestPriorityID", SqlDbType.NVarChar) { Value = SqlValue.OrNull(filter.Priority) });
 
                 _connection.Open();
                 try
@@ -63,7 +64,7 @@ namespace HelpDeskNet8.Services
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "[dbo].[usp_Helpdesk_RFCGetDetail]";
-                command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = RFCID ?? (object)DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = SqlValue.OrNull(RFCID) });
 
                 _connection.Open();
                 try
@@ -97,23 +98,23 @@ namespace HelpDeskNet8.Services
 
                 command.Parameters.Add(new SqlParameter("@ChangeRequestID", SqlDbType.Int) { Value = rfc.ChangeRequestID });
                 command.Parameters.Add(new SqlParameter("@ChangeRequestUserID", SqlDbType.Int) { Value = UserID });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestTitle", SqlDbType.NVarChar) { Value = rfc.Title ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@AssignedToUserID", SqlDbType.Int) { Value = rfc.AssignedTechName ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ChangeRequestDescription", SqlDbType.NVarChar) { Value = rfc.Description ?? (object)DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestTitle", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.Title) });
+                command.Parameters.Add(new SqlParameter("@AssignedToUserID", SqlDbType.Int) { Value = SqlValue.OrNull(rfc.AssignedTechName) });
+                command.Parameters.Add(new SqlParameter("@ChangeRequestDescription", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.Description) });
                 command.Parameters.Add(new SqlParameter("@ChangeRequestPriorityID", SqlDbType.Int) { Value = rfc.Priority });
                 command.Parameters.Add(new SqlParameter("@ChangeRequestEnvironmentID", SqlDbType.Int) { Value = rfc.Environment });
                 command.Parameters.Add(new SqlParameter("@ChangeRequestStatusID", SqlDbType.Int) { Value = rfc.Status });
-                command.Parameters.Add(new SqlParameter("@AffectedBusinessSystemsOrServices", SqlDbType.NVarChar) { Value = rfc.AffectedBusinessSystemsOrServices ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@AffectedCustomers", SqlDbType.NVarChar) { Value = rfc.AffectedCustomers ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@BusinessJustification", SqlDbType.NVarChar) { Value = rfc.BusinessJustification ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@RiskAssessment", SqlDbType.NVarChar) { Value = rfc.RiskAssessment ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ImpactAnalysis", SqlDbType.NVarChar) { Value = rfc.ImpactAnalysis ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@InformationSecurityConsiderations", SqlDbType.NVarChar) { Value = rfc.InformationSecurityConsiderations ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@TargetDate", SqlDbType.DateTime) { Value = rfc.TargetDate ?? (object)DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@AffectedBusinessSystemsOrServices", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.AffectedBusinessSystemsOrServices) });
+                command.Parameters.Add(new SqlParameter("@AffectedCustomers", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.AffectedCustomers) });
+                command.Parameters.Add(new SqlParameter("@BusinessJustification", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.BusinessJustification) });
+                command.Parameters.Add(new SqlParameter("@RiskAssessment", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.RiskAssessment) });
+                command.Parameters.Add(new SqlParameter("@ImpactAnalysis", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.ImpactAnalysis) });
+                command.Parameters.Add(new SqlParameter("@InformationSecurityConsiderations", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.InformationSecurityConsiderations) });
+                command.Parameters.Add(new SqlParameter("@TargetDate", SqlDbType.DateTime) { Value = SqlValue.OrNull(rfc.TargetDate) });
                 command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
-                command.Parameters.Add(new SqlParameter("@CompletedDate", SqlDbType.DateTime) { Value = rfc.CompletedDate ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ApprovedBy", SqlDbType.NVarChar) { Value = rfc.ApprovedBy ?? (object)DBNull.Value });
-                command.Parameters.Add(new SqlParameter("@ApprovalDate", SqlDbType.DateTime) { Value = rfc.ApprovalDate ?? (object)DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@CompletedDate", SqlDbType.DateTime) { Value = SqlValue.OrNull(rfc.CompletedDate) });
+                command.Parameters.Add(new SqlParameter("@ApprovedBy", SqlDbType.NVarChar) { Value = SqlValue.OrNull(rfc.ApprovedBy) });
+                command.Parameters.Add(new SqlParameter("@ApprovalDate", SqlDbType.DateTime) { Value = SqlValue.OrNull(rfc.ApprovalDate) });
 
                 _connection.Open();
                 var result = new List<Object>();

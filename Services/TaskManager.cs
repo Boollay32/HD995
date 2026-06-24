@@ -114,18 +114,18 @@ namespace HelpDeskNet8.Services
 
             var taskParameters = new Dictionary<string, (SqlDbType Type, object Value)>
             {
-                { "@TaskID",        (SqlDbType.Int,      (object)task.TaskID ?? DBNull.Value) },
-                { "@ProgressLog",   (SqlDbType.NVarChar, (object)task.ProgressLog ?? DBNull.Value) },
-                { "@CompletionDate",(SqlDbType.DateTime, (object)task.Completed ?? DBNull.Value) },
+                { "@TaskID",        (SqlDbType.Int,      SqlValue.OrNull(task.TaskID)) },
+                { "@ProgressLog",   (SqlDbType.NVarChar, SqlValue.OrNull(task.ProgressLog)) },
+                { "@CompletionDate",(SqlDbType.DateTime, SqlValue.OrNull(task.Completed)) },
                 { "@UTC",           (SqlDbType.Int,      UTC) },
                 { "@UserID",        (SqlDbType.Int,      userID.HasValue ? (object)userID.Value : DBNull.Value) },
-                { "@TicketID",      (SqlDbType.Int,      (object)task.TicketID ?? DBNull.Value) },
-                { "@TaskDescr",     (SqlDbType.NVarChar, (object)task.Description ?? DBNull.Value) },
-                { "@StatusID",      (SqlDbType.Int,      (object)task.Status ?? DBNull.Value) },
+                { "@TicketID",      (SqlDbType.Int,      SqlValue.OrNull(task.TicketID)) },
+                { "@TaskDescr",     (SqlDbType.NVarChar, SqlValue.OrNull(task.Description)) },
+                { "@StatusID",      (SqlDbType.Int,      SqlValue.OrNull(task.Status)) },
                 { "@Important",     (SqlDbType.Int,      task.Important == true ? 1 : 0) },
                 { "@AssignedTechID",(SqlDbType.Int,      int.TryParse(task.AssignedTech, out int techId) ? techId : DBNull.Value) },
-                { "@Title",         (SqlDbType.NVarChar, (object)task.Title ?? DBNull.Value) },
-                { "@RequiredByDate",(SqlDbType.DateTime, (object)task.RequiredDate ?? DBNull.Value) }
+                { "@Title",         (SqlDbType.NVarChar, SqlValue.OrNull(task.Title)) },
+                { "@RequiredByDate",(SqlDbType.DateTime, SqlValue.OrNull(task.RequiredDate)) }
             };
             AddParameters(command, taskParameters);
 
