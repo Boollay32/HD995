@@ -30,20 +30,21 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
-        public IEnumerable<ITicketStub> GetTickets(IUser user, IFilter filter, Int32 mytickets, int UTC)
-            => RunTicketRead("[dbo].[usp_Helpdesk_GetTickets]", user, filter, mytickets, UTC);
+        public async Task<IEnumerable<ITicketStub>> GetTickets(IUser user, IFilter filter, Int32 mytickets, int UTC)
+            => await RunTicketRead("[dbo].[usp_Helpdesk_GetTickets]", user, filter, mytickets, UTC);
 
-        public IEnumerable<ITicketStub> GetIncidents(IUser user, IFilter filter, Int32 mytickets, int UTC)
-            => RunTicketRead("[dbo].[usp_Helpdesk_GetIncidents]", user, filter, mytickets, UTC);
+        public async Task<IEnumerable<ITicketStub>> GetIncidents(IUser user, IFilter filter, Int32 mytickets, int UTC)
+            => await RunTicketRead("[dbo].[usp_Helpdesk_GetIncidents]", user, filter, mytickets, UTC);
 
-        private IEnumerable<ITicketStub> RunTicketRead(string proc, IUser user, IFilter filter, Int32 mytickets, int UTC)
+        private async Task<IEnumerable<ITicketStub>> RunTicketRead(string proc, IUser user, IFilter filter, Int32 mytickets, int UTC)
         {
             if (filter == null)
             { filter = new Filter(); }
 
             var TicketList = new TicketList();
 
-            using IDbCommand command = _connection.CreateCommand();
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
             command.CommandType = CommandType.StoredProcedure;
             command.CommandText = proc;
 
@@ -62,11 +63,11 @@ namespace HelpDeskNet8.Services
             command.Parameters.Add(new SqlParameter("@Subject", SqlDbType.NVarChar) { Value = filter.Subject });
             command.Parameters.Add(new SqlParameter("@CategoryID", SqlDbType.Int) { Value = filter.Category });
 
-            _connection.Open();
+            await conn.OpenAsync();
             try
             {
-                using IDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
                     TicketList.Add(TicketStub.FromReader(reader));
                 }
@@ -77,17 +78,18 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return TicketList;
         }
 
-        public ITicket GetTicketDetail(int ID, IUser user)
+        public async Task<ITicket> GetTicketDetail(int ID, IUser user)
         {
+            var conn = (SqlConnection)_connection;
             try
             {
-                using (IDbCommand command = _connection.CreateCommand())
+                using (SqlCommand command = conn.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[usp_Helpdesk_GetTicketDetail]";
@@ -95,33 +97,34 @@ namespace HelpDeskNet8.Services
                     command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ID });
                     command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.NVarChar) { Value = user.UserID });
 
-                    _connection.Open();
+                    await conn.OpenAsync();
 
                     ITicket ticket = null;
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             ticket = Ticket.FromReader(reader);
                         }
                     }
 
-                    _connection.Close();
+                    await conn.CloseAsync();
                     return ticket;
                 }
             }
 
             catch (Exception EX)
             {
-                _connection.Close();
+                await conn.CloseAsync();
 
                 return null;
             }
         }
 
-        public SaveResult SaveTicket(ITicket ticket, IUser user, int UTC, bool FalseReply, int emailSent, int visibleToClient = 1, DateTime? closeDate = null)
+        public async Task<SaveResult> SaveTicket(ITicket ticket, IUser user, int UTC, bool FalseReply, int emailSent, int visibleToClient = 1, DateTime? closeDate = null)
         {
-            using (IDbCommand command = _connection.CreateCommand())
+            var conn = (SqlConnection)_connection;
+            using (SqlCommand command = conn.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
 
@@ -241,17 +244,17 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@EmailCC", SqlDbType.NVarChar) { Value = ToSqlValue(ticket.EmailCC) });
                 command.Parameters.Add(new SqlParameter("@FileName", SqlDbType.NVarChar) { Value = ToSqlValue(ticket.FileName) });
 
-                _connection.Open();
+                await conn.OpenAsync();
                 try
                 {
                     if (isUpdate)
                     {
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
                         return SaveResult.Updated(ticket.TicketID);
                     }
                     else
                     {
-                        int newTicketID = (int)command.ExecuteScalar();
+                        int newTicketID = (int)await command.ExecuteScalarAsync();
                         return SaveResult.Created(newTicketID);
                     }
                 }
@@ -263,7 +266,7 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await conn.CloseAsync();
                 }
             }
         }
@@ -283,13 +286,14 @@ namespace HelpDeskNet8.Services
             return value.HasValue && value.Value != DateTime.MinValue ? (object)value.Value : DBNull.Value;
         }
 
-        public DataTable GetStats(int ID, IUser user)
+        public async Task<DataTable> GetStats(int ID, IUser user)
         {
+            var conn = (SqlConnection)_connection;
             try
             {
                 DataTable StatsTable = new DataTable();
 
-                using (IDbCommand command = _connection.CreateCommand())
+                using (SqlCommand command = conn.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[usp_Helpdesk_GetTicketDetail]";
@@ -297,16 +301,16 @@ namespace HelpDeskNet8.Services
                     command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ID });
                     command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = user.UserID });
 
-                    _connection.Open();
+                    await conn.OpenAsync();
 
-                    using (IDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
-                            StatsTable.Load(command.ExecuteReader());
+                            StatsTable.Load(await command.ExecuteReaderAsync());
                         }
                     }
-                    _connection.Close();
+                    await conn.CloseAsync();
                     return StatsTable;
                 }
             }
@@ -317,7 +321,7 @@ namespace HelpDeskNet8.Services
             }
             finally
             {
-                _connection.Close();
+                await conn.CloseAsync();
             }
 
             return null;

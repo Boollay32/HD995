@@ -29,13 +29,13 @@ namespace HelpDeskNet8.Services
             _preview = preview;
         }
 
-        public void Notify(int ticketId, NotificationType type, IUser user)
+        public async Task Notify(int ticketId, NotificationType type, IUser user)
         {
             try
             {
                 if (ticketId <= 0) return;
 
-                ITicket ticket = _ticketManager.GetTicketDetail(ticketId, user);
+                ITicket ticket = await _ticketManager.GetTicketDetail(ticketId, user);
                 if (ticket == null) return;
 
                 // C2/C3: an event can notify several parties (e.g. assign ->

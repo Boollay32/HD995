@@ -37,14 +37,14 @@ namespace HelpDeskNet8.Controllers.Tickets
         // -------------------------  Ticket  ------------------------- //
 
         [HttpPost]
-        public IActionResult GetTicketDetail([FromBody] GetTicketDetailRequest request)
+        public async Task<IActionResult> GetTicketDetail([FromBody] GetTicketDetailRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
             if (request.TicketId <= 0) return BadRequest("Invalid ticket ID.");
 
-            var ticket = _ticketManager.GetTicketDetail(request.TicketId, user);
+            var ticket = await _ticketManager.GetTicketDetail(request.TicketId, user);
             if (ticket == null) return NotFound();
 
             // IDOR guard: a non-Govtech caller may only open a ticket in their own authority.
@@ -64,7 +64,7 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             if (request.TicketId <= 0) return BadRequest("Invalid ticket ID.");
 
-            if (CannotSeeTicket(user, request.TicketId)) return NotFound();
+            if (await CannotSeeTicket(user, request.TicketId)) return NotFound();
 
             var notes = await _noteManager.GetNotes(user, request.TicketId);
             return Ok(notes);
@@ -121,9 +121,9 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (!request.RFC && isNewNote)
             {
                 if (request.IsOriginal)
-                    _notificationService.Notify(note.TicketID ?? 0, NotificationType.TicketCreated, user);
+                    await _notificationService.Notify(note.TicketID ?? 0, NotificationType.TicketCreated, user);
                 else
-                    _notificationService.Notify(note.TicketID ?? 0, NotificationType.NoteResponded, user);
+                    await _notificationService.Notify(note.TicketID ?? 0, NotificationType.NoteResponded, user);
             }
 
             // Return updated notes so UI can re-render without a second call
@@ -173,7 +173,7 @@ namespace HelpDeskNet8.Controllers.Tickets
                 return BadRequest(result.Error);
 
             // Notify the ticket's assigned tech of the task change.
-            _notificationService.Notify(task.TicketID ?? 0, NotificationType.TaskSaved, user);
+            await _notificationService.Notify(task.TicketID ?? 0, NotificationType.TaskSaved, user);
 
             // Return updated task list scoped to same ticket
             var filter = new Filter { TicketID = task.TicketID };
@@ -184,14 +184,14 @@ namespace HelpDeskNet8.Controllers.Tickets
         // -------------------------  Activity  ------------------------- //
 
         [HttpPost]
-        public IActionResult GetActivity([FromBody] GetHistoryRequest request)
+        public async Task<IActionResult> GetActivity([FromBody] GetHistoryRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
             if (request.TicketId <= 0) return BadRequest("Invalid ticket ID.");
 
-            if (CannotSeeTicket(user, request.TicketId)) return NotFound();
+            if (await CannotSeeTicket(user, request.TicketId)) return NotFound();
 
             var activity = _history.GetHistory(user, request.TicketId);
             return Ok(activity);
@@ -200,10 +200,10 @@ namespace HelpDeskNet8.Controllers.Tickets
         // -------------------------  Private helpers  ------------------------- //
 
         // IDOR guard: non-Govtech callers may only act on tickets in their own authority.
-        private bool CannotSeeTicket(IUser user, int ticketId)
+        private async Task<bool> CannotSeeTicket(IUser user, int ticketId)
         {
             if (user.AuthorityID == Constants.Authority.Govtech) return false;
-            var t = _ticketManager.GetTicketDetail(ticketId, user);
+            var t = await _ticketManager.GetTicketDetail(ticketId, user);
             return t == null || t.UserAuthorityID != user.AuthorityID;
         }
 

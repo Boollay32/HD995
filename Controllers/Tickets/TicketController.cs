@@ -30,18 +30,18 @@ namespace HelpDeskNet8.Controllers.Tickets
         // This duplicate had no JS caller and skipped those checks.
 
         [HttpPost]
-        public IActionResult GetTickets([FromBody] GetTicketsRequest request)
+        public async Task<IActionResult> GetTickets([FromBody] GetTicketsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
             Filter filter = TicketFilterMapper.Map(request.Filters);
-            var allTickets = _ticketManager.GetTickets(user, filter, request.MyTicket, request.UTC);
+            var allTickets = await _ticketManager.GetTickets(user, filter, request.MyTicket, request.UTC);
             return Ok(allTickets);
         }
 
         [HttpPost]
-        public IActionResult GetIncidents([FromBody] GetTicketsRequest request)
+        public async Task<IActionResult> GetIncidents([FromBody] GetTicketsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -50,12 +50,12 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (user.AuthorityID != Constants.Authority.Govtech) return Ok(System.Array.Empty<object>());
 
             Filter filter = TicketFilterMapper.Map(request.Filters);
-            var incidents = _ticketManager.GetIncidents(user, filter, request.MyTicket, request.UTC);
+            var incidents = await _ticketManager.GetIncidents(user, filter, request.MyTicket, request.UTC);
             return Ok(incidents);
         }
 
         [HttpPost]
-        public IActionResult SaveTicket([FromBody] SaveTicketRequest request)
+        public async Task<IActionResult> SaveTicket([FromBody] SaveTicketRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
@@ -75,12 +75,12 @@ namespace HelpDeskNet8.Controllers.Tickets
             // re-assignment ('Assigned') from a plain reply ('Responded').
             int? oldAssignedTechId = null;
             if (ticket.TicketID != null)
-                oldAssignedTechId = _ticketManager.GetTicketDetail(ticket.TicketID.Value, user)?.AssignedTechID;
+                oldAssignedTechId = (await _ticketManager.GetTicketDetail(ticket.TicketID.Value, user))?.AssignedTechID;
 
             // Fix: SaveResult — strongly typed — replaces List<object> index access
             SaveResult result = ticket.TicketID != null
-                ? _ticketManager.SaveTicket(ticket.GetChanges(), user, request.UTC, request.FalseReply, request.EmailSent, visibleToClient: 1)
-                : _ticketManager.SaveTicket(ticket, user, request.UTC, request.FalseReply, request.EmailSent);
+                ? await _ticketManager.SaveTicket(ticket.GetChanges(), user, request.UTC, request.FalseReply, request.EmailSent, visibleToClient: 1)
+                : await _ticketManager.SaveTicket(ticket, user, request.UTC, request.FalseReply, request.EmailSent);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
@@ -88,14 +88,14 @@ namespace HelpDeskNet8.Controllers.Tickets
             // Notify on update only: Assigned if the tech changed, else Responded.
             if (ticket.TicketID != null)
             {
-                var saved = _ticketManager.GetTicketDetail(ticket.TicketID.Value, user);
+                var saved = await _ticketManager.GetTicketDetail(ticket.TicketID.Value, user);
                 if (saved != null)
                 {
                     bool techChanged = oldAssignedTechId != saved.AssignedTechID;
                     NotificationType type = techChanged
                         ? NotificationType.TicketAssigned
                         : NotificationType.TicketResponded;
-                    _notificationService.Notify(ticket.TicketID.Value, type, user);
+                    await _notificationService.Notify(ticket.TicketID.Value, type, user);
                 }
             }
 
