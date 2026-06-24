@@ -4,20 +4,20 @@ namespace HelpDeskNet8.Interfaces.Users
 {
     public interface IUserManager
     {
-        IEnumerable<IUserStub> GetUsers(IFilter filter);
+        Task<IEnumerable<IUserStub>> GetUsers(IFilter filter);
 
-        IUser GetUserDetail(int UserID);
+        Task<IUser> GetUserDetail(int UserID);
         
-        string CreateUser(String UserLogin, String FName, String SName, String Phone, Int32 Authority, Int32 Department, int UTC);
+        Task<string> CreateUser(String UserLogin, String FName, String SName, String Phone, Int32 Authority, Int32 Department, int UTC);
 
-        string DeleteUser(string AdminUser, string userLogin);
+        Task<string> DeleteUser(string AdminUser, string userLogin);
 
-        String ResetUser(String UserLogin);
+        Task<String> ResetUser(String UserLogin);
 
-        String GetUserEmailAddress(int UserID, string UserFirstName, string UserLastName, string AuthorityName);
+        Task<String> GetUserEmailAddress(int UserID, string UserFirstName, string UserLastName, string AuthorityName);
 
-        int UpdateUser(string UserLogin, string Phone);
+        Task<int> UpdateUser(string UserLogin, string Phone);
 
-        string ManageUser(string UserLogin, string AdminUserLogin, int? UnlockUser, Int32 AdminLevelID, string Phone);
+        Task<string> ManageUser(string UserLogin, string AdminUserLogin, int? UnlockUser, Int32 AdminLevelID, string Phone);
     }
 }
