@@ -55,12 +55,12 @@ namespace HelpDeskNet8.Controllers.Shared
         }
 
         [HttpPost]
-        public IActionResult GetDropDownList([FromBody] GetDropDownListRequest request)
+        public async Task<IActionResult> GetDropDownList([FromBody] GetDropDownListRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var dropdowns = _dropDownManager.GetDropDowns(user, request.Filter, request.Group);
+            var dropdowns = await _dropDownManager.GetDropDowns(user, request.Filter, request.Group);
 
             if (dropdowns is not IEnumerable enumerable)
                 return Ok(new Dictionary<string, List<object>>());
