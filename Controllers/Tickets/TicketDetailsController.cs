@@ -193,7 +193,7 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             if (await CannotSeeTicket(user, request.TicketId)) return NotFound();
 
-            var activity = _history.GetHistory(user, request.TicketId);
+            var activity = await _history.GetHistory(user, request.TicketId);
             return Ok(activity);
         }
 

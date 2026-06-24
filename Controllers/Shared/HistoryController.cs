@@ -15,12 +15,12 @@ namespace HelpDeskNet8.Controllers.Shared
         private readonly IAuthenticator _authenticator = auth;
                 
         [HttpPost]
-        public IActionResult GetHistory([FromBody] GetHistoryRequest request)
+        public async Task<IActionResult> GetHistory([FromBody] GetHistoryRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = _historyManager.GetHistory(user, request.TicketId);
+            var result = await _historyManager.GetHistory(user, request.TicketId);
             return Ok(result);
         }
     }
