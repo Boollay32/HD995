@@ -194,6 +194,7 @@ document.addEventListener('input', e => {
 // Initial sizing on load
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('textarea').forEach(t => UI.autoGrow(t));
+    UI._drainFlash();
 });
 
 document.addEventListener('mouseover', e => {
@@ -229,16 +230,78 @@ UI.toast = function (message, type = 'info') {
         host.id = 'ui-toast-host';
         document.body.appendChild(host);
     }
+
     const el = document.createElement('div');
     el.className = `ui-toast ui-toast--${type}`;
     el.setAttribute('role', type === 'error' ? 'alert' : 'status');
+    el.setAttribute('tabindex', '-1');
     el.textContent = message;
     host.appendChild(el);
-    requestAnimationFrame(() => el.classList.add('is-in'));
-    setTimeout(() => {
+
+    // Remember where focus was, then move it onto the toast so a screen
+    // reader lands on the notice and reads it. If focus is already on an
+    // earlier toast, chain back to that one's origin so focus returns to the
+    // real control. Focus is handed back when this toast leaves (dismiss()).
+    const active = document.activeElement;
+    const fromToast = active && active.closest ? active.closest('.ui-toast') : null;
+    const origin = fromToast ? fromToast._returnFocus : active;
+    el._returnFocus = (origin && origin.isConnected && origin !== document.body) ? origin : null;
+
+    // Dwell scales with reading length (5s min, 10s cap) so there's time to
+    // read it; the timer pauses on hover or on deliberate (user) focus.
+    const words = String(message).trim().split(/\s+/).filter(Boolean).length;
+    const lifeMs = Math.min(10000, Math.max(5000, 2600 + words * 700));
+    let timer = null, done = false;
+    const dismiss = () => {
+        if (done) return;
+        done = true;
+        if (timer) { clearTimeout(timer); timer = null; }
         el.classList.remove('is-in');
-        setTimeout(() => el.remove(), 300);
-    }, 3200);
+        const back = el._returnFocus;
+        setTimeout(() => {
+            el.remove();
+            if (back && back.isConnected && typeof back.focus === 'function') {
+                try { back.focus({ preventScroll: true }); } catch (_) {}
+            }
+        }, 260);
+    };
+    const arm  = () => { if (!done && timer === null) timer = setTimeout(dismiss, lifeMs); };
+    const hold = () => { if (timer) { clearTimeout(timer); timer = null; } };
+
+    el.addEventListener('mouseenter', hold);
+    el.addEventListener('mouseleave', arm);
+    // Our own programmatic focus must not pause the timer (an untouched toast
+    // would then never leave); only a user tabbing in should hold it open.
+    let selfFocus = false;
+    el.addEventListener('focusin',  () => { if (!selfFocus) hold(); });
+    el.addEventListener('focusout', arm);
+    el.addEventListener('click', dismiss);
+    el.addEventListener('keydown', e => { if (e.key === 'Escape') dismiss(); });
+
+    requestAnimationFrame(() => {
+        el.classList.add('is-in');
+        selfFocus = true;
+        try { el.focus({ preventScroll: true }); } catch (_) { try { el.focus(); } catch (_) {} }
+        selfFocus = false;
+    });
+
+    arm();
+};
+
+// Cross-navigation flash: stash a message now, surface it as a toast on the
+// next page load. Used by create flows that navigate to a list. Drained in
+// the DOMContentLoaded handler below.
+UI.flash = function (message, type = 'info') {
+    try { sessionStorage.setItem('ui-flash', JSON.stringify({ message, type })); } catch (_) {}
+};
+
+UI._drainFlash = function () {
+    let raw = null;
+    try { raw = sessionStorage.getItem('ui-flash'); } catch (_) { return; }
+    if (!raw) return;
+    try { sessionStorage.removeItem('ui-flash'); } catch (_) {}
+    let data; try { data = JSON.parse(raw); } catch (_) { return; }
+    if (data && data.message) UI.toast(data.message, data.type || 'info');
 };
 
 UI._ensureToastStyles = function () {
@@ -246,18 +309,24 @@ UI._ensureToastStyles = function () {
     const s = document.createElement('style');
     s.id = 'ui-toast-styles';
     s.textContent = `
-#ui-toast-host { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+#ui-toast-host { position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; gap: 8px; z-index: 4000; pointer-events: none; }
 .ui-toast { font-family: 'Spline Sans', system-ui, sans-serif; font-size: 0.84375rem; font-weight: 500;
   background: var(--panel, #fff); color: var(--text, #1D1C1A);
   border: 1px solid var(--border, #D8D3C8); border-left-width: 4px; border-radius: 9px;
   padding: 10px 16px; box-shadow: 0 6px 22px rgba(0,0,0,0.18);
-  opacity: 0; transform: translateY(8px); transition: opacity .25s ease, transform .25s ease; }
+  opacity: 0; transform: translateY(-10px); transition: opacity .25s ease, transform .25s ease;
+  pointer-events: auto; cursor: default; }
 .ui-toast.is-in { opacity: 1; transform: translateY(0); }
 .ui-toast--success { border-left-color: var(--ok, #2e7d32); }
 .ui-toast--error   { border-left-color: var(--danger, #c62828); }
 .ui-toast--warning { border-left-color: var(--warn, #ed6c02); }
 .ui-toast--info    { border-left-color: var(--info, #0277bd); }
+.ui-toast:focus { outline: 2px solid var(--accent, #B5530E); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .ui-toast { transition: opacity .15s ease; transform: none; }
+  .ui-toast.is-in { transform: none; }
+}
 .ui-av { display: inline-flex; align-items: center; justify-content: center;
   width: 18px; height: 18px; border-radius: 50%; margin-right: 6px; flex: none;
   font-family: 'Spline Sans', system-ui, sans-serif; font-size: 0.59375rem; font-weight: 700;

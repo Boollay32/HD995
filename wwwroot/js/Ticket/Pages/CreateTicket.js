@@ -294,7 +294,8 @@ class CreateTicket extends PageBase {
             return;
         }
 
-        BuildMessageBox(`Created Ticket ${newTicketId}`, 'TicketPage');
+        UI.flash(`Created Ticket ${newTicketId}`, 'success');
+        Router.toTicketPage();
     }
 }
 
