@@ -16,7 +16,7 @@ const Auth = {
     },
 
     keepAlive() {
-        if (!sessionStorage.getItem(STORAGE_KEYS.TOKEN)) return;
+        if (!sessionStorage.getItem(STORAGE_KEYS.USER_NAME)) return;
 
         const lastMove = sessionStorage.getItem('LastMouseMove');
         const now = Date.now();
@@ -38,14 +38,12 @@ const Auth = {
 
     async authenticateUser() {
         const userName = sessionStorage.getItem(STORAGE_KEYS.USER_NAME);
-        const token = sessionStorage.getItem(STORAGE_KEYS.TOKEN);
 
-        if (!userName || !token) return;
+        if (!userName) return;
 
         try {
             const data = await API.post('Authenticator/Authenticate', {
                 userName,
-                token,
                 utc: UTCWorkAround()
             });
 
@@ -66,7 +64,6 @@ const Auth = {
         try {
             const adminId = await API.post('Authenticator/CheckAdmin', {
                 userName: sessionStorage.getItem(STORAGE_KEYS.USER_NAME),
-                token: sessionStorage.getItem(STORAGE_KEYS.TOKEN),
                 utc: UTCWorkAround()
             });
 

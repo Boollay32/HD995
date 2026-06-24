@@ -192,7 +192,6 @@ async function SecondWallAuth() {
 
         // Fix: named AuthResult properties — not data[0], data[1]
         if (data.isSuccess) {
-            sessionStorage.setItem("Token", data.token);
             // Post-login redirect (login message feature removed):
             // RFC-only users (level 4) -> RFC, everyone else -> TicketPage.
             const destination = sessionStorage.getItem("Admin") === "4" ? "RFC" : "TicketPage";
