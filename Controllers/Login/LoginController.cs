@@ -33,6 +33,14 @@ namespace HelpDeskNet8.Controllers.Login
             AuthResult result = _authenticator.SecondWallAuth(
                 request.Email, request.Pin, request.UTC);
 
+            if (result.IsSuccess && !string.IsNullOrEmpty(result.Token))
+            {
+                // Phase A: also issue the session token as an httpOnly cookie.
+                // The body token is still returned (dual transport); the auth
+                // filter prefers the cookie and falls back to the body.
+                Response.Cookies.Append(SessionCookie.Name, result.Token, SessionCookie.Options());
+            }
+
             return result.IsSuccess ? Ok(result) : Unauthorized(result.Error);
         }
     }
