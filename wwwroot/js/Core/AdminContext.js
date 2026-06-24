@@ -7,7 +7,6 @@
 
             const level = await API.post('Authenticator/CheckAdmin', {
                 userName: sessionStorage.getItem(STORAGE_KEYS.USER_NAME),
-                token: sessionStorage.getItem(STORAGE_KEYS.TOKEN),
                 utc: UTCWorkAround()
             });
 

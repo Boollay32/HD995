@@ -7,8 +7,9 @@ const API = {
 
     isAuthenticated() {
         const userName = sessionStorage.getItem(STORAGE_KEYS.USER_NAME);
-        const token = sessionStorage.getItem(STORAGE_KEYS.TOKEN);
-        return !!(userName && token);
+        // Token now lives in the httpOnly hd_session cookie (not JS-readable);
+        // userName presence is the optimistic marker, a server 401 is authoritative.
+        return !!userName;
     },
 
     handleSessionTimeout() {
@@ -18,7 +19,6 @@ const API = {
     async verifySession() {
         const data = await API.post('Authenticator/Authenticate', {
             userName: sessionStorage.getItem(STORAGE_KEYS.USER_NAME),
-            token: sessionStorage.getItem(STORAGE_KEYS.TOKEN),
             utc: UTCWorkAround()
         });
 
@@ -74,7 +74,6 @@ const API = {
     authPayload: function (extras = {}) {
         return {
             userName: sessionStorage.getItem(STORAGE_KEYS.USER_NAME),
-            token: sessionStorage.getItem(STORAGE_KEYS.TOKEN),
             utc: UTCWorkAround(),
             ...extras
         };
