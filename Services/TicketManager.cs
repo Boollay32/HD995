@@ -74,7 +74,7 @@ namespace HelpDeskNet8.Services
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"[{GetType().Name}] {ex.Message}");
+                AppLogger.Error(nameof(TicketManager), ex);
             }
             finally
             {

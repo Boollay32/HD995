@@ -4,6 +4,7 @@ using HelpDeskNet8.Models.RFCs;
 using HelpDeskNet8.Models.Shared;
 using HelpDeskNet8.Infrastructure;
 using Microsoft.Data.SqlClient;
+using HelpDeskNet8.Utilities;
 using System.Data;
 
 namespace HelpDeskNet8.Services
@@ -49,7 +50,7 @@ namespace HelpDeskNet8.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine($"[{GetType().Name}] {ex.Message}");
+                    AppLogger.Error(nameof(RFCManager), ex);
                     return null;
                 }
                 finally
@@ -81,7 +82,7 @@ namespace HelpDeskNet8.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine($"[{GetType().Name}] {ex.Message}");
+                    AppLogger.Error(nameof(RFCManager), ex);
                     return null;
                 }
                 finally

@@ -10,6 +10,7 @@
 using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Users;
 using Microsoft.Data.SqlClient;
+using HelpDeskNet8.Utilities;
 using System.Data;
 using System.Net.Mail;
 
@@ -47,7 +48,7 @@ namespace HelpDeskNet8.Services
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"[{GetType().Name}] {ex.Message}");
+                AppLogger.Error(nameof(MiscManager), ex);
             }
             finally
             {
