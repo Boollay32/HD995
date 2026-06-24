@@ -14,12 +14,12 @@ namespace HelpDeskNet8.Controllers.Shared
         private readonly IAuthenticator _authenticator = auth;
 
         [HttpPost]
-        public IActionResult GetStats([FromBody] GetStatsRequest request)
+        public async Task<IActionResult> GetStats([FromBody] GetStatsRequest request)
         {
     IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            return Ok(_reportsManager.GetStats(request.StatsId));
+            return Ok(await _reportsManager.GetStats(request.StatsId));
         }
     }
 }
