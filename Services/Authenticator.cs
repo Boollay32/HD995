@@ -59,7 +59,7 @@ namespace HelpDeskNet8.Services
             return user;
         }
 
-        public IUser? AuthenticateByToken(string username, string token, int UTC)
+        public async Task<IUser?> AuthenticateByToken(string username, string token, int UTC)
         {
             IUser? user = null;
 
@@ -73,12 +73,12 @@ namespace HelpDeskNet8.Services
                 command.Parameters.Add(new SqlParameter("@UserToken", SqlDbType.NVarChar) { Value = token });
                 command.Parameters.Add(new SqlParameter("@UTC", SqlDbType.Int) { Value = UTC });
 
-                _connection.Open();
+                await _connection.OpenAsync();
                 try
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                             user = User.FromReader(reader);
                     }
                 }
@@ -89,7 +89,7 @@ namespace HelpDeskNet8.Services
                 finally
                 {
                     if (_connection.State == ConnectionState.Open)
-                        _connection.Close();
+                        await _connection.CloseAsync();
                 }
             }
 

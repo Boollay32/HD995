@@ -13,7 +13,7 @@ namespace HelpDeskNet8.Interfaces.Shared
             int UTC, string? newPassword = null);
 
         // Fix: nullable return — null = token invalid/expired
-        IUser? AuthenticateByToken(string username, string token, int UTC);
+        Task<IUser?> AuthenticateByToken(string username, string token, int UTC);
 
         Task Logout(int userID);
 

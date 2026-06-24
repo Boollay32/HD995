@@ -6,15 +6,18 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace HelpDeskNet8.Infrastructure
 {
-    public class AuthenticateActionFilter(IAuthenticator authenticator) : IActionFilter
+    public class AuthenticateActionFilter(IAuthenticator authenticator) : IAsyncActionFilter
     {
         private readonly IAuthenticator _authenticator = authenticator;
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            // Fix: skip auth for actions without AuthenticatedRequest — e.g. login page
+            // Skip auth for actions without AuthenticatedRequest (e.g. the login page).
             if (!context.ActionArguments.Values.OfType<AuthenticatedRequest>().Any())
+            {
+                await next();
                 return;
+            }
 
             var request = context.ActionArguments.Values
                 .OfType<AuthenticatedRequest>()
@@ -23,7 +26,7 @@ namespace HelpDeskNet8.Infrastructure
             // Session token comes only from the httpOnly cookie (set at login).
             string token = context.HttpContext.Request.Cookies[SessionCookie.Name] ?? string.Empty;
 
-            IUser? user = _authenticator.AuthenticateByToken(
+            IUser? user = await _authenticator.AuthenticateByToken(
                 request.UserName, token, request.UTC);
 
             if (user == null)
@@ -33,8 +36,8 @@ namespace HelpDeskNet8.Infrastructure
             }
 
             context.HttpContext.Items["AuthenticatedUser"] = user;
-        }
 
-        public void OnActionExecuted(ActionExecutedContext context) { }
+            await next();
+        }
     }
 }
