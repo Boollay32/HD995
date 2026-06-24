@@ -14,11 +14,6 @@ const TQ_STATUS_COLOR = {
     Closed:    ['var(--ok-fg)', 'var(--ok-bg)'],
     Solved:    ['var(--ok-fg)', 'var(--ok-bg)'],
 };
-const TQ_AV_PALETTE = ['#5A6470', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
-
-const TQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const TQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
-const TQavColor = n => { let h = 0; for (const c of (n || '')) h = c.charCodeAt(0) + ((h << 5) - h); return TQ_AV_PALETTE[Math.abs(h) % TQ_AV_PALETTE.length]; };
 const TQisOpen = r => !['Closed', 'Solved'].includes(r.status);
 // The assigned tech has a client reply to answer: notify '0' (client
 // replied) and the ticket is assigned to the current user. myId is set
@@ -108,28 +103,28 @@ class IncidentPage extends PageBase {
                 {
                     key: 'subject', label: 'Ticket', sortable: true,
                     sortValue: r => (r.subject || '').toLowerCase(),
-                    render: r => `<div class="qv-subj">${TQneedsMyReply(r) ? '<span class="qv-unread qv-mine" title="Client replied \u2013 your reply needed"></span>' : (r.notify === '0' ? '<span class="qv-unread" title="Awaiting reply"></span>' : '')}<div><div class="s1">${TQesc(r.subject)}</div><div class="s2"><span class="qv-ref">#${r.ticketID}</span> · ${TQesc(r.userName)}</div></div></div>`
+                    render: r => `<div class="qv-subj">${TQneedsMyReply(r) ? '<span class="qv-unread qv-mine" title="Client replied \u2013 your reply needed"></span>' : (r.notify === '0' ? '<span class="qv-unread" title="Awaiting reply"></span>' : '')}<div><div class="s1">${Format.escapeHtml(r.subject)}</div><div class="s2"><span class="qv-ref">#${r.ticketID}</span> · ${Format.escapeHtml(r.userName)}</div></div></div>`
                 },
                 {
                     key: 'requestType', label: 'Type',
-                    render: r => `<span class="qv-badge">${TQesc(r.requestType)}</span>`
+                    render: r => `<span class="qv-badge">${Format.escapeHtml(r.requestType)}</span>`
                 },
                 {
                     key: 'priority', label: 'Priority', sortable: true,
                     sortValue: r => TQ_PRIORITY_ORDER[r.priority] ?? 9,
-                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span>`
+                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${Format.escapeHtml(r.priority)}</span>`
                 },
                 {
                     key: 'status', label: 'Status',
                     render: r => {
                         const c = TQ_STATUS_COLOR[r.status] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
-                        return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${TQesc(r.status)}</span>`;
+                        return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${Format.escapeHtml(r.status)}</span>`;
                     }
                 },
                 {
                     key: 'assignedTech', label: 'Assignee',
                     render: r => r.assignedTech
-                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${TQavColor(r.assignedTech)}">${TQinitials(r.assignedTech)}</span>${TQesc(r.assignedTech)}</span>`
+                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${UI.avatarColor(r.assignedTech)}">${Format.initials(r.assignedTech)}</span>${Format.escapeHtml(r.assignedTech)}</span>`
                         : '<span class="qv-unassigned">Unassigned</span>'
                 },
                 {
@@ -141,28 +136,28 @@ class IncidentPage extends PageBase {
 
             defaultSort: { key: 'notify', dir: 1 },
 
-            previewHeader: r => `<div class="qv-pv-tid">#${r.ticketID}</div><div class="qv-pv-title">${TQesc(r.subject)}</div>
+            previewHeader: r => `<div class="qv-pv-tid">#${r.ticketID}</div><div class="qv-pv-title">${Format.escapeHtml(r.subject)}</div>
                 <div class="qv-pv-meta">
-                  <span class="qv-pv-chip"><span class="qv-pv-chip-label">Type</span><span class="qv-badge">${TQesc(r.requestType)}</span></span>
-                  <span class="qv-pv-chip"><span class="qv-pv-chip-label">Priority</span><span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span></span>
+                  <span class="qv-pv-chip"><span class="qv-pv-chip-label">Type</span><span class="qv-badge">${Format.escapeHtml(r.requestType)}</span></span>
+                  <span class="qv-pv-chip"><span class="qv-pv-chip-label">Priority</span><span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${Format.escapeHtml(r.priority)}</span></span>
                 </div>`,
             preview: r => {
                 const sc = TQ_STATUS_COLOR[r.status] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
                 const note = (r.notes || '').trim();
                 const snippet = note.length > 220 ? note.slice(0, 220) + '\u2026' : note;
                 return `<h3 class="qv-pv-h">Requester</h3>
-                <div class="qv-assignee" style="margin-bottom:14px"><span class="qv-av" style="background:${TQavColor(r.userName)};width:28px;height:28px;font-size:0.625rem">${TQinitials(r.userName)}</span><div><div style="font-weight:600;font-size:0.8125rem">${TQesc(r.userName)}</div><div style="font-size:0.71875rem;color:var(--muted, #6A655C)">${TQesc(r.authority)}</div></div></div>
+                <div class="qv-assignee" style="margin-bottom:14px"><span class="qv-av" style="background:${UI.avatarColor(r.userName)};width:28px;height:28px;font-size:0.625rem">${Format.initials(r.userName)}</span><div><div style="font-weight:600;font-size:0.8125rem">${Format.escapeHtml(r.userName)}</div><div style="font-size:0.71875rem;color:var(--muted, #6A655C)">${Format.escapeHtml(r.authority)}</div></div></div>
                 <h3 class="qv-pv-h">At a glance</h3>
                 <div class="qv-pv-dl">
-                  <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${sc[0]};background:${sc[1]}">${TQesc(r.status)}</span></span>
-                  <span class="qv-pv-dt">Priority</span><span class="qv-pv-dd"><span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span></span>
-                  <span class="qv-pv-dt">Type</span><span class="qv-pv-dd">${TQesc(r.requestType)}</span>
-                  <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? TQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
+                  <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${sc[0]};background:${sc[1]}">${Format.escapeHtml(r.status)}</span></span>
+                  <span class="qv-pv-dt">Priority</span><span class="qv-pv-dd"><span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${Format.escapeHtml(r.priority)}</span></span>
+                  <span class="qv-pv-dt">Type</span><span class="qv-pv-dd">${Format.escapeHtml(r.requestType)}</span>
+                  <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? Format.escapeHtml(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
                   <span class="qv-pv-dt">Opened</span><span class="qv-pv-dd">${TQdate(r.created)}</span>
                   <span class="qv-pv-dt">Last activity</span><span class="qv-pv-dd">${TQago(r.updated)}</span>
                   ${r.notify ? '<span class="qv-pv-dt">Status</span><span class="qv-pv-dd" style="color:var(--accent-strong);font-weight:600">\u25cf Awaiting reply</span>' : ''}
                 </div>
-                ${snippet ? `<h3 class="qv-pv-h">Latest note</h3><div style="font-size:0.78125rem;line-height:1.6">${TQesc(snippet)}</div>` : ''}`;
+                ${snippet ? `<h3 class="qv-pv-h">Latest note</h3><div style="font-size:0.78125rem;line-height:1.6">${Format.escapeHtml(snippet)}</div>` : ''}`;
             },
             onOpen: r => this._open(r),
         };

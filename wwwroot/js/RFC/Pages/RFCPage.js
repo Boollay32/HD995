@@ -16,11 +16,6 @@ const RQ_STATUS_COLOR = {
     Rejected:      ['var(--bad-fg)', 'var(--bad-bg)'],
 };
 const RQ_DONE = ['Completed', 'Rejected', 'Closed', 'Cancelled'];
-const RQ_AV_PALETTE = ['#5A6470', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
-
-const RQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const RQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
-const RQavColor = n => { let h = 0; for (const c of (n || '')) h = c.charCodeAt(0) + ((h << 5) - h); return RQ_AV_PALETTE[Math.abs(h) % RQ_AV_PALETTE.length]; };
 const RQisOpen = r => !RQ_DONE.includes(r.status);
 const RQstatusColor = s => RQ_STATUS_COLOR[s] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
 const RQdate = iso => {
@@ -89,21 +84,21 @@ class RFCPage extends PageBase {
                 {
                     key: 'title', label: 'Change request', sortable: true,
                     sortValue: r => (r.title || '').toLowerCase(),
-                    render: r => `<div class="qv-subj"><div><div class="s1">${RQesc(r.title)}</div><div class="s2"><span class="qv-ref">#${r.rfcID}</span> · ${RQesc(r.createdBy)}</div></div></div>`
+                    render: r => `<div class="qv-subj"><div><div class="s1">${Format.escapeHtml(r.title)}</div><div class="s2"><span class="qv-ref">#${r.rfcID}</span> · ${Format.escapeHtml(r.createdBy)}</div></div></div>`
                 },
                 {
                     key: 'priority', label: 'Priority', sortable: true,
                     sortValue: r => RQ_PRIORITY_ORDER[r.priority] ?? 9,
-                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${RQesc(r.priority)}</span>`
+                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${Format.escapeHtml(r.priority)}</span>`
                 },
                 {
                     key: 'status', label: 'Status',
-                    render: r => { const c = RQstatusColor(r.status); return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${RQesc(r.status)}</span>`; }
+                    render: r => { const c = RQstatusColor(r.status); return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${Format.escapeHtml(r.status)}</span>`; }
                 },
                 {
                     key: 'assignedTech', label: 'Assignee',
                     render: r => r.assignedTech
-                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${RQavColor(r.assignedTech)}">${RQinitials(r.assignedTech)}</span>${RQesc(r.assignedTech)}</span>`
+                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${UI.avatarColor(r.assignedTech)}">${Format.initials(r.assignedTech)}</span>${Format.escapeHtml(r.assignedTech)}</span>`
                         : '<span class="qv-unassigned">Unassigned</span>'
                 },
                 {
@@ -115,19 +110,19 @@ class RFCPage extends PageBase {
 
             defaultSort: { key: 'targetDate', dir: 1 },
 
-            previewHeader: r => `<div class="qv-pv-tid">#${r.rfcID}</div><div class="qv-pv-title">${RQesc(r.title)}</div>
-                <div class="qv-pv-meta"><span class="qv-pv-chip"><span class="qv-pv-chip-label">Priority</span><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${RQesc(r.priority)}</span></span></div>`,
+            previewHeader: r => `<div class="qv-pv-tid">#${r.rfcID}</div><div class="qv-pv-title">${Format.escapeHtml(r.title)}</div>
+                <div class="qv-pv-meta"><span class="qv-pv-chip"><span class="qv-pv-chip-label">Priority</span><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${Format.escapeHtml(r.priority)}</span></span></div>`,
             preview: r => {
                 const c = RQstatusColor(r.status);
                 return `<h3 class="qv-pv-h">Raised by</h3>
                     <div class="qv-pv-dl" style="margin-bottom:6px">
-                      <span class="qv-pv-dt">Raised by</span><span class="qv-pv-dd">${RQesc(r.createdBy)}</span>
+                      <span class="qv-pv-dt">Raised by</span><span class="qv-pv-dd">${Format.escapeHtml(r.createdBy)}</span>
                     </div>
                     <h3 class="qv-pv-h">At a glance</h3>
                     <div class="qv-pv-dl">
-                      <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${c[0]};background:${c[1]}">${RQesc(r.status)}</span></span>
-                      <span class="qv-pv-dt">Priority</span><span class="qv-pv-dd"><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${RQesc(r.priority)}</span></span>
-                      <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? RQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
+                      <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${c[0]};background:${c[1]}">${Format.escapeHtml(r.status)}</span></span>
+                      <span class="qv-pv-dt">Priority</span><span class="qv-pv-dd"><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${Format.escapeHtml(r.priority)}</span></span>
+                      <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? Format.escapeHtml(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
                       <span class="qv-pv-dt">Target</span><span class="qv-pv-dd">${RQdate(r.targetDate)}</span>
                     </div>`;
             },

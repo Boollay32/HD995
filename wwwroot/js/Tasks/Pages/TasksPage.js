@@ -16,11 +16,6 @@ const KQ_STATUS_COLOR = {
     'Draft':       ['var(--neutral-fg)', 'var(--neutral-bg)'],
 };
 const KQ_OPEN = new Set([1, 2]);
-const KQ_AV_PALETTE = ['#5A6470', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
-
-const KQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const KQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
-const KQavColor = n => { let h = 0; for (const c of (n || '')) h = c.charCodeAt(0) + ((h << 5) - h); return KQ_AV_PALETTE[Math.abs(h) % KQ_AV_PALETTE.length]; };
 const KQlabel = s => KQ_STATUS[s] ?? 'Other';
 const KQstatusColor = label => KQ_STATUS_COLOR[label] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
 const KQisOpen = r => KQ_OPEN.has(r.status);
@@ -101,7 +96,7 @@ class TaskPage extends PageBase {
                 {
                     key: 'title', label: 'Task', sortable: true,
                     sortValue: r => (r.title || '').toLowerCase(),
-                    render: r => `<div class="qv-subj"><div><div class="s1">${KQesc(r.title)}</div><div class="s2"><span class="qv-ref">#${r.taskID}</span>${r.important ? '<span title="Important" style="color:var(--accent);margin-left:4px">\u2605</span>' : ''}</div></div></div>`
+                    render: r => `<div class="qv-subj"><div><div class="s1">${Format.escapeHtml(r.title)}</div><div class="s2"><span class="qv-ref">#${r.taskID}</span>${r.important ? '<span title="Important" style="color:var(--accent);margin-left:4px">\u2605</span>' : ''}</div></div></div>`
                 },
                 {
                     key: 'ticketID', label: 'Ticket', sortable: true,
@@ -111,12 +106,12 @@ class TaskPage extends PageBase {
                 {
                     key: 'assignedTech', label: 'Assignee',
                     render: r => r.assignedTech
-                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${KQavColor(r.assignedTech)}">${KQinitials(r.assignedTech)}</span>${KQesc(r.assignedTech)}</span>`
+                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${UI.avatarColor(r.assignedTech)}">${Format.initials(r.assignedTech)}</span>${Format.escapeHtml(r.assignedTech)}</span>`
                         : '<span class="qv-unassigned">Unassigned</span>'
                 },
                 {
                     key: '_status', label: 'Status',
-                    render: r => { const c = KQstatusColor(r._status); return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${KQesc(r._status)}</span>`; }
+                    render: r => { const c = KQstatusColor(r._status); return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${Format.escapeHtml(r._status)}</span>`; }
                 },
                 {
                     key: 'requiredDate', label: 'Required by', sortable: true,
@@ -127,14 +122,14 @@ class TaskPage extends PageBase {
 
             defaultSort: { key: 'requiredDate', dir: 1 },
 
-            previewHeader: r => `<div class="qv-pv-tid">#${r.taskID}${r.ticketID ? ` \u00b7 Ticket #${r.ticketID}` : ''}</div><div class="qv-pv-title">${KQesc(r.title)}</div>
-                <div class="qv-pv-meta"><span class="qv-pv-chip"><span class="qv-pv-chip-label">Status</span><span class="qv-status" style="color:${KQstatusColor(r._status)[0]};background:${KQstatusColor(r._status)[1]}">${KQesc(r._status)}</span></span></div>`,
+            previewHeader: r => `<div class="qv-pv-tid">#${r.taskID}${r.ticketID ? ` \u00b7 Ticket #${r.ticketID}` : ''}</div><div class="qv-pv-title">${Format.escapeHtml(r.title)}</div>
+                <div class="qv-pv-meta"><span class="qv-pv-chip"><span class="qv-pv-chip-label">Status</span><span class="qv-status" style="color:${KQstatusColor(r._status)[0]};background:${KQstatusColor(r._status)[1]}">${Format.escapeHtml(r._status)}</span></span></div>`,
             preview: r => `<h3 class="qv-pv-h">Detail</h3>
-                <div style="font-size:0.78125rem;line-height:1.6;margin-bottom:10px">${KQesc(r.description) || '\u2014'}</div>
+                <div style="font-size:0.78125rem;line-height:1.6;margin-bottom:10px">${Format.escapeHtml(r.description) || '\u2014'}</div>
                 <h3 class="qv-pv-h">At a glance</h3>
                 <div class="qv-pv-dl">
-                  <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${KQstatusColor(r._status)[0]};background:${KQstatusColor(r._status)[1]}">${KQesc(r._status)}</span></span>
-                  <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? KQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
+                  <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${KQstatusColor(r._status)[0]};background:${KQstatusColor(r._status)[1]}">${Format.escapeHtml(r._status)}</span></span>
+                  <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? Format.escapeHtml(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
                   <span class="qv-pv-dt">Required by</span><span class="qv-pv-dd">${KQdate(r.requiredDate)}</span>
                   <span class="qv-pv-dt">Parent</span><span class="qv-pv-dd">${r.ticketID ? `Ticket #${r.ticketID}` : '\u2014'}</span>
                 </div>`,
