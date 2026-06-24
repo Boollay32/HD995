@@ -61,69 +61,35 @@ const Auth = {
     // -------------------------  User Permissions  ------------------------- //
 
     async checkPermissions() {
-        // Claim the menu synchronously so revealMenuFallback backs off and lets
-        // the (async) gating below do the reveal -- prevents the all-items flash.
+        // Claim the menu synchronously so the global gate (gateMenuGlobally)
+        // backs off and lets this page gate -- prevents any flash.
         Auth._gatingMenu = true;
         try {
-            const adminId = await API.post('Authenticator/CheckAdmin', {
-                userName: sessionStorage.getItem(STORAGE_KEYS.USER_NAME),
-                utc: UTCWorkAround()
-            });
+            const adminId = await Auth.getAdminLevel();
 
-            if (adminId == null) return;
+            if (adminId == null) { Auth.applyMenuVisibility(null); return; }
 
             this.setAdminAbilities(adminId);
             this.checkLimitedUserPerms(adminId);
         } catch (error) {
             console.error('Error checking permissions:', error);
-        } finally {
-            // HD36: reveal the menu now that gating has run (the restricted
-            // items already have inline display:none and stay hidden). In a
-            // finally so a null/failed CheckAdmin still shows the menu rather
-            // than leaving it permanently blank.
-            document.getElementById('navbar-menu')?.classList.add('perms-ready');
+            // Deny by default on failure: reveal the (now-empty) menu rather
+            // than leaving it stuck hidden.
+            Auth.applyMenuVisibility(sessionStorage.getItem(STORAGE_KEYS.ADMIN_LEVEL));
         }
     },
 
     // -------------------------  Admin Abilities  ------------------------- //
 
     setAdminAbilities(adminId) {
-        // restrict = the menu item ids to HIDE for that admin level. (These were
-        // previously 'subnav-*' ids that don't exist in the nav, so nothing was
-        // hidden -- clients wrongly saw Tasks + RFC. Use the real *Menu ids. HD35 B6.)
-        // Projects/Incidents/Stats are also enforced by the explicit hideById calls below.
-        const ADMIN_CONFIG = {
-            // Authority (client): Tickets + Users only.
-            0: { restrict: 'TasksMenu,ProjectsMenu,RFCMenu,IncidentsMenu,StatsMenu', extra: false },
-            // Standard Govtech: everything except Stats (Stats is level 2 only, handled below).
-            1: { restrict: '', extra: true },
-            // Admin Govtech: everything.
-            2: { restrict: '', extra: true },
-            // RFC Only: just RFC (+ the account/logout chrome).
-            4: { restrict: 'TicketsMenu,TasksMenu,ProjectsMenu,IncidentsMenu,UsersMenu,StatsMenu', extra: false }
-        };
+        // Menu visibility is allow-list (see Auth.MENU_ALLOW): show only the
+        // items this level may see and hide the rest. The same routine runs
+        // globally on every page (gateMenuGlobally), so the menu is consistent
+        // even on pages that never call checkPermissions.
+        Auth.applyMenuVisibility(adminId);
 
-        const config = ADMIN_CONFIG[adminId] ?? {
-            restrict: 'TicketsMenu,TasksMenu,ProjectsMenu,RFCMenu,IncidentsMenu,UsersMenu,StatsMenu',
-            extra: false
-        };
-
-        if (config.restrict) {
-            UI.hideAll(config.restrict);
-        }
-
-        // Stats is admin-level-2 only
-        if (parseInt(adminId, 10) !== 2) {
-            UI.hideById('StatsMenu');
-        }
-
-        // Projects and Incidents are Govtech-only (admin levels 1 and 2). Clients never see them.
-        if (![1, 2].includes(parseInt(adminId, 10))) {
-            UI.hideById('ProjectsMenu');
-            UI.hideById('IncidentsMenu');
-        }
-
-        if (config.extra) {
+        // Govtech levels (standard + admin) get the extra in-page controls.
+        if ([1, 2].includes(parseInt(adminId, 10))) {
             this._applyExtraFunctionality();
             MakeDropDownsEditable();
         }
@@ -206,6 +172,52 @@ const Auth = {
     }
 };
 
+// -------------------------  Menu Gating (allow-list)  ------------------------- //
+
+// The nav menu is deny-by-default: every item is hidden (CSS, until
+// .perms-ready) and we SHOW only the ids the current admin level may see.
+// Applied on every page (gateMenuGlobally) and on permission-checked pages
+// (setAdminAbilities) -- both go through applyMenuVisibility so the menu is
+// identical everywhere and forbidden items never appear, even briefly.
+Auth.MENU_ITEMS = ['TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu', 'StatsMenu'];
+Auth.MENU_ALLOW = {
+    0: ['TicketsMenu', 'UsersMenu'],                                                          // Authority (client)
+    1: ['TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu'], // Standard Govtech
+    2: ['TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu', 'StatsMenu'], // Admin
+    4: ['RFCMenu']                                                                            // RFC only
+};
+
+Auth.applyMenuVisibility = function (adminId) {
+    const allow = Auth.MENU_ALLOW[parseInt(adminId, 10)] || [];   // unknown / not-logged-in -> nothing
+    Auth.MENU_ITEMS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = allow.includes(id) ? '' : 'none';
+    });
+    document.getElementById('navbar-menu')?.classList.add('perms-ready');
+};
+
+// Admin level is fetched once and cached for the session (UI hint only -- the
+// server still enforces real access). Concurrent callers share one in-flight
+// request. Cleared by sessionStorage.clear() on login/logout.
+Auth._adminLevelPromise = null;
+Auth.getAdminLevel = function () {
+    const cached = sessionStorage.getItem(STORAGE_KEYS.ADMIN_LEVEL);
+    if (cached != null) return Promise.resolve(cached);
+    if (Auth._adminLevelPromise) return Auth._adminLevelPromise;
+    Auth._adminLevelPromise = API.post('Authenticator/CheckAdmin', {
+        userName: sessionStorage.getItem(STORAGE_KEYS.USER_NAME),
+        utc: UTCWorkAround()
+    }).then(id => {
+        if (id != null) sessionStorage.setItem(STORAGE_KEYS.ADMIN_LEVEL, id);
+        Auth._adminLevelPromise = null;
+        return id;
+    }).catch(err => {
+        Auth._adminLevelPromise = null;
+        throw err;
+    });
+    return Auth._adminLevelPromise;
+};
+
 // -------------------------  Legacy Wrappers  ------------------------- //
 
 function UserPermissions() { return Auth.checkPermissions(); }
@@ -220,19 +232,19 @@ function DisplayExtraGovtechFunctionality() { Auth._applyExtraFunctionality(); }
 
 Auth.initActivityListeners();
 
-// HD37 2a: safety net for the nav menu. The menu items are hidden until
-// #navbar-menu gets `.perms-ready` (added by checkPermissions). If a page
-// never runs the permission check, the menu would stay blank -- so once the
-// DOM is ready, reveal it on the next tick if nothing has marked it ready.
-// Pages that DO gate add the class first, so this never causes a flash.
-(function revealMenuFallback() {
+// The nav menu is allow-list gated on every page. Pages that call
+// checkPermissions gate themselves (and set _gatingMenu); for any page that
+// doesn't (e.g. ticket details), this global fallback fetches the admin level
+// and applies the same allow-list. Result: the menu is correct everywhere and
+// forbidden items never appear -- deny by default. Deferred a tick so a page's
+// own checkPermissions (run in its DOMContentLoaded) can claim it first.
+(function gateMenuGlobally() {
     function arm() {
         setTimeout(function () {
-            // Only reveal if no page claimed the menu via checkPermissions; a
-            // gating page reveals itself after hiding its restricted items.
-            if (!Auth._gatingMenu) {
-                document.getElementById('navbar-menu')?.classList.add('perms-ready');
-            }
+            if (Auth._gatingMenu) return;          // an opt-in page is handling it
+            Auth.getAdminLevel()
+                .then(id => Auth.applyMenuVisibility(id))
+                .catch(() => Auth.applyMenuVisibility(null));
         }, 0);
     }
     if (document.readyState === 'loading') {
