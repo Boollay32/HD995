@@ -185,32 +185,6 @@
 
 /* ===== RFC overhaul S2: base control styles (ported from TicketDetails.css,
    which the RFC page does not load) + overview description, scoped. ===== */
-#RFCDetails-App .td-select {
-  width: 100%;
-  font-family: "Spline Sans", system-ui, sans-serif;
-  font-size: 0.8125rem;
-  color: var(--td-text);
-  background: var(--td-surface);
-  border: 1px solid var(--td-border);
-  border-radius: 6px;
-  padding: 6px 10px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236A655C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 30px;
-  cursor: pointer;
-}
-#RFCDetails-App .td-select:focus {
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-pale);
-}
-#RFCDetails-App .td-select:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 #RFCDetails-App .rfc-ov-desc {
   width: 100%;
   box-sizing: border-box;
@@ -235,50 +209,3 @@
    Priority pills on RFC details have a styled chooser (the RFC page does
    not load TicketDetails.css). The popover is appended to the app root by
    RFCPillEdit, so it is not scoped to a container. */
-
-/* HD36 3b: Workspace "Details" tab header, mirrored from the ticket
-   Workspace (the RFC page does not load TicketDetails.css). Scoped to
-   #RFCDetails-App. A single, always-selected, static tab. */
-#RFCDetails-App .td-ws-tabs {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 12px 0;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--td-border-2);
-  background: var(--td-surface);
-}
-#RFCDetails-App .td-ws-tabs [role="tab"] {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: "Spline Sans", system-ui, sans-serif;
-  font-size: 0.71875rem;
-  font-weight: 600;
-  color: var(--td-muted);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 7px 10px 9px;
-  cursor: pointer;
-  border-radius: 6px 6px 0 0;
-  position: relative;
-}
-#RFCDetails-App .td-ws-tabs [role="tab"] svg { flex-shrink: 0; }
-#RFCDetails-App .td-ws-tabs [role="tab"][aria-selected="true"] {
-  color: var(--brand);
-  border-bottom-color: var(--brand);
-  background: var(--td-panel);
-}
-#RFCDetails-App .td-pane-head--ws .td-pane-title { flex: 0 0 auto; }
-#RFCDetails-App .td-pane-head--ws .td-ws-tabs {
-  flex: 1 1 auto;
-  min-width: 0;
-  align-self: stretch;
-  align-items: flex-end;
-  padding: 0;
-  border-bottom: none;
-  background: none;
-  overflow-x: auto;
-}
-#RFCDetails-App .td-pane-head--ws .td-collapse-btn { flex: 0 0 auto; }
