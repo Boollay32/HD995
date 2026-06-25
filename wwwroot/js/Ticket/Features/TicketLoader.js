@@ -161,17 +161,20 @@ const TicketLoader = {
                     }
 
                     // HD36 1d: when Extended Information is empty there is nothing
-                    // to show in the group -- hide it. And for a client (whose
-                    // Details tab is the only Workspace tab), an empty group means
-                    // the whole Workspace is empty, so collapse to Messages only.
+                    // to show in the group -- hide it. For a client (whose Details
+                    // tab is the only Workspace tab), an empty group means the whole
+                    // Workspace is empty.
+                    // HD39 1b: clients START in LEFT_ONLY (messages-only) to avoid
+                    // flashing the Workspace before this async check; reveal BOTH only
+                    // when it has content. If the field fetch fails, no fields build
+                    // -> empty -> staying messages-only is correct.
                     var cfContainer = document.getElementById('CustomFields-Container');
                     var isEmpty = !cfContainer || cfContainer.children.length === 0;
                     if (isEmpty) {
                         document.getElementById('CustomFields-Group')
                             ?.setAttribute('hidden', '');
-                        if (State.clientView) {
-                            PaneLayout.apply(TDLAYOUT.LEFT_ONLY);
-                        }
+                    } else if (State.clientView) {
+                        PaneLayout.apply(TDLAYOUT.BOTH);
                     }
                 })
                 .catch(err => console.error('Custom-field dropdown load:', err));

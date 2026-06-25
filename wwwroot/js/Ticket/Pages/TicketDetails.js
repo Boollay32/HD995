@@ -99,13 +99,14 @@ const PaneLayout = {
         const isAdmin = adminLevel >= 1;
         const { isInternal } = Session;
 
-        // HD35 B4/B7: clients are NO LONGER LEFT_ONLY. They get BOTH panes so
-        // the Workspace Details tab (with the Extended Information they
-        // submitted) is visible -- but read-only, and with only that tab.
+        // HD35 B4/B7: a client sees the Workspace Details tab (the Extended
+        // Information they submitted, read-only) only when it has content.
         // clientView drives the tab-hiding + field lockdown in TicketLoader.
+        // HD39 1b: start messages-only so the Workspace doesn't flash before the
+        // async custom-field emptiness check (TicketLoader) reveals it if non-empty.
         if (!isAdmin) {
             State.clientView = true;
-            return TDLAYOUT.BOTH;
+            return TDLAYOUT.LEFT_ONLY;
         }
         State.clientView = false;
         // Internal tickets keep the Messages pane PRESENT (started collapsed
