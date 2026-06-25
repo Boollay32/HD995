@@ -408,7 +408,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 0 2px;
+  padding: 0 2px 4px;
 }
 .td-scroll-unread-btn {
   display: flex;
@@ -1819,7 +1819,7 @@ body {
 .saved-flash { animation: save-ring 0.6s ease; }
 
 /* Group-1: details panel top padding + relocated ticket subject */
-#tabpanel-details { padding-top: 0; }
+#tabpanel-details { padding-top: 12px; }
 .td-details-subject {
   margin: 0;
   font-size: 1rem;
@@ -2071,13 +2071,12 @@ body {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  /* HD36 1a: bottom margin + full radius so the panel's bottom corners are
-     rounded like the top (the overview gap the user already likes). */
-  margin: 10px 10px 6px;
+  /* HD39 1a: weld the topbar to the shell below (no bottom gap, top-only
+     radius, no float shadow) so the overview reads as joined to the topbar. */
+  margin: 10px 10px 0;
   border: 1px solid var(--td-border);
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 #TicketDetails-App .td-topbar {
   background: var(--td-surface);
@@ -2112,11 +2111,6 @@ body {
 #TicketDetails-App .td-overview > #ov-collapse svg { margin: 0; }
 /* keep the subject clear of the button */
 #TicketDetails-App .td-overview > .td-details-subject { padding-right: 44px; }
-/* collapsed slim bar: centre the button vertically at the right edge */
-#TicketDetails-App .td-overview.is-collapsed > #ov-collapse {
-  top: 50%;
-  transform: translateY(-50%);
-}
 #TicketDetails-App .td-overview.is-collapsed > .td-ov-slim { padding-right: 50px; }
 
 /* ===== HD38 ticket-details fixes ===== */
@@ -2127,7 +2121,7 @@ body {
 
 /* #4 "Title" label aligned with the subject and the Origin group below it
    (the label had no left padding; subject + body sit at 16px). */
-#TicketDetails-App .td-subject-lbl { padding-left: 16px; }
+#TicketDetails-App .td-subject-lbl { padding: 10px 16px 0; }
 
 /* #3 Activity tab scrollbar: make it visible and ~50% wider than the default
    8px workspace scrollbar. */
@@ -2142,6 +2136,12 @@ body {
    It now sits at the top of the right pane, above the tabs: drop the
    backdrop gap below it and add a divider against the tab row. */
 #TicketDetails-App .td-overview {
-  margin-bottom: 0;
-  border-bottom: 1px solid var(--td-border);
+  margin-bottom: 8px;
+  border-bottom: none;
+  border-radius: 0 0 12px 12px;
 }
+
+/* ===== HD Issues 39 - Ticket Details (Option A) =====
+   1d: inset the shell to match the topbar (10px) so the overview's right
+   edge no longer reaches the viewport edge. */
+#TicketDetails-App .td-shell { margin: 0 10px; }
