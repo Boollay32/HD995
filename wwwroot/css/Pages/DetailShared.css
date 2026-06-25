@@ -279,3 +279,90 @@
   box-sizing: border-box;
   cursor: pointer;
 }
+
+/* ============================================================================
+   HD39 unify (Stage 2b): shared workspace tabs, select control and ws pane-head
+   row -- the ticket's canonical set. RFC's ported copy was a stale subset, so RFC
+   gains the tab :hover, the [hidden] guard and the tab transition. */
+.td-app .td-ws-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--td-border-2);
+  background: var(--td-surface);
+}
+.td-app .td-ws-tabs [role="tab"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "Spline Sans", system-ui, sans-serif;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  color: var(--td-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 7px 10px 9px;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+/* [hidden] guard: inline-flex above beats the UA [hidden] rule, so a tab
+   hidden by JS (e.g. Notes tab on project/incident tickets, where notes
+   live in the left pane) would still show. Hide it explicitly. */
+.td-app .td-ws-tabs [role="tab"][hidden] {
+  display: none;
+}
+.td-app .td-ws-tabs [role="tab"] svg {
+  flex-shrink: 0;
+}
+.td-app .td-ws-tabs [role="tab"]:hover {
+  color: var(--td-text);
+  background: var(--td-border-2);
+}
+.td-app .td-ws-tabs [role="tab"][aria-selected="true"] {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+  background: var(--td-panel);
+}
+.td-app .td-select {
+  width: 100%;
+  font-family: "Spline Sans", system-ui, sans-serif;
+  font-size: 0.8125rem;
+  color: var(--td-text);
+  background: var(--td-surface);
+  border: 1px solid var(--td-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236A655C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+  cursor: pointer;
+}
+.td-app .td-select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-pale);
+}
+.td-app .td-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.td-app .td-pane-head--ws .td-pane-title { flex: 0 0 auto; }
+.td-app .td-pane-head--ws .td-ws-tabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  align-self: stretch;
+  align-items: flex-end;
+  padding: 0;
+  border-bottom: none;
+  background: none;
+  overflow-x: auto;
+}
+.td-app .td-pane-head--ws .td-collapse-btn { flex: 0 0 auto; }
