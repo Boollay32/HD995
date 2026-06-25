@@ -182,6 +182,18 @@
    HD-RFC overhaul -- ticket overview/panel styling, re-scoped
    to #RFCDetails-App. Ported from TicketDetails.css (Stage 1).
    ========================================================== */
+#RFCDetails-App .td-header-panel {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  /* HD36 1a: bottom margin + full radius so the panel's bottom corners are
+     rounded like the top (the overview gap the user already likes). */
+  margin: 10px 10px 6px;
+  border: 1px solid var(--td-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
 #RFCDetails-App .td-topbar {
   background: var(--td-surface);
   padding: 7px 16px;
