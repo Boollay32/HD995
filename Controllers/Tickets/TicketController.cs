@@ -3,6 +3,7 @@ using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Shared;
+using HelpDeskNet8.Models.Tickets;
 using HelpDeskNet8.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -62,6 +63,20 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             ITicket ticket = TicketMapper.Map(request.ObjectInfo);
             if (ticket == null) return BadRequest("Invalid ticket data.");
+
+            // Clients may not edit ticket data after creation -- the internal team must
+            // keep working off the information the client submitted at the start. The only
+            // change a client may make to an existing ticket is resolving it (a status
+            // change). Verify ownership, then discard every client-supplied field except
+            // Status; the update proc's ISNULL(@param, existing) preserves all stored data.
+            if (ticket.TicketID != null
+                && await auth.CheckAdmin(user) == Constants.AdminLevel.Authority)
+            {
+                var existing = await _ticketManager.GetTicketDetail(ticket.TicketID.Value, user);
+                if (existing == null || existing.UserAuthorityID != user.AuthorityID)
+                    return NotFound();
+                ticket = new Ticket { TicketID = ticket.TicketID, Status = ticket.Status };
+            }
 
             // Fix: redacted value restored
             if (request.ContactClientAuthorityId.HasValue && request.ContactClientUserId.HasValue)
