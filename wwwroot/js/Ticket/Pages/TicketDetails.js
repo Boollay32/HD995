@@ -128,16 +128,26 @@ const PaneLayout = {
 
         const paneRight = Dom.paneRight();
         const paneLeft = Dom.paneLeft();
+        const collapseLeft = document.getElementById('collapse-left');
+        const collapseRight = document.getElementById('collapse-right');
 
         if (layout === TDLAYOUT.LEFT_ONLY) {
             paneRight?.setAttribute('hidden', '');
             paneLeft?.removeAttribute('hidden');
+            // 1a: Messages is the only pane -- block minimising it (collapsing the
+            // sole pane would leave nothing on screen / re-open the hidden one).
+            collapseLeft?.setAttribute('hidden', '');
+            collapseRight?.removeAttribute('hidden');
         } else if (layout === TDLAYOUT.RIGHT_ONLY) {
             paneLeft?.setAttribute('hidden', '');
             paneRight?.removeAttribute('hidden');
+            collapseRight?.setAttribute('hidden', '');
+            collapseLeft?.removeAttribute('hidden');
         } else {
             paneLeft?.removeAttribute('hidden');
             paneRight?.removeAttribute('hidden');
+            collapseLeft?.removeAttribute('hidden');
+            collapseRight?.removeAttribute('hidden');
         }
     },
 };
