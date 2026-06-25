@@ -50,6 +50,11 @@ const TicketLoader = {
                     .forEach(function (id) {
                         document.getElementById(id)?.setAttribute('hidden', '');
                     });
+                // Lock the overview's editable controls (Assigned to / Needed by) so a
+                // client cannot edit the overview either -- mirrors the server-side data
+                // lock in SaveTicket. Replies and the Resolved status pill are unaffected.
+                document.querySelectorAll('#Ticket-Overview input, #Ticket-Overview select, #Ticket-Overview textarea')
+                    .forEach(function (el) { el.setAttribute('disabled', ''); });
             }
 
             Tabs.restore();
