@@ -182,47 +182,6 @@
    HD-RFC overhaul -- ticket overview/panel styling, re-scoped
    to #RFCDetails-App. Ported from TicketDetails.css (Stage 1).
    ========================================================== */
-#RFCDetails-App .td-ov-collapse {
-  height: 30px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 8px;
-  box-sizing: border-box;
-  cursor: pointer;
-}
-#RFCDetails-App .td-ov-collapse:hover {
-  background: var(--td-panel);
-  color: var(--td-text);
-}
-#RFCDetails-App .td-ov-collapse svg {
-  transition: transform 0.18s ease;
-}
-#RFCDetails-App .td-ov-collapse[aria-expanded="false"] svg {
-  transform: rotate(180deg);
-}
-#RFCDetails-App .td-overview.is-collapsed .td-ov-body {
-  display: none;
-}
-#RFCDetails-App .td-overview.is-collapsed .td-ov-slim {
-  display: flex;
-}
-#RFCDetails-App .td-header-panel {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  /* HD36 1a: bottom margin + full radius so the panel's bottom corners are
-     rounded like the top (the overview gap the user already likes). */
-  margin: 10px 10px 6px;
-  border: 1px solid var(--td-border);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-}
 #RFCDetails-App .td-topbar {
   background: var(--td-surface);
   padding: 7px 16px;
@@ -340,25 +299,3 @@
   overflow-x: auto;
 }
 #RFCDetails-App .td-pane-head--ws .td-collapse-btn { flex: 0 0 auto; }
-
-/* HD36 misc-3a: collapse button pinned to the overview's top-right
-   (moved out of the header action group). */
-#RFCDetails-App .td-overview { position: relative; }
-#RFCDetails-App .td-overview > #ov-collapse {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  z-index: 2;
-  height: 30px;
-  width: 30px;
-  padding: 0;
-}
-#RFCDetails-App .td-overview > #ov-collapse svg { margin: 0; }
-/* keep the subject clear of the button */
-#RFCDetails-App .td-overview > .td-details-subject { padding-right: 44px; }
-/* collapsed slim bar: centre the button vertically at the right edge */
-#RFCDetails-App .td-overview.is-collapsed > #ov-collapse {
-  top: 50%;
-  transform: translateY(-50%);
-}
-#RFCDetails-App .td-overview.is-collapsed > .td-ov-slim { padding-right: 50px; }
