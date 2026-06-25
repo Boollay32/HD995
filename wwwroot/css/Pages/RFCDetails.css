@@ -182,23 +182,6 @@
    HD-RFC overhaul -- ticket overview/panel styling, re-scoped
    to #RFCDetails-App. Ported from TicketDetails.css (Stage 1).
    ========================================================== */
-#RFCDetails-App .td-topbar {
-  background: var(--td-surface);
-  padding: 7px 16px;
-  min-height: 50px;
-}
-#RFCDetails-App .td-topbar-actions .td-btn-primary {
-  height: 30px;
-  padding: 0 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 8px;
-  box-sizing: border-box;
-  cursor: pointer;
-}
 
 /* ===== RFC overhaul S2: base control styles (ported from TicketDetails.css,
    which the RFC page does not load) + overview description, scoped. ===== */
