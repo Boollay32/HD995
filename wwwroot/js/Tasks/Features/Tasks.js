@@ -382,12 +382,29 @@ const Tasks = (() => {
     function _bindEditor(editor, task, isNew) {
         editor._kept = _echoAttachments(task);
 
+        // Dirty = any tracked control, the Important pill, or the attachment
+        // set differs from its value when the editor opened. Re-evaluated on
+        // every change rather than latched, so reverting a field back to its
+        // original value clears the dirty state. New tasks keep Save enabled.
+        const fldEls = Array.from(editor.querySelectorAll(
+            'input[data-fld], select[data-fld], textarea[data-fld]'));
+        const fldBaseline = fldEls.map(el => el.value);
+        const impPill = editor.querySelector('.td-imp-pill');
+        const impBaseline = impPill ? impPill.getAttribute('aria-pressed') : null;
+        const attKey = () => editor._kept.map(a => a.attachmentName).join('\u001f');
+        const attBaseline = attKey();
+
         const markDirty = () => {
-            if (State.dirty) return;
-            State.dirty = true;
-            editor.querySelector('.td-ed-dirty')?.removeAttribute('hidden');
-            const saveBtn = editor.querySelector('[data-act="save"]');
-            if (saveBtn) saveBtn.disabled = false;
+            const isDirty =
+                fldEls.some((el, i) => el.value !== fldBaseline[i])
+                || (impPill && impPill.getAttribute('aria-pressed') !== impBaseline)
+                || attKey() !== attBaseline;
+            State.dirty = isDirty;
+            editor.querySelector('.td-ed-dirty')?.toggleAttribute('hidden', !isDirty);
+            if (!isNew) {
+                const saveBtn = editor.querySelector('[data-act="save"]');
+                if (saveBtn) saveBtn.disabled = !isDirty;
+            }
         };
 
         editor.querySelectorAll('input[data-fld], select[data-fld], textarea[data-fld]').forEach(el => {
