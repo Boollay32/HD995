@@ -65,7 +65,77 @@
             <button type="button" class="td-btn-primary" id="Save-Button" disabled>Save Changes</button>
         </div>
     </header>
+    </div>
 
+    @* ---- Shell: Notes (left) / Workspace (right) ---- *@
+    <div class="td-shell" id="RFC-Shell" data-layout="both" role="main">
+
+        <div class="td-pane td-pane--left" id="pane-left" aria-label="Notes">
+            <div class="td-rail" id="rail-left" aria-hidden="true" tabindex="-1" hidden>
+                <span class="td-rail-label">Notes</span>
+            </div>
+            <div class="td-pane-inner" id="pane-left-inner">
+                <div class="td-pane-head">
+                    <h2 class="td-pane-title">Notes</h2>
+                    <button type="button" class="td-collapse-btn" id="collapse-left"
+                            aria-expanded="true" aria-controls="pane-left" aria-label="Collapse notes pane">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="rfc-notes-body">
+                    <div class="td-note-thread" id="RFCNotes-Thread" role="log"
+                         aria-live="polite" aria-label="RFC notes"></div>
+
+                    <div class="td-note-compose" id="RFCNotes-Compose">
+                        <textarea id="rfc-note-textarea"
+                                  class="td-note-input"
+                                  placeholder="Add a note…"
+                                  maxlength="2000"
+                                  rows="1"
+                                  aria-label="Note text"
+                                  aria-describedby="rfc-note-charcount"></textarea>
+                        <button type="button" class="td-note-add-btn" id="rfc-note-send-btn"
+                                aria-label="Save note" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="td-composer-footer">
+                        <span class="td-charcount mono" id="rfc-note-charcount" aria-live="polite">0 / 2000</span>
+                        <div class="td-composer-attachments" id="rfc-note-attachment-list"></div>
+                        <label class="td-attach-btn" aria-label="Add attachment to note">
+                            <input type="file" id="rfc-note-file-input" class="sr-only"
+                                   multiple accept="*/*"
+                                   aria-label="Attach file to note" />
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
+                            </svg>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="td-divider" id="pane-divider" role="separator"
+             aria-orientation="vertical" aria-label="Resize panes"
+             tabindex="0"><span class="td-divider-grip" aria-hidden="true"></span></div>
+
+        <div class="td-pane td-pane--right" id="pane-right" aria-label="Workspace">
+            <div class="td-rail" id="rail-right" aria-hidden="true" tabindex="-1" hidden>
+                <span class="td-rail-label">Workspace</span>
+            </div>
+            <div class="td-pane-inner" id="pane-right-inner">
     <section class="td-overview" id="RFC-Overview" aria-label="RFC overview">
                 <button type="button" class="td-ov-collapse" id="ov-collapse"
                     aria-label="Collapse overview" aria-expanded="true"
@@ -146,77 +216,7 @@
             <select class="Value td-select" id="priority" required></select>
         </div>
     </section>
-    </div>
 
-    @* ---- Shell: Notes (left) / Workspace (right) ---- *@
-    <div class="td-shell" id="RFC-Shell" data-layout="both" role="main">
-
-        <div class="td-pane td-pane--left" id="pane-left" aria-label="Notes">
-            <div class="td-rail" id="rail-left" aria-hidden="true" tabindex="-1" hidden>
-                <span class="td-rail-label">Notes</span>
-            </div>
-            <div class="td-pane-inner" id="pane-left-inner">
-                <div class="td-pane-head">
-                    <h2 class="td-pane-title">Notes</h2>
-                    <button type="button" class="td-collapse-btn" id="collapse-left"
-                            aria-expanded="true" aria-controls="pane-left" aria-label="Collapse notes pane">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <polyline points="15 18 9 12 15 6" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="rfc-notes-body">
-                    <div class="td-note-thread" id="RFCNotes-Thread" role="log"
-                         aria-live="polite" aria-label="RFC notes"></div>
-
-                    <div class="td-note-compose" id="RFCNotes-Compose">
-                        <textarea id="rfc-note-textarea"
-                                  class="td-note-input"
-                                  placeholder="Add a note…"
-                                  maxlength="2000"
-                                  rows="1"
-                                  aria-label="Note text"
-                                  aria-describedby="rfc-note-charcount"></textarea>
-                        <button type="button" class="td-note-add-btn" id="rfc-note-send-btn"
-                                aria-label="Save note" disabled>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2.2"
-                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <line x1="12" y1="5" x2="12" y2="19" />
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="td-composer-footer">
-                        <span class="td-charcount mono" id="rfc-note-charcount" aria-live="polite">0 / 2000</span>
-                        <div class="td-composer-attachments" id="rfc-note-attachment-list"></div>
-                        <label class="td-attach-btn" aria-label="Add attachment to note">
-                            <input type="file" id="rfc-note-file-input" class="sr-only"
-                                   multiple accept="*/*"
-                                   aria-label="Attach file to note" />
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2.2"
-                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
-                            </svg>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="td-divider" id="pane-divider" role="separator"
-             aria-orientation="vertical" aria-label="Resize panes"
-             tabindex="0"><span class="td-divider-grip" aria-hidden="true"></span></div>
-
-        <div class="td-pane td-pane--right" id="pane-right" aria-label="Workspace">
-            <div class="td-rail" id="rail-right" aria-hidden="true" tabindex="-1" hidden>
-                <span class="td-rail-label">Workspace</span>
-            </div>
-            <div class="td-pane-inner" id="pane-right-inner">
                 <div class="td-pane-head td-pane-head--ws">
                     <h2 class="td-pane-title">Workspace</h2>
                     @* HD36 3b: a single static "Details" tab for visual parity
