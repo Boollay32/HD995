@@ -45,6 +45,18 @@ window.onload = function () {
 // Captured at the first DEFAULT_PASSWORD response so the new-password submit
 // re-sends the user's actual default (e.g. "Helpdesk7741"), not a fixed string.
 let defaultPassword = "";
+// Set when the first password wall reports a default/temp password (status 10).
+// The new password must be set AFTER the PIN, so we only flag it here and show the
+// reset form once the PIN has verified. pinVerified gates that post-PIN step.
+let mustChangePassword = false;
+let pinVerified = false;
+
+// Redirect into the app after both walls pass: RFC-only users (level 4) -> RFC,
+// everyone else -> TicketPage.
+function enterApp() {
+    const destination = sessionStorage.getItem("Admin") === "4" ? "RFC" : "TicketPage";
+    OkayButtonPress(destination);
+}
 
 async function Login(form, e) {
     ToggleWaiting();
@@ -114,16 +126,22 @@ function HandleStatusLogin(status) {
             break;
 
         case LOGIN_STATUS.PASSWORD_UPDATED:
-            BuildMessageBox("Logged in & password updated");
             sessionStorage.setItem("Status", 0);
+            if (pinVerified) {
+                // New flow: the new password was set after the PIN -> enter the app.
+                enterApp();
+                return;
+            }
+            BuildMessageBox("Logged in & password updated");
             break;
 
         case LOGIN_STATUS.DEFAULT_PASSWORD:
-            // User logging in with default password — show reset form
-            document.getElementById("Login-Container").classList.remove("active");
-            document.getElementById("ResetPassword-Container").classList.add("active");
-            sessionStorage.setItem("Status", 1);
-            return; // Fix: early return — don't show SecondWall
+            // Default/temp password is correct, but the new password must be
+            // set AFTER the PIN. Flag it and continue to the PIN wall; the reset
+            // form is shown only once the PIN verifies (in SecondWallAuth).
+            mustChangePassword = true;
+            sessionStorage.setItem("Status", 0);
+            break;
 
         case LOGIN_STATUS.INVALID_CREDENTIALS:
         case LOGIN_STATUS.INVALID_CREDENTIALS_2:
@@ -192,10 +210,14 @@ async function SecondWallAuth() {
 
         // Fix: named AuthResult properties — not data[0], data[1]
         if (data.isSuccess) {
-            // Post-login redirect (login message feature removed):
-            // RFC-only users (level 4) -> RFC, everyone else -> TicketPage.
-            const destination = sessionStorage.getItem("Admin") === "4" ? "RFC" : "TicketPage";
-            OkayButtonPress(destination);
+            pinVerified = true;
+            if (mustChangePassword) {
+                // PIN verified: require the new password before entering the app.
+                document.getElementById("SecondWall-Container").classList.remove("active");
+                document.getElementById("ResetPassword-Container").classList.add("active");
+                return;
+            }
+            enterApp();
         } else if (data.returnCode === LOGIN_STATUS.ACCOUNT_LOCKED) {
             BuildMessageBox("Incorrect Pin", "Index");
         } else {
