@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HelpDeskNet8.Infrastructure;
+using HelpDeskNet8.Interfaces.Shared;
+using HelpDeskNet8.Interfaces.Users;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDeskNet8.Controllers.Shared
 {
-    public class PageController : Controller
+    public class PageController(IAuthenticator authenticator) : Controller
     {
         [Route("StatsPage")]
         public IActionResult StatsPage() => View("~/Views/Page/StatsPage.cshtml");
@@ -32,7 +35,18 @@ namespace HelpDeskNet8.Controllers.Shared
         public IActionResult ProjectForm() => View("~/Views/Page/Projects/ProjectForm.cshtml");
 
         [Route("TicketDetails")]
-        public IActionResult TicketDetails() => View("~/Views/Page/Ticket/TicketDetails.cshtml");
+        public async Task<IActionResult> TicketDetails()
+        {
+            // HD39: stamp the boot layout server-side so a client's Workspace is hidden
+            // from first paint (no flash). Uses the same CheckAdmin the JS resolve uses,
+            // so the stamped value and the JS-applied layout agree. Nothing is cached
+            // client-side -- recomputed each render, so there is no editable stored value.
+            IUser user = this.GetAuthenticatedUser();
+            bool isClient = user != null
+                && await authenticator.CheckAdmin(user) == Constants.AdminLevel.Authority;
+            ViewBag.BootLayout = isClient ? "left-only" : "both";
+            return View("~/Views/Page/Ticket/TicketDetails.cshtml");
+        }
 
         [Route("Projects")]
         public IActionResult Projects() => View("~/Views/Page/Projects/ProjectsPage.cshtml");
