@@ -130,12 +130,14 @@
 #Table-Div-Outer {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
 #Table-Div-Inner {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   overflow: auto;
 }
 #Table {
