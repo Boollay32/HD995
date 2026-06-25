@@ -209,3 +209,14 @@
    Priority pills on RFC details have a styled chooser (the RFC page does
    not load TicketDetails.css). The popover is appended to the app root by
    RFCPillEdit, so it is not scoped to a container. */
+
+/* The Target pill (#meta-target) is display-only -- no status/priority/SLA
+   modifier -- so without this it falls through to the unthemed base
+   .td-meta-pill and renders dark-on-dark in dark mode. Give it the neutral
+   info tokens (light + dark aware), matching the project chip / status-open.
+   :empty keeps a date-less pill invisible (no coloured blob). */
+#RFCDetails-App #meta-target {
+  background: var(--td-info-bg);
+  color: var(--td-info);
+}
+#RFCDetails-App #meta-target:empty { display: none; }
