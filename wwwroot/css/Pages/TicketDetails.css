@@ -1756,7 +1756,7 @@ body {
 .saved-flash { animation: save-ring 0.6s ease; }
 
 /* Group-1: details panel top padding + relocated ticket subject */
-#tabpanel-details { padding-top: 12px; }
+#tabpanel-details { padding-top: 18px; }
 .td-details-subject {
   margin: 0;
   font-size: 1rem;
