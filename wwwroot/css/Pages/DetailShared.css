@@ -215,7 +215,7 @@
   border-bottom: none;
   border-radius: 0 0 12px 12px;
 }
-.td-app .td-subject-lbl { padding: 10px 16px 0; }
+.td-app .td-subject-lbl { padding: 10px 16px 0; font-size: 0.75rem; }
 .td-app .td-overview > #ov-collapse {
   position: absolute;
   top: 10px;
