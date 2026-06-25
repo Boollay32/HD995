@@ -342,6 +342,15 @@ html[data-theme="dark"] {
         grid-template-columns: 1fr;
     }
 
+    /* HD39: hide the off pane (and the sole pane's collapse button) by layout
+       alone, independent of the JS [hidden] attr, so a server-stamped data-layout
+       renders the correct single-pane view from first paint -- no boot flash of the
+       Workspace for a client whose ticket ends up messages-only. Mirrors apply()/1a. */
+    .td-shell[data-layout="left-only"] .td-pane--right { display: none; }
+    .td-shell[data-layout="right-only"] .td-pane--left { display: none; }
+    .td-shell[data-layout="left-only"] #collapse-left { display: none; }
+    .td-shell[data-layout="right-only"] #collapse-right { display: none; }
+
 .td-pane[hidden] {
     display: none;
 }
