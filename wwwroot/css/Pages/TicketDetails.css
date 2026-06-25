@@ -1884,43 +1884,12 @@ body {
 }
 #TicketDetails-App .td-ov-spacer { flex: 1 1 auto; }
 
-/* Save (.td-btn-primary, keeps its colour) and collapse share one size. */
-#TicketDetails-App .td-ov-head .td-btn-primary,
-#TicketDetails-App .td-ov-collapse {
-  height: 30px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 8px;
-  box-sizing: border-box;
-  cursor: pointer;
-}
-#TicketDetails-App .td-ov-collapse {
-  color: var(--td-muted-2);
-  background: none;
-  border: 1px solid var(--td-border);
-  transition: background 0.15s ease, color 0.15s ease;
-}
-#TicketDetails-App .td-ov-collapse:hover {
-  background: var(--td-panel);
-  color: var(--td-text);
-}
-#TicketDetails-App .td-ov-collapse svg { transition: transform 0.18s ease; }
-#TicketDetails-App .td-ov-collapse[aria-expanded="false"] svg {
-  transform: rotate(180deg);
-}
 
 /* ---- expanded body ---- */
 
 /* ---- timeline (Created -> First response -> Needed by -> Closed) ---- */
 
 /* ---- slim summary (shown when collapsed) ---- */
-#TicketDetails-App .td-overview.is-collapsed .td-ov-body { display: none; }
-#TicketDetails-App .td-overview.is-collapsed .td-ov-slim { display: flex; }
 /* ═══════════  end HD30-6 Overview band  ═══════════ */
 
 /* ═════  HD30-6 Description block (Stage 3)  ═════ */
@@ -2067,17 +2036,6 @@ body {
 /* 1c: labels on the collapsed slim overview summary */
 
 /* HD34: detached header panel + topbar tint + persistent title */
-#TicketDetails-App .td-header-panel {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  /* HD39 1a: weld the topbar to the shell below (no bottom gap, top-only
-     radius, no float shadow) so the overview reads as joined to the topbar. */
-  margin: 10px 10px 0;
-  border: 1px solid var(--td-border);
-  border-radius: 12px 12px 0 0;
-  overflow: hidden;
-}
 #TicketDetails-App .td-topbar {
   background: var(--td-surface);
   padding: 7px 16px;
@@ -2096,32 +2054,11 @@ body {
   cursor: pointer;
 }
 
-/* HD36 misc-3a: collapse button pinned to the overview's top-right
-   (moved out of the header action group). */
-#TicketDetails-App .td-overview { position: relative; }
-#TicketDetails-App .td-overview > #ov-collapse {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  z-index: 2;
-  height: 30px;
-  width: 30px;
-  padding: 0;
-}
-#TicketDetails-App .td-overview > #ov-collapse svg { margin: 0; }
-/* keep the subject clear of the button */
-#TicketDetails-App .td-overview > .td-details-subject { padding-right: 44px; }
-#TicketDetails-App .td-overview.is-collapsed > .td-ov-slim { padding-right: 50px; }
-
 /* ===== HD38 ticket-details fixes ===== */
 
 /* #1 Notes-Compose flush to the bottom of the notes panel (was a gap from the
    tab panel's bottom padding sitting under the composer). */
 #TicketDetails-App #tabpanel-notes { padding-bottom: 0; }
-
-/* #4 "Title" label aligned with the subject and the Origin group below it
-   (the label had no left padding; subject + body sit at 16px). */
-#TicketDetails-App .td-subject-lbl { padding: 10px 16px 0; }
 
 /* #3 Activity tab scrollbar: make it visible and ~50% wider than the default
    8px workspace scrollbar. */
@@ -2131,17 +2068,3 @@ body {
   background: var(--scroll-thumb);
   border-radius: 99px;
 }
-
-/* ===== HD38 #5: overview relocated into the workspace column =====
-   It now sits at the top of the right pane, above the tabs: drop the
-   backdrop gap below it and add a divider against the tab row. */
-#TicketDetails-App .td-overview {
-  margin-bottom: 8px;
-  border-bottom: none;
-  border-radius: 0 0 12px 12px;
-}
-
-/* ===== HD Issues 39 - Ticket Details (Option A) =====
-   1d: inset the shell to match the topbar (10px) so the overview's right
-   edge no longer reaches the viewport edge. */
-#TicketDetails-App .td-shell { margin: 0 10px; }
