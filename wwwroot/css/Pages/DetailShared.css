@@ -195,12 +195,26 @@
 }
 
 /* ============================================================================
-   HD39 unify (Stage 1a): shared overview CHROME -- collapse button, its
-   positioning, the Title-label alignment, slim/body toggles. The overview
-   LAYOUT (header-panel weld, rounded bottom, shell inset) is deliberately NOT
-   shared: the ticket places its overview inside the workspace pane, RFC inside
-   the header panel, so layout stays per-page (each via its own #...-App rules). */
-.td-app .td-overview { position: relative; }
+   HD39 unify (Stage 1): shared overview chrome AND layout. RFC's overview was
+   moved into the workspace pane (RFCDetails.cshtml) to match the ticket, so the
+   Option-A layout below -- header-panel weld, shell inset, overview rounded
+   bottom + gap -- now applies cleanly to BOTH detail pages from here. */
+.td-app .td-header-panel {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 10px 10px 0;
+  border: 1px solid var(--td-border);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+.td-app .td-shell { margin: 0 10px; }
+.td-app .td-overview {
+  position: relative;
+  margin-bottom: 8px;
+  border-bottom: none;
+  border-radius: 0 0 12px 12px;
+}
 .td-app .td-subject-lbl { padding: 10px 16px 0; }
 .td-app .td-overview > #ov-collapse {
   position: absolute;
