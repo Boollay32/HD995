@@ -258,3 +258,24 @@
 }
 .td-app .td-overview.is-collapsed .td-ov-body { display: none; }
 .td-app .td-overview.is-collapsed .td-ov-slim { display: flex; }
+
+/* ============================================================================
+   HD39 unify (Stage 2): shared topbar tint + Save button, lifted from the
+   per-page #TicketDetails-App / #RFCDetails-App copies (identical on both). */
+.td-app .td-topbar {
+  background: var(--td-surface);
+  padding: 7px 16px;
+  min-height: 50px;
+}
+.td-app .td-topbar-actions .td-btn-primary {
+  height: 30px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
