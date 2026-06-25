@@ -193,3 +193,72 @@
 .td-app .td-overview {
   margin-bottom: 6px;
 }
+
+/* ============================================================================
+   HD39 unify (Stage 1): shared overview chrome. Header panel (Option-A weld),
+   overview panel, collapse button and the Title-label alignment -- lifted from
+   the per-page #TicketDetails-App / #RFCDetails-App copies (which had drifted)
+   into one .td-app-scoped source. Both detail pages carry .td-app on the root. */
+.td-app .td-header-panel {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 10px 10px 0;
+  border: 1px solid var(--td-border);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+.td-app .td-shell { margin: 0 10px; }
+
+.td-app .td-overview {
+  position: relative;
+  margin-bottom: 8px;
+  border-bottom: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.td-app .td-subject-lbl { padding: 10px 16px 0; }
+
+.td-app .td-overview > #ov-collapse {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 2;
+  height: 30px;
+  width: 30px;
+  padding: 0;
+}
+.td-app .td-overview > #ov-collapse svg { margin: 0; }
+.td-app .td-overview > .td-details-subject { padding-right: 44px; }
+.td-app .td-overview.is-collapsed > .td-ov-slim { padding-right: 50px; }
+
+.td-app .td-ov-head .td-btn-primary,
+.td-app .td-ov-collapse {
+  height: 30px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.td-app .td-ov-collapse {
+  color: var(--td-muted-2);
+  background: none;
+  border: 1px solid var(--td-border);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.td-app .td-ov-collapse:hover {
+  background: var(--td-panel);
+  color: var(--td-text);
+}
+.td-app .td-ov-collapse svg { transition: transform 0.18s ease; }
+.td-app .td-ov-collapse[aria-expanded="false"] svg {
+  transform: rotate(180deg);
+}
+.td-app .td-overview.is-collapsed .td-ov-body { display: none; }
+.td-app .td-overview.is-collapsed .td-ov-slim { display: flex; }
