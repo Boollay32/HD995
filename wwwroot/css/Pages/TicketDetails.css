@@ -107,6 +107,8 @@ body {
   font-weight: 700;
 }
 .td-ws-body {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-height: 0;
   overflow: hidden;
@@ -115,7 +117,8 @@ body {
 .td-ws-inner {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 16px;
