@@ -170,11 +170,17 @@ const TicketLoader = {
                     // -> empty -> staying messages-only is correct.
                     var cfContainer = document.getElementById('CustomFields-Container');
                     var isEmpty = !cfContainer || cfContainer.children.length === 0;
+                    var detailsEmpty = document.getElementById('Details-Empty');
                     if (isEmpty) {
                         document.getElementById('CustomFields-Group')
                             ?.setAttribute('hidden', '');
-                    } else if (State.clientView) {
-                        PaneLayout.apply(TDLAYOUT.BOTH);
+                        // Show the "no extra details" empty state in the Details tab.
+                        detailsEmpty?.removeAttribute('hidden');
+                    } else {
+                        detailsEmpty?.setAttribute('hidden', '');
+                        if (State.clientView) {
+                            PaneLayout.apply(TDLAYOUT.BOTH);
+                        }
                     }
                 })
                 .catch(err => console.error('Custom-field dropdown load:', err));
