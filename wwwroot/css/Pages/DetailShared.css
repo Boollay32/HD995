@@ -195,30 +195,13 @@
 }
 
 /* ============================================================================
-   HD39 unify (Stage 1): shared overview chrome. Header panel (Option-A weld),
-   overview panel, collapse button and the Title-label alignment -- lifted from
-   the per-page #TicketDetails-App / #RFCDetails-App copies (which had drifted)
-   into one .td-app-scoped source. Both detail pages carry .td-app on the root. */
-.td-app .td-header-panel {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  margin: 10px 10px 0;
-  border: 1px solid var(--td-border);
-  border-radius: 12px 12px 0 0;
-  overflow: hidden;
-}
-.td-app .td-shell { margin: 0 10px; }
-
-.td-app .td-overview {
-  position: relative;
-  margin-bottom: 8px;
-  border-bottom: none;
-  border-radius: 0 0 12px 12px;
-}
-
+   HD39 unify (Stage 1a): shared overview CHROME -- collapse button, its
+   positioning, the Title-label alignment, slim/body toggles. The overview
+   LAYOUT (header-panel weld, rounded bottom, shell inset) is deliberately NOT
+   shared: the ticket places its overview inside the workspace pane, RFC inside
+   the header panel, so layout stays per-page (each via its own #...-App rules). */
+.td-app .td-overview { position: relative; }
 .td-app .td-subject-lbl { padding: 10px 16px 0; }
-
 .td-app .td-overview > #ov-collapse {
   position: absolute;
   top: 10px;
@@ -231,7 +214,6 @@
 .td-app .td-overview > #ov-collapse svg { margin: 0; }
 .td-app .td-overview > .td-details-subject { padding-right: 44px; }
 .td-app .td-overview.is-collapsed > .td-ov-slim { padding-right: 50px; }
-
 .td-app .td-ov-head .td-btn-primary,
 .td-app .td-ov-collapse {
   height: 30px;
