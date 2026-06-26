@@ -87,6 +87,7 @@ class CreateTicket extends PageBase {
         // From the Incidents page "New ticket" -> lock this form to incidents only.
         const incidentContext = sessionStorage.getItem('NewTicketIncident') === '1';
         if (incidentContext) sessionStorage.removeItem('NewTicketIncident');
+        this._incidentContext = incidentContext;   // remembered for the post-create redirect (6a)
 
         // Govtech (authority 151) raises only Contact Client tickets here; clients
         // raise every other type but never Contact Client (that is Govtech-only).
@@ -295,7 +296,12 @@ class CreateTicket extends PageBase {
         }
 
         UI.flash(`Created Ticket ${newTicketId}`, 'success');
-        Router.toTicketPage();
+        // 6a: incidents return to the Incidents queue, not the main ticket queue.
+        if (this._incidentContext) {
+            Router.toIncidentsPage();
+        } else {
+            Router.toTicketPage();
+        }
     }
 }
 
