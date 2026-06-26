@@ -49,15 +49,19 @@
 
     function show(payload) {
         var entries = Array.isArray(payload) ? payload : _decode(payload);
-        if (!entries || entries.length === 0) return;
+        if (!entries || entries.length === 0) return Promise.resolve();
 
         _styles();
         _close();
 
+        var _resolve;
+        var _done = new Promise(function (r) { _resolve = r; });
+        function dismiss() { _close(); _resolve(); }
+
         var overlay = document.createElement('div');
         overlay.id = 'mail-preview-overlay';
         overlay.addEventListener('click', function (e) {
-            if (e.target === overlay) _close();
+            if (e.target === overlay) dismiss();
         });
 
         var card = document.createElement('div');
@@ -117,12 +121,13 @@
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.textContent = 'Got it';
-        btn.addEventListener('click', _close);
+        btn.addEventListener('click', dismiss);
         foot.appendChild(btn);
         card.appendChild(foot);
 
         overlay.appendChild(card);
         document.body.appendChild(overlay);
+        return _done;
     }
 
     window.MailPreview = { show: show };

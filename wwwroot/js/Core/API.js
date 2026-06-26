@@ -53,7 +53,7 @@ const API = {
             // header (no real SMTP send locally); absent/ignored in production.
             const mailPreview = response.headers.get('X-Mail-Preview');
             if (mailPreview && window.MailPreview) {
-                window.MailPreview.show(mailPreview);
+                await window.MailPreview.show(mailPreview);
             }
 
             // Some endpoints return a plain string (Ok(string) -> text/plain);
