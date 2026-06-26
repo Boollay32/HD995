@@ -32,6 +32,7 @@ class TaskPage extends PageBase {
     constructor() {
         super('Task');
         this.queue = null;
+        this.myName = null;   // resolved display name for the "My open" filter
     }
 
     async init() {
@@ -45,10 +46,29 @@ class TaskPage extends PageBase {
             return;
         }
 
+        // The task list shows the assignee as a display name; resolve ours so the
+        // "My open" view can match. Must run before _config() builds the filters.
+        await this._resolveMyName();
         this.queue = new QueueView('#queue-mount', this._config());
         // "My Tasks" vs "View Tasks": the nav sets MY_TICKETS to pick the default view.
         this.queue.view = sessionStorage.getItem(STORAGE_KEYS.MY_TICKETS) === '1' ? 'mine' : 'all';
         await this.queue.load();
+    }
+
+    // The list shows the assignee as a display name, but our stored identity is the
+    // login + UserID. Resolve our name from the assignable-tech list so "My open" can
+    // compare names. On failure, leaves myName null and the login compare still applies.
+    async _resolveMyName() {
+        try {
+            const data = await API.post('Misc/GetDropDownList',
+                API.authPayload({ filter: '0', group: 'Ticket' }));
+            const techs = (data && data.assignedTechName) || [];
+            const myId = String(sessionStorage.getItem(STORAGE_KEYS.USER_ID) ?? '');
+            const mineRow = techs.find(t => String(t.id) === myId);
+            this.myName = mineRow ? mineRow.name : null;
+        } catch (err) {
+            console.error('Tasks._resolveMyName:', err);
+        }
     }
 
     async _fetch() {
@@ -73,7 +93,11 @@ class TaskPage extends PageBase {
     }
 
     _config() {
-        const me = this.username;   // compared to assignedTech for the "My open" view
+        // "My open" matches the assignee (a display name) against both our login and
+        // our resolved name, so it works whichever identifier the proc returns.
+        const norm = s => (s ?? '').trim().toLowerCase();
+        const mineKeys = new Set([norm(this.username), norm(this.myName)].filter(Boolean));
+        const isMine = r => mineKeys.has(norm(r.assignedTech));
         return {
             title: 'Tasks',
             fetch: () => this._fetch(),
@@ -81,7 +105,7 @@ class TaskPage extends PageBase {
             search: ['title', 'assignedTech', 'taskID', 'ticketID'],
 
             views: [
-                { id: 'mine',  label: 'My open',     filter: r => r.assignedTech === me && KQisOpen(r) },
+                { id: 'mine',  label: 'My open',     filter: r => isMine(r) && KQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => KQisOpen(r) },
                 { id: 'wdn',   label: 'Withdrawn',   filter: r => r.status === 4 },
                 { id: 'cmp',   label: 'Complete',    filter: r => r.status === 3 },
