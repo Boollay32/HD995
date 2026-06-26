@@ -1960,7 +1960,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-top: 10px;
+  padding: 10px 8px 8px 0;
   border-top: 1px solid var(--td-border-2);
 }
 .td-ed-foot-btns {
