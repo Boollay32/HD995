@@ -160,10 +160,18 @@ const Save = {
         const customContainer = document.querySelector('#CustomFields-Container')
             || document.querySelector('#Custom-fields');
         if (customContainer) {
+            // TicketMapper.Map builds an OrdinalIgnoreCase dictionary and throws
+            // ("same key ... Webform") if a field id repeats. Track keys already
+            // emitted (incl. the standard fields above) and keep the first one.
+            const SEP = String.fromCharCode(96);
+            const seen = new Set(parts.map(p => p.split(SEP)[0].toLowerCase()));
             for (const el of customContainer.querySelectorAll('input, select, textarea')) {
                 if (!el.id) continue;
+                const _key = el.id.toLowerCase();
+                if (seen.has(_key)) continue;
                 const val = (el.type === 'checkbox') ? (el.checked ? '1' : '0') : el.value;
                 if (val === null || val === undefined || val === '') continue;
+                seen.add(_key);
                 parts.push(`${el.id}\`${val}`);
             }
         }
