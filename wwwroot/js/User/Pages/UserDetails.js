@@ -66,7 +66,16 @@ class UserManager extends PageBase {
 
     async _loadUserData() {
         const data = await UserLoader.getDetail(this.userLogin);
-        if (data) FillUserDetail(data);
+        if (data) {
+            FillUserDetail(data);
+            // The list row only carries the contact Email (UserStub.Email), which
+            // is NOT guaranteed to equal the account UserLogin the UserManage proc
+            // matches on. Stash the canonical UserLogin from GetUserDetail so the
+            // save / manage / reset / delete ops key on the right value. (HD41 7a)
+            if (data.userLogin) {
+                sessionStorage.setItem(STORAGE_KEYS.VIEW_USER_LOGIN, data.userLogin);
+            }
+        }
         // Raw lock state (the Locked select cannot represent 99/deactivated)
         this.userLocked = Number(data?.locked) || 0;
     }
