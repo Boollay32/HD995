@@ -152,6 +152,7 @@ const TicketLoader = {
             // selects, so only the new custom ones get their options.
             Promise.resolve(builder.changeCustomFields(data.requestID, data))
                 .then(() => Dropdowns.load('Ticket'))
+                .then(() => builder.applySavedValues())
                 .then(() => {
                     // HD35 B4: the Extended Information inputs are read-only for
                     // a client. Disable them HERE (not earlier) because the

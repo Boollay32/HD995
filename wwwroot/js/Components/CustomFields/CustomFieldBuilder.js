@@ -65,7 +65,21 @@ class CustomFieldBuilder {
         // Populate saved values, if supplied. Each field element id ===
         // customFilterItem, which matches the serialized ticket field name
         // (camelCase), so values[id] is the saved value for that field.
+        // Inputs/textareas populate now; the <select> options and the <div>
+        // checkbox children are injected later by Dropdowns.load, so stash the
+        // fields/values for a second pass once those exist (HD41 3a).
+        this._savedFields = fields;
+        this._savedValues = values;
         if (values) this._applyCustomValues(fields, values);
+    }
+
+    // Re-apply saved values after the dropdown load has populated the custom
+    // <select> options and checkbox children. The build-time pass can only set
+    // inputs/textareas; this pass lands the selects and checkbox groups (HD41 3a).
+    applySavedValues() {
+        if (this._savedFields && this._savedValues) {
+            this._applyCustomValues(this._savedFields, this._savedValues);
+        }
     }
 
     // Set the saved value into each built custom field. Handles inputs,
@@ -90,6 +104,11 @@ class CustomFieldBuilder {
             if (el.tagName === 'SELECT') {
                 const opt = [...el.options].find(o => o.value === v);
                 if (opt) el.value = v;
+            } else if (el.hasAttribute('CheckBox')) {
+                // div-based checkbox group: value is Form's "1-3-" index list;
+                // child inputs are injected by Dropdowns.load (so this lands in
+                // the post-load applySavedValues pass).
+                if (typeof Form !== 'undefined' && Form.populateCheckboxes) Form.populateCheckboxes(el, v);
             } else if (el.tagName === 'INPUT' && el.type === 'checkbox') {
                 el.checked = (v === '1' || v.toLowerCase() === 'true');
             } else if (el.tagName === 'INPUT' && el.type === 'date') {
