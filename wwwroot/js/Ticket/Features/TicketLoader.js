@@ -239,6 +239,7 @@ const NotesLeft = {
             attachmentOwnerType: 0,
             rfc: false,
             extraSaveFields: { visibleToClient: '0' },
+            pinDescription: true,
             ids: {
                 thread: 'Messages-Thread',
                 textarea: 'msg-textarea',
