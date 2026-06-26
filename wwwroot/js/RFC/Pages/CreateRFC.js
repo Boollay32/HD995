@@ -128,9 +128,21 @@ class CreateRFC extends PageBase {
     }
 
     async _submitRFC(formData) {
+        // SaveRFCRequest expects the pipe-backtick ObjectInfo string (same shape
+        // as the RFC detail save and CreateTicket), not flat fields. Spreading the
+        // raw fields sent no objectInfo and let a stray typed field (e.g. an empty
+        // RFCId) fail [ApiController] model binding -> 400. Build objectInfo and
+        // send the typed fields explicitly.
+        const KEY_ALIASES = { rfcStatus: 'status' };
+        const objectInfo = Object.entries(formData)
+            .filter(([k, v]) => k.toLowerCase() !== 'rfcid' && v !== null && v !== undefined && v !== '')
+            .map(([k, v]) => `${KEY_ALIASES[k] ?? k}\`${v}`)
+            .join('|');
+
         return API.post('RFC/SaveRFC',
             API.authPayload({
-                ...formData,
+                objectInfo,
+                attachment: '',
                 emailSent: 0
             })
         );
@@ -139,8 +151,9 @@ class CreateRFC extends PageBase {
     // -------------------------  Create Success  ------------------------- //
 
     async _handleCreateSuccess(data, note) {
-        const newRfcId = data.id ?? data.rfcId;
-        const message = data.message ?? 'Created';
+        // SaveRFC returns [status, newRfcId] (List<object> -> JSON array).
+        const newRfcId = Array.isArray(data) ? data[1] : (data.id ?? data.rfcId);
+        const message = Array.isArray(data) ? (data[0] ?? 'Created') : (data.message ?? 'Created');
 
         // The description becomes the RFC's first note, now CARRYING the
         // attachments (previously null was passed and files were lost).
