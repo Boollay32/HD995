@@ -89,17 +89,14 @@ class UserManager extends PageBase {
     }
 
     // The account can only be UNLOCKED from the UI (the UserManage proc has
-    // no lock path). Show the Unlock button only for a genuinely locked
-    // account (locked === 1; not active 0, not deactivated 99).
+    // no lock path). The Unlock button is always visible; it is enabled only
+    // when the account is genuinely locked (locked === 1).
     _setupUnlockButton() {
         const btn = document.getElementById('Unlock-Button');
         if (!btn) return;
-        if (this.userLocked === 1) {
-            btn.style.display = '';
-            btn.addEventListener('click', () => userSave.unlockUser());
-        } else {
-            btn.style.display = 'none';
-        }
+        btn.style.display = '';
+        btn.disabled = this.userLocked !== 1;
+        btn.addEventListener('click', () => userSave.unlockUser());
     }
 
     // State-aware: deactivated accounts (locked 99) offer reactivation;
