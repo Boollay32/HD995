@@ -70,6 +70,19 @@ const Form = {
         return true;
     },
 
+    // -------------------------  Phone  ------------------------- //
+
+    // Lenient phone check (HD40 7b): an optional leading + then digits
+    // with spaces / ( ) / - separators, 7-15 digits total (E.164 max).
+    // Empty is allowed -- required-ness is handled by validate()/gateSubmit().
+    isValidPhone(value) {
+        const s = (value ?? '').trim();
+        if (!s) return true;
+        if (!/^\+?[\d\s()-]+$/.test(s)) return false;
+        const digits = s.replace(/\D/g, '');
+        return digits.length >= 7 && digits.length <= 15;
+    },
+
     // Clear a field's invalid highlight as soon as it gets a value.
     _bindClearInvalid(field) {
         if (field._invalidBound) return;
