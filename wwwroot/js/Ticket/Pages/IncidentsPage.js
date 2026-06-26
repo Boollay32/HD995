@@ -75,7 +75,6 @@ class IncidentPage extends PageBase {
 
     // ---- Config consumed by QueueView ----
     _config() {
-        const me = this.username;   // compared to assignedTech for the "My open" view
         const myId = Number(sessionStorage.getItem(STORAGE_KEYS.USER_ID));
         TQ_MY_ID = Number.isNaN(myId) ? null : myId;
         return {
@@ -86,17 +85,14 @@ class IncidentPage extends PageBase {
             search: ['subject', 'userName', 'ticketID'],
 
             views: [
-                { id: 'mine',  label: 'My open',     filter: r => (r.assignedTech === me || r.userName === me) && TQisOpen(r) },
-                { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && TQisOpen(r) },
-                { id: 'reply', label: 'Needs reply', filter: r => r.notify === '0' && TQisOpen(r) },
                 { id: 'all',   label: 'All open',     filter: r => TQisOpen(r) },
+                { id: 'reply', label: 'Needs reply', filter: r => r.notify === '0' && TQisOpen(r) },
             ],
 
             filters: [
                 { id: 'type', label: 'Type',     field: 'requestType' },
                 { id: 'prio', label: 'Priority', field: 'priority' },
                 { id: 'stat', label: 'Status',   field: 'status' },
-                { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
             ],
 
             columns: [
@@ -120,12 +116,6 @@ class IncidentPage extends PageBase {
                         const c = TQ_STATUS_COLOR[r.status] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
                         return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${Format.escapeHtml(r.status)}</span>`;
                     }
-                },
-                {
-                    key: 'assignedTech', label: 'Assignee',
-                    render: r => r.assignedTech
-                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${UI.avatarColor(r.assignedTech)}">${Format.initials(r.assignedTech)}</span>${Format.escapeHtml(r.assignedTech)}</span>`
-                        : '<span class="qv-unassigned">Unassigned</span>'
                 },
                 {
                     key: 'updated', label: 'Updated', sortable: true,
@@ -152,7 +142,6 @@ class IncidentPage extends PageBase {
                   <span class="qv-pv-dt">Status</span><span class="qv-pv-dd"><span class="qv-status" style="color:${sc[0]};background:${sc[1]}">${Format.escapeHtml(r.status)}</span></span>
                   <span class="qv-pv-dt">Priority</span><span class="qv-pv-dd"><span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${Format.escapeHtml(r.priority)}</span></span>
                   <span class="qv-pv-dt">Type</span><span class="qv-pv-dd">${Format.escapeHtml(r.requestType)}</span>
-                  <span class="qv-pv-dt">Assignee</span><span class="qv-pv-dd">${r.assignedTech ? Format.escapeHtml(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</span>
                   <span class="qv-pv-dt">Opened</span><span class="qv-pv-dd">${TQdate(r.created)}</span>
                   <span class="qv-pv-dt">Last activity</span><span class="qv-pv-dd">${TQago(r.updated)}</span>
                   ${r.notify ? '<span class="qv-pv-dt">Status</span><span class="qv-pv-dd" style="color:var(--accent-strong);font-weight:600">\u25cf Awaiting reply</span>' : ''}
