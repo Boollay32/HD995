@@ -53,6 +53,15 @@ class CreateUser extends PageBase {
     async submitUser() {
         if (!validateForm(this.formId)) return;
 
+        // HD40 7b: phone must be a valid format when provided.
+        const phoneEl = document.getElementById('PhoneNumber');
+        if (phoneEl && !Form.isValidPhone(phoneEl.value)) {
+            phoneEl.classList.add('field-invalid');
+            phoneEl.focus();
+            UI.toast?.('Please enter a valid phone number', 'warning');
+            return;
+        }
+
         const submitButton = document.getElementById('SubmitCreatedUser');
         if (submitButton) submitButton.disabled = true;
         ToggleWaiting();

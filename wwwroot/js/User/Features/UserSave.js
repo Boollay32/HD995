@@ -35,6 +35,14 @@ class UserSave extends PageBase {
 
     async manageUser() {
         try {
+            // HD40 7b: phone must be a valid format when provided.
+            const phoneInput = document.getElementById('UserPhone');
+            if (phoneInput && !Form.isValidPhone(phoneInput.value)) {
+                phoneInput.classList.add('field-invalid');
+                phoneInput.focus();
+                UI.toast?.('Please enter a valid phone number', 'warning');
+                return;
+            }
             const phone = document.getElementById('UserPhone')?.value;
             const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
             // ManageUserRequest declares these as C# strings; STJ rejects JSON
