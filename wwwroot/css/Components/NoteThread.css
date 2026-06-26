@@ -167,23 +167,8 @@
 
 /* Collapsed-to-icon: the filename and size spans hide, leaving the file
    icon + remove button (a compact "icon" pill), so 5 chips fit on one line. */
-/* Hovered or keyboard-focused chip expands to reveal the full filename. */
-.td-attach-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  /* reset UA button surface so <button>.td-attach-btn (task editor)
-     matches the <label> version; looked bright in dark mode otherwise. */
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-  flex-shrink: 0;
-}
-.td-attach-btn:hover { background: var(--border); color: var(--text); }
+/* .td-attach-btn is defined globally in Components/Attachments.css now
+   (canonical 34px tile-matching add button) -- HD41 1a unified them all. */
 
 /* ---- edit own note ---- */
 /* Edit icon: pinned to the top-right of the note head, styled to match the

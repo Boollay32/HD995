@@ -273,12 +273,5 @@
     font-weight: 500;
 }
 
-/* HD40 1a: attach button matches the 34px chip tiles and sits inline with them (button left). */
-.ca-attach-row .td-attach-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  border: 1px solid var(--td-border, var(--border));
-  background: var(--td-surface, var(--row-hover));
-}
+/* HD41 1a: attach button sizing is global now (.td-attach-btn in Attachments.css). */
 .ca-attach-row .td-attach-list { margin-top: 0; }
