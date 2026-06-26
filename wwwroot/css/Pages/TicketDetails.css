@@ -1637,14 +1637,7 @@ body {
   align-items: center;
   gap: 5px;
 }
-/* HD40 3c: attach button matches the 34px chip tiles, sits left with chips to its right, inline. */
-.td-att-wrap .td-attach-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  border: 1px solid var(--td-border, var(--border));
-  background: var(--td-surface, var(--row-hover));
-}
+/* HD41 1a: attach button sizing is global now (.td-attach-btn in Attachments.css). */
 .td-att-wrap .td-att-chips { order: 1; }
 .td-att-wrap .td-attach-list { margin-top: 0; }
 .td-att-add {
