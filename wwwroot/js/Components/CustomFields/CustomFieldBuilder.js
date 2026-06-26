@@ -39,9 +39,18 @@ class CustomFieldBuilder {
         // (The create form, #Custom-fields, still needs them.)
         const isDetail = customDiv.id === 'CustomFields-Container';
         const OVERVIEW_FIELDS = new Set(['Authority', 'assignedClientID', 'targetDate', 'neededBy']);
-        const fields = isDetail
-            ? data.filter(f => !OVERVIEW_FIELDS.has(f.customFilterItem))
-            : data;
+        // Guard against the same customFilterItem arriving twice: two controls
+        // sharing an id is invalid markup and makes the save serialize a duplicate
+        // key (the "Webform" crash). Case-insensitive to match TicketMapper's
+        // OrdinalIgnoreCase parse. Overview fields are still dropped on detail.
+        const seen = new Set();
+        const fields = data.filter(f => {
+            if (isDetail && OVERVIEW_FIELDS.has(f.customFilterItem)) return false;
+            const key = (f.customFilterItem || '').toLowerCase();
+            if (key && seen.has(key)) return false;
+            if (key) seen.add(key);
+            return true;
+        });
 
         // Clear any previously-built rows (class .Detail-Div, scoped to this
         // container) before rebuilding.
