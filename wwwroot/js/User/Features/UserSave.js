@@ -17,7 +17,7 @@ class UserSave extends PageBase {
     async updateUser() {
         try {
             const phone = document.getElementById('UserPhone')?.value;
-            const userLogin = document.getElementById('UserEmail')?.innerText;
+            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
 
             await API.post('User/UpdateUser', API.authPayload({
                 userLogin,
@@ -36,7 +36,7 @@ class UserSave extends PageBase {
     async manageUser() {
         try {
             const phone = document.getElementById('UserPhone')?.value;
-            const userLogin = document.getElementById('UserEmail')?.innerText;
+            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
             // ManageUserRequest declares these as C# strings; STJ rejects JSON
             // numbers for string props (400), so send the raw select values.
             //
@@ -76,7 +76,7 @@ class UserSave extends PageBase {
     async activateUser() {
         UI.toggleWaiting();
         try {
-            const userLogin = document.getElementById('UserEmail')?.innerText;
+            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
             const phone = document.getElementById('UserPhone')?.value;
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
@@ -104,7 +104,7 @@ class UserSave extends PageBase {
     async unlockUser() {
         UI.toggleWaiting();
         try {
-            const userLogin = document.getElementById('UserEmail')?.innerText;
+            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
             const phone = document.getElementById('UserPhone')?.value;
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
@@ -143,7 +143,7 @@ class UserSave extends PageBase {
     async resetUser() {
         UI.toggleWaiting();
         try {
-            const userLogin = document.getElementById('UserEmail')?.innerText;
+            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
 
             const data = await API.post('User/ResetUser',
                 API.authPayload({ userLogin })
@@ -180,7 +180,7 @@ class UserSave extends PageBase {
     async deleteUser() {
         UI.toggleWaiting();
         try {
-            const userLogin = document.getElementById('UserEmail')?.innerText;
+            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
 
             const data = await API.post('User/DeleteUser',
                 API.authPayload({ userLogin })
