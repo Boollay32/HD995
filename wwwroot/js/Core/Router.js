@@ -20,7 +20,7 @@ const Router = {
     toStats() { Router._navigate('/Stats'); },
     toTicketDetails() {
         const here = window.location.pathname;
-        if (here && here !== '/TicketDetails') sessionStorage.setItem('TicketListReturn', here);
+        if (here && here !== '/TicketDetails' && here !== '/CreateTicket') sessionStorage.setItem('TicketListReturn', here);
         Router._navigate('/TicketDetails');
     },
     toUserPage() { Router._navigate('/UserPage'); },
