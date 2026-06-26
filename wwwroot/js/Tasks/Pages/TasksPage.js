@@ -51,7 +51,7 @@ class TaskPage extends PageBase {
         await this._resolveMyName();
         this.queue = new QueueView('#queue-mount', this._config());
         // "My Tasks" vs "View Tasks": the nav sets MY_TICKETS to pick the default view.
-        this.queue.view = sessionStorage.getItem(STORAGE_KEYS.MY_TICKETS) === '1' ? 'mine' : 'all';
+        this.queue.view = sessionStorage.getItem(STORAGE_KEYS.MY_TICKETS) === '0' ? 'all' : 'mine';
         await this.queue.load();
     }
 

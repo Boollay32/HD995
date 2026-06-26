@@ -23,7 +23,7 @@ class QueueView {
         this.cfg = config;
         this.rows = [];
         this.current = [];
-        this.view = config.views?.[0]?.id ?? null;
+        this.view = (config.views?.find(v => v.id === 'mine') ?? config.views?.[0])?.id ?? null;
         this.sortKey = config.defaultSort?.key ?? null;
         this.sortDir = config.defaultSort?.dir ?? 1;
         this.selected = new Set();
