@@ -72,12 +72,18 @@ class CustomFieldBuilder {
     // textareas, selects (best-effort: only if the option exists), checkboxes,
     // and date inputs (trim the time part).
     _applyCustomValues(configs, values) {
+        // Saved values are mapped onto the Ticket model case-insensitively;
+        // the response can echo keys back in a different case than the field's
+        // customFilterItem. Match case-insensitively so every field repopulates
+        // (HD40 3a), not just the ones whose casing happens to line up.
+        const byLower = {};
+        for (const k in values) byLower[k.toLowerCase()] = values[k];
         for (const cfg of configs) {
             const id = cfg.customFilterItem;
             if (!id) continue;
             const el = document.getElementById(id);
             if (!el) continue;
-            let v = values[id];
+            let v = byLower[id.toLowerCase()];
             if (v === undefined || v === null) continue;
             v = String(v);
 
