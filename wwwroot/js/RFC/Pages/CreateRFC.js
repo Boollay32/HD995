@@ -160,7 +160,8 @@ class CreateRFC extends PageBase {
         await SaveOriginalNote(this.files, true, note, newRfcId);
 
 
-        BuildMessageBox(`${message} RFC ${newRfcId}`, 'RFC');
+        UI.flash?.(`${message} RFC ${newRfcId}`, 'success');
+        Router.toRFC();
     }
 }
 
