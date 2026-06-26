@@ -114,7 +114,9 @@ namespace HelpDeskNet8.Services
             {
                 // A new ticket was created -> notify the helpdesk inbox (the
                 // shared FromAddress), NOT the originator. HD35 B1/B3.
-                case NotificationType.TicketCreated:
+           case NotificationType.TicketCreated:
+                    // 6a: an incident (request type 8) does not email on creation.
+                    if (ticket.RequestID == 8) return System.Array.Empty<string>();
                     // 1b: a Contact Client ticket (type 12) is raised on behalf of
                     // a client -> email that client (the ticket originator) too.
                     if (ticket.RequestID == 12) return new[] { ticket.Email, FromAddress };
