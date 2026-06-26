@@ -115,6 +115,9 @@ namespace HelpDeskNet8.Services
                 // A new ticket was created -> notify the helpdesk inbox (the
                 // shared FromAddress), NOT the originator. HD35 B1/B3.
                 case NotificationType.TicketCreated:
+                    // 1b: a Contact Client ticket (type 12) is raised on behalf of
+                    // a client -> email that client (the ticket originator) too.
+                    if (ticket.RequestID == 12) return new[] { ticket.Email, FromAddress };
                     return new[] { FromAddress };
 
                 // A task was saved -> the ticket's assigned tech is notified.
