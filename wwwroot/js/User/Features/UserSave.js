@@ -24,7 +24,8 @@ class UserSave extends PageBase {
                 phone
             }));
 
-            MessageBox.show('User has been updated', 'UserDetails');
+            UI.flash?.('User has been updated', 'success');
+            Router.toUserDetails();
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
@@ -61,7 +62,8 @@ class UserSave extends PageBase {
                 phone
             }));
 
-            MessageBox.show('User has been updated', 'UserDetails');
+            UI.flash?.('User has been updated', 'success');
+            Router.toUserDetails();
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
@@ -96,7 +98,8 @@ class UserSave extends PageBase {
                 phone
             }));
 
-            MessageBox.show('User has been reactivated', 'UserPage');
+            UI.flash?.('User has been reactivated', 'success');
+            Router.toUserPage();
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
@@ -125,7 +128,8 @@ class UserSave extends PageBase {
                 phone
             }));
 
-            MessageBox.show('User has been unlocked', 'UserDetails');
+            UI.flash?.('User has been unlocked', 'success');
+            Router.toUserDetails();
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
@@ -194,7 +198,8 @@ class UserSave extends PageBase {
                 API.authPayload({ userLogin })
             );
 
-            MessageBox.show(data, 'UserPage');
+            UI.flash?.(data, 'success');
+            Router.toUserPage();
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
