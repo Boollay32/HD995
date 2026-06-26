@@ -81,6 +81,7 @@ class UserPage extends PageBase {
 
     _open(row) {
         sessionStorage.setItem(STORAGE_KEYS.USER_ID, row.userID);
+        sessionStorage.setItem(STORAGE_KEYS.VIEW_USER_LOGIN, row.email);
         this.navigateToUserDetails();
     }
 
