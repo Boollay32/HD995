@@ -4,6 +4,7 @@ using HelpDeskNet8.Interfaces.RFCs;
 using System.Linq;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
+using HelpDeskNet8.Interfaces.Projects;
 
 namespace HelpDeskNet8.Services
 {
@@ -20,13 +21,17 @@ namespace HelpDeskNet8.Services
         private readonly IMiscManager _miscManager;
         private readonly IRFCManager _rfcManager;
         private readonly IMailPreviewSink _preview;
+        private readonly IProjectManager _projectManager;
+        private readonly IUserManager _userManager;
 
-        public NotificationService(ITicketManager ticketManager, IMiscManager miscManager, IRFCManager rfcManager, IMailPreviewSink preview)
+        public NotificationService(ITicketManager ticketManager, IMiscManager miscManager, IRFCManager rfcManager, IMailPreviewSink preview, IProjectManager projectManager, IUserManager userManager)
         {
             _ticketManager = ticketManager;
             _miscManager = miscManager;
             _rfcManager = rfcManager;
             _preview = preview;
+            _projectManager = projectManager;
+            _userManager = userManager;
         }
 
         public async Task Notify(int ticketId, NotificationType type, IUser user)
@@ -46,7 +51,11 @@ namespace HelpDeskNet8.Services
                     ? user.UserLogin
                     : user?.UserEmail;
 
+                // 2b-a: a ticket created on a project also notifies the project owner.
+                string projectOwnerEmail = await ResolveProjectOwnerEmail(type, ticket, user);
+
                 string[] recipients = ResolveRecipients(type, ticket)
+                    .Append(projectOwnerEmail)
                     .Where(e => !string.IsNullOrWhiteSpace(e))
                     .Where(e => string.IsNullOrWhiteSpace(authorEmail)
                         || !string.Equals(e, authorEmail, System.StringComparison.OrdinalIgnoreCase))
@@ -108,6 +117,24 @@ namespace HelpDeskNet8.Services
 
         // The recipient rules. One arm per NotificationType. Returns the full
         // set for the event; Notify() then drops blanks + the author + dupes.
+        // 2b-a: resolve the project owner's email for a ticket created on a
+        // project. Returns empty when it's not a creation, has no project, or
+        // the owner can't be resolved. Notify's author filter drops the owner
+        // if they are the acting user.
+        private async Task<string> ResolveProjectOwnerEmail(NotificationType type, ITicket ticket, IUser user)
+        {
+            if (type != NotificationType.TicketCreated) return string.Empty;
+            if (!ticket.ProjectID.HasValue || ticket.ProjectID.Value <= 0) return string.Empty;
+
+            IProject? project = await _projectManager.GetProjectDetail(user, ticket.ProjectID.Value);
+            if (project == null || project.OwnerID <= 0) return string.Empty;
+
+            IUser? owner = await _userManager.GetUserDetail(project.OwnerID);
+            if (owner == null) return string.Empty;
+
+            return (string.IsNullOrWhiteSpace(owner.UserEmail) ? owner.UserLogin : owner.UserEmail) ?? string.Empty;
+        }
+
         private static string[] ResolveRecipients(NotificationType type, ITicket ticket)
         {
             switch (type)
