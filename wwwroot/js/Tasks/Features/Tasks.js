@@ -541,6 +541,33 @@ const Tasks = (() => {
         const assignKeep = selOpt?.dataset?.keep === '1';
         const assignedTech = assignKeep ? '' : (assignSel?.value || '');
 
+        // New tasks must be fully specified before they can be created
+        // (HD40 3g): status, assignee, due date and description are all
+        // required. Requiring an assignee also stops unassigned tasks,
+        // which never surface in the queue or the ticket's Tasks tab.
+        if (isNew) {
+            if (!get('status')?.value) {
+                get('status')?.focus();
+                UI.toast?.('Please choose a status', 'warning');
+                return;
+            }
+            if (!assignedTech) {
+                get('assignedTech')?.focus();
+                UI.toast?.('Please assign the task to someone', 'warning');
+                return;
+            }
+            if (!requiredDate) {
+                get('requiredDate')?.focus();
+                UI.toast?.('Please set a due date', 'warning');
+                return;
+            }
+            if (!(get('description')?.value || '').trim()) {
+                get('description')?.focus();
+                UI.toast?.('Please enter a description', 'warning');
+                return;
+            }
+        }
+
         // Completion date comes from its editable field (YYYY-MM-DD, like the
         // due date). It is REQUIRED when the task is being marked Complete --
         // a task can't be completed without recording when.
