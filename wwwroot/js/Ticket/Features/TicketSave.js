@@ -25,14 +25,52 @@ const Dirty = {
         if (!State.isDirty) return true;
         return window.confirm('You have unsaved changes. Leave anyway?');
     },
+
+    // HD43 Ticket-g: snapshot editable fields after load so dirty can be
+    // RE-evaluated on every change -- reverting a field to its original value
+    // clears dirty (and greys Save) again, instead of latching on.
+    _baseline: null,
+
+    captureBaseline() {
+        this._baseline = new Map();
+        FieldHandlers._trackedControls().forEach((el) => {
+            this._baseline.set(el, FieldHandlers._controlValue(el));
+        });
+    },
+
+    recompute() {
+        if (!this._baseline) { this.set(true); return; }  // no baseline yet -> fail safe
+        let dirty = false;
+        this._baseline.forEach((val, el) => {
+            if (el.isConnected && FieldHandlers._controlValue(el) !== val) dirty = true;
+        });
+        this.set(dirty);
+    },
 };
 
 // -------------------------  Field change handlers  ------------------------- //
 
 const FieldHandlers = {
 
+    _controlValue(el) {
+        return el.type === 'checkbox' ? el.checked : el.value;
+    },
+
+    // Status / priority / category + custom fields live in the Details panel;
+    // assigned-tech and target-date live in the Overview band.
+    _trackedControls() {
+        const set = new Set();
+        const panel = document.getElementById('tabpanel-details');
+        if (panel) panel.querySelectorAll('input, select, textarea').forEach((el) => set.add(el));
+        ['assignedtech', 'targetdate'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) set.add(el);
+        });
+        return set;
+    },
+
     _onChange() {
-        Dirty.set(true);
+        Dirty.recompute();
     },
 
     _onAssignedTechChange(e) {
@@ -45,11 +83,11 @@ const FieldHandlers = {
             sessionStorage.setItem(STORAGE_KEYS.OLD_ASSIGNED_TECH, newTech);
         }
 
-        Dirty.set(true);
+        Dirty.recompute();
     },
 
     _onCategoryChange() {
-        Dirty.set(true);
+        Dirty.recompute();
     },
 
     _onTargetDateChange(e) {
@@ -67,7 +105,7 @@ const FieldHandlers = {
             return;
         }
 
-        Dirty.set(true);
+        Dirty.recompute();
     },
 
     bind() {
@@ -98,7 +136,7 @@ const FieldHandlers = {
         if (detailsPanel) {
             const markDirty = (e) => {
                 if (e.target.id === 'targetdate') return;
-                if (e.target.matches('input, select, textarea')) Dirty.set(true);
+                if (e.target.matches('input, select, textarea')) Dirty.recompute();
             };
             detailsPanel.addEventListener('change', markDirty);
             detailsPanel.addEventListener('input', markDirty);
@@ -216,6 +254,7 @@ const Save = {
 
             // Success
             Dirty.set(false);
+            Dirty.captureBaseline();   // saved values are the new baseline
             UI.toast?.('Ticket saved', 'success');
 
             // brief success pulse on the Save button (point-of-action cue)

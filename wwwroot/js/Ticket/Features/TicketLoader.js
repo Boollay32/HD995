@@ -188,6 +188,10 @@ const TicketLoader = {
                             PaneLayout.apply(TDLAYOUT.BOTH);
                         }
                     }
+
+                    // HD43 Ticket-g: fields are fully populated now -- snapshot
+                    // them as the dirty baseline so reverting a change clears Save.
+                    Dirty.captureBaseline();
                 })
                 .catch(err => console.error('Custom-field dropdown load:', err));
         }
