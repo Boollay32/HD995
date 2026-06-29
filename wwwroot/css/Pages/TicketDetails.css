@@ -523,15 +523,6 @@ body {
 .td-field dd {
   min-width: 0;
 }
-.td-act-filters {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--td-border-2);
-}
 .td-chip {
   display: inline-flex;
   align-items: center;
@@ -997,40 +988,6 @@ body {
 .td-task-editor .td-ed-area { min-height: 38px; }
 .td-task-editor .td-ed-input { padding: 5px 9px; }
 .td-task-editor .td-ed-title-static { font-size: 0.8125rem; }
-
-/* ============================================================================
-   Details tab header: "Details" heading with the Save button top-right.
-   ============================================================================ */
-.td-details-save-row {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  display: flex;
-  justify-content: flex-end;
-  flex-shrink: 0;
-  background: var(--td-surface);
-  /* span only the side padding; no negative top margin - that left a sliver
-     above the pinned bar where scrolled content peeked through */
-  margin: 0 -16px;
-  padding: 0 16px;
-}
-.td-details-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-shrink: 0;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--td-border-2);
-}
-.td-details-head .td-details-title {
-  margin: 0;
-  font-size: 0.71875rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--td-muted);
-}
 
 /* Read-only title row: label sits tight to the static title (no row gap). */
 .td-ed-row:has(.td-ed-title-static) {
