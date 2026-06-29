@@ -126,15 +126,32 @@ const Topbar = {
         const slaGroup = document.getElementById('meta-sla-group');
         const hasRealTarget = data.targetDate
             && !String(data.targetDate).startsWith('1900-01-01');
-        // Ticket-k: the "Due" pill just repeats the target date already shown
-        // as "Needed by" in the overview. On internal tickets that's pure
-        // duplication, so hide the pill (project tickets keep their target SLA).
+        const hasFirstResponse = data.firstResponseDate
+            && !String(data.firstResponseDate).startsWith('1900-01-01');
+
+        // Ticket-j/k: the "Due" pill counts down to the target date, varied by
+        // ticket type. Internal (non-project): hidden -- it duplicates the
+        // "Needed by"/target already in the overview. Project: count down to the
+        // target. Client: "Awaiting first response" until the tech first replies,
+        // then count down to the target (hidden if responded with no target yet).
         const INTERNAL_REQUEST_TYPES = [4, 8, 10, 11, 14];
-        const hideSla = INTERNAL_REQUEST_TYPES.includes(Number(data.requestID))
-            && !data.projectID;
-        if (hideSla) {
+        const isInternal = INTERNAL_REQUEST_TYPES.includes(Number(data.requestID));
+        const isProject = !!data.projectID;
+
+        let slaMode;   // 'hide' | 'countdown' | 'awaiting'
+        if (isInternal && !isProject) {
+            slaMode = 'hide';
+        } else if (isProject) {
+            slaMode = hasRealTarget ? 'countdown' : 'awaiting';
+        } else if (!hasFirstResponse) {
+            slaMode = 'awaiting';
+        } else {
+            slaMode = hasRealTarget ? 'countdown' : 'hide';
+        }
+
+        if (slaMode === 'hide') {
             if (slaGroup) slaGroup.hidden = true;
-        } else if (hasRealTarget) {
+        } else if (slaMode === 'countdown') {
             if (slaGroup) slaGroup.hidden = false;
             Topbar.renderPill(
                 Dom.metaSla(),
@@ -142,15 +159,9 @@ const Topbar = {
                 Topbar.slaLabel(data.targetDate),
                 false,
             );
-        } else if (slaGroup) {
-            // No real target date yet: a new ticket waiting on first response.
-            slaGroup.hidden = false;
-            Topbar.renderPill(
-                Dom.metaSla(),
-                'sla-ok',
-                'Awaiting first response',
-                false,
-            );
+        } else {
+            if (slaGroup) slaGroup.hidden = false;
+            Topbar.renderPill(Dom.metaSla(), 'sla-ok', 'Awaiting first response', false);
         }
 
         // Linked project — resolved live by GetTicketDetail's join on ProjectID.
