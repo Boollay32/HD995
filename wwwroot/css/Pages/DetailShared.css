@@ -10,6 +10,7 @@
 /* ---- Editable field input ---- */
 .td-app .td-input {
   width: 100%;
+  box-sizing: border-box;
   font-family: "Spline Sans", system-ui, sans-serif;
   font-size: 0.8125rem;
   color: var(--td-text);
@@ -335,6 +336,7 @@ html[data-theme="dark"] .td-app .td-input[type="date"] { color-scheme: dark; }
 }
 .td-app .td-select {
   width: 100%;
+  box-sizing: border-box;
   font-family: "Spline Sans", system-ui, sans-serif;
   font-size: 0.8125rem;
   color: var(--td-text);
