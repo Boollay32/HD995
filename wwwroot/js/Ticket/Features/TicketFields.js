@@ -126,7 +126,15 @@ const Topbar = {
         const slaGroup = document.getElementById('meta-sla-group');
         const hasRealTarget = data.targetDate
             && !String(data.targetDate).startsWith('1900-01-01');
-        if (hasRealTarget) {
+        // Ticket-k: the "Due" pill just repeats the target date already shown
+        // as "Needed by" in the overview. On internal tickets that's pure
+        // duplication, so hide the pill (project tickets keep their target SLA).
+        const INTERNAL_REQUEST_TYPES = [4, 8, 10, 11, 14];
+        const hideSla = INTERNAL_REQUEST_TYPES.includes(Number(data.requestID))
+            && !data.projectID;
+        if (hideSla) {
+            if (slaGroup) slaGroup.hidden = true;
+        } else if (hasRealTarget) {
             if (slaGroup) slaGroup.hidden = false;
             Topbar.renderPill(
                 Dom.metaSla(),
