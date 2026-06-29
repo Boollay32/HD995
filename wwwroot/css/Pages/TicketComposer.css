@@ -73,6 +73,13 @@
   gap: 8px;
   padding: 0 2px 4px;
 }
+/* HD43 Ticket-c: message composer footer order -- paperclip + attachment
+   tiles on the left, char count pushed to the right (matches the note
+   composer). Scoped to .td-composer-dock so the note/RFC composers, which
+   set their own order under .td-note-compose, are untouched. */
+.td-composer-dock .td-attach-btn { order: 1; }
+.td-composer-dock .td-composer-attachments { order: 2; }
+.td-composer-dock .td-charcount { order: 3; flex: 0 0 auto; margin-left: auto; }
 .td-scroll-unread-btn {
   display: flex;
   align-items: center;

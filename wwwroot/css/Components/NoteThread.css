@@ -164,6 +164,7 @@
 .td-charcount.is-near-limit { color: var(--warn); }
 .td-charcount.is-at-limit { color: var(--danger); font-weight: 700; }
 .td-composer-attachments { display: flex; flex-wrap: nowrap; gap: 4px; min-width: 0; }
+.td-composer-attachments .td-attach-list { margin-top: 0; }
 
 /* Collapsed-to-icon: the filename and size spans hide, leaving the file
    icon + remove button (a compact "icon" pill), so 5 chips fit on one line. */
