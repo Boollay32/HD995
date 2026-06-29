@@ -93,6 +93,10 @@ class RFCDetails extends PageBase {
         RFCOverview.init();
         this._syncTargetPill();
 
+        // Overview opens collapsed to match ticket details (collapse after
+        // populate so the slim summary is filled, not blank).
+        window.RFCOverview?.setCollapsed?.(true);
+
         // Fields are now populated -- capture the dirty baseline here so
         // Save activates only when the user actually changes something.
         this._rfcDirtyResetBaseline();
