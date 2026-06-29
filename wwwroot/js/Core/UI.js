@@ -238,6 +238,12 @@ UI.toast = function (message, type = 'info') {
     el.textContent = message;
     host.appendChild(el);
 
+    // HD43 Ticket-i: commit the off-screen initial state (opacity:0 + slid
+    // out) before the rAF below adds .is-in, so the transition has a baseline
+    // and actually animates. The el.focus() in that rAF forces a layout flush
+    // that would otherwise skip straight to the final state (no slide/fade).
+    void el.offsetWidth;
+
     // Remember where focus was, then move it onto the toast so a screen
     // reader lands on the notice and reads it. If focus is already on an
     // earlier toast, chain back to that one's origin so focus returns to the
