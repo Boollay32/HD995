@@ -72,8 +72,10 @@ class ProjectDetails extends PageBase {
                 return;
             }
             this.project = data;
+            this._allTickets = Array.isArray(data.tickets) ? data.tickets : [];
             this._renderHeader(data);
-            this._renderTickets(data.tickets || []);
+            this._setupStatusFilter();
+            this._renderTickets(this._applyStatusFilter(this._allTickets));
         } catch (err) {
             console.error('ProjectDetails._load:', err);
             this._renderError("Couldn't load this project. Please try again.");
@@ -116,7 +118,14 @@ class ProjectDetails extends PageBase {
 
         if (!tickets.length) {
             tbody.innerHTML = '';
-            if (empty) empty.style.display = 'block';
+            if (empty) {
+                // Distinguish a project with no tickets from a filter that
+                // matched none, so the message isn't misleading.
+                empty.textContent = (this._allTickets && this._allTickets.length)
+                    ? 'No tickets match this status.'
+                    : 'No tickets in this project yet.';
+                empty.style.display = 'block';
+            }
             return;
         }
         if (empty) empty.style.display = 'none';
@@ -137,6 +146,36 @@ class ProjectDetails extends PageBase {
 
         tbody.querySelectorAll('.pjd-trow[data-ticket]').forEach(row =>
             row.addEventListener('click', () => this._openTicket(parseInt(row.dataset.ticket, 10))));
+    }
+
+    // Projects-a: client-side status filter over the already-loaded ticket
+    // list. Populated from the distinct statuses present; hidden when there
+    // is nothing worth filtering on.
+    _setupStatusFilter() {
+        const sel = document.getElementById('pjd-status-filter');
+        if (!sel) return;
+        const seen = new Set();
+        const statuses = [];
+        (this._allTickets || []).forEach(t => {
+            const s = t.status ?? '';
+            if (s && !seen.has(s)) { seen.add(s); statuses.push(s); }
+        });
+        if (statuses.length <= 1) { sel.hidden = true; return; }
+        sel.innerHTML = '<option value="">All statuses</option>'
+            + statuses.map(s => `<option value="${this._esc(s)}">${this._esc(s)}</option>`).join('');
+        sel.hidden = false;
+        if (!sel._bound) {
+            sel.addEventListener('change',
+                () => this._renderTickets(this._applyStatusFilter(this._allTickets)));
+            sel._bound = true;
+        }
+    }
+
+    _applyStatusFilter(list) {
+        const sel = document.getElementById('pjd-status-filter');
+        const val = sel && !sel.hidden ? sel.value : '';
+        if (!val) return list || [];
+        return (list || []).filter(t => String(t.status ?? '') === val);
     }
 
     _openTicket(ticketId) {
