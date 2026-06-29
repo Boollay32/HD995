@@ -5,16 +5,17 @@ using System.Linq;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Interfaces.Projects;
+using HelpDeskNet8.Models.Shared;
 
 namespace HelpDeskNet8.Services
 {
-    // Server-side notification routing. The recipient rules and the SMTP send
-    // live here, next to the data that resolves them -- the browser no longer
-    // decides who gets emailed. First slice: task saves only; note and ticket
-    // events will route through the same Notify() as they are migrated.
+    // Server-side notification routing. Recipient rules + SMTP send live here.
+    // HD43: the project owner only hears about status changes (ticket + task);
+    // the shared inbox is used ONLY when a new client ticket is raised with no
+    // tech yet; the client is never emailed about tasks; every body carries the
+    // specific change (who / what / old -> new), still metadata only.
     public class NotificationService : INotificationService
     {
-        // Shared notification inbox, used only as the sender address.
         private const string FromAddress = "govtech.helpdesk@govtech.co.uk";
 
         private readonly ITicketManager _ticketManager;
@@ -34,7 +35,7 @@ namespace HelpDeskNet8.Services
             _userManager = userManager;
         }
 
-        public async Task Notify(int ticketId, NotificationType type, IUser user)
+        public async Task Notify(int ticketId, NotificationType type, IUser user, NotificationContext? context = null)
         {
             try
             {
@@ -43,19 +44,15 @@ namespace HelpDeskNet8.Services
                 ITicket ticket = await _ticketManager.GetTicketDetail(ticketId, user);
                 if (ticket == null) return;
 
-                // C2/C3: an event can notify several parties (e.g. assign ->
-                // tech + client; message -> client + tech). Exclude the acting
-                // user (the author) so a sender is never emailed their own
+                // Exclude the acting user so a sender is never emailed their own
                 // action. UserLogin is the user's email; UserEmail as a backup.
                 string authorEmail = !string.IsNullOrWhiteSpace(user?.UserLogin)
                     ? user.UserLogin
                     : user?.UserEmail;
 
-                // 2b-a: a ticket created on a project also notifies the project owner.
-                string projectOwnerEmail = await ResolveProjectOwnerEmail(type, ticket, user);
+                var people = await ResolveTicketRecipients(type, ticket, user, context);
 
-                string[] recipients = ResolveRecipients(type, ticket)
-                    .Append(projectOwnerEmail)
+                string[] recipients = people
                     .Where(e => !string.IsNullOrWhiteSpace(e))
                     .Where(e => string.IsNullOrWhiteSpace(authorEmail)
                         || !string.Equals(e, authorEmail, System.StringComparison.OrdinalIgnoreCase))
@@ -64,7 +61,7 @@ namespace HelpDeskNet8.Services
                 if (recipients.Length == 0) return;
 
                 string subject = BuildSubject(type, ticketId);
-                string body = BuildBody(type, ticketId);
+                string body = BuildBody(BuildTicketMessage(type, ticketId, ticket, context, user));
 
                 if (_preview.Enabled)
                 {
@@ -81,8 +78,7 @@ namespace HelpDeskNet8.Services
         }
 
         // RFC notifications. Internal-only: both reply and assign go to the
-        // assigned tech + the originator. Recipients are identical for both
-        // types; the type only selects the wording.
+        // assigned tech + the originator. The type only selects the wording.
         public async Task NotifyRFC(int rfcId, NotificationType type)
         {
             try
@@ -99,7 +95,7 @@ namespace HelpDeskNet8.Services
                 if (recipients.Length == 0) return;
 
                 string subject = BuildSubject(type, rfcId);
-                string body = BuildBody(type, rfcId);
+                string body = BuildBody(BuildRfcMessage(type, rfcId));
 
                 if (_preview.Enabled)
                 {
@@ -115,14 +111,87 @@ namespace HelpDeskNet8.Services
             }
         }
 
-        // The recipient rules. One arm per NotificationType. Returns the full
-        // set for the event; Notify() then drops blanks + the author + dupes.
+        // ----------------------------  Recipients  ---------------------------- //
+
+        // Build the recipient set for a ticket/task event. Notify() then drops
+        // blanks, the acting user, and duplicates.
+        private async Task<System.Collections.Generic.List<string>> ResolveTicketRecipients(
+            NotificationType type, ITicket ticket, IUser user, NotificationContext? context)
+        {
+            var people = new System.Collections.Generic.List<string>();
+
+            string tech = ticket.AssignedTechEmail;
+            string originator = ticket.Email;
+            bool clientFacing = !IsInternal(ticket);
+            bool hasTech = !string.IsNullOrWhiteSpace(tech);
+
+            switch (type)
+            {
+                case NotificationType.TicketCreated:
+                    // New work: the assigned tech + the project owner (oversight).
+                    // The shared inbox is a triage fallback ONLY for a client-raised
+                    // ticket with no tech yet. The creator is the actor (dropped).
+                    people.Add(tech);
+                    people.Add(await ResolveProjectOwnerEmail(ticket, user));
+                    if (clientFacing && !hasTech) people.Add(FromAddress);
+                    break;
+
+                case NotificationType.NoteResponded:
+                    // A reply: the tech always; the originator only when the note is
+                    // client-visible (internal notes never reach the client). No inbox.
+                    people.Add(tech);
+                    if (context?.NoteVisibleToClient ?? true) people.Add(originator);
+                    break;
+
+                case NotificationType.TicketResponded:
+                    // A plain ticket reply: tech + originator. No inbox, no owner.
+                    people.Add(tech);
+                    people.Add(originator);
+                    break;
+
+                case NotificationType.TicketAssigned:
+                    // Re-assignment: only the (new) assigned tech. Not a status move,
+                    // so the project owner is not notified.
+                    people.Add(tech);
+                    break;
+
+                case NotificationType.TicketStatusChanged:
+                    // Status movement: tech + originator (the client, on a client
+                    // ticket) + the project owner for oversight.
+                    people.Add(tech);
+                    people.Add(originator);
+                    people.Add(await ResolveProjectOwnerEmail(ticket, user));
+                    break;
+
+                case NotificationType.TaskCreated:
+                    // Ticket owner (the originator -- suppressed on a client ticket so
+                    // the client never hears about tasks) + ticket's tech + the task's
+                    // assignee (best-effort name match).
+                    if (!clientFacing) people.Add(originator);
+                    people.Add(tech);
+                    people.Add(await ResolveAssigneeEmail(context?.TaskAssigneeName));
+                    break;
+
+                case NotificationType.TaskUpdated:
+                    // Only the ticket's assigned tech (dropped if they are the actor).
+                    people.Add(tech);
+                    break;
+
+                case NotificationType.TaskStatusChanged:
+                    // Ticket owner (suppressed on a client ticket) + ticket's tech +
+                    // the project owner.
+                    if (!clientFacing) people.Add(originator);
+                    people.Add(tech);
+                    people.Add(await ResolveProjectOwnerEmail(ticket, user));
+                    break;
+            }
+
+            return people;
+        }
+
         // Resolve the project owner's email for a ticket that sits on a project.
-        // Applies to every event (creation, reply, task, assign) so the owner is
-        // always a stakeholder. Returns empty when there is no project or the
-        // owner can't be resolved. Notify's author filter drops the owner if they
-        // are the acting user. (type is retained for signature/label stability.)
-        private async Task<string> ResolveProjectOwnerEmail(NotificationType type, ITicket ticket, IUser user)
+        // Empty when there is no project or the owner can't be resolved.
+        private async Task<string> ResolveProjectOwnerEmail(ITicket ticket, IUser user)
         {
             if (!ticket.ProjectID.HasValue || ticket.ProjectID.Value <= 0) return string.Empty;
 
@@ -135,48 +204,33 @@ namespace HelpDeskNet8.Services
             return (string.IsNullOrWhiteSpace(owner.UserEmail) ? owner.UserLogin : owner.UserEmail) ?? string.Empty;
         }
 
-        private static string[] ResolveRecipients(NotificationType type, ITicket ticket)
+        // Best-effort: a task stores only the assignee's display NAME, so match it
+        // against the user list and resolve their email. Fragile by nature
+        // (duplicate / mismatched names) -- returns empty when there is no clean
+        // single match, and never throws into the caller.
+        private async Task<string> ResolveAssigneeEmail(string? assigneeName)
         {
-            switch (type)
+            if (string.IsNullOrWhiteSpace(assigneeName)) return string.Empty;
+            try
             {
-                // Stakeholder model: every ticket/task event notifies the people
-                // SET on the item -- the assigned tech and the ticket creator
-                // (originator). The project owner is appended in Notify(). Notify()
-                // then drops blanks, the acting user (so nobody is emailed their
-                // own change), and duplicates.
-                case NotificationType.TicketCreated:
-                case NotificationType.TaskSaved:
-                case NotificationType.NoteResponded:
-                case NotificationType.TicketResponded:
-                case NotificationType.TicketAssigned:
-                {
-                    var people = new System.Collections.Generic.List<string>
-                    {
-                        ticket.AssignedTechEmail,
-                        ticket.Email,
-                    };
+                var users = await _userManager.GetUsers(new Filter());
+                if (users == null) return string.Empty;
 
-                    // The shared helpdesk inbox is a TRIAGE fallback only: used
-                    // when a client-raised request has no internal user attached
-                    // yet. Once a tech is assigned, that tech is notified instead;
-                    // internal request types never use the inbox.
-                    bool internalRequest = ticket.RequestID.HasValue
-                        && System.Array.IndexOf(InternalRequestTypes, ticket.RequestID.Value) >= 0;
-                    bool hasAssignedTech = !string.IsNullOrWhiteSpace(ticket.AssignedTechEmail);
-                    if (!internalRequest && !hasAssignedTech)
-                        people.Add(FromAddress);
+                var match = users.FirstOrDefault(u =>
+                    !string.IsNullOrWhiteSpace(u.UserName)
+                    && string.Equals(u.UserName.Trim(), assigneeName.Trim(), System.StringComparison.OrdinalIgnoreCase));
+                if (match == null || !match.UserID.HasValue) return string.Empty;
 
-                    return people.ToArray();
-                }
-
-                default:
-                    return System.Array.Empty<string>();
+                IUser? person = await _userManager.GetUserDetail(match.UserID.Value);
+                if (person == null) return string.Empty;
+                return (string.IsNullOrWhiteSpace(person.UserEmail) ? person.UserLogin : person.UserEmail) ?? string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
             }
         }
 
-        // Internal tickets are raised by internal users; their request type
-        // is one of these. Mirrors the client's INTERNAL_REQUEST_TYPES list.
-        // (Contact Client, type 12, is intentionally NOT internal.)
         private static readonly int[] InternalRequestTypes = { 4, 8, 10, 11, 14 };
 
         private static bool IsInternal(ITicket ticket)
@@ -185,60 +239,115 @@ namespace HelpDeskNet8.Services
                 && System.Array.IndexOf(InternalRequestTypes, ticket.RequestID.Value) >= 0;
         }
 
-        // Friendly label for the dev mail-preview popup ("at each point").
+        // ----------------------------  Wording  ---------------------------- //
+
         private static string PointLabel(NotificationType type)
         {
             return type switch
             {
                 NotificationType.TicketCreated => "New ticket",
-                NotificationType.TaskSaved => "Task saved",
                 NotificationType.NoteResponded => "Reply added",
                 NotificationType.TicketResponded => "Ticket reply saved",
                 NotificationType.TicketAssigned => "Assigned tech changed",
+                NotificationType.TicketStatusChanged => "Ticket status changed",
+                NotificationType.TaskCreated => "Task created",
+                NotificationType.TaskUpdated => "Task updated",
+                NotificationType.TaskStatusChanged => "Task status changed",
                 NotificationType.RFCResponded => "RFC updated",
                 NotificationType.RFCAssigned => "RFC assigned",
                 _ => "Notification",
             };
         }
 
-        private static string BuildSubject(NotificationType type, int ticketId)
+        private static string BuildSubject(NotificationType type, int id)
         {
             return type switch
             {
-                NotificationType.TicketCreated => $"New Ticket {ticketId}",
-                NotificationType.TaskSaved => $"Updated Task on Ticket {ticketId}",
-                NotificationType.NoteResponded => $"Responded Ticket {ticketId}",
-                NotificationType.TicketResponded => $"Responded Ticket {ticketId}",
-                NotificationType.TicketAssigned => $"Assigned Ticket {ticketId}",
-                NotificationType.RFCResponded => $"Responded RFC {ticketId}",
-                NotificationType.RFCAssigned => $"Assigned RFC {ticketId}",
-                _ => $"Notification - Ticket {ticketId}",
+                NotificationType.TicketCreated => $"New Ticket {id}",
+                NotificationType.NoteResponded => $"Update on Ticket {id}",
+                NotificationType.TicketResponded => $"Update on Ticket {id}",
+                NotificationType.TicketAssigned => $"Ticket {id} Assigned",
+                NotificationType.TicketStatusChanged => $"Ticket {id} Status Changed",
+                NotificationType.TaskCreated => $"New Task on Ticket {id}",
+                NotificationType.TaskUpdated => $"Task Updated on Ticket {id}",
+                NotificationType.TaskStatusChanged => $"Task Status Changed on Ticket {id}",
+                NotificationType.RFCResponded => $"Responded RFC {id}",
+                NotificationType.RFCAssigned => $"Assigned RFC {id}",
+                _ => $"Notification - Ticket {id}",
             };
         }
 
-        // Mirrors the notification email the client used to build: a simple HTML
-        // body with the message and a reminder to log in rather than follow links.
-        private static string BuildBody(NotificationType type, int ticketId)
+        // The specific, dynamic line describing what happened. Metadata only.
+        private static string BuildTicketMessage(NotificationType type, int id, ITicket ticket, NotificationContext? ctx, IUser user)
         {
-            string message = type switch
-            {
-                NotificationType.TicketCreated =>
-                    $"A new Ticket {ticketId} has been raised. Please review it in the helpdesk.",
-                NotificationType.TaskSaved =>
-                    $"A task on Ticket {ticketId} has been updated. It may require your attention, please review.",
-                NotificationType.NoteResponded =>
-                    $"Ticket {ticketId} has been responded to. It may require your attention, please review.",
-                NotificationType.TicketResponded =>
-                    $"Ticket {ticketId} has been responded to. It may require your attention, please review.",
-                NotificationType.TicketAssigned =>
-                    $"Ticket {ticketId} has been assigned to you. It may require your attention, please review.",
-                NotificationType.RFCResponded =>
-                    $"RFC {ticketId} has been updated. It may require your attention, please review.",
-                NotificationType.RFCAssigned =>
-                    $"RFC {ticketId} has been assigned to you. It may require your attention, please review.",
-                _ => $"Ticket {ticketId} has an update.",
-            };
+            string actor = string.IsNullOrWhiteSpace(user?.UserName) ? "a user" : user.UserName;
+            string subject = string.IsNullOrWhiteSpace(ticket?.Subject) ? "" : $" '{ticket.Subject}'";
+            string priority = string.IsNullOrWhiteSpace(ticket?.Priority) ? "" : ticket.Priority;
+            string taskTitle = string.IsNullOrWhiteSpace(ctx?.TaskTitle) ? "a task" : $"'{ctx.TaskTitle}'";
+            string oldS = string.IsNullOrWhiteSpace(ctx?.OldStatus) ? "(unknown)" : ctx.OldStatus;
+            string newS = string.IsNullOrWhiteSpace(ctx?.NewStatus) ? "(unknown)" : ctx.NewStatus;
 
+            switch (type)
+            {
+                case NotificationType.TicketCreated:
+                    return $"A new ticket #{id}{subject} has been raised"
+                        + (string.IsNullOrEmpty(priority) ? "" : $" with priority {priority}") + ".";
+
+                case NotificationType.NoteResponded:
+                    return $"{actor} added a reply to ticket #{id}{subject}.";
+
+                case NotificationType.TicketResponded:
+                    return $"{actor} updated ticket #{id}{subject}.";
+
+                case NotificationType.TicketAssigned:
+                    return $"Ticket #{id}{subject} has been assigned"
+                        + (string.IsNullOrWhiteSpace(ticket?.AssignedTechEmail) ? "" : $" to {ticket.AssignedTechEmail}")
+                        + $" by {actor}.";
+
+                case NotificationType.TicketStatusChanged:
+                    return $"Ticket #{id}{subject} status changed from {oldS} to {newS} by {actor}.";
+
+                case NotificationType.TaskCreated:
+                    return $"A new task {taskTitle} was created on ticket #{id}{subject} by {actor}.";
+
+                case NotificationType.TaskUpdated:
+                    return $"The task {taskTitle} on ticket #{id}{subject} was updated by {actor}.";
+
+                case NotificationType.TaskStatusChanged:
+                    return $"The task {taskTitle} on ticket #{id}{subject} is now '{TaskStatusLabel(ctx?.NewTaskStatus)}'"
+                        + $" (was '{TaskStatusLabel(ctx?.OldTaskStatus)}'), changed by {actor}.";
+
+                default:
+                    return $"Ticket #{id} has an update.";
+            }
+        }
+
+        private static string BuildRfcMessage(NotificationType type, int id)
+        {
+            return type switch
+            {
+                NotificationType.RFCResponded => $"RFC {id} has been updated. It may require your attention, please review.",
+                NotificationType.RFCAssigned => $"RFC {id} has been assigned to you. It may require your attention, please review.",
+                _ => $"RFC {id} has an update.",
+            };
+        }
+
+        private static string TaskStatusLabel(int? status)
+        {
+            return status switch
+            {
+                1 => "New",
+                2 => "In Progress",
+                3 => "Complete",
+                4 => "Withdrawn",
+                5 => "Draft",
+                _ => "Unknown",
+            };
+        }
+
+        // Wrap a notification line in the Govtech Helpdesk email shell.
+        private static string BuildBody(string message)
+        {
             return
                 "<div style=\"margin-bottom:30px;\">" +
                 "<table style=\"border-radius:3px; width:800px; padding-left:20px; " +

@@ -123,7 +123,8 @@ namespace HelpDeskNet8.Controllers.Tickets
                 if (request.IsOriginal)
                     await _notificationService.Notify(note.TicketID ?? 0, NotificationType.TicketCreated, user);
                 else
-                    await _notificationService.Notify(note.TicketID ?? 0, NotificationType.NoteResponded, user);
+                    await _notificationService.Notify(note.TicketID ?? 0, NotificationType.NoteResponded, user,
+                        new NotificationContext { NoteVisibleToClient = note.VisibleToClient });
             }
 
             // Return updated notes so UI can re-render without a second call
@@ -163,6 +164,16 @@ namespace HelpDeskNet8.Controllers.Tickets
             // Stamp server-side user
             task.UserID = user.UserID;
 
+            // HD43: detect create vs update vs status-change to route the task
+            // notification. The old status must be read BEFORE the save mutates it.
+            bool isNewTask = !(task.TaskID.HasValue && task.TaskID.Value != 0);
+            int? oldTaskStatus = null;
+            if (!isNewTask)
+            {
+                var beforeTask = (await _taskManager.GetTaskDetail(user, task.TaskID.Value)).FirstOrDefault();
+                oldTaskStatus = beforeTask?.Status;
+            }
+
             var result = await _taskManager.SaveTask(
                 task,
                 attachments,
@@ -172,8 +183,21 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
 
-            // Notify the ticket's assigned tech of the task change.
-            await _notificationService.Notify(task.TicketID ?? 0, NotificationType.TaskSaved, user);
+            // HD43: route the task event (create / update / status change) with
+            // a context carrying the title, assignee name and old->new status.
+            NotificationType taskType = isNewTask
+                ? NotificationType.TaskCreated
+                : (oldTaskStatus != task.Status
+                    ? NotificationType.TaskStatusChanged
+                    : NotificationType.TaskUpdated);
+            await _notificationService.Notify(task.TicketID ?? 0, taskType, user,
+                new NotificationContext
+                {
+                    TaskTitle = task.Title,
+                    TaskAssigneeName = task.AssignedTech,
+                    OldTaskStatus = oldTaskStatus,
+                    NewTaskStatus = task.Status,
+                });
 
             // Return updated task list scoped to same ticket
             var filter = new Filter { TicketID = task.TicketID };
