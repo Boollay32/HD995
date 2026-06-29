@@ -134,6 +134,10 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// CSP enforcement is config-gated: false (default) ships Report-Only; true
+// ships the enforcing header. Lets each environment graduate independently.
+bool cspEnforce = app.Configuration.GetValue<bool>("Security:CspEnforce");
+
 app.Use(async (context, next) =>
 {
     var headers = context.Response.Headers;
@@ -156,11 +160,15 @@ app.Use(async (context, next) =>
     var cspNonce = Convert.ToBase64String(nonceBytes);
     context.Items["csp-nonce"] = cspNonce;
 
-    // Content-Security-Policy, scoped to what the app loads. Shipped
-    // REPORT-ONLY: violations are logged to the browser console but nothing
-    // is blocked. Once verified clean for normal use, switch the header name
-    // below to "Content-Security-Policy" (without -Report-Only) to enforce.
-    headers["Content-Security-Policy-Report-Only"] =
+    // Content-Security-Policy, scoped to what the app loads. The header name
+    // is chosen by Security:CspEnforce (default false = Report-Only:
+    // violations log to the console but nothing is blocked). Set it true
+    // per-environment once the console is verified clean to ENFORCE; revert
+    // via config if anything breaks.
+    string cspHeaderName = cspEnforce
+        ? "Content-Security-Policy"
+        : "Content-Security-Policy-Report-Only";
+    headers[cspHeaderName] =
         "default-src 'self'; " +
         "script-src 'self' 'nonce-" + cspNonce + "' https://js.monitor.azure.com; " +
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
