@@ -30,12 +30,15 @@ const TaskPopulation = {
     },
     formatDate(raw) {
         if (!raw) return '\u2014';
+        // 1900-01-01 is the proc's null-date placeholder; show no date.
+        if (String(raw).startsWith('1900-01-01')) return '\u2014';
         const d = new Date(raw);
         if (isNaN(d)) return '\u2014';
         return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
     },
     toInputDate(raw) {
         if (!raw) return '';
+        if (String(raw).startsWith('1900-01-01')) return '';
         const d = new Date(raw);
         if (isNaN(d)) return '';
         const off = d.getTimezoneOffset();
