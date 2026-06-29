@@ -28,6 +28,11 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+/* HD43 Ticket-d: native date input renders its calendar-picker indicator
+   (and popup) per the page color-scheme; default light makes the glyph
+   black and invisible on the dark input. Opt date inputs into dark native
+   rendering so the icon shows. */
+html[data-theme="dark"] .td-app .td-input[type="date"] { color-scheme: dark; }
 
 /* ---- Read-only field value ---- */
 .td-app .Field-Value {
