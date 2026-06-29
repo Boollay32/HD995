@@ -1,0 +1,148 @@
+/* ============================================================================
+   TicketOverview.css -- ticket overview band (HD30-6): title/spacer,
+   description block, and inline description editor. Extracted verbatim from
+   TicketDetails.css; every selector is #TicketDetails-App-scoped. Loaded by
+   the ticket detail page immediately after TicketDetails.css.
+   ============================================================================ */
+
+/* ═══════════  HD30-6 Overview band (Stage 2)  ═══════════ */
+/* Merged header band: flows directly under .td-topbar (no card/gap),    */
+/* sharing the app-shell banding. All selectors scoped to the ticket app. */
+
+/* ---- control strip (tinted divider row: title + Save + collapse) ---- */
+#TicketDetails-App .td-ov-title {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--td-muted);
+}
+#TicketDetails-App .td-ov-spacer { flex: 1 1 auto; }
+
+
+/* ---- expanded body ---- */
+
+/* ---- timeline (Created -> First response -> Needed by -> Closed) ---- */
+
+/* ---- slim summary (shown when collapsed) ---- */
+/* ═══════════  end HD30-6 Overview band  ═══════════ */
+
+/* ═════  HD30-6 Description block (Stage 3)  ═════ */
+#TicketDetails-App .td-ov-desc-body {
+  font-size: 0.84375rem;
+  line-height: 1.55;
+  color: var(--td-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+#TicketDetails-App .td-ov-desc-atts { margin-top: 8px; }
+/* ═════  end HD30-6 Description block  ═════ */
+
+/* ═════  HD30-6 Pill editing (Stage 4a)  ═════ */
+/* popover is appended inside #TicketDetails-App so --td-* tokens resolve */
+/* ═════  end HD30-6 Pill editing  ═════ */
+
+/* ═════  HD30-6 Description editor (Stage 3b)  ═════ */
+#TicketDetails-App .td-ov-desc-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+#TicketDetails-App .td-ov-desc-head .td-ov-grp-head { margin: 0; }
+#TicketDetails-App .td-ov-desc-edit {
+  margin-left: auto;
+  font-size: 0.6875rem;
+  color: var(--td-muted-2);
+  background: none;
+  border: 1px solid var(--td-border);
+  border-radius: 7px;
+  padding: 3px 9px;
+  cursor: pointer;
+}
+#TicketDetails-App .td-ov-desc-edit:hover {
+  background: var(--td-surface);
+  color: var(--td-text);
+}
+#TicketDetails-App .td-ov-desc-input {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 0.84375rem;
+  line-height: 1.5;
+  color: var(--td-text);
+  background: var(--td-panel);
+  border: 1px solid var(--td-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+#TicketDetails-App .td-ov-desc-input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-pale);
+}
+#TicketDetails-App .td-ov-desc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+#TicketDetails-App .td-ov-desc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: var(--td-text);
+  background: var(--td-surface);
+  border: 1px solid var(--td-border);
+  border-radius: 7px;
+  padding: 3px 5px 3px 8px;
+}
+#TicketDetails-App .td-ov-desc-chip.is-new { border-style: dashed; }
+#TicketDetails-App .td-ov-desc-chip-x {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--td-muted);
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+}
+#TicketDetails-App .td-ov-desc-chip-x:hover { color: var(--brand); }
+#TicketDetails-App .td-ov-desc-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+#TicketDetails-App .td-ov-desc-add {
+  margin-right: auto;
+  font-size: 0.75rem;
+  color: var(--brand);
+  cursor: pointer;
+  border: 1px solid var(--td-border);
+  border-radius: 7px;
+  padding: 5px 10px;
+}
+#TicketDetails-App .td-ov-desc-save,
+#TicketDetails-App .td-ov-desc-cancel {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+#TicketDetails-App .td-ov-desc-save {
+  color: #fff;
+  background: var(--brand);
+  border: 1px solid var(--brand);
+}
+#TicketDetails-App .td-ov-desc-save:disabled { opacity: 0.6; cursor: default; }
+#TicketDetails-App .td-ov-desc-cancel {
+  color: var(--td-muted-2);
+  background: none;
+  border: 1px solid var(--td-border);
+}
+/* ═════  end HD30-6 Description editor  ═════ */
