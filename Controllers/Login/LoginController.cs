@@ -4,6 +4,7 @@ using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Shared;
 using HelpDeskNet8.Requests;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace HelpDeskNet8.Controllers.Login
 {
@@ -14,6 +15,7 @@ namespace HelpDeskNet8.Controllers.Login
         private readonly IAuthenticator _authenticator = auth;
 
         [HttpPost]
+        [EnableRateLimiting("login")]
         [IgnoreAntiforgeryToken] // pre-auth login step; CSRF here is low-value, exemption avoids lockout risk
         public async Task<IActionResult> PostLogin([FromBody] PostLoginRequest request)
         {
@@ -29,6 +31,7 @@ namespace HelpDeskNet8.Controllers.Login
         }
 
         [HttpPost]
+        [EnableRateLimiting("login")]
         [IgnoreAntiforgeryToken] // pre-auth login step (see PostLogin)
         public async Task<IActionResult> SecondWallAuth([FromBody] SecondWallAuthRequest request)
         {

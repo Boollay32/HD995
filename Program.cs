@@ -11,6 +11,8 @@ using HelpDeskNet8.Services;
 using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
@@ -75,6 +77,49 @@ builder.Services.AddCors(options =>
             policy.WithOrigins(corsOrigins).AllowAnyMethod().AllowAnyHeader();
         // else: no origins configured -> no cross-origin access (fail closed).
     });
+});
+
+
+// Rate limiting (competitive-gap 1.3): throttle the anonymous login
+// endpoints (PostLogin, SecondWallAuth) per client IP to blunt brute-force
+// / credential-stuffing. Limits are configurable (RateLimit:Login:*) so they
+// can be tuned without a code change. Keyed by client IP -- the
+// X-Forwarded-For first hop when present (Azure proxies), else the socket
+// address -- so users behind a shared NAT/proxy share one bucket.
+builder.Services.AddRateLimiter(options =>
+{
+    int permitLimit = builder.Configuration.GetValue<int?>("RateLimit:Login:PermitLimit") ?? 20;
+    int windowSeconds = builder.Configuration.GetValue<int?>("RateLimit:Login:WindowSeconds") ?? 60;
+
+    options.AddPolicy("login", httpContext =>
+    {
+        string forwardedFor = httpContext.Request.Headers["X-Forwarded-For"].ToString();
+        string clientKey = !string.IsNullOrWhiteSpace(forwardedFor)
+            ? forwardedFor.Split(',')[0].Trim()
+            : (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+
+        return RateLimitPartition.GetFixedWindowLimiter(clientKey, _ =>
+            new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = permitLimit,
+                Window = TimeSpan.FromSeconds(windowSeconds),
+                QueueLimit = 0
+            });
+    });
+
+    // On throttle: 429 + Retry-After with a short plain-text message.
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, token) =>
+    {
+        if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out TimeSpan retryAfter))
+        {
+            context.HttpContext.Response.Headers["Retry-After"] =
+                ((int)retryAfter.TotalSeconds).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        await context.HttpContext.Response.WriteAsync(
+            "Too many attempts. Please wait a moment and try again.", token);
+    };
 });
 
 var app = builder.Build();
@@ -148,6 +193,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapControllerRoute(
