@@ -6,21 +6,29 @@ namespace HelpDeskNet8.Interfaces.Shared
     // recipient rules and the email subject/body wording.
     public enum NotificationType
     {
-        // A task on the ticket was created, updated, or completed.
-        TaskSaved,
+        // A task was created.
+        TaskCreated,
+
+        // A task was edited (anything other than its status).
+        TaskUpdated,
+
+        // A task's status changed.
+        TaskStatusChanged,
 
         // A brand-new ticket was created (its opening description note).
-        // Routes to the helpdesk inbox, not the originator. HD35 B1/B3.
         TicketCreated,
 
         // A note/reply was added to the ticket.
         NoteResponded,
 
-        // A ticket was saved as a reply (no assigned-tech change).
+        // A ticket was saved as a reply (no assigned-tech / status change).
         TicketResponded,
 
         // A ticket's assigned tech was changed.
         TicketAssigned,
+
+        // A ticket's status changed.
+        TicketStatusChanged,
 
         // An RFC was saved as a reply / update.
         RFCResponded,
@@ -29,12 +37,27 @@ namespace HelpDeskNet8.Interfaces.Shared
         RFCAssigned,
     }
 
+    // Optional change-context a caller passes alongside an event so the service
+    // can route correctly (status changes -> project owner) and word the body
+    // with the specific change. All fields optional; the service guards nulls.
+    public class NotificationContext
+    {
+        public string? OldStatus { get; set; }          // ticket status, before
+        public string? NewStatus { get; set; }          // ticket status, after
+        public bool? NoteVisibleToClient { get; set; }  // a reply's client visibility
+        public string? TaskTitle { get; set; }
+        public int? OldTaskStatus { get; set; }
+        public int? NewTaskStatus { get; set; }
+        public string? TaskAssigneeName { get; set; }   // display name (best-effort match)
+    }
+
     // Server-side notification routing. Resolves the recipients for a ticket
-    // event from the ticket's own data and sends the email. A mail failure must
-    // never break the originating save, so implementations swallow their errors.
+    // event from the ticket's own data (+ the optional context) and sends the
+    // email. A mail failure must never break the originating save, so
+    // implementations swallow their errors.
     public interface INotificationService
     {
-        Task Notify(int ticketId, NotificationType type, IUser user);
+        Task Notify(int ticketId, NotificationType type, IUser user, NotificationContext? context = null);
 
         // RFCs are internal-only; recipients come from the RFC itself, so no
         // IUser is needed for scoping.

@@ -89,8 +89,13 @@ namespace HelpDeskNet8.Controllers.Tickets
             // On update, capture the current assigned tech so we can tell a
             // re-assignment ('Assigned') from a plain reply ('Responded').
             int? oldAssignedTechId = null;
+            string oldStatus = null;
             if (ticket.TicketID != null)
-                oldAssignedTechId = (await _ticketManager.GetTicketDetail(ticket.TicketID.Value, user))?.AssignedTechID;
+            {
+                var before = await _ticketManager.GetTicketDetail(ticket.TicketID.Value, user);
+                oldAssignedTechId = before?.AssignedTechID;
+                oldStatus = before?.Status;
+            }
 
             // Fix: SaveResult — strongly typed — replaces List<object> index access
             SaveResult result = ticket.TicketID != null
@@ -107,10 +112,19 @@ namespace HelpDeskNet8.Controllers.Tickets
                 if (saved != null)
                 {
                     bool techChanged = oldAssignedTechId != saved.AssignedTechID;
-                    NotificationType type = techChanged
-                        ? NotificationType.TicketAssigned
-                        : NotificationType.TicketResponded;
-                    await _notificationService.Notify(ticket.TicketID.Value, type, user);
+                    bool statusChanged = !string.Equals(oldStatus ?? "", saved.Status ?? "", System.StringComparison.OrdinalIgnoreCase);
+
+                    // A reassignment and a status change are distinct events: if a
+                    // single save does both, record (notify) both rather than letting
+                    // the reassign mask the status move. A plain reply fires only when
+                    // neither moved.
+                    if (techChanged)
+                        await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketAssigned, user);
+                    if (statusChanged)
+                        await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketStatusChanged, user,
+                            new NotificationContext { OldStatus = oldStatus, NewStatus = saved.Status });
+                    if (!techChanged && !statusChanged)
+                        await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketResponded, user);
                 }
             }
 
