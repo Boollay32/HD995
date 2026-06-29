@@ -140,7 +140,7 @@ class ProjectDetails extends PageBase {
               <td><span class="pjd-tstatus">${this._esc(t.status ?? '')}</span></td>
               <td class="pjd-ttype">${this._esc(t.requestType ?? '')}</td>
               <td class="pjd-ttech">${this._esc(t.assignedTechName || '—')}</td>
-              <td class="pjd-tdate mono">${t.targetDate ? this._fmtDate(t.targetDate) : '—'}</td>
+              <td class="pjd-tdate mono">${t.targetDate && !String(t.targetDate).startsWith('1900-01-01') ? this._fmtDate(t.targetDate) : '—'}</td>
             </tr>`;
         }).join('');
 
