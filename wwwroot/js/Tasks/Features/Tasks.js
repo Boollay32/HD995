@@ -292,7 +292,10 @@ const Tasks = (() => {
 
     function _editorHtml(task, isNew) {
         const status = H.statusOf(task);
-        const statusOpts = STATUS
+        // Tasks-b: a new task can only start as New or Draft; the full status
+        // set becomes available once the task exists.
+        const statusList = isNew ? STATUS.filter(s => s.v === 1 || s.v === 5) : STATUS;
+        const statusOpts = statusList
             .map(s => `<option value="${s.v}" ${s.v === status ? 'selected' : ''}>${s.label}</option>`)
             .join('');
 
@@ -335,7 +338,7 @@ const Tasks = (() => {
                 </div>
                 <div class="td-ed-row">
                     <label class="td-ed-label">Completion date</label>
-                    <input type="date" class="td-ed-input" data-fld="completed"
+                    <input type="date" class="td-ed-input" data-fld="completed"${status === DONE ? '' : ' disabled'}
                            value="${H.toInputDate(task.completed) || (status === DONE ? H.toInputDate(new Date()) : '')}">
                 </div>
             </div>
@@ -448,9 +451,19 @@ const Tasks = (() => {
         const statusSel = editor.querySelector('[data-fld="status"]');
         const completedInput = editor.querySelector('[data-fld="completed"]');
         statusSel?.addEventListener('change', () => {
-            if (parseInt(statusSel.value, 10) === DONE && completedInput && !completedInput.value) {
-                completedInput.value = H.toInputDate(new Date());
-                markDirty();
+            // Tasks-a: the completion date is editable only once the task is
+            // Complete. Unlock + default it to today when switching to Complete;
+            // lock + clear it otherwise (a non-complete task has no completion date).
+            const done = parseInt(statusSel.value, 10) === DONE;
+            if (completedInput) {
+                completedInput.disabled = !done;
+                if (done && !completedInput.value) {
+                    completedInput.value = H.toInputDate(new Date());
+                    markDirty();
+                } else if (!done && completedInput.value) {
+                    completedInput.value = '';
+                    markDirty();
+                }
             }
         });
 
