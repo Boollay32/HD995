@@ -141,6 +141,13 @@ app.Use(async (context, next) =>
     headers["X-Frame-Options"] = "SAMEORIGIN";
     headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
 
+    // Permissions-Policy (competitive-gap 1.5): deny browser features the
+    // app does not use, so a compromised page can't silently invoke them.
+    headers["Permissions-Policy"] =
+        "accelerometer=(), autoplay=(), camera=(), display-capture=(), " +
+        "encrypted-media=(), geolocation=(), gyroscope=(), magnetometer=(), " +
+        "microphone=(), midi=(), payment=(), usb=()";
+
     // Per-request CSP nonce: lets the one remaining inline script (the
     // Application Insights snippet) execute without 'unsafe-inline'. Exposed
     // via HttpContext.Items so _Layout can stamp nonce="..." on that <script>.
