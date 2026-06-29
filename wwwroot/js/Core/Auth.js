@@ -221,7 +221,6 @@ Auth.getAdminLevel = function () {
 // -------------------------  Legacy Wrappers  ------------------------- //
 
 function UserPermissions() { return Auth.checkPermissions(); }
-function AuthenticateUser(user, token) { return Auth.authenticateUser(); }
 function KeepThePageAlive() { Auth.keepAlive(); }
 function SetUserAdminAbilities(adminId) { Auth.setAdminAbilities(adminId); }
 function CheckLimitedGovtechUserPerms() { Auth.checkLimitedUserPerms(); }
