@@ -42,6 +42,10 @@ builder.Services.AddScoped<IMailPreviewSink, MailPreviewSink>();
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddSingleton<JavaScriptSnippet>();
 
+// Health checks (observability 2.2): a liveness endpoint for uptime monitors
+// and the Azure health probe. Mapped to GET /healthz (anonymous) below.
+builder.Services.AddHealthChecks();
+
 // CSRF: validate the anti-forgery token sent as a header by CSRF.js on POSTs.
 builder.Services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
 
@@ -210,6 +214,8 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseRouting();
 app.UseRateLimiter();
 app.UseAuthorization();
+
+app.MapHealthChecks("/healthz");
 
 app.MapControllerRoute(
     name: "default",
