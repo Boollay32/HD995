@@ -207,3 +207,19 @@
 }
 .pjd-newticket-btn:hover { filter: brightness(0.95); }
 .pjd-newticket-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pjd-tickets-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.pjd-status-filter {
+    font-size: 0.8125rem;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.pjd-status-filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
