@@ -42,9 +42,26 @@ builder.Services.AddScoped<IMailPreviewSink, MailPreviewSink>();
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddSingleton<JavaScriptSnippet>();
 
-// Health checks (observability 2.2): a liveness endpoint for uptime monitors
-// and the Azure health probe. Mapped to GET /healthz (anonymous) below.
-builder.Services.AddHealthChecks();
+// Health checks (observability 2.2): GET /healthz reports the process is up
+// AND that the database is reachable (SELECT 1). Used by uptime monitors and
+// the Azure health probe.
+builder.Services.AddHealthChecks()
+    .AddAsyncCheck("database", async () =>
+    {
+        try
+        {
+            await using var conn = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+            await conn.OpenAsync();
+            await using var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT 1";
+            await cmd.ExecuteScalarAsync();
+            return Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy("Database reachable");
+        }
+        catch (System.Exception ex)
+        {
+            return Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Unhealthy("Database unreachable", ex);
+        }
+    });
 
 // CSRF: validate the anti-forgery token sent as a header by CSRF.js on POSTs.
 builder.Services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
