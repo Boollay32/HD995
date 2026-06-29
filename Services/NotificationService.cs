@@ -117,13 +117,13 @@ namespace HelpDeskNet8.Services
 
         // The recipient rules. One arm per NotificationType. Returns the full
         // set for the event; Notify() then drops blanks + the author + dupes.
-        // 2b-a: resolve the project owner's email for a ticket created on a
-        // project. Returns empty when it's not a creation, has no project, or
-        // the owner can't be resolved. Notify's author filter drops the owner
-        // if they are the acting user.
+        // Resolve the project owner's email for a ticket that sits on a project.
+        // Applies to every event (creation, reply, task, assign) so the owner is
+        // always a stakeholder. Returns empty when there is no project or the
+        // owner can't be resolved. Notify's author filter drops the owner if they
+        // are the acting user. (type is retained for signature/label stability.)
         private async Task<string> ResolveProjectOwnerEmail(NotificationType type, ITicket ticket, IUser user)
         {
-            if (type != NotificationType.TicketCreated) return string.Empty;
             if (!ticket.ProjectID.HasValue || ticket.ProjectID.Value <= 0) return string.Empty;
 
             IProject? project = await _projectManager.GetProjectDetail(user, ticket.ProjectID.Value);
@@ -139,34 +139,35 @@ namespace HelpDeskNet8.Services
         {
             switch (type)
             {
-                // A new ticket was created -> notify the helpdesk inbox (the
-                // shared FromAddress), NOT the originator. HD35 B1/B3.
-           case NotificationType.TicketCreated:
-                    // 6a: an incident (request type 8) does not email on creation.
-                    if (ticket.RequestID == 8) return System.Array.Empty<string>();
-                    // 1b: a Contact Client ticket (type 12) is raised on behalf of
-                    // a client -> email that client (the ticket originator) too.
-                    if (ticket.RequestID == 12) return new[] { ticket.Email, FromAddress };
-                    return new[] { FromAddress };
-
-                // A task was saved -> the ticket's assigned tech is notified.
+                // Stakeholder model: every ticket/task event notifies the people
+                // SET on the item -- the assigned tech and the ticket creator
+                // (originator). The project owner is appended in Notify(). Notify()
+                // then drops blanks, the acting user (so nobody is emailed their
+                // own change), and duplicates.
+                case NotificationType.TicketCreated:
                 case NotificationType.TaskSaved:
-                    return new[] { ticket.AssignedTechEmail };
-
-                // C3: a message/note was added -> notify BOTH the client
-                // (originator) and the assigned tech. Notify() removes the
-                // author, so the sender is never emailed their own message.
                 case NotificationType.NoteResponded:
-                    return new[] { ticket.Email, ticket.AssignedTechEmail };
-
-                // A ticket reply -> same routing as a note reply (C3).
                 case NotificationType.TicketResponded:
-                    return new[] { ticket.Email, ticket.AssignedTechEmail };
-
-                // C2: the assigned tech was changed -> notify the new tech AND
-                // the client who raised the ticket.
                 case NotificationType.TicketAssigned:
-                    return new[] { ticket.AssignedTechEmail, ticket.Email };
+                {
+                    var people = new System.Collections.Generic.List<string>
+                    {
+                        ticket.AssignedTechEmail,
+                        ticket.Email,
+                    };
+
+                    // The shared helpdesk inbox is a TRIAGE fallback only: used
+                    // when a client-raised request has no internal user attached
+                    // yet. Once a tech is assigned, that tech is notified instead;
+                    // internal request types never use the inbox.
+                    bool internalRequest = ticket.RequestID.HasValue
+                        && System.Array.IndexOf(InternalRequestTypes, ticket.RequestID.Value) >= 0;
+                    bool hasAssignedTech = !string.IsNullOrWhiteSpace(ticket.AssignedTechEmail);
+                    if (!internalRequest && !hasAssignedTech)
+                        people.Add(FromAddress);
+
+                    return people.ToArray();
+                }
 
                 default:
                     return System.Array.Empty<string>();
