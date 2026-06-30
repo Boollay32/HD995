@@ -57,6 +57,7 @@ namespace HelpDeskNet8.Interfaces.Shared
         public string? TaskAssigneeName { get; set; }     // new assignee display name (best-effort match)
         public string? OldTaskAssigneeName { get; set; }  // previous assignee, to word assign vs reassign
         public string? OldTechEmail { get; set; }         // previous ticket tech, to word assign vs reassign
+        public bool? TechAlsoChanged { get; set; }         // a status save that also reassigned the tech
     }
 
     // Server-side notification routing. Resolves the recipients for an event from

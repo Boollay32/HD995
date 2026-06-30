@@ -125,7 +125,7 @@ namespace HelpDeskNet8.Controllers.Tickets
                             new NotificationContext { OldTechEmail = oldTechEmail });
                     if (statusChanged)
                         await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketStatusChanged, user,
-                            new NotificationContext { OldStatus = oldStatus, NewStatus = saved.Status });
+                            new NotificationContext { OldStatus = oldStatus, NewStatus = saved.Status, TechAlsoChanged = techChanged });
                     if (!techChanged && !statusChanged)
                         await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketResponded, user);
                 }
