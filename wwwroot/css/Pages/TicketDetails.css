@@ -178,6 +178,8 @@ body {
   color: var(--td-muted);
   padding: 24px;
 }
+
+.td-thread-empty[hidden] { display: none; }
 .td-notify-banner {
   display: flex;
   align-items: center;
