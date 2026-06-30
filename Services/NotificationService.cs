@@ -186,7 +186,10 @@ namespace HelpDeskNet8.Services
                         // Internal -> the project owner + ticket owner + assigned tech.
                         people.Add(await ResolveProjectOwnerEmail(ticket, user));
                         people.Add(owner);
-                        people.Add(tech);
+                        // HD44: a save that also reassigned the ticket sends the
+                        // brand-new tech the "assigned" mail, not this status one.
+                        // A pre-existing tech is still notified.
+                        if (!(context?.TechAlsoChanged ?? false)) people.Add(tech);
                     }
                     break;
 
@@ -215,7 +218,7 @@ namespace HelpDeskNet8.Services
                     // match), the ticket owner (the actor-strip drops them when they
                     // raised it), and the project owner.
                     people.Add(await ResolveAssigneeEmail(context?.TaskAssigneeName));
-                    people.Add(owner);
+                    if (!clientTicket) people.Add(owner);
                     people.Add(await ResolveProjectOwnerEmail(ticket, user));
                     break;
 
@@ -223,7 +226,7 @@ namespace HelpDeskNet8.Services
                     // HD44: the task's own assigned tech (always) + the ticket owner
                     // (dropped if they are the actor).
                     people.Add(await ResolveAssigneeEmail(context?.TaskAssigneeName));
-                    people.Add(owner);
+                    if (!clientTicket) people.Add(owner);
                     break;
 
                 case NotificationType.TaskAssigned:
@@ -320,10 +323,10 @@ namespace HelpDeskNet8.Services
             string actor = string.IsNullOrWhiteSpace(user?.UserName) ? "A user" : user.UserName;
             string title = string.IsNullOrWhiteSpace(ticket?.Subject) ? "(no subject)" : ticket.Subject;
             string priority = string.IsNullOrWhiteSpace(ticket?.Priority) ? "\u2014" : ticket.Priority;
-            string status = string.IsNullOrWhiteSpace(ticket?.Status) ? "\u2014" : ticket.Status;
+            string status = TicketStatusLabel(ticket?.Status);
             string tech = string.IsNullOrWhiteSpace(ticket?.AssignedTechEmail) ? "Unassigned" : ticket.AssignedTechEmail;
-            string oldS = string.IsNullOrWhiteSpace(ctx?.OldStatus) ? "(unknown)" : ctx.OldStatus;
-            string newS = string.IsNullOrWhiteSpace(ctx?.NewStatus) ? status : ctx.NewStatus;
+            string oldS = string.IsNullOrWhiteSpace(ctx?.OldStatus) ? "(unknown)" : TicketStatusLabel(ctx.OldStatus);
+            string newS = string.IsNullOrWhiteSpace(ctx?.NewStatus) ? status : TicketStatusLabel(ctx.NewStatus);
             string tt = string.IsNullOrWhiteSpace(ctx?.TaskTitle) ? "a task" : ctx.TaskTitle;
             string ticketLine = $"Ticket #{id}: {title}";
 
@@ -491,6 +494,28 @@ namespace HelpDeskNet8.Services
                 "rejected" => "rejected",
                 "cancelled" => "cancelled",
                 _ => "marked as " + (status ?? "").Trim(),
+            };
+        }
+
+        // Map the numeric ticket status id to its label (the wire value is the
+        // id, e.g. "5"). A value already a label, or an unknown id, is returned
+        // unchanged.
+        private static string TicketStatusLabel(string? status)
+        {
+            string s = (status ?? "").Trim();
+            if (s.Length == 0) return "\u2014";
+            return s switch
+            {
+                "1" => "Open",
+                "2" => "Pending",
+                "3" => "Closed",
+                "4" => "Cancelled",
+                "5" => "Resolved",
+                "6" => "CR Open",
+                "7" => "CR Assigned",
+                "8" => "CR Complete",
+                "9" => "CR Withdrawn",
+                _ => s,
             };
         }
 
