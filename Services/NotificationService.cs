@@ -211,17 +211,19 @@ namespace HelpDeskNet8.Services
 
                 case NotificationType.TaskCreated:
                 case NotificationType.TaskStatusChanged:
-                    // Internal-only -> the project owner + ticket owner + the ticket's
-                    // assigned tech. (The task's own assignee is notified via the
-                    // separate TaskAssigned event.)
-                    people.Add(await ResolveProjectOwnerEmail(ticket, user));
+                    // HD44: the task's own assigned tech (always, best-effort name
+                    // match), the ticket owner (the actor-strip drops them when they
+                    // raised it), and the project owner.
+                    people.Add(await ResolveAssigneeEmail(context?.TaskAssigneeName));
                     people.Add(owner);
-                    people.Add(tech);
+                    people.Add(await ResolveProjectOwnerEmail(ticket, user));
                     break;
 
                 case NotificationType.TaskUpdated:
-                    // -> the ticket's assigned tech.
-                    people.Add(tech);
+                    // HD44: the task's own assigned tech (always) + the ticket owner
+                    // (dropped if they are the actor).
+                    people.Add(await ResolveAssigneeEmail(context?.TaskAssigneeName));
+                    people.Add(owner);
                     break;
 
                 case NotificationType.TaskAssigned:
