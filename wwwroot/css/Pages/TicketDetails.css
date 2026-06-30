@@ -488,9 +488,6 @@ body {
 .td-field-group {
   display: flex;
   flex-direction: column;
-  /* HD43 Ticket-e: comfortable form width, left-aligned, instead of stretching
-     the whole pane (drops to full width when the pane is narrower). */
-  max-width: 560px;
   gap: 12px;
   background: var(--td-panel);
   border: 1px solid var(--td-border-2);
@@ -1097,6 +1094,7 @@ body {
 /* #1 Notes-Compose flush to the bottom of the notes panel (was a gap from the
    tab panel's bottom padding sitting under the composer). */
 #TicketDetails-App #tabpanel-notes { padding-bottom: 0; }
+#TicketDetails-App #tabpanel-notes .td-note-compose { margin-top: auto; }
 
 /* #3 Activity tab scrollbar: make it visible and ~50% wider than the default
    8px workspace scrollbar. */
