@@ -79,20 +79,38 @@ namespace HelpDeskNet8.Controllers
             IRFC rfc = new RFC();
             PopulateObject(rfc, rfcBuild);
 
+            // Capture the RFC's current status before the save so a status move can
+            // be told from a plain update for the notification.
+            string oldRfcStatus = null;
+            if (rfc.ChangeRequestID != 0)
+            {
+                IRFC beforeRfc = await _changeRequestManager.GetRFCDetail(rfc.ChangeRequestID);
+                oldRfcStatus = beforeRfc?.Status;
+            }
+
             List<object> result = rfc.ChangeRequestID != 0
                 ? await _changeRequestManager.SaveRFC((int)user.UserID, rfc.GetChanges(), request.UTC)
                 : await _changeRequestManager.SaveRFC((int)user.UserID, rfc, request.UTC);
 
             if (result[0]?.ToString() == "Error") return BadRequest(result);
 
-            // Notify the assigned tech + originator. 'Created' uses the assign
-            // wording, an update uses the reply wording; recipients are the same.
+            // Notify: a new RFC -> Assigned (the new tech); an existing RFC ->
+            // StatusChanged when the status moved, otherwise Responded (update).
             if (result.Count > 1 && int.TryParse(result[1]?.ToString(), out int savedRfcId))
             {
-                NotificationType rfcType = result[0]?.ToString() == "Created"
-                    ? NotificationType.RFCAssigned
-                    : NotificationType.RFCResponded;
-                await _notificationService.NotifyRFC(savedRfcId, rfcType);
+                if (result[0]?.ToString() == "Created")
+                {
+                    await _notificationService.NotifyRFC(savedRfcId, NotificationType.RFCAssigned, user);
+                }
+                else
+                {
+                    bool rfcStatusChanged = !string.Equals(oldRfcStatus ?? "", rfc.Status ?? "", System.StringComparison.OrdinalIgnoreCase);
+                    NotificationType rfcType = rfcStatusChanged
+                        ? NotificationType.RFCStatusChanged
+                        : NotificationType.RFCResponded;
+                    await _notificationService.NotifyRFC(savedRfcId, rfcType, user,
+                        new NotificationContext { OldStatus = oldRfcStatus, NewStatus = rfc.Status });
+                }
             }
 
             return Ok(result);
