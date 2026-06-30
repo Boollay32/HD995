@@ -73,6 +73,28 @@ const FieldHandlers = {
         Dirty.recompute();
     },
 
+    // HD44-f: when the ticket moves to a closed/complete status, populate the
+    // Closed date display (universal). Keep an existing date; otherwise
+    // default to today (the moment of closing). Clears to a dash when
+    // re-opened. The DB persists the close date separately (Ticket-l write).
+    _onStatusChange() {
+        const statusEl = document.getElementById('status');
+        const closedEl = document.getElementById('closed');
+        if (!statusEl || !closedEl) return;
+        const opt = statusEl.options[statusEl.selectedIndex];
+        const label = (opt ? opt.textContent : '').trim().toLowerCase();
+        const isClosed = ['closed', 'solved', 'complete', 'resolved'].includes(label);
+        const dash = '\u2014';
+        if (isClosed) {
+            const cur = (closedEl.textContent || '').trim();
+            if (!cur || cur === dash) {
+                closedEl.textContent = Fields._formatDate(new Date().toISOString());
+            }
+        } else {
+            closedEl.textContent = dash;
+        }
+    },
+
     _onAssignedTechChange(e) {
         const newTech = e.target.value;
         const oldTech = sessionStorage.getItem(STORAGE_KEYS.OLD_ASSIGNED_TECH);
@@ -125,6 +147,10 @@ const FieldHandlers = {
         // Target date
         const targetEl = document.getElementById('targetdate');
         targetEl?.addEventListener('change', FieldHandlers._onTargetDateChange);
+
+        // Status: update the Closed date display when moving to a closed status.
+        const statusEl = document.getElementById('status');
+        statusEl?.addEventListener('change', FieldHandlers._onStatusChange);
 
         // Blanket dirty-marking: any change to an editable control in the
         // Details panel (Status + the four above + custom fields) flags the
@@ -277,8 +303,12 @@ const Save = {
             console.error('Save.execute:', err);
             UI.toast?.('Failed to save ticket', 'error');
         } finally {
-            saveBtn.disabled = false;
-            saveBtn.textContent = State.isDirty ? 'Save Changes' : 'Save';
+            // HD44-d: restore the button to reflect the dirty state after the
+            // 'Saving\u2026' label -- greyed when there's nothing to save (success
+            // cleared dirty), re-enabled for a retry on error. Never leave it
+            // active-but-empty, and keep the 'Save Changes' label (as Dirty.set).
+            saveBtn.disabled = !State.isDirty;
+            saveBtn.textContent = 'Save Changes';
         }
     },
 
