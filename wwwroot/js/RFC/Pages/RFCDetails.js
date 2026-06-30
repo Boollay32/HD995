@@ -198,6 +198,12 @@ RFCDetails.prototype._wireRfcDirty = function () {
     // mirrors RFCSave/RFCFields, which also read .Value document-wide.
     document.addEventListener('input', refresh, true);
     document.addEventListener('change', refresh, true);
+
+    // HD44-b: grow Extended Information textareas as the user types -- they
+    // only autosize to fit on load (UI.adjustTextAreas) otherwise.
+    document.addEventListener('input', (e) => {
+        if (e.target && e.target.tagName === 'TEXTAREA') UI.autoGrow(e.target);
+    }, true);
     saveBtn.disabled = true;
 };
 
