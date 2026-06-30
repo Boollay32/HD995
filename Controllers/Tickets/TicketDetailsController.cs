@@ -185,6 +185,17 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
 
+            // The task form sends the assignee's user id; re-read the saved task
+            // to get the display name so the wording shows the name (not the id),
+            // the assignee resolves to a recipient, and the assignee-changed check
+            // below compares name-to-name (not name-to-id, always "changed").
+            string newAssigneeName = task.AssignedTech;
+            if (result.ObjectID.HasValue)
+            {
+                var savedTask = (await _taskManager.GetTaskDetail(user, result.ObjectID.Value)).FirstOrDefault();
+                if (savedTask != null) newAssigneeName = savedTask.AssignedTech;
+            }
+
             // HD44: route the task event(s). Create, status change and assignee
             // change are distinct events (mirroring tickets): a single save that
             // changes more than one fires each. A new task with an assignee fires
@@ -193,7 +204,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             var taskCtx = new NotificationContext
             {
                 TaskTitle = task.Title,
-                TaskAssigneeName = task.AssignedTech,
+                TaskAssigneeName = newAssigneeName,
                 OldTaskAssigneeName = oldTaskAssignee,
                 OldTaskStatus = oldTaskStatus,
                 NewTaskStatus = task.Status,
@@ -203,12 +214,12 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (isNewTask)
             {
                 await _notificationService.Notify(taskTicketId, NotificationType.TaskCreated, user, taskCtx);
-                if (!string.IsNullOrWhiteSpace(task.AssignedTech))
+                if (!string.IsNullOrWhiteSpace(newAssigneeName))
                     await _notificationService.Notify(taskTicketId, NotificationType.TaskAssigned, user, taskCtx);
             }
             else
             {
-                bool taskAssigneeChanged = !string.Equals(oldTaskAssignee ?? "", task.AssignedTech ?? "", System.StringComparison.OrdinalIgnoreCase);
+                bool taskAssigneeChanged = !string.Equals(oldTaskAssignee ?? "", newAssigneeName ?? "", System.StringComparison.OrdinalIgnoreCase);
                 bool taskStatusChanged = oldTaskStatus != task.Status;
                 if (taskAssigneeChanged)
                     await _notificationService.Notify(taskTicketId, NotificationType.TaskAssigned, user, taskCtx);
