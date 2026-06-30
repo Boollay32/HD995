@@ -131,18 +131,16 @@ const Topbar = {
 
         // Ticket-j/k: the "Due" pill counts down to the target date, varied by
         // ticket type. Internal (non-project): hidden -- it duplicates the
-        // "Needed by"/target already in the overview. Project: count down to the
-        // target. Client: "Awaiting first response" until the tech first replies,
+        // "Needed by"/target already in the overview. Project: also hidden
+        // (same reason). Client: "Awaiting first response" until the tech first replies,
         // then count down to the target (hidden if responded with no target yet).
         const INTERNAL_REQUEST_TYPES = [4, 8, 10, 11, 14];
         const isInternal = INTERNAL_REQUEST_TYPES.includes(Number(data.requestID));
         const isProject = !!data.projectID;
 
         let slaMode;   // 'hide' | 'countdown' | 'awaiting'
-        if (isInternal && !isProject) {
+        if (isInternal || isProject) {
             slaMode = 'hide';
-        } else if (isProject) {
-            slaMode = hasRealTarget ? 'countdown' : 'awaiting';
         } else if (!hasFirstResponse) {
             slaMode = 'awaiting';
         } else {
