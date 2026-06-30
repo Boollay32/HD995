@@ -133,7 +133,7 @@
   outline: none;
   resize: none;
   line-height: 1.5;
-  max-height: 140px;
+  max-height: 500px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--scroll-thumb) transparent;

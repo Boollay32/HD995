@@ -100,8 +100,8 @@
   margin-top: 10px;
 }
 /* RFC notes: cap the compose textarea so it can't swallow the thread
-   (the shared .td-note-input cap of 140px is too tall for this pane). */
-#rfc-note-textarea { max-height: 96px; }
+   capped at a usable height so it can't swallow the whole thread. */
+#rfc-note-textarea { max-height: 500px; }
 /* RFC composer footer mirrors the ticket note composer: paperclip left,
    char count right. The footer is a sibling of .td-note-compose here, so
    the shared .td-note-compose order rules don't reach it. */
@@ -187,6 +187,18 @@
    (UI.adjustTextAreas on load + autoGrow on input). */
 #Extended-Information textarea.Value {
   min-height: 44px;
+}
+/* Item 2: RFC detail inputs inherited DetailForm's .dform input.Value sizing
+   (9px 11px, --border-strong / --row-hover). Pull them back to the ticket
+   .td-input look (DetailShared: 6px 10px) so RFC + ticket detail inputs match.
+   Scoped to #RFCDetails-App so the create pages keep the .dform sizing. */
+#RFCDetails-App .dform input.Value,
+#RFCDetails-App .dform select.Value,
+#RFCDetails-App .dform textarea.Value {
+  padding: 6px 10px;
+  border: 1px solid var(--td-border);
+  background: var(--td-surface);
+  border-radius: 6px;
 }
 @media (max-width: 640px) {
   .dform .rfc-grid { grid-template-columns: 1fr; }
