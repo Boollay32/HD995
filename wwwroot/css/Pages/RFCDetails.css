@@ -99,6 +99,15 @@
 .rfc-notes-body .td-note-compose {
   margin-top: 10px;
 }
+/* RFC notes: cap the compose textarea so it can't swallow the thread
+   (the shared .td-note-input cap of 140px is too tall for this pane). */
+#rfc-note-textarea { max-height: 96px; }
+/* RFC composer footer mirrors the ticket note composer: paperclip left,
+   char count right. The footer is a sibling of .td-note-compose here, so
+   the shared .td-note-compose order rules don't reach it. */
+.rfc-notes-body .td-composer-footer .td-attach-btn { order: 1; }
+.rfc-notes-body .td-composer-footer .td-composer-attachments { order: 3; }
+.rfc-notes-body .td-composer-footer .td-charcount { order: 4; flex: 0 0 auto; margin-left: auto; }
 
 /* Workspace pane: the form scrolls within the pane */
 .rfc-ws {
@@ -196,7 +205,7 @@
   box-sizing: border-box;
   margin-top: 1px;
   min-height: 62px;
-  resize: vertical;
+  resize: none;
   font-family: "Spline Sans", system-ui, sans-serif;
   font-size: 0.8125rem;
   color: var(--td-text);

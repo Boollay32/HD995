@@ -232,7 +232,7 @@
 }
 .dform textarea.Value {
   min-height: 88px;
-  resize: vertical;
+  resize: none;
 }
 .dform input.Value:focus,
 .dform select.Value:focus,
