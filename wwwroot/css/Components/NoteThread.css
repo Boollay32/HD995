@@ -59,6 +59,8 @@
   color: var(--muted);
   padding: 24px;
 }
+
+.td-thread-empty[hidden] { display: none; }
 .td-thread-empty svg { opacity: 0.35; }
 .td-thread-empty p { font-size: 0.8125rem; font-weight: 600; text-align: center; }
 
