@@ -90,11 +90,13 @@ namespace HelpDeskNet8.Controllers.Tickets
             // re-assignment ('Assigned') from a plain reply ('Responded').
             int? oldAssignedTechId = null;
             string oldStatus = null;
+            string oldTechEmail = null;
             if (ticket.TicketID != null)
             {
                 var before = await _ticketManager.GetTicketDetail(ticket.TicketID.Value, user);
                 oldAssignedTechId = before?.AssignedTechID;
                 oldStatus = before?.Status;
+                oldTechEmail = before?.AssignedTechEmail;
             }
 
             // Fix: SaveResult — strongly typed — replaces List<object> index access
@@ -119,7 +121,8 @@ namespace HelpDeskNet8.Controllers.Tickets
                     // the reassign mask the status move. A plain reply fires only when
                     // neither moved.
                     if (techChanged)
-                        await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketAssigned, user);
+                        await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketAssigned, user,
+                            new NotificationContext { OldTechEmail = oldTechEmail });
                     if (statusChanged)
                         await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketStatusChanged, user,
                             new NotificationContext { OldStatus = oldStatus, NewStatus = saved.Status });

@@ -168,10 +168,12 @@ namespace HelpDeskNet8.Controllers.Tickets
             // notification. The old status must be read BEFORE the save mutates it.
             bool isNewTask = !(task.TaskID.HasValue && task.TaskID.Value != 0);
             int? oldTaskStatus = null;
+            string oldTaskAssignee = null;
             if (!isNewTask)
             {
                 var beforeTask = (await _taskManager.GetTaskDetail(user, task.TaskID.Value)).FirstOrDefault();
                 oldTaskStatus = beforeTask?.Status;
+                oldTaskAssignee = beforeTask?.AssignedTech;
             }
 
             var result = await _taskManager.SaveTask(
@@ -183,21 +185,38 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
 
-            // HD43: route the task event (create / update / status change) with
-            // a context carrying the title, assignee name and old->new status.
-            NotificationType taskType = isNewTask
-                ? NotificationType.TaskCreated
-                : (oldTaskStatus != task.Status
-                    ? NotificationType.TaskStatusChanged
-                    : NotificationType.TaskUpdated);
-            await _notificationService.Notify(task.TicketID ?? 0, taskType, user,
-                new NotificationContext
-                {
-                    TaskTitle = task.Title,
-                    TaskAssigneeName = task.AssignedTech,
-                    OldTaskStatus = oldTaskStatus,
-                    NewTaskStatus = task.Status,
-                });
+            // HD44: route the task event(s). Create, status change and assignee
+            // change are distinct events (mirroring tickets): a single save that
+            // changes more than one fires each. A new task with an assignee fires
+            // both Created and Assigned. The context carries the title, the new and
+            // previous assignee, and the old->new status for the wording.
+            var taskCtx = new NotificationContext
+            {
+                TaskTitle = task.Title,
+                TaskAssigneeName = task.AssignedTech,
+                OldTaskAssigneeName = oldTaskAssignee,
+                OldTaskStatus = oldTaskStatus,
+                NewTaskStatus = task.Status,
+            };
+            int taskTicketId = task.TicketID ?? 0;
+
+            if (isNewTask)
+            {
+                await _notificationService.Notify(taskTicketId, NotificationType.TaskCreated, user, taskCtx);
+                if (!string.IsNullOrWhiteSpace(task.AssignedTech))
+                    await _notificationService.Notify(taskTicketId, NotificationType.TaskAssigned, user, taskCtx);
+            }
+            else
+            {
+                bool taskAssigneeChanged = !string.Equals(oldTaskAssignee ?? "", task.AssignedTech ?? "", System.StringComparison.OrdinalIgnoreCase);
+                bool taskStatusChanged = oldTaskStatus != task.Status;
+                if (taskAssigneeChanged)
+                    await _notificationService.Notify(taskTicketId, NotificationType.TaskAssigned, user, taskCtx);
+                if (taskStatusChanged)
+                    await _notificationService.Notify(taskTicketId, NotificationType.TaskStatusChanged, user, taskCtx);
+                if (!taskAssigneeChanged && !taskStatusChanged)
+                    await _notificationService.Notify(taskTicketId, NotificationType.TaskUpdated, user, taskCtx);
+            }
 
             // Return updated task list scoped to same ticket
             var filter = new Filter { TicketID = task.TicketID };
