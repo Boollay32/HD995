@@ -173,6 +173,12 @@
   min-height: 92px;
   resize: vertical;
 }
+
+/* HD44-b: Extended Information textareas start at half height and grow to fit
+   (UI.adjustTextAreas on load + autoGrow on input). */
+#Extended-Information textarea.Value {
+  min-height: 44px;
+}
 @media (max-width: 640px) {
   .dform .rfc-grid { grid-template-columns: 1fr; }
 }
