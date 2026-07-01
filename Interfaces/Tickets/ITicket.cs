@@ -10,6 +10,7 @@
         DateTime? NotesDate { get; set; }
         DateTime? FirstResponseDate { get; set; }
         string RaisedBy { get; set; }
+        int? RaisedByID { get; set; }
         string Email { get; set; }
         new string Status { get; set; }
         string Priority { get; set; }
