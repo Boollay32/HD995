@@ -119,7 +119,7 @@
   width: auto;
   height: 10px;
   position: absolute;
-  font-family: Calibri;
+  font-family: var(--font-sans);
   z-index: 50000;
 }
 #DisplayImage {

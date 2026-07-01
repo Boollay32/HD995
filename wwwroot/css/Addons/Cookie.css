@@ -8,7 +8,7 @@
 #cookie-bar {
     background: #232A31;
     color: #eeeeee;
-    font-family: Calibri, Arial, sans-serif;
+    font-family: var(--font-sans);
     font-size: 0.875rem;
     line-height: 1.6;
     text-align: center;

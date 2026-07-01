@@ -24,7 +24,7 @@
 }
 #History .HistoryDiv .History-Div label {
   font-size: 0.875rem;
-  font-family: Calibri;
+  font-family: var(--font-sans);
   color: var(--text);
 }
 #Notes {
