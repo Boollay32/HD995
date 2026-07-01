@@ -170,9 +170,9 @@
   color: var(--td-text);
 }
 .td-activity-filter-btn.is-active {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
 }
 .td-activity-load-more-wrap {
   display: flex;

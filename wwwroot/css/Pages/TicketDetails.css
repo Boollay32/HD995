@@ -45,8 +45,8 @@ body {
   height: 20px;
   padding: 0 6px;
   border-radius: 20px;
-  background: var(--brand);
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
   font-family: "Spline Sans Mono", ui-monospace, monospace;
   font-size: 0.65625rem;
   font-weight: 700;
@@ -70,8 +70,8 @@ body {
   height: 16px;
   padding: 0 4px;
   border-radius: 20px;
-  background: var(--brand);
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
   font-family: "Spline Sans Mono", ui-monospace, monospace;
   font-size: 0.5625rem;
   font-weight: 700;

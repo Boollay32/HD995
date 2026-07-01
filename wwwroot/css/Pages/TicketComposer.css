@@ -54,15 +54,15 @@
   border-radius: 10px;
   display: grid;
   place-items: center;
-  background: var(--brand);
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
   border: none;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s ease, opacity 0.15s ease;
 }
 .td-send-btn:hover {
-  background: var(--brand-deep);
+  background: var(--accent-strong);
 }
 .td-send-btn:disabled {
   opacity: 0.35;
@@ -87,8 +87,8 @@
   gap: 8px;
   margin: 0 16px 8px;
   padding: 8px 14px;
-  background: var(--brand);
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
   border: none;
   border-radius: 20px;
   font-family: "Spline Sans", system-ui, sans-serif;
@@ -100,7 +100,7 @@
   animation: rise 0.25s ease both;
 }
 .td-scroll-unread-btn:hover {
-  background: var(--brand-deep);
+  background: var(--accent-strong);
 }
 .td-scroll-unread-btn.hidden {
   display: none;
