@@ -317,8 +317,9 @@ const NotesPanel = (() => {
         time.setAttribute('title', note.CreatedDate ?? '');
         head.appendChild(time);
 
-        // Edit affordance — only on the current user's own (already-saved) notes.
-        if (_canEdit(note)) {
+        // Edit/delete affordances — only on the current user's own
+        // (already-saved, not-already-removed) notes.
+        if (_canEdit(note) && !_isRemoved(note)) {
             const editBtn = document.createElement('button');
             editBtn.type = 'button';
             editBtn.className = 'td-note-edit';
@@ -334,6 +335,24 @@ const NotesPanel = (() => {
             editBtn.addEventListener('click', () =>
                 _enterEditMode(editBtn.closest('.td-note-card'), note));
             head.appendChild(editBtn);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'td-note-delete';
+            deleteBtn.title = 'Delete note';
+            deleteBtn.setAttribute('aria-label', 'Delete note');
+            deleteBtn.innerHTML = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/><path d="M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>`;
+            deleteBtn.addEventListener('click', () =>
+                _deleteNote(deleteBtn.closest('.td-note-card'), note));
+            head.appendChild(deleteBtn);
         }
 
         return head;
@@ -341,7 +360,7 @@ const NotesPanel = (() => {
 
     function _buildNoteBody(note) {
         const body = document.createElement('div');
-        body.className = 'td-note-body';
+        body.className = 'td-note-body' + (_isRemoved(note) ? ' is-removed' : '');
         body.textContent = note.Body ?? '';
         return body;
     }
@@ -365,6 +384,20 @@ const NotesPanel = (() => {
             && typeof note.NoteID === 'number'
             && Session.userId != null
             && note.AuthorUserID === Session.userId;
+    }
+
+    function _isRemoved(note) {
+        return note.Body === 'Removed';
+    }
+
+    // Delete = the same commit path the edit feature already uses, with the
+    // body replaced and an empty attachment set (dropping any existing
+    // ones via the same replace-on-save semantics _commitEdit already
+    // relies on for edits). Keeps the author/timestamp, no new endpoint.
+    async function _deleteNote(card, note) {
+        if (!card || _isRemoved(note)) return;
+        if (!window.confirm('Delete this note? This cannot be undone.')) return;
+        await _commitEdit(card, note, 'Removed', [], {});
     }
 
     function _enterEditMode(card, note) {
