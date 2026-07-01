@@ -48,9 +48,16 @@ namespace HelpDeskNet8.Services
                 ITicket ticket = await _ticketManager.GetTicketDetail(ticketId, user);
                 if (ticket == null) return;
 
-                string actorEmail = !string.IsNullOrWhiteSpace(user?.UserLogin)
-                    ? user.UserLogin
-                    : user?.UserEmail;
+                // Same priority order as every other identity resolver in this
+                // file (ResolveAssigneeEmailById / ResolveAssigneeEmail /
+                // ResolveProjectOwnerEmail): UserEmail first, UserLogin as
+                // fallback. Getting this backwards here meant the actor's
+                // "identity string" for self-exclusion never matched the same
+                // person's email as computed by those resolvers, so the actor
+                // could end up notified about their own action.
+                string actorEmail = !string.IsNullOrWhiteSpace(user?.UserEmail)
+                    ? user.UserEmail
+                    : user?.UserLogin;
 
                 var people = await ResolveTicketRecipients(type, ticket, user, context);
 
@@ -83,9 +90,11 @@ namespace HelpDeskNet8.Services
                 IRFC rfc = await _rfcManager.GetRFCDetail(rfcId);
                 if (rfc == null) return;
 
-                string actorEmail = !string.IsNullOrWhiteSpace(user?.UserLogin)
-                    ? user.UserLogin
-                    : user?.UserEmail;
+                // Same priority order as every other identity resolver in this
+                // file -- see the matching comment in Notify() above.
+                string actorEmail = !string.IsNullOrWhiteSpace(user?.UserEmail)
+                    ? user.UserEmail
+                    : user?.UserLogin;
 
                 // RFCs are internal-only. Assigned (creation) -> the new tech only;
                 // an update or status change -> the RFC owner + the tech.
