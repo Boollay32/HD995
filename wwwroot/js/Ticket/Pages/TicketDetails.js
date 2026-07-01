@@ -175,6 +175,8 @@ const Events = {
         Tabs.init();
         Collapse.init();
         NotifyBanner.bind();
-        TicketComposer.init();
+        // TicketComposer.init() removed -- see the comment left in
+        // TicketShell.js; NotesPanel.js's Composer.create() already covers
+        // #msg-textarea and #note-textarea.
     },
 };
