@@ -70,7 +70,14 @@ namespace HelpDeskNet8.Models.Tickets
                         AssignedTechID = reader["AssignedTechID"] as int?,
                         Authority = (string)reader["AuthorityAbbr"],
                         Priority = (string)reader["PriorityDesc"],
-                        Notify = (string)reader["Notify"]
+                        // Guarded like AssignedTech above: a ticket that has never
+                        // gone through any notify-setting code path stores NULL here,
+                        // and (string)DBNull.Value throws -- which previously killed
+                        // this entire row (caught below, FromReader returns null, and
+                        // TicketManager still adds it to the list -- crashing every
+                        // queue-side filter/render that dereferences it). '2' = no
+                        // active notification, matching NULL's real meaning.
+                        Notify = reader["Notify"] is DBNull ? "2" : (string)reader["Notify"]
                     };
                 }
             }
