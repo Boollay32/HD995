@@ -34,6 +34,8 @@
             '.mail-preview-row .k{color:#777;display:inline-block;min-width:74px;',
             'vertical-align:top;}',
             '.mail-preview-to{font-family:"Spline Sans Mono",ui-monospace,monospace;}',
+            '.mail-preview-frame{width:100%;height:260px;border:1px solid #e5e5e5;',
+            'border-radius:8px;margin-top:8px;background:#fff;}',
             '.mail-preview-foot{padding:12px 18px;text-align:right;}',
             '.mail-preview-foot button{font:inherit;font-weight:600;font-size:13px;',
             'cursor:pointer;border:none;border-radius:8px;padding:8px 16px;',
@@ -110,6 +112,16 @@
                 sub.appendChild(sk);
                 sub.appendChild(sv);
                 row.appendChild(sub);
+            }
+
+            if (en.body) {
+                var frame = document.createElement('iframe');
+                frame.className = 'mail-preview-frame';
+                frame.setAttribute('sandbox', '');
+                frame.setAttribute('title', 'Email preview');
+                row.appendChild(frame);
+                // srcdoc isn't available until the iframe is in the document.
+                requestAnimationFrame(function () { frame.srcdoc = en.body; });
             }
 
             body.appendChild(row);

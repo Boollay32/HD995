@@ -69,7 +69,7 @@ namespace HelpDeskNet8.Services
 
                 if (_preview.Enabled)
                 {
-                    _preview.Add(PointLabel(type), recipients, subject);
+                    _preview.Add(PointLabel(type), recipients, subject, body);
                     return;
                 }
 
@@ -119,7 +119,7 @@ namespace HelpDeskNet8.Services
 
                 if (_preview.Enabled)
                 {
-                    _preview.Add(PointLabel(type), recipients, subject);
+                    _preview.Add(PointLabel(type), recipients, subject, body);
                     return;
                 }
 
@@ -223,10 +223,11 @@ namespace HelpDeskNet8.Services
 
                 case NotificationType.TaskCreated:
                 case NotificationType.TaskStatusChanged:
-                    // HD44: the task's own assigned tech (always, id first, name as
-                    // fallback), the ticket owner (the actor-strip drops them when
-                    // they raised it), and the project owner.
-                    people.Add(await ResolveTaskAssigneeEmail(context));
+                    // The task's own assignee is NOT included here -- they get
+                    // their own dedicated TaskAssigned email; including them here
+                    // too meant a double notification for one action. Just the
+                    // ticket owner (the actor-strip drops them when they raised
+                    // it) and the project owner.
                     if (!clientTicket) people.Add(owner);
                     people.Add(await ResolveProjectOwnerEmail(ticket, user));
                     break;
@@ -473,10 +474,14 @@ namespace HelpDeskNet8.Services
                 case NotificationType.TaskAssigned:
                 {
                     string assignee = string.IsNullOrWhiteSpace(ctx?.TaskAssigneeName) ? "(unassigned)" : ctx.TaskAssigneeName;
-                    string headline = !string.IsNullOrWhiteSpace(ctx?.OldTaskAssigneeName)
+                    bool isReassignment = !string.IsNullOrWhiteSpace(ctx?.OldTaskAssigneeName);
+                    string headline = isReassignment
                         ? $"{actor} reassigned the task \"{tt}\" from {ctx.OldTaskAssigneeName} to {assignee}."
                         : $"{actor} assigned the task \"{tt}\" on ticket #{id} to {assignee}.";
-                    return ($"Task assigned on ticket #{id}",
+                    string subject = isReassignment
+                        ? "A task has been reassigned to you"
+                        : "New task has been assigned to you";
+                    return (subject,
                         headline,
                         new List<string> { $"Task: {tt} \u00b7 Status: {TaskStatusLabel(ctx?.NewTaskStatus)}", ticketLine });
                 }

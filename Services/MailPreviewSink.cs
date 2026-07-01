@@ -19,13 +19,14 @@ namespace HelpDeskNet8.Services
             Enabled = env.IsDevelopment();
         }
 
-        public void Add(string point, string[] recipients, string subject)
+        public void Add(string point, string[] recipients, string subject, string body)
         {
             _entries.Add(new MailPreviewEntry
             {
                 Point = point,
                 Recipients = recipients ?? Array.Empty<string>(),
                 Subject = subject,
+                Body = body,
             });
         }
 
