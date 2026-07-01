@@ -172,10 +172,6 @@
   flex-wrap: wrap;
   align-content: flex-start;
   gap: 6px;
-  padding-top: 8px;
-}
-.create-app #ct-attachment-list:empty {
-  padding-top: 0;
 }
 .ct-att-chip {
   display: inline-flex;
@@ -275,3 +271,12 @@
 
 /* HD41 1a: attach button sizing is global now (.td-attach-btn in Attachments.css). */
 .ca-attach-row .td-attach-list { margin-top: 0; }
+/* Tile spacing halved for this page's attachment list only -- the
+   shared .td-attach-list gap (Attachments.css) stays 16px/18px
+   everywhere else it's used (messages, notes, tasks). */
+.create-app #ct-attachment-list .td-attach-list { gap: 8px 9px; }
+
+/* Dark-mode calendar icon: date inputs can be injected dynamically via
+   CustomFieldBuilder.js depending on request type, so this targets the
+   type selector directly rather than a specific field id. */
+html[data-theme="dark"] .create-app input[type="date"] { color-scheme: dark; }
