@@ -281,9 +281,16 @@ body {
   border-radius: 20px;
   letter-spacing: 0.02em;
 }
+/* flex-direction/align-items match NoteThread.css's intended layout --
+   kept explicit here too so it doesn't depend on file load order (this
+   file loads after NoteThread.css, and same-specificity same-selector
+   rules resolve per property across the whole file set). Without this,
+   align-items: flex-end (below) wins and the row/footer shrink-wrap and
+   pin to the right instead of stretching full width. */
 .td-note-compose {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: stretch;
   gap: 8px;
   background: var(--td-panel);
   border: 1px solid var(--td-border);
