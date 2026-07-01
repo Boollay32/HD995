@@ -60,7 +60,10 @@ class RFCSave extends PageBase {
     // -------------------------  Data Collection  ------------------------- //
 
     _collectRFCData() {
-        const rfcId = document.getElementById('RFCID')?.innerHTML;
+        // #RFCID displays "#123" (the "#" is added for the header style); strip
+        // non-digits so parseInt() yields the numeric id and not NaN (NaN
+        // serialises to null and 400s the non-nullable int RFCId binding).
+        const rfcId = document.getElementById('RFCID')?.innerHTML?.replace(/\D/g, '');
         if (!rfcId) throw new Error('RFC ID element not found');
 
         const formElements = document.getElementsByClassName('Value');
