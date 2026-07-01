@@ -183,7 +183,11 @@ const Composer = (() => {
         });
 
         textarea.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            // Plain Enter (and Shift+Enter) insert a newline -- native
+            // textarea behaviour, no preventDefault. Ctrl/Cmd+Enter sends,
+            // matching the keyboard-save shortcut NotesPanel.js already uses
+            // for editing an existing note.
+            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
                 if (!sendBtn.disabled) sendBtn.click();
             }

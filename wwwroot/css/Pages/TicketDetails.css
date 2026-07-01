@@ -465,7 +465,10 @@ body {
 /* #1 Notes-Compose flush to the bottom of the notes panel (was a gap from the
    tab panel's bottom padding sitting under the composer). */
 #TicketDetails-App #tabpanel-notes { padding-bottom: 0; }
-#TicketDetails-App #tabpanel-notes .td-note-compose { margin-top: auto; }
+/* Mirrors RFCDetails.css's .rfc-notes-body .td-note-thread override:
+   the shared 460px cap (NoteThread.css) stops the thread from filling
+   available space on a tall viewport, leaving a gap above compose. */
+#TicketDetails-App #tabpanel-notes .td-note-thread { max-height: none; }
 
 /* #3 Activity tab scrollbar: make it visible and ~50% wider than the default
    8px workspace scrollbar. */

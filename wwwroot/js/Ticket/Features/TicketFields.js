@@ -195,7 +195,7 @@ const Fields = {
         // Dates (model fields are Created / CloseDate)
         Fields._setText('created', Fields._formatDate(data.created));
         Fields._setText('closed', Fields._formatDate(data.closeDate));
-        Fields._setText('ov-first-response', Fields._formatDate(data.firstResponseDate));
+        Fields._setText('ov-first-response', Fields._formatDateTime(data.firstResponseDate));
 
         // Target date input
         const targetEl = document.getElementById('targetdate');
@@ -218,7 +218,7 @@ const Fields = {
             if (targetEl) targetEl.hidden = true;
             if (lastUpdatedEl) {
                 lastUpdatedEl.hidden = false;
-                lastUpdatedEl.textContent = Fields._formatDate(data.updated);
+                lastUpdatedEl.textContent = Fields._formatDateTime(data.updated);
             }
             if (slimLbl) slimLbl.textContent = 'Last updated';
         }
@@ -256,6 +256,22 @@ const Fields = {
             day: '2-digit',
             month: 'short',
             year: 'numeric',
+        });
+    },
+
+    // Same guards as _formatDate, plus hour:minute -- used for First response /
+    // Last updated, which are more useful with a time attached.
+    _formatDateTime(raw) {
+        if (!raw) return '—';
+        if (String(raw).startsWith('1900-01-01')) return '—';
+        const d = new Date(raw);
+        if (isNaN(d)) return '—';
+        return d.toLocaleString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
         });
     },
 };
