@@ -54,7 +54,10 @@ namespace HelpDeskNet8.Interfaces.Shared
         public string? TaskTitle { get; set; }
         public int? OldTaskStatus { get; set; }
         public int? NewTaskStatus { get; set; }
-        public string? TaskAssigneeName { get; set; }     // new assignee display name (best-effort match)
+        public int? TaskAssigneeID { get; set; }          // new assignee user id -- resolve email by this
+                                                            // first; it is reliable where the name is not
+                                                            // (see ResolveAssigneeEmailById)
+        public string? TaskAssigneeName { get; set; }     // new assignee display name (fallback / wording)
         public string? OldTaskAssigneeName { get; set; }  // previous assignee, to word assign vs reassign
         public string? OldTechEmail { get; set; }         // previous ticket tech, to word assign vs reassign
         public bool? TechAlsoChanged { get; set; }         // a status save that also reassigned the tech

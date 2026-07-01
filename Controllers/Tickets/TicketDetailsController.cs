@@ -189,6 +189,12 @@ namespace HelpDeskNet8.Controllers.Tickets
             // to get the display name so the wording shows the name (not the id),
             // the assignee resolves to a recipient, and the assignee-changed check
             // below compares name-to-name (not name-to-id, always "changed").
+            // The form sends the assignee's user id as task.AssignedTech; capture
+            // it now, before the re-read below overwrites the same variable name
+            // with the display name for wording. ResolveAssigneeEmailById resolves
+            // the recipient from this id directly -- no cross-proc name matching.
+            int? newAssigneeId = int.TryParse(task.AssignedTech, out int parsedAssigneeId) ? parsedAssigneeId : (int?)null;
+
             string newAssigneeName = task.AssignedTech;
             if (result.ObjectID.HasValue)
             {
@@ -204,6 +210,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             var taskCtx = new NotificationContext
             {
                 TaskTitle = task.Title,
+                TaskAssigneeID = newAssigneeId,
                 TaskAssigneeName = newAssigneeName,
                 OldTaskAssigneeName = oldTaskAssignee,
                 OldTaskStatus = oldTaskStatus,

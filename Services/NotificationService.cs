@@ -214,10 +214,10 @@ namespace HelpDeskNet8.Services
 
                 case NotificationType.TaskCreated:
                 case NotificationType.TaskStatusChanged:
-                    // HD44: the task's own assigned tech (always, best-effort name
-                    // match), the ticket owner (the actor-strip drops them when they
-                    // raised it), and the project owner.
-                    people.Add(await ResolveAssigneeEmail(context?.TaskAssigneeName));
+                    // HD44: the task's own assigned tech (always, id first, name as
+                    // fallback), the ticket owner (the actor-strip drops them when
+                    // they raised it), and the project owner.
+                    people.Add(await ResolveTaskAssigneeEmail(context));
                     if (!clientTicket) people.Add(owner);
                     people.Add(await ResolveProjectOwnerEmail(ticket, user));
                     break;
@@ -225,13 +225,13 @@ namespace HelpDeskNet8.Services
                 case NotificationType.TaskUpdated:
                     // HD44: the task's own assigned tech (always) + the ticket owner
                     // (dropped if they are the actor).
-                    people.Add(await ResolveAssigneeEmail(context?.TaskAssigneeName));
+                    people.Add(await ResolveTaskAssigneeEmail(context));
                     if (!clientTicket) people.Add(owner);
                     break;
 
                 case NotificationType.TaskAssigned:
-                    // -> the newly assigned task assignee (best-effort name match).
-                    people.Add(await ResolveAssigneeEmail(context?.TaskAssigneeName));
+                    // -> the newly assigned task assignee (id first, name as fallback).
+                    people.Add(await ResolveTaskAssigneeEmail(context));
                     break;
             }
 
@@ -266,10 +266,40 @@ namespace HelpDeskNet8.Services
             return (string.IsNullOrWhiteSpace(owner.UserEmail) ? owner.UserLogin : owner.UserEmail) ?? string.Empty;
         }
 
+        // Tries the reliable id-based lookup first; only falls back to the
+        // fragile cross-proc name match below if no id was captured.
+        private async Task<string> ResolveTaskAssigneeEmail(NotificationContext? context)
+        {
+            string byId = await ResolveAssigneeEmailById(context?.TaskAssigneeID);
+            if (!string.IsNullOrEmpty(byId)) return byId;
+            return await ResolveAssigneeEmail(context?.TaskAssigneeName);
+        }
+
+        // Reliable path: resolve directly by user id (the task save always has
+        // this). Avoids matching a display name across two independent procs
+        // (see ResolveAssigneeEmail below, kept as a fallback only).
+        private async Task<string> ResolveAssigneeEmailById(int? assigneeId)
+        {
+            if (!assigneeId.HasValue || assigneeId.Value <= 0) return string.Empty;
+            try
+            {
+                IUser? person = await _userManager.GetUserDetail(assigneeId.Value);
+                if (person == null) return string.Empty;
+                return (string.IsNullOrWhiteSpace(person.UserEmail) ? person.UserLogin : person.UserEmail) ?? string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        // Fallback only, and only reached when ResolveAssigneeEmailById has no id.
         // Best-effort: a task stores only the assignee's display NAME, so match it
         // against the user list and resolve their email. Fragile by nature
-        // (duplicate / mismatched names) -- returns empty when there is no clean
-        // single match, and never throws into the caller.
+        // (duplicate / mismatched names, or -- as turned out to be the actual bug
+        // here -- two different procs formatting the same person's name
+        // differently) -- returns empty when there is no clean single match, and
+        // never throws into the caller.
         private async Task<string> ResolveAssigneeEmail(string? assigneeName)
         {
             if (string.IsNullOrWhiteSpace(assigneeName)) return string.Empty;
