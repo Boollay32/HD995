@@ -37,7 +37,7 @@ html[data-theme="dark"] .td-app input[type="date"] { color-scheme: dark; }
 
 /* ---- Read-only field value ---- */
 .td-app .Field-Value {
-  font-size: 0.8125rem;
+  font-size: 0.84375rem;
   color: var(--td-text);
   font-weight: 500;
   display: block;
@@ -133,7 +133,7 @@ html[data-theme="dark"] .td-app input[type="date"] { color-scheme: dark; }
   align-items: center;
   gap: 5px;
   margin-bottom: 1px;
-  font-size: 0.6875rem;
+  font-size: 0.84375rem;
   color: var(--td-muted);
 }
 .td-app .td-ov-val {
