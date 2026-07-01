@@ -11,7 +11,7 @@ body {
     min-height: 100vh;
     box-sizing: border-box;
     background: var(--canvas);
-    font-family: Calibri, Arial, sans-serif;
+    font-family: var(--font-sans);
 }
 
 button {
@@ -50,7 +50,7 @@ nav.Nav-Bar {
             color: var(--muted) !important;
             font-size: 0.8125rem;
             font-weight: 600;
-            font-family: Calibri, Arial, sans-serif;
+            font-family: var(--font-sans);
             letter-spacing: 0.04em;
             text-transform: uppercase;
             cursor: pointer;
@@ -82,7 +82,7 @@ nav.Nav-Bar {
             color: var(--muted);
             font-size: 0.8125rem;
             font-weight: 500;
-            font-family: Calibri, Arial, sans-serif;
+            font-family: var(--font-sans);
             max-width: 140px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -101,7 +101,7 @@ nav.Nav-Bar {
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 700;
-            font-family: Calibri, Arial, sans-serif;
+            font-family: var(--font-sans);
             letter-spacing: 0.04em;
             text-transform: uppercase;
             cursor: pointer;
@@ -157,7 +157,7 @@ footer {
 }
 
     footer a {
-        font-family: Calibri, Arial, sans-serif;
+        font-family: var(--font-sans);
         color: var(--muted);
         font-size: 0.75rem;
         text-decoration: none;
