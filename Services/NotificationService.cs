@@ -153,7 +153,7 @@ namespace HelpDeskNet8.Services
             var people = new List<string>();
 
             string tech = ticket.AssignedTechEmail;     // the ticket's assigned tech
-            string owner = ticket.Email;                // the ticket originator / owner
+            string owner = await ResolveTicketOwnerEmail(ticket);  // the ticket originator / owner
             bool actorInternal = ActorIsInternal(user);
             bool clientTicket = IsClientTicket(ticket);
 
@@ -262,6 +262,29 @@ namespace HelpDeskNet8.Services
         }
 
         // Resolve the project owner's email for a ticket that sits on a project.
+        // Prefers the reliable numeric raiser id; falls back to the ticket's
+        // own Email column (presumably join-based and not reliably populated
+        // for every ticket type) only if that id is unavailable.
+        private async Task<string> ResolveTicketOwnerEmail(ITicket ticket)
+        {
+            if (ticket.RaisedByID.HasValue && ticket.RaisedByID.Value > 0)
+            {
+                try
+                {
+                    IUser? person = await _userManager.GetUserDetail(ticket.RaisedByID.Value);
+                    string email = person == null
+                        ? string.Empty
+                        : (string.IsNullOrWhiteSpace(person.UserEmail) ? person.UserLogin : person.UserEmail) ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(email)) return email;
+                }
+                catch
+                {
+                    // fall through to the Email column below
+                }
+            }
+            return ticket.Email ?? string.Empty;
+        }
+
         private async Task<string> ResolveProjectOwnerEmail(ITicket ticket, IUser user)
         {
             if (!ticket.ProjectID.HasValue || ticket.ProjectID.Value <= 0) return string.Empty;
