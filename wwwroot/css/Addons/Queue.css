@@ -52,6 +52,22 @@
   color: var(--muted);
   flex-shrink: 0;
 }
+.qv-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.qv-search-clear:hover { background: var(--row-hover); color: var(--text); }
+.qv-search-clear[hidden] { display: none; }
 .qv-search-input {
   border: none;
   background: transparent;

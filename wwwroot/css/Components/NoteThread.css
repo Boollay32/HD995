@@ -259,7 +259,7 @@
 /* 3d: footer now lives inside the bordered compose box; box becomes a column. */
 .td-note-compose { flex-direction: column; align-items: stretch; gap: 6px; }
 .td-note-compose-row { display: flex; align-items: flex-end; gap: 8px; }
-.td-note-compose .td-composer-footer { padding: 0 4px; }
+.td-note-compose .td-composer-footer { padding: 0 4px 8px; }
 /* 3c: paperclip left, char count right (message composer keeps charcount left). */
 .td-note-compose .td-attach-btn { order: 1; }
 .td-note-compose .td-visibility-btn { order: 2; }

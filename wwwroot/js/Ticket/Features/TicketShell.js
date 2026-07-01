@@ -295,56 +295,11 @@ const NotifyBanner = {
     },
 };
 
-// -------------------------  Composer helpers  ------------------------- //
-
-const TicketComposer = {
-
-    _bindTextarea(textareaEl, charcountEl, sendBtnEl, limit = 2000) {
-        if (!textareaEl) return;
-
-        textareaEl.addEventListener('input', () => {
-            const len = textareaEl.value.length;
-
-            // Charcount
-            if (charcountEl) {
-                charcountEl.textContent = `${len} / ${limit}`;
-                charcountEl.classList.toggle('is-near-limit', len >= limit * 0.85);
-                charcountEl.classList.toggle('is-at-limit', len >= limit);
-            }
-
-            // Send button
-            if (sendBtnEl) {
-                sendBtnEl.disabled = len === 0;
-            }
-
-            // Auto-grow
-            textareaEl.style.height = 'auto';
-            textareaEl.style.height = `${textareaEl.scrollHeight}px`;
-        });
-
-        // Enter to send — Shift+Enter for newline
-        textareaEl.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (!sendBtnEl?.disabled) {
-                    sendBtnEl?.click();
-                }
-            }
-        });
-    },
-
-    init() {
-        TicketComposer._bindTextarea(
-            Dom.msgTextarea(),
-            Dom.msgCharcount(),
-            Dom.msgSendBtn(),
-        );
-
-        TicketComposer._bindTextarea(
-            Dom.noteTextarea(),
-            Dom.noteCharcount(),
-            Dom.noteSendBtn(),
-        );
-    },
-};
+// Composer helpers used to live here (TicketComposer): a full duplicate of
+// what Components/Notes/NotesPanel.js's Composer.create() already does for
+// the same #msg-textarea/#note-textarea elements -- charcount, auto-grow,
+// send-button state, and Enter-key handling. Both were bound at once, and
+// this one's never-fixed "Enter submits" handler silently overrode the
+// shared Composer.js fix (RFC, which never loaded this file, was
+// unaffected). Removed rather than patched a second time.
 

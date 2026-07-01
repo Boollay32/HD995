@@ -61,6 +61,9 @@ class QueueView {
             <div class="qv-search">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
               <input type="search" class="qv-search-input" placeholder="Search…" aria-label="Search ${this._esc(c.title ?? '')}">
+              <button type="button" class="qv-search-clear" aria-label="Clear search" hidden>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
             </div>
             <div class="qv-spacer"></div>
             ${c.action ? `<button type="button" class="qv-action">${this._esc(c.action.label)}</button>` : ''}
@@ -77,6 +80,7 @@ class QueueView {
 
         this.$ = {
             search:   this.root.querySelector('.qv-search-input'),
+            searchClear: this.root.querySelector('.qv-search-clear'),
             count:    this.root.querySelector('.qv-count'),
             action:   this.root.querySelector('.qv-action'),
             views:    this.root.querySelector('.qv-views'),
@@ -120,7 +124,18 @@ class QueueView {
     // -------------------------  Events  ------------------------- //
 
     _bindStaticEvents() {
-        this.$.search?.addEventListener('input', e => { this.search = e.target.value.trim().toLowerCase(); this.render(); });
+        this.$.search?.addEventListener('input', e => {
+            this.search = e.target.value.trim().toLowerCase();
+            if (this.$.searchClear) this.$.searchClear.hidden = !this.search;
+            this.render();
+        });
+        this.$.searchClear?.addEventListener('click', () => {
+            if (this.$.search) this.$.search.value = '';
+            this.search = '';
+            this.$.searchClear.hidden = true;
+            this.$.search?.focus();
+            this.render();
+        });
         this.$.action?.addEventListener('click', () => this.cfg.action?.onClick?.());
 
         this.$.views?.addEventListener('click', e => {
