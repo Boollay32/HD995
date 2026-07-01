@@ -1,8 +1,8 @@
-// OverviewPanel.js -- collapse/expand for the ticket Overview band.
+// TicketOverviewPanel.js -- collapse/expand for the ticket Overview band.
 // Thin config over the shared Components/Overview/OverviewCollapse.js core.
 // Collapsing folds the body to a slim one-line summary copied from the
 // already-populated overview fields; the control strip (Save + toggle) stays.
-window.OverviewPanel = createOverviewCollapse({
+window.TicketOverviewPanel = createOverviewCollapse({
     bandId: 'Ticket-Overview',
     buildSlim: function (txt, selText) {
         var dash = '\u2014';

@@ -75,13 +75,13 @@ const TicketLoader = {
             }
             Topbar.populate(data);
             Fields.populate(data);
-            // HD35 B4: in client view, PillEdit makes ONLY the status pill
+            // HD35 B4: in client view, TicketPillEdit makes ONLY the status pill
             // interactive (Resolved-only); priority/category become plain
             // labels. Internal view is unchanged (all pills editable).
-            window.PillEdit?.init?.({ clientView: State.clientView });
+            window.TicketPillEdit?.init?.({ clientView: State.clientView });
             // 1b: overview opens collapsed (after populate so the slim
             // summary is filled, not blank).
-            window.OverviewPanel?.setCollapsed?.(true);
+            window.TicketOverviewPanel?.setCollapsed?.(true);
             TicketLoader._clearNotificationIfMine(data);
             TicketLoader._delegateModules(data);
 

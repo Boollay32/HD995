@@ -1,4 +1,4 @@
-// PillEdit.js -- makes the topbar Status & Priority pills interactive. Clicking
+// TicketPillEdit.js -- makes the topbar Status & Priority pills interactive. Clicking
 // a pill opens a small popover of options (read from the matching hidden
 // <select>); choosing one sets the select's value and dispatches 'change', so
 // the existing dirty-tracking + Save flow persists it. A 'change' listener
@@ -143,5 +143,5 @@
         });
     }
 
-    window.PillEdit = { init: init };
+    window.TicketPillEdit = { init: init };
 })();

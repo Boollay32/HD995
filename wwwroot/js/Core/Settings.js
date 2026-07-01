@@ -71,11 +71,7 @@ const Settings = {
     },
 
     boot() {
-        let tries = 0;
-        const timer = setInterval(() => {
-            if (this.mount() && document.querySelector('#qv-settings')) clearInterval(timer);
-            if (++tries > 60) clearInterval(timer);
-        }, 50);
+        PersistedToggle.pollMount(() => this.mount(), '#qv-settings');
     }
 };
 

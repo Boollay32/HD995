@@ -17,9 +17,9 @@
     <script src="~/js/Components/Shell/PaneShell.js" asp-append-version="true"></script>
     <script src="~/js/Ticket/Features/TicketShell.js" asp-append-version="true"></script>
     <script src="~/js/Ticket/Pages/TicketDetails.js" asp-append-version="true"></script>
-    <script src="~/js/Ticket/Features/PillEdit.js" asp-append-version="true"></script>
+    <script src="~/js/Ticket/Features/TicketPillEdit.js" asp-append-version="true"></script>
     <script src="~/js/Components/Overview/OverviewCollapse.js" asp-append-version="true"></script>
-    <script src="~/js/Ticket/Features/OverviewPanel.js" asp-append-version="true"></script>
+    <script src="~/js/Ticket/Features/TicketOverviewPanel.js" asp-append-version="true"></script>
 }
 
 @section AddCSSToHead {
@@ -523,7 +523,7 @@
 
                         <!-- Status / Priority / Category dropdown sources.
                              Hidden <select>s populated by Dropdowns.load; the save
-                             source for these fields. PillEdit renders them as the
+                             source for these fields. TicketPillEdit renders them as the
                              topbar meta dropdowns. -->
                         <div id="ticket-meta-selects" hidden>
                             <select id="status" class="td-select" aria-label="Status"></select>
