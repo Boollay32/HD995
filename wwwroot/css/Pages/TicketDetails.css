@@ -296,6 +296,7 @@ body {
   border: 1px solid var(--td-border);
   border-radius: 14px;
   padding: 8px 8px 8px 14px;
+  margin-bottom: 8px;
   flex-shrink: 0;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
