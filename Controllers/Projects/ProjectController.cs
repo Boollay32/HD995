@@ -18,11 +18,17 @@ namespace HelpDeskNet8.Controllers.Projects
         private async Task<bool> IsGovtechAdmin(IUser user) =>
             await _authenticator.CheckAdmin(user) == Constants.AdminLevel.Admin;
 
+        // Projects are internal-only. External authority users
+        // (AdminLevel.Authority) must not access any Project endpoint.
+        private async Task<bool> IsInternal(IUser user) =>
+            await _authenticator.CheckAdmin(user) != Constants.AdminLevel.Authority;
+
         [HttpPost]
         public async Task<IActionResult> GetProjects([FromBody] GetProjectsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
+            if (!await IsInternal(user)) return StatusCode(403);
 
             var result = await _projectManager.GetProjects(user, request.StatusId);
             return Ok(result);
@@ -33,6 +39,7 @@ namespace HelpDeskNet8.Controllers.Projects
         {
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
+            if (!await IsInternal(user)) return StatusCode(403);
 
             var result = await _projectManager.GetProjectDetail(user, request.ProjectId);
             if (result == null) return NotFound();
