@@ -182,6 +182,20 @@
   color: var(--muted);
   font-weight: 600;
 }
+.qv-filt-clear {
+  border: none;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.qv-filt-clear:hover { color: var(--accent-strong); }
+.qv-filt-clear[hidden] { display: none; }
 .qv-filt select {
   border: none;
   background: transparent;

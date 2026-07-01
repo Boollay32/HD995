@@ -201,11 +201,27 @@ class QueueView {
             <span class="qv-filt">
               <label for="qv-f-${f.id}">${this._esc(f.label)}</label>
               <select id="qv-f-${f.id}" data-filter="${f.id}"><option value="">All</option></select>
-            </span>`).join('');
+            </span>`).join('')
+            + '<button type="button" class="qv-filt-clear" hidden>Clear filters</button>';
+        this.$.filterClear = this.$.filters.querySelector('.qv-filt-clear');
         this.$.filters.addEventListener('change', e => {
             const sel = e.target.closest('select[data-filter]'); if (!sel) return;
-            this.filterValues[sel.dataset.filter] = sel.value; this.render();
+            this.filterValues[sel.dataset.filter] = sel.value;
+            this._syncFilterClear();
+            this.render();
         });
+        this.$.filterClear.addEventListener('click', () => {
+            this.filterValues = {};
+            this.$.filters.querySelectorAll('select[data-filter]').forEach(sel => { sel.value = ''; });
+            this._syncFilterClear();
+            this.render();
+        });
+    }
+
+    _syncFilterClear() {
+        if (!this.$.filterClear) return;
+        const anyActive = Object.values(this.filterValues).some(v => v);
+        this.$.filterClear.hidden = !anyActive;
     }
 
     _refreshFilterOptions() {
