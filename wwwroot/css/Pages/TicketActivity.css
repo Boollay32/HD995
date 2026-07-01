@@ -360,3 +360,48 @@
   flex-shrink: 0;
   color: var(--td-muted);
 }
+
+/* Item 5: grouped activity -- one actor's changes from a single save,
+   collapsed into one clickable row that expands to show every change. */
+.td-timeline-item.td-tl-group {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+}
+.td-timeline-item.td-tl-group::before { top: 15px; transform: none; }
+.td-tl-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.td-tl-group-head:hover { background: var(--row-hover, rgba(127, 127, 127, 0.08)); }
+.td-tl-caret {
+  flex-shrink: 0;
+  font-size: 0.6rem;
+  color: var(--td-muted);
+  transition: transform 0.15s ease;
+}
+.td-tl-group-head[aria-expanded="true"] .td-tl-caret { transform: rotate(90deg); }
+.td-tl-group-body {
+  list-style: none;
+  margin: 0;
+  padding: 2px 10px 8px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.td-tl-group-line {
+  font-size: 0.71875rem;
+  color: var(--td-muted-2);
+  line-height: 1.4;
+}
