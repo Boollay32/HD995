@@ -204,6 +204,24 @@ const Fields = {
             targetEl.value = data.targetDate.split('T')[0];
         }
 
+        // Client-raised tickets (and Contact Client, type 12) don't have a
+        // meaningful "Needed by" -- an internally-set SLA/priority field the
+        // client can't act on -- so show "Last updated" instead. Internal
+        // tickets are unaffected.
+        const isClientTicket = Number(data.userAuthorityID) !== 151 || Number(data.requestID) === 12;
+        if (isClientTicket) {
+            const neededLblText = document.getElementById('ov-needed-lbl-text');
+            const lastUpdatedEl = document.getElementById('ov-last-updated');
+            const slimLbl = document.getElementById('ov-slim-needed-lbl');
+            if (neededLblText) neededLblText.textContent = 'Last updated';
+            if (targetEl) targetEl.hidden = true;
+            if (lastUpdatedEl) {
+                lastUpdatedEl.hidden = false;
+                lastUpdatedEl.textContent = Fields._formatDate(data.updated);
+            }
+            if (slimLbl) slimLbl.textContent = 'Last updated';
+        }
+
         // Selects: options are loaded by Dropdowns.load('Ticket') in
         // TicketLoader. Pre-select the ticket's current values (best-effort:
         // only applies when the value matches a loaded option; TicketSave

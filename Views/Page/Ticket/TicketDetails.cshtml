@@ -247,8 +247,9 @@
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
                     </div>
                     <div class="td-ov-node">
-                        <div class="td-ov-lbl"><span class="td-ov-dot"></span>Needed by</div>
+                        <div class="td-ov-lbl"><span class="td-ov-dot"></span><span id="ov-needed-lbl-text">Needed by</span></div>
                         <input type="date" id="targetdate" class="td-input" aria-label="Target date" />
+                        <label class="Field-Value mono" id="ov-last-updated" hidden>&mdash;</label>
                     </div>
                     <div class="td-ov-arrow">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
@@ -278,7 +279,7 @@
             <span class="td-ov-sep">&rarr;</span>
             <span><span class="td-ov-slim-lbl">Assigned</span> <span class="Field-Value" id="ov-slim-assigned"></span></span>
             <span class="td-ov-sep">&middot;</span>
-            <span><span class="td-ov-slim-lbl">Needed by</span> <span class="Field-Value mono" id="ov-slim-needed"></span></span>
+            <span><span class="td-ov-slim-lbl" id="ov-slim-needed-lbl">Needed by</span> <span class="Field-Value mono" id="ov-slim-needed"></span></span>
         </div>
 
     </section>
