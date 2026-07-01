@@ -195,6 +195,7 @@ const Fields = {
         // Dates (model fields are Created / CloseDate)
         Fields._setText('created', Fields._formatDate(data.created));
         Fields._setText('closed', Fields._formatDate(data.closeDate));
+        Fields._setText('ov-first-response', Fields._formatDate(data.firstResponseDate));
 
         // Target date input
         const targetEl = document.getElementById('targetdate');
