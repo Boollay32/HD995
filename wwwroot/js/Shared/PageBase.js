@@ -13,6 +13,9 @@ class PageBase {
     constructor(filterType = 'Ticket') {
         this.ticketId = sessionStorage.getItem(STORAGE_KEYS.TICKET_ID);
         this.username = sessionStorage.getItem(STORAGE_KEYS.USER_NAME);
+        // Real display name for matching against AssignedTech/Originator
+        // columns (queue "My open" views) -- see STORAGE_KEYS.DISPLAY_NAME.
+        this.displayName = sessionStorage.getItem(STORAGE_KEYS.DISPLAY_NAME);
         this.filterType = filterType;
     }
 
