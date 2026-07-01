@@ -1,9 +1,10 @@
 /* ============================================================================
-   TicketComposer.css -- ticket message composer: dock, input, send button,
-   footer, drag-over state, scroll-to-unread. Extracted verbatim from
-   TicketDetails.css. Ticket-only (RFC uses none of these classes); kept out
-   of the shared NoteThread.css so RFC's composer footer is unaffected.
-   Loaded by the ticket detail page after TicketDetails.css.
+   TicketComposer.css -- the shared composer dock: input row, send button,
+   footer (charcount/attachments/attach-btn ordering), drag-over state.
+   Originally extracted from TicketDetails.css; now loaded by BOTH detail
+   pages -- the ticket Messages tab (Messages-Compose) and RFC notes
+   (RFCNotes-Compose) share this one definition. scroll-to-unread is
+   ticket-only (RFC has no unread-scroll affordance) but harmless if unused.
    ============================================================================ */
 
 .td-composer-dock {

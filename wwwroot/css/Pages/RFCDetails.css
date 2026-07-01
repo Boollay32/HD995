@@ -96,18 +96,11 @@
                          add-note bar sits at the bottom */
   overflow-y: auto;
 }
-.rfc-notes-body .td-note-compose {
-  margin-top: 10px;
-}
-/* RFC notes: cap the compose textarea so it can't swallow the thread
-   capped at a usable height so it can't swallow the whole thread. */
+/* Composer dock/footer/order chrome now comes entirely from the shared
+   TicketComposer.css (RFCNotes-Compose is a .td-composer-dock, same as
+   the ticket Messages tab). Only this page-specific cap survives: RFC's
+   note textarea stays taller than the ticket message composer's default. */
 #rfc-note-textarea { max-height: 500px; }
-/* RFC composer footer mirrors the ticket note composer: paperclip left,
-   char count right. The footer is a sibling of .td-note-compose here, so
-   the shared .td-note-compose order rules don't reach it. */
-.rfc-notes-body .td-composer-footer .td-attach-btn { order: 1; }
-.rfc-notes-body .td-composer-footer .td-composer-attachments { order: 3; }
-.rfc-notes-body .td-composer-footer .td-charcount { order: 4; flex: 0 0 auto; margin-left: auto; }
 
 /* Workspace pane: the form scrolls within the pane */
 .rfc-ws {
