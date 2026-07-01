@@ -59,7 +59,12 @@ class RFCPage extends PageBase {
     }
 
     _config() {
-        const me = this.username;   // compared to assignedTech for the "My open" view
+        // "My open": RFC rows have no numeric assignee/originator ID, so
+        // match by normalised display name against both the raw login and
+        // the resolved display name (UserName here is a login credential).
+        const norm = s => (s ?? '').trim().toLowerCase();
+        const myNameKeys = new Set([norm(this.username), norm(this.displayName)].filter(Boolean));
+        const isMyRFC = r => myNameKeys.has(norm(r.assignedTech)) || myNameKeys.has(norm(r.createdBy));
         return {
             title: 'RFC',
             fetch: () => this._fetch(),
@@ -69,7 +74,7 @@ class RFCPage extends PageBase {
             action: { label: '+ New RFC', onClick: () => Router.toCreateRFC() },
 
             views: [
-                { id: 'mine',  label: 'My open',     filter: r => (r.assignedTech === me || r.createdBy === me) && RQisOpen(r) },
+                { id: 'mine',  label: 'My open',     filter: r => isMyRFC(r) && RQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => RQisOpen(r) },
                 { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && RQisOpen(r) },
             ],

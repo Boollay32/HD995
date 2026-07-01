@@ -75,7 +75,15 @@ class TicketPage extends PageBase {
 
     // ---- Config consumed by QueueView ----
     _config() {
-        const me = this.username;   // compared to assignedTech for the "My open" view
+        // "My open": assignee compares by numeric ID (AssignedTechID is
+        // reliable); originator compares by normalised display name, since
+        // UserName here is a login credential, not the joined display name
+        // the queue's userName/assignedTech columns hold.
+        const norm = s => (s ?? '').trim().toLowerCase();
+        const myNameKeys = new Set([norm(this.username), norm(this.displayName)].filter(Boolean));
+        const isMyTicket = r =>
+            (TQ_MY_ID != null && Number(r.assignedTechID) === TQ_MY_ID) ||
+            myNameKeys.has(norm(r.userName));
         const myId = Number(sessionStorage.getItem(STORAGE_KEYS.USER_ID));
         TQ_MY_ID = Number.isNaN(myId) ? null : myId;
         return {
@@ -86,7 +94,7 @@ class TicketPage extends PageBase {
             search: ['subject', 'userName', 'ticketID'],
 
             views: [
-                { id: 'mine',  label: 'My open',     filter: r => (r.assignedTech === me || r.userName === me) && TQisOpen(r) },
+                { id: 'mine',  label: 'My open',     filter: r => isMyTicket(r) && TQisOpen(r) },
                 { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && TQisOpen(r) },
                 { id: 'reply', label: 'Needs reply', filter: r => r.notify === '0' && TQisOpen(r) },
                 { id: 'all',   label: 'All open',     filter: r => TQisOpen(r) },

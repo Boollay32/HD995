@@ -99,6 +99,10 @@ async function Login(form, e) {
         const data = await response.json();
 
         sessionStorage.setItem("UserName", name);
+        // Real display name ("First Last"), separate from the login
+        // credential above -- used for queue "My open" matching, since
+        // AssignedTech/Originator columns are display names, not logins.
+        sessionStorage.setItem(STORAGE_KEYS.DISPLAY_NAME, data.displayName || '');
         sessionStorage.setItem("UserID", data.userID);
         sessionStorage.setItem("AuthorityID", data.authorityID);
 

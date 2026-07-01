@@ -26,7 +26,8 @@ namespace HelpDeskNet8.Controllers.Login
             {
                 Status = _authenticator.StatusCode,
                 UserID = user?.UserID,
-                AuthorityID = user?.AuthorityID
+                AuthorityID = user?.AuthorityID,
+                DisplayName = user?.UserName
             });
         }
 

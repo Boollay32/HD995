@@ -6,5 +6,6 @@
         public int Status { get; set; }
         public int? UserID { get; set; }
         public int? AuthorityID { get; set; }
+        public string? DisplayName { get; set; }
     }
 }
