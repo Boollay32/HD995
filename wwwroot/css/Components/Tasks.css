@@ -546,8 +546,8 @@
 .td-imp-pill:hover { border-color: var(--brand); }
 .td-imp-pill[aria-pressed="true"] {
   color: var(--on-accent, #fff);
-  background: var(--brand);
-  border-color: var(--brand);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 /* Add-file control sits with the attachment tiles. */
