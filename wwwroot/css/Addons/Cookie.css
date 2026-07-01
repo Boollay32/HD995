@@ -89,14 +89,17 @@
         }
 
     /* ============= Policy Button ============= */
+    /* Was a hardcoded Bootstrap-blue gradient unrelated to the app's
+       palette; now uses tokens.css's semantic --info color, flat like
+       its .cb-enable/.cb-disable siblings, and theme-aware. */
     #cookie-bar .cb-policy {
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-        border-color: #007bff;
+        background: var(--info, #1D4ED8);
+        border-color: var(--info, #1D4ED8);
     }
 
         #cookie-bar .cb-policy:hover {
-            background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.4);
+            background: #1640A8;
+            box-shadow: 0 2px 8px rgba(29, 78, 216, 0.4);
         }
 
 /* ============= Responsive Design ============= */

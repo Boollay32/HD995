@@ -128,12 +128,12 @@
 }
 
 .cf-btn-primary {
-    background: var(--brand);
-    color: #FFFFFF;
+    background: var(--accent);
+    color: var(--on-accent);
 }
 
 .cf-btn-primary:hover {
-    background: var(--brand-deep);
+    background: var(--accent-strong);
 }
 
 .cf-btn-danger {
