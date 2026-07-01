@@ -9,8 +9,8 @@ const FontSize = {
     SIZES: ['small', 'medium', 'large'],
     LABEL: { small: 'A', medium: 'A', large: 'A' },
 
-    _get() { try { return localStorage.getItem(this.KEY); } catch (e) { return null; } },
-    _set(v) { try { localStorage.setItem(this.KEY, v); } catch (e) {} },
+    _get() { return PersistedToggle.get(this.KEY); },
+    _set(v) { PersistedToggle.set(this.KEY, v); },
 
     initial() {
         const saved = this._get();
@@ -54,11 +54,7 @@ const FontSize = {
 
     boot() {
         this.apply(this.initial());
-        let tries = 0;
-        const timer = setInterval(() => {
-            if (this.mount() && document.querySelector('.qv-font')) clearInterval(timer);
-            if (++tries > 60) clearInterval(timer);
-        }, 50);
+        PersistedToggle.pollMount(() => this.mount(), '.qv-font');
     }
 };
 

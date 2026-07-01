@@ -7,20 +7,10 @@
    ============================================================= */
 
 :root {
-    --brand: #B5530E;
-    --brand-deep: #964307;
-    --brand-pale: #FDEFE0;
-    --brand-line: #F6D7BC;
-    --ink: #33302C;
-    --ink-soft: #55504A;
-    --muted: #675D50;
-    --paper: #FFFFFF;
-    --paper-2: #F7EFE4;
-    --line: #F0E4D4;
-    --line-2: #D9C9B4;
-    /* --font/--mono removed: use the canonical --font-sans/--font-mono
-       from tokens.css (already in scope via _Layout) instead of a local
-       duplicate with a shorter fallback chain. */
+    /* --brand/--ink/--muted/--paper/--line* removed: use tokens.css's
+       canonical values (already in scope via _Layout) instead of a local
+       copy -- --brand here had drifted to #B5530E vs tokens.css's #E8633C.
+       --font/--mono removed for the same reason, earlier. */
     --r-lg: 20px;
     --r-md: 12px;
     --shadow: 0 1px 2px rgba(20,16,12,.07), 0 18px 50px rgba(30,20,10,.30);

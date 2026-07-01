@@ -6,38 +6,8 @@
   margin: 0;
   padding: 0;
 }
-:focus-visible {
-  outline: 3px solid var(--brand-deep);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-.skip-link {
-  position: absolute;
-  left: 8px;
-  top: -48px;
-  z-index: 200;
-  background: #1A2027;
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 0 0 10px 10px;
-  font-weight: 600;
-  font-size: 0.8125rem;
-  text-decoration: none;
-  transition: top 0.15s ease;
-}
-.skip-link:focus {
-  top: 0;
-}
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+/* :focus-visible / .skip-link / reduced-motion now come from tokens.css only (theme-aware; this
+   page used to shadow them with hardcoded, non-theme-aware colors). */
 html,
 body {
   height: 100%;
@@ -168,18 +138,7 @@ body {
 .td-thread::-webkit-scrollbar-thumb:hover {
   background: var(--scroll-thumb-hover);
 }
-.td-thread-empty {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  color: var(--td-muted);
-  padding: 24px;
-}
-
-.td-thread-empty[hidden] { display: none; }
+/* .td-thread-empty now comes from NoteThread.css only (identical, plus max-height) */
 .td-notify-banner {
   display: flex;
   align-items: center;
@@ -254,18 +213,7 @@ body {
   padding: 0;
 }
 .td-scope-dismiss:hover { background: var(--td-warn-2); color: var(--td-text); }
-.td-note-thread {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-bottom: 8px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scroll-thumb) transparent;
-}
+/* .td-note-thread now comes from NoteThread.css only (identical) */
 .td-note-card.is-visible-to-client {
   border-left: 3px solid var(--brand);
 }
@@ -287,13 +235,17 @@ body {
    rules resolve per property across the whole file set). Without this,
    align-items: flex-end (below) wins and the row/footer shrink-wrap and
    pin to the right instead of stretching full width. */
+/* Colors now match NoteThread.css's shared tokens (--panel/--border-strong)
+   instead of a local --td-* copy; margin-bottom/gap stay -- this page's
+   composer sits above the thread, needing space below it, unlike
+   NoteThread.css's default margin-top. */
 .td-note-compose {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
-  background: var(--td-panel);
-  border: 1px solid var(--td-border);
+  background: var(--panel);
+  border: 1px solid var(--border-strong);
   border-radius: 14px;
   padding: 8px 8px 8px 14px;
   margin-bottom: 8px;
