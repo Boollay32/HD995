@@ -194,7 +194,7 @@
 .dform label.Name {
   display: block;
   font-family: var(--font-sans);
-  font-size: 0.78125rem;
+  font-size: 0.84375rem;
   font-weight: 600;
   color: var(--muted);
   padding-top: 8px;
