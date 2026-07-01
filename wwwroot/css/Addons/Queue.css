@@ -136,8 +136,8 @@
   border-color: var(--muted);
 }
 .qv-view[aria-pressed="true"] {
-  background: var(--brand);
-  border-color: var(--brand);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 .qv-view[aria-pressed="true"] .qv-vc,
 .qv-view[aria-pressed="true"] .qv-vl {
