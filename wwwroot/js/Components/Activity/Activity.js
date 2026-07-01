@@ -96,7 +96,9 @@ const Activity = (() => {
         }
 
         const fragment = document.createDocumentFragment();
-        State.items.forEach(item => fragment.appendChild(_buildItem(item)));
+        _groupItems(State.items).forEach(group =>
+            fragment.appendChild(group.length > 1 ? _buildGroup(group) : _buildItem(group[0]))
+        );
         list.appendChild(fragment);
     }
 
@@ -134,6 +136,86 @@ const Activity = (() => {
         time.textContent = Helpers.timeAgo(item.historyDate);
         time.title = Helpers.formatDateTime(item.historyDate);
         li.appendChild(time);
+
+        return li;
+    }
+
+    // Group consecutive entries by the same actor within the same second
+    // (one save writes several history rows at once). A run of 2+ becomes a
+    // single collapsible item; a lone entry stays a normal row.
+    function _groupItems(items) {
+        const groups = [];
+        for (const item of items) {
+            const last = groups[groups.length - 1];
+            if (last && _sameGroup(last[0], item)) last.push(item);
+            else groups.push([item]);
+        }
+        return groups;
+    }
+
+    function _sameGroup(a, b) {
+        return (a.name || '') === (b.name || '')
+            && _secondKey(a.historyDate) === _secondKey(b.historyDate);
+    }
+
+    function _secondKey(d) {
+        const t = new Date(d).getTime();
+        return isNaN(t) ? String(d || '') : Math.floor(t / 1000);
+    }
+
+    function _buildGroup(group) {
+        const li = document.createElement('li');
+        li.className = 'td-timeline-item td-tl-group';
+
+        const head = document.createElement('button');
+        head.type = 'button';
+        head.className = 'td-tl-group-head';
+        head.setAttribute('aria-expanded', 'false');
+
+        const caret = document.createElement('span');
+        caret.className = 'td-tl-caret';
+        caret.setAttribute('aria-hidden', 'true');
+        caret.textContent = '\u25B8';
+        head.appendChild(caret);
+
+        const actor = document.createElement('span');
+        actor.className = 'td-tl-actor';
+        actor.appendChild(UI.avatarEl(group[0].name || 'System'));
+        actor.appendChild(document.createTextNode(group[0].name || 'System'));
+        head.appendChild(actor);
+
+        const summary = document.createElement('span');
+        summary.className = 'td-tl-body';
+        summary.textContent = group.length + ' updates';
+        head.appendChild(summary);
+
+        const time = document.createElement('time');
+        time.className = 'td-tl-time';
+        time.dateTime = group[0].historyDate || '';
+        time.textContent = Helpers.timeAgo(group[0].historyDate);
+        time.title = Helpers.formatDateTime(group[0].historyDate);
+        head.appendChild(time);
+
+        li.appendChild(head);
+
+        const details = document.createElement('ul');
+        details.className = 'td-tl-group-body';
+        details.hidden = true;
+        group.forEach(g => {
+            const row = document.createElement('li');
+            row.className = 'td-tl-group-line';
+            row.textContent = g.historyTxt || '';
+            row.title = g.historyTxt || '';
+            details.appendChild(row);
+        });
+        li.appendChild(details);
+
+        head.addEventListener('click', () => {
+            const open = head.getAttribute('aria-expanded') === 'true';
+            head.setAttribute('aria-expanded', String(!open));
+            details.hidden = open;
+            li.classList.toggle('is-expanded', !open);
+        });
 
         return li;
     }
