@@ -299,6 +299,10 @@ const Save = {
             sessionStorage.removeItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);
             sessionStorage.removeItem(STORAGE_KEYS.OLD_ASSIGNED_TECH);
 
+            // Refresh so the saved values (status, assignee, activity, etc.)
+            // are re-fetched from the server, not just reflected in place.
+            setTimeout(() => window.location.reload(), 600);
+
         } catch (err) {
             console.error('Save.execute:', err);
             UI.toast?.('Failed to save ticket', 'error');

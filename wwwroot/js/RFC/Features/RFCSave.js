@@ -105,6 +105,9 @@ class RFCSave extends PageBase {
         this._updateAssignedTechSession();
         this._saveOriginalNote(rfcId);
 
+        // Refresh so the saved values are re-fetched from the server
+        // (skipped on autosave, which must not reload the page).
+        if (!autoSave) setTimeout(() => window.location.reload(), 600);
     }
 
     _updateAssignedTechSession() {
