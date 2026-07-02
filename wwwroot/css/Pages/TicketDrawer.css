@@ -1,8 +1,9 @@
-/* TicketDrawer.css -- right-edge rail + slide-in workspace drawer + contextual
-   save bar for TicketDetails. Layout: .td-body-row wraps the pane shell and
-   the rail; the drawer/scrim are fixed full-height overlays. The drawer stops
-   46px short of the right edge so the rail stays clickable while it is open
-   (sections switch without closing).
+/* TicketDrawer.css -- left-edge rail + slide-in workspace drawer + contextual
+   save bar + overview header for TicketDetails. Layout (left to right):
+   rail | overview pane | messages pane. The drawer/scrim are fixed full-height
+   overlays; the drawer slides in from the LEFT and stops 46px short of the
+   left edge so the rail stays clickable while it is open (sections switch
+   without closing).
    z-order: scrim 60 < rail 65 < drawer 70 < task overlay 100 (TicketOverlay.css). */
 
 .td-body-row {
@@ -15,7 +16,7 @@
   min-width: 0;
 }
 
-/* ---- Rail ---- */
+/* ---- Rail (left edge) ---- */
 .td-railbar {
   flex: 0 0 46px;
   display: flex;
@@ -23,7 +24,7 @@
   align-items: center;
   padding-top: 10px;
   background: var(--td-panel);
-  border-left: 1px solid var(--td-border);
+  border-right: 1px solid var(--td-border);
   position: relative;
   z-index: 65;
 }
@@ -92,11 +93,11 @@
   pointer-events: auto;
 }
 
-/* ---- Drawer ---- */
+/* ---- Drawer (slides in from the left) ---- */
 .td-drawer {
   position: fixed;
   top: 0;
-  right: 46px;
+  left: 46px;
   bottom: 0;
   width: 50%;
   min-width: 360px;
@@ -104,8 +105,8 @@
   display: flex;
   flex-direction: column;
   background: var(--td-panel);
-  border-left: 1px solid var(--td-border);
-  transform: translateX(calc(100% + 46px));
+  border-right: 1px solid var(--td-border);
+  transform: translateX(calc(-100% - 46px));
   visibility: hidden;
   transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
               visibility 0s linear 0.28s;
@@ -150,8 +151,8 @@
 
 /* ---- Contextual save bar ---- */
 /* Appears only while dirty (TicketDrawer.syncDirty): its presence is the
-   "unsaved changes" signal. Save mirrors the topbar button (same handler /
-   shared dirty state); Discard restores the post-load baseline. */
+   "unsaved changes" signal. Save mirrors the overview-header button (same
+   handler / shared dirty state); Discard restores the post-load baseline. */
 .td-drawer-savebar {
   display: flex;
   align-items: center;
@@ -168,6 +169,35 @@
   flex: 1;
   font-size: 0.8125rem;
   color: var(--td-muted);
+}
+
+/* ---- Overview header (replaces the global topbar) ---- */
+/* Shares .td-pane-head for the 46px height so it lines up with the Messages
+   pane head; back / ID / Save keep their PaneShell.css classes. */
+#TicketDetails-App .td-ov-header {
+  gap: 10px;
+  padding: 0 12px 0 10px;
+}
+
+/* Hero title: the page's subject leads the overview body (the old "Title"
+   caption is gone -- the treatment makes it redundant). */
+#TicketDetails-App .td-overview > .td-details-subject {
+  font-size: 1.125rem;
+  line-height: 1.3;
+  padding: 12px 16px 2px;
+}
+
+/* Pills row under the title: the relocated topbar meta. Same ids/classes, so
+   Topbar.renderPill + TicketPillEdit are untouched; wrapping replaces the old
+   viewport media rule that hid the pills outright at narrow widths. */
+#TicketDetails-App .td-ov-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px 14px;
+  margin: 0 16px;
+  padding: 6px 0 12px;
+  border-bottom: 1px solid var(--td-border-2);
 }
 
 @media (prefers-reduced-motion: reduce) {

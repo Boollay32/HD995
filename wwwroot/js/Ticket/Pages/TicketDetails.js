@@ -52,7 +52,6 @@ const Dom = {
     shell: () => document.getElementById('TD-Shell'),
     saveBtn: () => document.getElementById('Save-Button'),
     backBtn: () => document.getElementById('Back-Button'),
-    falseReplyBtn: () => document.getElementById('FalseReply'),
 
     // Topbar
     ticketId: () => document.getElementById('TicketID'),
@@ -68,7 +67,7 @@ const Dom = {
     collapseRight: () => document.getElementById('collapse-right'),
     railLeft: () => document.getElementById('rail-left'),
     railRight: () => document.getElementById('rail-right'),
-    railLeftPip: () => document.getElementById('rail-left-pip'),
+    railRightPip: () => document.getElementById('rail-right-pip'),
 
     // Tabs
     tabs: () => document.querySelectorAll('[role="tab"]'),
@@ -106,7 +105,9 @@ const PaneLayout = {
         // async custom-field emptiness check (TicketLoader) reveals it if non-empty.
         if (!isAdmin) {
             State.clientView = true;
-            return TDLAYOUT.LEFT_ONLY;
+            // Messages is the RIGHT pane post shell-flip, so messages-only
+            // is right-only (matches the server-stamped BootLayout).
+            return TDLAYOUT.RIGHT_ONLY;
         }
         State.clientView = false;
         // Internal tickets keep the Messages pane PRESENT (started collapsed
@@ -135,8 +136,8 @@ const PaneLayout = {
         if (layout === TDLAYOUT.LEFT_ONLY) {
             paneRight?.setAttribute('hidden', '');
             paneLeft?.removeAttribute('hidden');
-            // 1a: Messages is the only pane -- block minimising it (collapsing the
-            // sole pane would leave nothing on screen / re-open the hidden one).
+            // 1a: the sole visible pane can't be minimised (collapsing it would
+            // leave nothing on screen / re-open the hidden one).
             collapseLeft?.setAttribute('hidden', '');
             collapseRight?.removeAttribute('hidden');
         } else if (layout === TDLAYOUT.RIGHT_ONLY) {
@@ -152,10 +153,10 @@ const PaneLayout = {
         }
 
         // The workspace rail tracks the workspace: no workspace, no rail.
-        // (Clients start LEFT_ONLY until the custom-field emptiness check
-        // reveals BOTH -- see TicketLoader.)
+        // (Clients start RIGHT_ONLY (messages-only) until the custom-field
+        // emptiness check reveals BOTH -- see TicketLoader.)
         const rail = document.getElementById('ws-rail');
-        if (layout === TDLAYOUT.LEFT_ONLY) {
+        if (layout === TDLAYOUT.RIGHT_ONLY) {
             rail?.setAttribute('hidden', '');
             window.TicketDrawer?.close?.();
         } else {

@@ -266,8 +266,6 @@ const NotifyBanner = {
 
         NotifyBanner._el = banner;
 
-        // Also show FalseReply button
-        Dom.falseReplyBtn()?.classList.remove('hidden');
     },
 
     dismiss() {
@@ -276,7 +274,6 @@ const NotifyBanner = {
         if (typeof Save !== 'undefined') Save.markFalseReply?.();
 
         NotifyBanner._remove();
-        Dom.falseReplyBtn()?.classList.add('hidden');
 
         // Clear notification session keys
         sessionStorage.removeItem(STORAGE_KEYS.CURRENT_TICKET_NTFY);
@@ -303,7 +300,8 @@ const NotifyBanner = {
     },
 
     bind() {
-        Dom.falseReplyBtn()?.addEventListener('click', NotifyBanner.dismiss);
+        // The topbar FalseReply button was removed with the topbar (shell
+        // flip): the banner's own Dismiss button is the identical action.
     },
 };
 

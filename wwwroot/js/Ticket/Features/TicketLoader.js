@@ -71,7 +71,7 @@ const TicketLoader = {
                 && !State.notesLeft
                 && !sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED)
                 && (State.activeTab === 'tasks' || Session.isInternal)) {
-                Collapse._shell?.collapse?.('left');
+                Collapse._shell?.collapse?.('right');
             }
             Topbar.populate(data);
             Fields.populate(data);
@@ -167,7 +167,7 @@ const TicketLoader = {
                     // to show in the group -- hide it. For a client (whose Details
                     // tab is the only Workspace tab), an empty group means the whole
                     // Workspace is empty.
-                    // HD39 1b: clients START in LEFT_ONLY (messages-only) to avoid
+                    // HD39 1b: clients START in RIGHT_ONLY (messages-only) to avoid
                     // flashing the Workspace before this async check; reveal BOTH only
                     // when it has content. If the field fetch fails, no fields build
                     // -> empty -> staying messages-only is correct.
@@ -214,12 +214,12 @@ const NotesLeft = {
         if (ta) { ta.placeholder = 'Add an internal note'; ta.setAttribute('aria-label', 'Note text'); }
         document.getElementById('msg-send-btn')?.setAttribute('aria-label', 'Save note');
 
-        const title = document.querySelector('#pane-left .td-pane-title');
+        const title = document.querySelector('#pane-right .td-pane-title');
         if (title) title.textContent = 'Notes';
-        const railLabel = document.querySelector('#rail-left .td-rail-label');
+        const railLabel = document.querySelector('#rail-right .td-rail-label');
         if (railLabel) railLabel.textContent = 'Notes';
-        document.getElementById('pane-left')?.setAttribute('aria-label', 'Notes');
-        document.getElementById('collapse-left')?.setAttribute('aria-label', 'Collapse notes pane');
+        document.getElementById('pane-right')?.setAttribute('aria-label', 'Notes');
+        document.getElementById('collapse-right')?.setAttribute('aria-label', 'Collapse notes pane');
 
         // Drop the Workspace Notes tab + its panel.
         document.getElementById('tab-notes')?.setAttribute('hidden', '');
