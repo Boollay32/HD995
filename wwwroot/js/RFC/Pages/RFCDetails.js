@@ -87,15 +87,10 @@ class RFCDetails extends PageBase {
 
         SetCurrentAssignedTech('assignedTechName');
 
-        // Editable Status/Priority pills + overview collapse, now that the
-        // dropdowns are loaded and the fields are populated.
+        // Editable Status/Priority pills, now that the dropdowns are
+        // loaded and the fields are populated.
         RFCPillEdit.init();
-        RFCOverview.init();
         this._syncTargetPill();
-
-        // Overview opens collapsed to match ticket details (collapse after
-        // populate so the slim summary is filled, not blank).
-        window.RFCOverview?.setCollapsed?.(true);
 
         // Fields are now populated -- capture the dirty baseline here so
         // Save activates only when the user actually changes something.
@@ -191,6 +186,8 @@ RFCDetails.prototype._wireRfcDirty = function () {
     const refresh = () => {
         const dirty = this._rfcDirtyEls.some((el, i) => el.value !== this._rfcDirtyBaseline[i]);
         saveBtn.disabled = !dirty;
+        // Mirror into the drawer's contextual save bar (RFCDrawer.js).
+        window.RFCDrawer?.syncDirty?.(dirty);
     };
     // Delegated listeners at the document level (capture phase), so every
     // .Value control dirties the form -- including the general-info fields in
@@ -218,6 +215,22 @@ RFCDetails.prototype._rfcDirtyResetBaseline = function () {
     this._rfcDirtyBaseline = this._rfcDirtyEls.map(el => el.value);
     const saveBtn = document.getElementById('Save-Button');
     if (saveBtn) saveBtn.disabled = true;
+};
+
+// Drawer save bar's Discard: put every tracked control back to its captured
+// baseline. Dirty tracking is document-wide (one monolithic save), so this
+// restores overview fields too -- deliberate, not drawer-scoped. Dispatching
+// 'change' re-fires the dependent UI (status/priority pills via RFCPillEdit,
+// the Completed Date row via _handleStatusChange, the Target pill).
+RFCDetails.prototype._rfcDirtyDiscard = function () {
+    this._rfcDirtyEls.forEach((el, i) => {
+        const base = this._rfcDirtyBaseline[i];
+        if (!el.isConnected || el.value === base) return;
+        el.value = base;
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    // The delegated change listeners re-run refresh(), so Save and the
+    // drawer bar deactivate on their own once values match the baseline.
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
