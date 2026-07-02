@@ -37,6 +37,9 @@ const Tabs = {
         // and only when there are unsaved changes. Dirty state is preserved
         // across tab switches, so it reappears on returning to Details.
         Tabs.applySaveVisibility();
+
+        // Keep the drawer header in step when sections switch via the rail.
+        window.TicketDrawer?.setTitle?.(name);
     },
 
     applySaveVisibility() {
@@ -60,6 +63,9 @@ const Tabs = {
         if (requested && requested !== TAB.DETAILS
             && Tabs._visibleTabs().includes(requested)) {
             Tabs.activate(requested);
+            // An explicit target tab (e.g. the Tasks queue) means the user
+            // came to work in that section -- open the drawer onto it.
+            window.TicketDrawer?.open?.(requested);
             return;
         }
         Tabs.activate(TAB.DETAILS);
@@ -87,9 +93,11 @@ const Tabs = {
 
         switch (e.key) {
             case 'ArrowRight':
+            case 'ArrowDown':   // vertical rail
                 next = visible[(idx + 1) % visible.length];
                 break;
             case 'ArrowLeft':
+            case 'ArrowUp':     // vertical rail
                 next = visible[(idx - 1 + visible.length) % visible.length];
                 break;
             case 'Home':
@@ -124,13 +132,17 @@ const Tabs = {
         Dom.tabs().forEach(tab => {
             tab.addEventListener('click', () => {
                 const name = tab.id.replace('tab-', '');
-                const reclick = State.activeTab === name;
-                Tabs.activate(name);
-                // 2d: re-clicking the already-active Tasks tab reloads its
-                // list and closes any open editor (unsaved-changes guarded).
-                if (reclick && name === TAB.TASKS && typeof Tasks !== 'undefined') {
-                    Tasks.reload?.();
+                // Rail semantics: re-clicking the active section's icon while
+                // the drawer is open closes it; anything else activates the
+                // section and opens the drawer onto it. (Replaces HD34 2d's
+                // reclick-reloads-Tasks: closing the drawer is the escape
+                // hatch now.)
+                if (State.activeTab === name && window.TicketDrawer?.isOpen?.()) {
+                    window.TicketDrawer.close();
+                    return;
                 }
+                Tabs.activate(name);
+                window.TicketDrawer?.open?.(name);
             });
         });
     },

@@ -11,6 +11,8 @@ const Dirty = {
 
     set(isDirty) {
         State.isDirty = isDirty;
+        // Mirror into the drawer's contextual save bar (TicketDrawer.js).
+        window.TicketDrawer?.syncDirty?.(isDirty);
         const saveBtn = Dom.saveBtn();
         if (!saveBtn) return;
 
@@ -45,6 +47,30 @@ const Dirty = {
             if (el.isConnected && FieldHandlers._controlValue(el) !== val) dirty = true;
         });
         this.set(dirty);
+    },
+
+    // Drawer save bar's Discard: put every tracked control back to its
+    // post-load baseline. Dirty state is GLOBAL (one monolithic save), so
+    // this restores overview fields (assigned tech / target date) too --
+    // deliberate, not drawer-scoped. Dispatching 'change' re-fires the
+    // dependent UI (pill labels via TicketPillEdit, closed-date display);
+    // #targetdate is restored silently because its change handler
+    // validates against past dates and would toast on overdue tickets.
+    restoreBaseline() {
+        if (!this._baseline) return;
+        this._baseline.forEach((val, el) => {
+            if (!el.isConnected) return;
+            if (FieldHandlers._controlValue(el) === val) return;
+            if (el.type === 'checkbox') el.checked = val;
+            else el.value = val;
+            if (el.id !== 'targetdate') {
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+        // A reverted reassignment is no reassignment.
+        sessionStorage.removeItem(STORAGE_KEYS.NEW_ASSIGNED_TECH);
+        sessionStorage.removeItem(STORAGE_KEYS.OLD_ASSIGNED_TECH);
+        this.recompute();
     },
 };
 

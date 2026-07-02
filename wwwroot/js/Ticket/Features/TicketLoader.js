@@ -79,9 +79,6 @@ const TicketLoader = {
             // interactive (Resolved-only); priority/category become plain
             // labels. Internal view is unchanged (all pills editable).
             window.TicketPillEdit?.init?.({ clientView: State.clientView });
-            // 1b: overview opens collapsed (after populate so the slim
-            // summary is filled, not blank).
-            window.TicketOverviewPanel?.setCollapsed?.(true);
             TicketLoader._clearNotificationIfMine(data);
             TicketLoader._delegateModules(data);
 

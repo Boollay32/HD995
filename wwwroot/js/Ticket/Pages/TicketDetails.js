@@ -150,6 +150,17 @@ const PaneLayout = {
             collapseLeft?.removeAttribute('hidden');
             collapseRight?.removeAttribute('hidden');
         }
+
+        // The workspace rail tracks the workspace: no workspace, no rail.
+        // (Clients start LEFT_ONLY until the custom-field emptiness check
+        // reveals BOTH -- see TicketLoader.)
+        const rail = document.getElementById('ws-rail');
+        if (layout === TDLAYOUT.LEFT_ONLY) {
+            rail?.setAttribute('hidden', '');
+            window.TicketDrawer?.close?.();
+        } else {
+            rail?.removeAttribute('hidden');
+        }
     },
 };
 
