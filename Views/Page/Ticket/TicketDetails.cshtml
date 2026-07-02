@@ -16,10 +16,9 @@
     <script src="~/js/Ticket/Features/TicketSave.js" asp-append-version="true"></script>
     <script src="~/js/Components/Shell/PaneShell.js" asp-append-version="true"></script>
     <script src="~/js/Ticket/Features/TicketShell.js" asp-append-version="true"></script>
+    <script src="~/js/Ticket/Features/TicketDrawer.js" asp-append-version="true"></script>
     <script src="~/js/Ticket/Pages/TicketDetails.js" asp-append-version="true"></script>
     <script src="~/js/Ticket/Features/TicketPillEdit.js" asp-append-version="true"></script>
-    <script src="~/js/Components/Overview/OverviewCollapse.js" asp-append-version="true"></script>
-    <script src="~/js/Ticket/Features/TicketOverviewPanel.js" asp-append-version="true"></script>
 }
 
 @section AddCSSToHead {
@@ -32,6 +31,7 @@
     <link rel="stylesheet" type="text/css" href="/css/Pages/TicketActivity.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Pages/TicketComposer.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Pages/TicketOverview.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="/css/Pages/TicketDrawer.css" asp-append-version="true" />
 }
 
 <a href="#pane-left" class="skip-link">Skip to ticket content</a>
@@ -94,6 +94,7 @@
 
 
     <!-- ═══════════════════  SHELL  ═══════════════════ -->
+    <div class="td-body-row" id="TD-BodyRow">
     <div class="td-shell" id="TD-Shell" role="main" data-layout="@ViewBag.BootLayout">
 
         <!-- ── LEFT PANE (Messages) ── -->
@@ -185,22 +186,13 @@
              tabindex="0"><span class="td-divider-grip" aria-hidden="true"></span></div>
 
         <!-- ── RIGHT PANE (Workspace) ── -->
-        <div class="td-pane td-pane--right" id="pane-right" aria-label="Workspace">
+        <div class="td-pane td-pane--right" id="pane-right" aria-label="Overview">
             <div class="td-rail" id="rail-right" aria-hidden="true" tabindex="-1">
-                <span class="td-rail-label">Workspace</span>
+                <span class="td-rail-label">Overview</span>
             </div>
             <div class="td-pane-inner" id="pane-right-inner">
                 <!-- OVERVIEW (moved into workspace column - HD38 #5) -->
     <section class="td-overview" id="Ticket-Overview" aria-label="Ticket overview">
-                <button type="button" class="td-ov-collapse" id="ov-collapse"
-                    aria-label="Collapse overview" aria-expanded="true"
-                    aria-controls="Ticket-Overview">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2.2"
-                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M18 15l-6-6-6 6" />
-                </svg>
-            </button>
 
         <span class="td-ov-lbl td-subject-lbl">Title</span>
         <h2 class="td-details-subject" id="subject"></h2>
@@ -272,74 +264,15 @@
 
         </div>
 
-        <div class="td-ov-slim" id="ov-slim" aria-hidden="true">
-            <span><span class="td-ov-slim-lbl">Type</span> <span class="Field-Value" id="ov-slim-type"></span></span>
-            <span class="td-ov-sep">&middot;</span>
-            <span><span class="td-ov-slim-lbl">From</span> <span class="Field-Value" id="ov-slim-from"></span></span>
-            <span class="td-ov-sep">&rarr;</span>
-            <span><span class="td-ov-slim-lbl">Assigned</span> <span class="Field-Value" id="ov-slim-assigned"></span></span>
-            <span class="td-ov-sep">&middot;</span>
-            <span><span class="td-ov-slim-lbl" id="ov-slim-needed-lbl">Needed by</span> <span class="Field-Value mono" id="ov-slim-needed"></span></span>
-        </div>
 
     </section>
 
                 <!-- ── Pane Header ── -->
-                <div class="td-pane-head td-pane-head--ws">
-                    <h2 class="td-pane-title">Workspace</h2>
-                    <!-- tabs on the header row -->
-                    <div class="td-ws-tabs" role="tablist" aria-label="Workspace sections">
-
-                    <button role="tab" id="tab-details" aria-selected="true"
-                            aria-controls="tabpanel-details" type="button">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.2"
-                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <circle cx="12" cy="12" r="10" />
-                            <line x1="12" y1="8" x2="12" y2="12" />
-                            <line x1="12" y1="16" x2="12.01" y2="16" />
-                        </svg>
-                        Details
-                    </button>
-
-                    <button role="tab" id="tab-tasks" aria-selected="false"
-                            aria-controls="tabpanel-tasks" type="button">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.2"
-                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <polyline points="9 11 12 14 22 4" />
-                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                        </svg>
-                        Tasks
-                        <span class="td-tab-pip mono hidden" id="tasks-pip"></span>
-                    </button>
-
-                    <button role="tab" id="tab-notes" aria-selected="false"
-                            aria-controls="tabpanel-notes" type="button">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.2"
-                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                        </svg>
-                        Notes
-                        <span class="td-tab-pip mono hidden" id="notes-pip"></span>
-                    </button>
-
-                    <button role="tab" id="tab-activity" aria-selected="false"
-                            aria-controls="tabpanel-activity" type="button">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.2"
-                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                        </svg>
-                        Activity
-                    </button>
-
-                    </div>
+                <div class="td-pane-head">
+                    <h2 class="td-pane-title">Overview</h2>
 
                     <button class="td-collapse-btn" id="collapse-right"
-                            aria-label="Collapse workspace pane"
+                            aria-label="Collapse overview pane"
                             aria-expanded="true"
                             aria-controls="pane-right"
                             type="button">
@@ -350,6 +283,88 @@
                         </svg>
                     </button>
                 </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+        <!-- Workspace rail: the relocated tab buttons (same ids/roles;
+             pips, clientView hiding and NotesLeft keep working untouched).
+             Clicking opens the workspace drawer on that section. -->
+        <nav class="td-railbar" id="ws-rail" aria-label="Workspace sections">
+                    <div class="td-railtabs" role="tablist" aria-label="Workspace sections" aria-orientation="vertical">
+
+                    <button role="tab" id="tab-details" title="Details" aria-selected="true"
+                            aria-controls="tabpanel-details" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <span class="td-railtab-lbl">Details</span>
+                    </button>
+
+                    <button role="tab" id="tab-tasks" title="Tasks" aria-selected="false"
+                            aria-controls="tabpanel-tasks" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="9 11 12 14 22 4" />
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                        </svg>
+                        <span class="td-railtab-lbl">Tasks</span>
+                        <span class="td-tab-pip mono hidden" id="tasks-pip"></span>
+                    </button>
+
+                    <button role="tab" id="tab-notes" title="Notes" aria-selected="false"
+                            aria-controls="tabpanel-notes" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        <span class="td-railtab-lbl">Notes</span>
+                        <span class="td-tab-pip mono hidden" id="notes-pip"></span>
+                    </button>
+
+                    <button role="tab" id="tab-activity" title="Activity" aria-selected="false"
+                            aria-controls="tabpanel-activity" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                        <span class="td-railtab-lbl">Activity</span>
+                    </button>
+
+                    </div>
+        </nav>
+    </div>
+
+    <!-- Workspace drawer: full-height slide-in hosting the four tabpanels.
+         Opened by the rail; scrim click / close button / Escape close it
+         (non-destructive: dirty state survives, topbar Save stays lit).
+         Contextual save bar appears while dirty (TicketDrawer.js). -->
+    <div class="td-drawer-scrim" id="drawer-scrim"></div>
+
+    <aside class="td-drawer" id="ws-drawer" aria-label="Workspace panel">
+        <div class="td-drawer-head">
+            <h2 class="td-drawer-title" id="drawer-title">Details</h2>
+            <button type="button" class="td-drawer-close" id="drawer-close" aria-label="Close panel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
 
                 <!-- ── Tab Panels ── -->
                 <div class="td-ws-body">
@@ -565,10 +580,11 @@
 
                 </div>
 
-            </div>
+        <div class="td-drawer-savebar" id="drawer-savebar" hidden>
+            <span class="td-drawer-savebar-text">Unsaved changes</span>
+            <button type="button" class="td-btn-ghost" id="drawer-discard-btn">Discard</button>
+            <button type="button" class="td-btn-primary" id="drawer-save-btn">Save Changes</button>
         </div>
-
-
-    </div>
+    </aside>
 
 </div>
