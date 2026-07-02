@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet" type="text/css" href="~/css/Pages/Dashboard.css" asp-append-version="true" />
+}
+
+@section AddJSToBody {
+    <script src="~/js/Dashboard/Pages/DashboardPage.js" asp-append-version="true"></script>
+}
+
+<div class="dash" id="Dashboard-App">
+
+    @* ---- Header: greeting + KPIs + refresh ---- *@
+    <div class="dash-head">
+        <div>
+            <h1 class="dash-greet" id="dash-greet">Dashboard</h1>
+            <div class="dash-sub" id="dash-sub">Loading…</div>
+        </div>
+        <div class="dash-head-spacer"></div>
+        <div class="dash-kpis" id="dash-kpis"></div>
+        <button type="button" class="dash-refresh" id="dash-refresh" aria-label="Refresh dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+            </svg>
+        </button>
+    </div>
+
+    @* ---- Body: urgency feed + oversight stack ---- *@
+    <div class="dash-body">
+
+        <section class="dash-feed-col" aria-label="Needs you first">
+            <h2 class="dash-sec-title">Needs you first</h2>
+            <div class="dash-list" id="dash-feed" aria-busy="true"></div>
+        </section>
+
+        <section class="dash-oversight-col" aria-label="Your oversight">
+            <h2 class="dash-sec-title">Your oversight</h2>
+
+            <div class="dash-card">
+                <div class="dash-card-head">Projects you own
+                    <a id="dash-all-projects" role="link" tabindex="0">All projects →</a>
+                </div>
+                <div id="dash-projects"></div>
+            </div>
+
+            <div class="dash-card">
+                <div class="dash-card-head">Raised by you · with others</div>
+                <div class="dash-list" id="dash-raised"></div>
+            </div>
+        </section>
+
+    </div>
+</div>

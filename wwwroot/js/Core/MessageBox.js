@@ -102,6 +102,7 @@ const MessageBox = {
         // Route map — replaces eval()
         const ROUTES = {
             'TicketPage': () => Router.toTicketPage(),
+            'Dashboard': () => Router.toDashboard(),
             'TicketDetails': () => Router.toTicketDetails(),
             'RFC': () => Router.toRFC(),
             'RFCDetails': () => Router.toRFCDetails(),

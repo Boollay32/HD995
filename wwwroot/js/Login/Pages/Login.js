@@ -52,9 +52,13 @@ let mustChangePassword = false;
 let pinVerified = false;
 
 // Redirect into the app after both walls pass: RFC-only users (level 4) -> RFC,
-// everyone else -> TicketPage.
+// clients (level 0) -> TicketPage, internal techs -> the Dashboard landing
+// page. Mirrors the guard in PageController.Dashboard so the two agree.
 function enterApp() {
-    const destination = sessionStorage.getItem("Admin") === "4" ? "RFC" : "TicketPage";
+    const level = sessionStorage.getItem("Admin");
+    const destination = level === "4" ? "RFC"
+        : level === "0" ? "TicketPage"
+        : "Dashboard";
     OkayButtonPress(destination);
 }
 

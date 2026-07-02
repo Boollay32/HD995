@@ -251,3 +251,9 @@ nav.Nav-Bar #navbar-menu .nav-ind {
 .qv-tf-sw[aria-checked="true"]{ background:var(--accent); }
 .qv-tf-sw[aria-checked="true"] .qv-tf-knob{ transform:translateX(22px);
   background:var(--on-accent); }
+
+/* ---- Settings: deadline-window number inputs (DeadlineWindows.js) ---- */
+.qv-set-num-pair{ display:inline-flex; gap:10px; align-items:center; }
+.qv-set-num-lbl{ display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; }
+.qv-set-num{ width:52px; padding:2px 4px; border:1px solid var(--border);
+  border-radius:6px; background:var(--panel); color:var(--text); font-family:inherit; }

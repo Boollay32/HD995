@@ -8,6 +8,7 @@ const Router = {
     },
 
     toTicketPage() { Router._navigate('/TicketPage'); },
+    toDashboard() { Router._navigate('/Dashboard'); },
     toTasksPage() { Router._navigate('/Tasks'); },
     toProjectForm() { Router._navigate('/ProjectForm'); },
     toProjectsPage() { Router._navigate('/Projects'); },
