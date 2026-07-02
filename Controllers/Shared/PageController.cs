@@ -54,6 +54,19 @@ namespace HelpDeskNet8.Controllers.Shared
         [Route("TicketPage")]
         public IActionResult TicketPage() => View("~/Views/Page/Ticket/TicketPage.cshtml");
 
+        [Route("Dashboard")]
+        public async Task<IActionResult> Dashboard()
+        {
+            // Internal landing page. Clients and RFC-only users are bounced to
+            // their own home; the split mirrors Login.js enterApp so the menu,
+            // the login destination, and this route always agree.
+            IUser user = this.GetAuthenticatedUser();
+            int level = user == null ? -1 : await authenticator.CheckAdmin(user);
+            if (level == Constants.AdminLevel.Authority) return Redirect("/TicketPage");
+            if (level == Constants.AdminLevel.RfcOnly) return Redirect("/RFC");
+            return View("~/Views/Page/Dashboard/Dashboard.cshtml");
+        }
+
         [Route("Incidents")]
         public IActionResult Incidents() => View("~/Views/Page/Ticket/IncidentsPage.cshtml");
 

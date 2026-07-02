@@ -1,0 +1,279 @@
+/* ============================================================================
+   Dashboard.css — internal landing page. Two columns: the urgency-sorted
+   "Needs you first" feed and the oversight stack (owned project cards +
+   raised-by-you chase list). Built on the core tokens (tokens.css) so light
+   and dark both work; deadline chips use the status palette (--warn/--danger
+   + *-bg). Secondary text uses opacity rather than a bespoke muted color.
+   ============================================================================ */
+
+.dash {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 18px 20px 28px;
+  color: var(--text);
+}
+
+/* ---- Header: greeting + KPIs + refresh ---- */
+.dash-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.dash-greet {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+.dash-sub {
+  font-size: 0.75rem;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+.dash-head-spacer { flex: 1; }
+
+.dash-kpis {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dash-kpi {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 7px 14px;
+  min-width: 84px;
+  text-align: center;
+}
+.dash-kpi-n {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.dash-kpi-n.is-red { color: var(--danger); }
+.dash-kpi-n.is-amber { color: var(--warn); }
+.dash-kpi-n.is-accent { color: var(--accent); }
+.dash-kpi-lbl {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.65;
+}
+
+.dash-refresh {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.dash-refresh:hover { background: var(--row-hover); }
+.dash-refresh svg { width: 16px; height: 16px; }
+
+/* ---- Body columns ---- */
+.dash-body {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.dash-feed-col { flex: 1.25; min-width: 0; }
+.dash-oversight-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+@media (max-width: 960px) {
+  .dash-body { flex-direction: column; }
+  .dash-feed-col, .dash-oversight-col { width: 100%; }
+}
+
+.dash-sec-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  margin: 0 0 8px 2px;
+}
+
+/* ---- Cards (oversight) ---- */
+.dash-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 12px 14px;
+}
+.dash-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+.dash-card-head a {
+  margin-left: auto;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--accent);
+  cursor: pointer;
+}
+.dash-card-head a:hover { color: var(--accent-strong); }
+
+/* ---- Rows (feed + raised list) ---- */
+.dash-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dash-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 8px 11px;
+  font-size: 0.8125rem;
+  color: var(--text);
+  cursor: pointer;
+}
+.dash-row:hover { background: var(--row-hover); }
+.dash-row.is-overdue { border-left: 3px solid var(--danger); }
+.dash-row--slim {
+  border: none;
+  background: none;
+  padding: 5px 2px;
+  border-radius: 6px;
+}
+.dash-row--slim:hover { background: var(--row-hover); }
+
+.dash-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: var(--row-hover);
+}
+.dash-type svg { width: 12px; height: 12px; }
+.dash-type--ticket { color: var(--ok); background: var(--ok-bg); }
+.dash-type--incident { color: var(--danger); background: var(--danger-bg); }
+.dash-type--task { color: var(--warn); background: var(--warn-bg); }
+.dash-type--rfc { color: var(--info); background: var(--info-bg); }
+
+.dash-ref {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  opacity: 0.65;
+}
+.dash-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dash-status {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  background: var(--row-hover);
+  border-radius: 9px;
+  padding: 1px 8px;
+  opacity: 0.85;
+}
+.dash-with {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  opacity: 0.65;
+}
+
+.dash-reply-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ---- Deadline chips ---- */
+.dash-chip {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  border-radius: 9px;
+  padding: 1px 8px;
+}
+.dash-chip--red { background: var(--danger-bg); color: var(--danger); }
+.dash-chip--amber { background: var(--warn-bg); color: var(--warn); }
+.dash-chip--neutral { background: var(--row-hover); color: var(--text); opacity: 0.75; }
+
+/* ---- Project cards ---- */
+.dash-proj {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 11px;
+  background: none;
+  color: var(--text);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+.dash-proj:hover { background: var(--row-hover); }
+.dash-proj + .dash-proj { margin-top: 8px; }
+.dash-proj-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dash-proj-top .dash-title { font-weight: 500; }
+.dash-bar {
+  display: block;
+  height: 4px;
+  border-radius: 3px;
+  background: var(--row-hover);
+  overflow: hidden;
+}
+.dash-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ok);
+}
+.dash-bar-fill.is-amber { background: var(--warn); }
+.dash-bar-fill.is-red { background: var(--danger); }
+.dash-proj-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 0.6875rem;
+  opacity: 0.7;
+}
+.dash-proj-idle { margin-left: auto; }
+.dash-proj-idle.is-amber { color: var(--warn); opacity: 1; }
+
+/* ---- States ---- */
+.dash-empty {
+  font-size: 0.8125rem;
+  opacity: 0.6;
+  margin: 4px 2px;
+}
+#dash-feed[aria-busy="true"] { opacity: 0.55; }

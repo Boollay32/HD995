@@ -9,6 +9,7 @@ const NavBar = {
         if (!nav) return;
 
         const routes = {
+            'DashboardMenu': () => Router.toDashboard(),
             'TicketsMenu': () => NavBar.tickets(),
             'TasksMenu': () => NavBar.tasks(),
             'UsersMenu': () => Router.toUserPage(),
@@ -88,6 +89,7 @@ const NavBar = {
 
     setActivePage(pageName) {
         const map = {
+            'Dashboard': 'DashboardMenu',
             'TicketPage': 'TicketsMenu',
             'TaskPage': 'TasksMenu',
             'UserPage': 'UsersMenu',

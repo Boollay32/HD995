@@ -179,11 +179,11 @@ const Auth = {
 // Applied on every page (gateMenuGlobally) and on permission-checked pages
 // (setAdminAbilities) -- both go through applyMenuVisibility so the menu is
 // identical everywhere and forbidden items never appear, even briefly.
-Auth.MENU_ITEMS = ['TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu', 'StatsMenu'];
+Auth.MENU_ITEMS = ['DashboardMenu', 'TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu', 'StatsMenu'];
 Auth.MENU_ALLOW = {
     0: ['TicketsMenu', 'UsersMenu'],                                                          // Authority (client)
-    1: ['TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu'], // Standard Govtech
-    2: ['TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu', 'StatsMenu'], // Admin
+    1: ['DashboardMenu', 'TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu'], // Standard Govtech
+    2: ['DashboardMenu', 'TicketsMenu', 'TasksMenu', 'ProjectsMenu', 'RFCMenu', 'IncidentsMenu', 'UsersMenu', 'StatsMenu'], // Admin
     4: ['RFCMenu']                                                                            // RFC only
 };
 
