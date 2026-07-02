@@ -44,7 +44,7 @@ namespace HelpDeskNet8.Controllers.Shared
             IUser user = this.GetAuthenticatedUser();
             bool isClient = user != null
                 && await authenticator.CheckAdmin(user) == Constants.AdminLevel.Authority;
-            ViewBag.BootLayout = isClient ? "left-only" : "both";
+            ViewBag.BootLayout = isClient ? "right-only" : "both";
             return View("~/Views/Page/Ticket/TicketDetails.cshtml");
         }
 
