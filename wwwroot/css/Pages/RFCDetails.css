@@ -74,12 +74,6 @@
    Components/PaneShell.css; these rules are the RFC-specific sizing only.
    ============================================================================ */
 
-/* 30/70 split: notes left, workspace right */
-.rfc-app .td-shell {
-  --shell-cols: 3fr;
-  --shell-cols-r: 7fr;
-}
-
 /* Notes pane: thread scrolls, composer pinned beneath it */
 .rfc-notes-body {
   flex: 1;

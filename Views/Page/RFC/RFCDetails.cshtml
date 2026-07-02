@@ -13,8 +13,8 @@
     <script src="~/js/Components/Notes/NotesPanel.js" asp-append-version="true"></script>
     <script src="~/js/RFC/Features/RFCNotes.js" asp-append-version="true"></script>
     <script src="~/js/RFC/Features/RFCPillEdit.js" asp-append-version="true"></script>
-    <script src="~/js/Components/Overview/OverviewCollapse.js" asp-append-version="true"></script>
-    <script src="~/js/RFC/Features/RFCOverview.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Shell/DetailDrawer.js" asp-append-version="true"></script>
+    <script src="~/js/RFC/Features/RFCDrawer.js" asp-append-version="true"></script>
     <script src="~/js/RFC/Pages/RFCDetails.js" asp-append-version="true"></script>
 }
 
@@ -26,13 +26,42 @@
     <link rel="stylesheet" type="text/css" href="/css/Pages/DetailForm.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Pages/DetailShared.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="/css/Pages/RFCDetails.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="/css/Components/DetailDrawer.css" asp-append-version="true" />
 }
 
 <div class="td-app rfc-app" id="RFCDetails-App">
 
-    @* ---- Header panel: topbar + overview (mirrors Ticket Details) ---- *@
-    <div class="td-header-panel">
-    <header class="td-topbar" role="banner">
+
+    @* ---- Shell: Notes (left) / Workspace (right) ---- *@
+    <div class="td-body-row" id="RFC-BodyRow">
+        @* Workspace rail: the Details icon toggles the workspace drawer
+           (single section -- RFC has only Extended Information). *@
+        <nav class="td-railbar" id="ws-rail" aria-label="Workspace sections">
+            <div class="td-railtabs" role="tablist" aria-label="Workspace sections" aria-orientation="vertical">
+                <button role="tab" id="rfc-tab-details" title="Details" aria-selected="true"
+                        type="button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <span class="td-railtab-lbl">Details</span>
+                </button>
+            </div>
+        </nav>
+    <div class="td-shell" id="RFC-Shell" data-layout="both" role="main">
+
+        <div class="td-pane td-pane--left" id="pane-left" aria-label="Overview">
+            <div class="td-rail" id="rail-left" aria-hidden="true" tabindex="-1" hidden>
+                <span class="td-rail-label">Overview</span>
+            </div>
+            <div class="td-pane-inner" id="pane-left-inner">
+                @* Overview header: the relocated topbar (back / ID / Save)
+                   plus the pane collapse, height-aligned with the Notes
+                   pane head via the shared td-pane-head class. *@
+                <div class="td-pane-head td-ov-header" id="Overview-Header">
         <button type="button" class="td-back" id="Back-Button" style="display:none" aria-label="Back to RFCs">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -40,12 +69,29 @@
                 <polyline points="12 19 5 12 12 5" />
             </svg>
         </button>
-
         <div class="td-id-block">
             <span class="td-tid mono">RFC <a id="RFCID"></a></span>
         </div>
+        <div class="td-spacer"></div>
 
-        <div class="td-topbar-meta" id="Topbar-Meta">
+        <div class="td-topbar-actions">
+            <button type="button" class="td-btn-primary" id="Save-Button" disabled>Save Changes</button>
+        </div>
+
+                    <button type="button" class="td-collapse-btn" id="collapse-left"
+                            aria-expanded="true" aria-controls="pane-left" aria-label="Collapse overview pane">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                </div>
+
+    <section class="td-overview" id="RFC-Overview" aria-label="RFC overview">
+
+        <label class="td-details-subject Value" id="Title"></label>
+
+        <div class="td-topbar-meta td-ov-pills" id="Topbar-Meta">
             <div class="td-meta-group">
                 <span class="td-meta-cap">Status</span>
                 <div class="td-meta-pill" id="meta-status"></div>
@@ -60,100 +106,6 @@
             </div>
         </div>
 
-        <div class="td-spacer"></div>
-
-        <div class="td-topbar-actions">
-            <button type="button" class="td-btn-primary" id="Save-Button" disabled>Save Changes</button>
-        </div>
-    </header>
-    </div>
-
-    @* ---- Shell: Notes (left) / Workspace (right) ---- *@
-    <div class="td-shell" id="RFC-Shell" data-layout="both" role="main">
-
-        <div class="td-pane td-pane--left" id="pane-left" aria-label="Notes">
-            <div class="td-rail" id="rail-left" aria-hidden="true" tabindex="-1" hidden>
-                <span class="td-rail-label">Notes</span>
-            </div>
-            <div class="td-pane-inner" id="pane-left-inner">
-                <div class="td-pane-head">
-                    <h2 class="td-pane-title">Notes</h2>
-                    <button type="button" class="td-collapse-btn" id="collapse-left"
-                            aria-expanded="true" aria-controls="pane-left" aria-label="Collapse notes pane">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <polyline points="15 18 9 12 15 6" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="rfc-notes-body">
-                    <div class="td-note-thread" id="RFCNotes-Thread" role="log"
-                         aria-live="polite" aria-label="RFC notes"></div>
-
-                    <div class="td-composer-dock" id="RFCNotes-Compose">
-
-                        <div class="td-composer" id="rfc-note-composer-box">
-                            <textarea id="rfc-note-textarea"
-                                      class="td-composer-input"
-                                      placeholder="Add a note…"
-                                      maxlength="2000"
-                                      rows="1"
-                                      aria-label="Note text"
-                                      aria-describedby="rfc-note-charcount"></textarea>
-                            <button type="button" class="td-send-btn" id="rfc-note-send-btn"
-                                    aria-label="Save note" disabled>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2.2"
-                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <line x1="22" y1="2" x2="11" y2="13" />
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="td-composer-footer">
-                            <span class="td-charcount mono" id="rfc-note-charcount" aria-live="polite">0 / 2000</span>
-                            <div class="td-composer-attachments" id="rfc-note-attachment-list"></div>
-                            <label class="td-attach-btn" aria-label="Add attachment to note">
-                                <input type="file" id="rfc-note-file-input" class="sr-only"
-                                       multiple accept="*/*"
-                                       aria-label="Attach file to note" />
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2.2"
-                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
-                                </svg>
-                            </label>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="td-divider" id="pane-divider" role="separator"
-             aria-orientation="vertical" aria-label="Resize panes"
-             tabindex="0"><span class="td-divider-grip" aria-hidden="true"></span></div>
-
-        <div class="td-pane td-pane--right" id="pane-right" aria-label="Workspace">
-            <div class="td-rail" id="rail-right" aria-hidden="true" tabindex="-1" hidden>
-                <span class="td-rail-label">Workspace</span>
-            </div>
-            <div class="td-pane-inner" id="pane-right-inner">
-    <section class="td-overview" id="RFC-Overview" aria-label="RFC overview">
-                <button type="button" class="td-ov-collapse" id="ov-collapse"
-                    aria-label="Collapse overview" aria-expanded="true"
-                    aria-controls="RFC-Overview">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2.2"
-                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M18 15l-6-6-6 6" />
-                </svg>
-            </button>
-
-        <span class="td-ov-lbl td-subject-lbl">Title</span>
-        <label class="td-details-subject Value" id="Title"></label>
 
         <div class="td-ov-body">
 
@@ -203,13 +155,6 @@
         </div>
 
         @* slim summary (shown when the overview is collapsed) *@
-        <div class="td-ov-slim" id="ov-slim" aria-hidden="true">
-            <span><span class="td-ov-slim-lbl">Originator</span> <span class="Field-Value" id="ov-slim-originator"></span></span>
-            <span class="td-ov-sep">|</span>
-            <span><span class="td-ov-slim-lbl">Assigned</span> <span class="Field-Value" id="ov-slim-assigned"></span></span>
-            <span class="td-ov-sep">|</span>
-            <span><span class="td-ov-slim-lbl">Target</span> <span class="Field-Value mono" id="ov-slim-target"></span></span>
-        </div>
 
         @* hidden source selects for the editable Status / Priority pills (Stage 3 RFCPillEdit reads these) *@
         <div id="rfc-meta-selects" hidden>
@@ -218,33 +163,98 @@
         </div>
     </section>
 
-                <div class="td-pane-head td-pane-head--ws">
-                    <h2 class="td-pane-title">Workspace</h2>
-                    @* HD36 3b: a single static "Details" tab for visual parity
-                       with the ticket Workspace. RFC has only Extended Information
-                       to show, so there is no switching machinery -- the tab is
-                       always selected. *@
-                    <div class="td-ws-tabs" role="tablist" aria-label="Workspace sections">
-                        <button role="tab" id="rfc-tab-details" aria-selected="true"
-                                type="button">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2.2"
-                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <circle cx="12" cy="12" r="10" />
-                                <line x1="12" y1="8" x2="12" y2="12" />
-                                <line x1="12" y1="16" x2="12.01" y2="16" />
-                            </svg>
-                            Details
-                        </button>
-                    </div>
+
+            </div>
+        </div>
+
+        <div class="td-divider" id="pane-divider" role="separator"
+             aria-orientation="vertical" aria-label="Resize panes"
+             tabindex="0"><span class="td-divider-grip" aria-hidden="true"></span></div>
+
+        <div class="td-pane td-pane--right" id="pane-right" aria-label="Notes">
+            <div class="td-rail" id="rail-right" aria-hidden="true" tabindex="-1" hidden>
+                <span class="td-rail-label">Notes</span>
+            </div>
+            <div class="td-pane-inner" id="pane-right-inner">
+                <div class="td-pane-head">
+                    <h2 class="td-pane-title">Notes</h2>
                     <button type="button" class="td-collapse-btn" id="collapse-right"
-                            aria-expanded="true" aria-controls="pane-right" aria-label="Collapse workspace pane">
+                            aria-expanded="true" aria-controls="pane-right" aria-label="Collapse notes pane">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="9 18 15 12 9 6" />
                         </svg>
                     </button>
                 </div>
+
+                <div class="rfc-notes-body">
+                    <div class="td-note-thread" id="RFCNotes-Thread" role="log"
+                         aria-live="polite" aria-label="RFC notes"></div>
+
+                    <div class="td-composer-dock" id="RFCNotes-Compose">
+
+                        <div class="td-composer" id="rfc-note-composer-box">
+                            <textarea id="rfc-note-textarea"
+                                      class="td-composer-input"
+                                      placeholder="Add a note…"
+                                      maxlength="2000"
+                                      rows="1"
+                                      aria-label="Note text"
+                                      aria-describedby="rfc-note-charcount"></textarea>
+                            <button type="button" class="td-send-btn" id="rfc-note-send-btn"
+                                    aria-label="Save note" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2.2"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <line x1="22" y1="2" x2="11" y2="13" />
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="td-composer-footer">
+                            <span class="td-charcount mono" id="rfc-note-charcount" aria-live="polite">0 / 2000</span>
+                            <div class="td-composer-attachments" id="rfc-note-attachment-list"></div>
+                            <label class="td-attach-btn" aria-label="Add attachment to note">
+                                <input type="file" id="rfc-note-file-input" class="sr-only"
+                                       multiple accept="*/*"
+                                       aria-label="Attach file to note" />
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2.2"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                </svg>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+
+    @* Workspace drawer: full-height slide-in hosting the Extended
+       Information form. Opened by the rail; scrim click / close button /
+       Escape close it (non-destructive: dirty state survives, the
+       overview-header Save stays lit). Contextual save bar appears
+       while dirty (RFCDrawer.js). *@
+    <div class="td-drawer-scrim" id="drawer-scrim"></div>
+
+    <aside class="td-drawer" id="ws-drawer" aria-label="Workspace panel">
+        <div class="td-drawer-head">
+            <h2 class="td-drawer-title" id="drawer-title">Details</h2>
+            <button type="button" class="td-drawer-close" id="drawer-close" aria-label="Close panel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
 
                 <div class="dform rfc-ws">
                     <form id="UpdateRFC">
@@ -329,8 +339,12 @@
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
 
-    </div>
+        <div class="td-drawer-savebar" id="drawer-savebar" hidden>
+            <span class="td-drawer-savebar-text">Unsaved changes</span>
+            <button type="button" class="td-btn-ghost" id="drawer-discard-btn">Discard</button>
+            <button type="button" class="td-btn-primary" id="drawer-save-btn">Save Changes</button>
+        </div>
+    </aside>
+
 </div>
