@@ -36,7 +36,7 @@
 }
 .pf-btn-primary {
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent);
     border-color: var(--accent);
 }
 .pf-btn-primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }

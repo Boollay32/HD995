@@ -176,7 +176,7 @@
     padding: 6px 14px; border-radius: 8px; cursor: pointer; margin-left: 8px;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.pjd-edit-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pjd-edit-btn:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 
 /* Field-label captions (project name + description) */
 .pjd-name-block { display: flex; flex-direction: column; }

@@ -167,7 +167,7 @@
 /* New-project button (admin only) */
 .pj-head-left { display: flex; align-items: center; gap: 14px; }
 .pj-new-btn {
-    font-size: 0.8125rem; font-weight: 600; color: #fff;
+    font-size: 0.8125rem; font-weight: 600; color: var(--on-accent);
     background: var(--accent); border: 1px solid var(--accent);
     padding: 7px 14px; border-radius: 8px; cursor: pointer;
     transition: background 0.15s ease, border-color 0.15s ease;

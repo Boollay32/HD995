@@ -270,7 +270,7 @@ nav.Nav-Bar #navbar-menu .nav-ind {
   background:var(--accent); border-color:var(--accent); }
 .qv-bell-btn svg{ width:18px; height:18px; }
 .qv-bell-badge{ position:absolute; top:0; right:0; min-width:15px; height:15px;
-  border-radius:8px; background:var(--accent); color:#fff; font-size:0.625rem;
+  border-radius:8px; background:var(--accent); color:var(--on-accent); font-size:0.625rem;
   line-height:15px; text-align:center; padding:0 3px; }
 .qv-bell-badge.hidden{ display:none; }
 .qv-bell-panel{ position:absolute; top:calc(100% + 8px); right:0; z-index:1200;
