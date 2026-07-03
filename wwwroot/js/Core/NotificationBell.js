@@ -12,8 +12,11 @@
 
 const NotificationBell = {
 
-    // Internal techs only -- matches the Dashboard/menu gating.
-    ALLOW: new Set([1, 2]),
+    // Internal techs (1, 2) see every event type; clients (0) get the
+    // bell with a server-scoped inbox (messages on their tickets +
+    // status changes -- NotificationController filters). RFC-only (4)
+    // stays email-only.
+    ALLOW: new Set([0, 1, 2]),
 
     // EntityType values from NotificationStub: 1 ticket, 2 task, 3 RFC.
     ENTITY: { TICKET: 1, TASK: 2, RFC: 3 },

@@ -20,6 +20,23 @@ namespace HelpDeskNet8.Controllers.Shared
             if (user == null || !user.UserID.HasValue) return Unauthorized();
 
             var (notifications, unreadCount) = await _notificationManager.GetForUser(user.UserID.Value);
+
+            // Clients get a scoped inbox: messages on their tickets and status
+            // changes only -- the other event types are internal workflow noise
+            // to them. Internal levels see all event types. The unread count is
+            // recomputed from the filtered set so the badge matches the panel.
+            int level = await _authenticator.CheckAdmin(user);
+            if (level == Constants.AdminLevel.Authority)
+            {
+                var allowed = new[]
+                {
+                    (byte)NotificationType.NoteResponded,
+                    (byte)NotificationType.TicketStatusChanged,
+                };
+                notifications = notifications.Where(n => allowed.Contains(n.EventType)).ToList();
+                unreadCount = notifications.Count(n => n.ReadDate == null);
+            }
+
             return Ok(new { notifications, unreadCount });
         }
 
