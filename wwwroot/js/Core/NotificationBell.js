@@ -13,7 +13,7 @@
 const NotificationBell = {
 
     // Internal techs only -- matches the Dashboard/menu gating.
-    ALLOW: new Set(['1', '2']),
+    ALLOW: new Set([1, 2]),
 
     // EntityType values from NotificationStub: 1 ticket, 2 task, 3 RFC.
     ENTITY: { TICKET: 1, TASK: 2, RFC: 3 },
@@ -47,7 +47,10 @@ const NotificationBell = {
         // Clients never get the bell; resolving without building is
         // the intended outcome for them.
         Auth.getAdminLevel().then((level) => {
-            if (!NotificationBell.ALLOW.has(String(level))) return;
+            // parseInt, exactly like Auth.applyMenuVisibility: the wire
+            // value isn't guaranteed to be a clean '1'/'2' string, and a
+            // strict string match here failed where the menus succeeded.
+            if (!NotificationBell.ALLOW.has(parseInt(level, 10))) return;
             NotificationBell._build(bar);
         }).catch(() => { /* no level, no bell */ });
         return true;
