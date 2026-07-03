@@ -34,7 +34,7 @@ html[data-font="large"] { font-size: 125%; }
     --line-2:  #D9C9B4;
 
     /* Status */
-    --ok:    #0E7A3D;
+    --ok:    #0C6E36;            /* darkened for AA on ok-bg: 5.21 */
     --warn:  #8A5318;            /* darkened for AA on warn-bg: 5.20 */
     --danger:#B42318;
 
@@ -62,7 +62,7 @@ html[data-font="large"] { font-size: 125%; }
     --accent: #B5530E;           /* button orange: AA 4.99 with white text */
     --accent-strong: #964307;    /* hover: 6.77 with white text */
     --on-accent: #FFFFFF;        /* text on accent-filled controls */
-    --accent-2: #2C7A6E;         /* teal companion: 5.10 white text, 7.72 as text */
+    --accent-2: #266A5F;         /* teal companion, AA on accent-2-bg: 5.19 */
     --accent-2-strong: #225F56;
     --accent-2-bg: #D7EDE9;      /* teal tint for 'open' pills (text #1F5249: 7.28) */
     --border-strong: #9C8362;    /* form-control borders: AA 3:1 on white/cream/canvas */
