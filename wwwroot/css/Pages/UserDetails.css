@@ -106,7 +106,7 @@
 .ud-btn--primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #ffffff;
+  color: var(--on-accent);
 }
 
 .ud-btn--primary:hover {

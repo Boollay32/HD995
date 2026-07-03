@@ -129,7 +129,7 @@ const MessageBox = {
 
         if (returnPage === 'Index') {
             sessionStorage.clear();
-            window.open('.', '_self', false);
+            window.location.assign('.');
             return;
         }
 
@@ -143,7 +143,7 @@ const MessageBox = {
             'UserDetails': () => Router.toUserDetails(),
             'Users': () => Router.toUserPage(),
             'UserPage': () => Router.toUserPage(),   // alias used by UserSave
-            'Index': () => { sessionStorage.clear(); window.open('.', '_self', false); }
+            'Index': () => { sessionStorage.clear(); window.location.assign('.'); }
         };
 
         const route = ROUTES[returnPage];
