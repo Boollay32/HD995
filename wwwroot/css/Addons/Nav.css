@@ -260,9 +260,15 @@ nav.Nav-Bar #navbar-menu .nav-ind {
 
 /* ---- Notification bell (NotificationBell.js) ---- */
 .qv-bell{ position:relative; display:inline-flex; align-items:center; }
-.qv-bell-btn{ position:relative; width:30px; height:30px; border:none; border-radius:8px;
-  background:none; color:inherit; display:grid; place-items:center; cursor:pointer; }
-.qv-bell-btn:hover{ background:var(--row-hover); }
+/* Same recipe as .qv-settings-btn so the pair sit identically in both
+   themes (size, border, tokens, hover, expanded state). */
+.qv-bell-btn{ position:relative; display:grid; place-items:center; width:34px; height:34px;
+  border-radius:8px; border:1px solid var(--border); background:var(--row-hover);
+  color:var(--muted); cursor:pointer; padding:0; transition:.15s ease; }
+.qv-bell-btn:hover{ color:var(--text); border-color:var(--accent); }
+.qv-bell-btn[aria-expanded="true"]{ color:var(--on-accent);
+  background:var(--accent); border-color:var(--accent); }
+.qv-bell-btn svg{ width:18px; height:18px; }
 .qv-bell-badge{ position:absolute; top:0; right:0; min-width:15px; height:15px;
   border-radius:8px; background:var(--accent); color:#fff; font-size:0.5625rem;
   line-height:15px; text-align:center; padding:0 3px; }

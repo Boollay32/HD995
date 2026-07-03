@@ -264,14 +264,18 @@ namespace HelpDeskNet8.Services
 
                 case NotificationType.NoteResponded:
                     // A note was created. Client -> the assigned tech; internal ->
-                    // the ticket owner + the assigned tech.
+                    // the ticket owner + the assigned tech. Client-INVISIBLE
+                    // (internal) notes must never ping the owner: the context
+                    // carried NoteVisibleToClient all along but was not checked
+                    // here, leaking "note added" emails (and, since the inbox,
+                    // rows) to clients for internal workings.
                     if (!actorInternal)
                     {
                         people.Add(tech);
                     }
                     else
                     {
-                        people.Add(owner);
+                        if (context?.NoteVisibleToClient ?? true) people.Add(owner);
                         people.Add(tech);
                     }
                     break;

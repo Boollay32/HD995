@@ -341,8 +341,6 @@ body {
 
 /* Collapse: the shell is a grid, so a collapsed pane's width:48px alone
    won't reflow the tracks -- retarget the columns so the open pane fills. */
-/* Messages/Workspace split: 30/70 across the whole page (PaneShell knob). */
-#TicketDetails-App .td-shell { --shell-cols: 3fr; --shell-cols-r: 7fr; }
 
 /* Additional Info (custom fields) -------------------------------------------
    CustomFieldBuilder emits legacy .Detail-Div/.left/.right/.Name/.Value markup

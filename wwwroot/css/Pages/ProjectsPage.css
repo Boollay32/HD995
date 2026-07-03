@@ -118,7 +118,7 @@
     padding: 2px 8px;
     border-radius: 999px;
 }
-.pj-status--new    { color: var(--muted);     background: var(--row-hover); }
+.pj-status--new    { color: var(--info);      background: var(--info-bg); }
 .pj-status--active { color: var(--accent-2);   background: var(--accent-2-bg); }
 .pj-status--draft  { color: var(--muted);      background: var(--row-hover); }
 .pj-status--done   { color: var(--ok);         background: var(--ok-bg); }

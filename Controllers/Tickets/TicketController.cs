@@ -108,7 +108,10 @@ namespace HelpDeskNet8.Controllers.Tickets
                 return BadRequest(result.Error);
 
             // Notify on update only: Assigned if the tech changed, else Responded.
-            if (ticket.TicketID != null)
+            // A FalseReply save exists solely to clear the notification flag when
+            // the recipient opens the ticket -- it is not a reply, so it must
+            // never notify (no email, no inbox row).
+            if (ticket.TicketID != null && !request.FalseReply)
             {
                 var saved = await _ticketManager.GetTicketDetail(ticket.TicketID.Value, user);
                 if (saved != null)
