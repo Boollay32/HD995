@@ -14,19 +14,44 @@ const MessageBox = {
         };
     },
 
-    _setMessage(messageBox, outerDiv, message) {
+    _setMessage(messageBox, outerDiv, message, opts = {}) {
         outerDiv?.classList.remove('Large');
 
         if (messageBox) {
             messageBox.innerHTML = '';
+
+            if (opts.title) {
+                const head = document.createElement('div');
+                head.className = 'mb-head';
+                const icon = document.createElement('span');
+                icon.className = 'mb-icon';
+                icon.innerHTML = MessageBox._ICONS[opts.icon] || MessageBox._ICONS.info;
+                const h = document.createElement('h2');
+                h.className = 'mb-title';
+                h.id = 'MessageBox-Title';
+                h.innerText = opts.title;    // innerText — XSS safe
+                head.appendChild(icon);
+                head.appendChild(h);
+                messageBox.appendChild(head);
+            }
+
             const p = document.createElement('p');
             p.id = 'MessageBox-Message';
+            if (opts.title) p.classList.add('mb-msg-titled');
             p.innerText = message;           // innerText — XSS safe
             messageBox.appendChild(p);
         }
 
-        document.getElementById('MessageBox-Message')
-            ?.classList.remove('Large');
+        // Name the dialog by its title when one exists; never point
+        // aria-labelledby at an element that is not there.
+        if (opts.title) outerDiv?.setAttribute('aria-labelledby', 'MessageBox-Title');
+        else outerDiv?.removeAttribute('aria-labelledby');
+    },
+
+    // Stroke icons matching the app's inline-SVG style.
+    _ICONS: {
+        info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="19" height="19"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+        clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="19" height="19"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
     },
 
     _show() {
@@ -57,23 +82,32 @@ const MessageBox = {
     // did not exist, so success popups threw AFTER a successful save and
     // confirm dialogs threw before doing anything.
 
-    show(message, loadPage = '') {
-        this.build(message, loadPage);
+    show(message, loadPage = '', opts = {}) {
+        this.build(message, loadPage, opts);
+    },
+
+    // The one dialog every user eventually meets: give it the full house
+    // treatment rather than a bare sentence.
+    sessionTimeout() {
+        this.build(
+            'You were signed out after a period of inactivity. Any unsaved changes were not kept.',
+            'Index',
+            { title: 'Session ended', icon: 'clock', okLabel: 'Sign back in' });
     },
 
     // -------------------------  Build  ------------------------- //
 
-    build(message, loadPage) {
+    build(message, loadPage, opts = {}) {
         const { screenCover, messageBox, outerDiv, buttonDiv } = this._getElements();
         if (!screenCover || !buttonDiv) return;
 
-        this._setMessage(messageBox, outerDiv, message);
+        this._setMessage(messageBox, outerDiv, message, opts);
 
         buttonDiv.innerHTML = '';
 
         const okayBtn = document.createElement('button');
         okayBtn.className = 'accept OkayButton';
-        okayBtn.innerText = 'Okay';
+        okayBtn.innerText = opts.okLabel || 'Okay';
         okayBtn.addEventListener('click', () => this.okayButtonPress(loadPage));
 
         buttonDiv.appendChild(okayBtn);

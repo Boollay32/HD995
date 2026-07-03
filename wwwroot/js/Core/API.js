@@ -13,7 +13,7 @@ const API = {
     },
 
     handleSessionTimeout() {
-        BuildMessageBox('Your session has timed out.', 'Index');
+        MessageBox.sessionTimeout();
     },
 
     async verifySession() {
@@ -41,7 +41,7 @@ const API = {
             });
 
             if (response.status === 401) {
-                BuildMessageBox('Your session has timed out.', 'Index');
+                MessageBox.sessionTimeout();
                 return null;
             }
 
