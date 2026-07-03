@@ -210,6 +210,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             var taskCtx = new NotificationContext
             {
                 TaskTitle = task.Title,
+                TaskID = result.ObjectID,
                 TaskAssigneeID = newAssigneeId,
                 TaskAssigneeName = newAssigneeName,
                 OldTaskAssigneeName = oldTaskAssignee,

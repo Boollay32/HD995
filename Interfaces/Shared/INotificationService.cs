@@ -52,6 +52,8 @@ namespace HelpDeskNet8.Interfaces.Shared
         public string? NewStatus { get; set; }            // ticket / RFC status, after
         public bool? NoteVisibleToClient { get; set; }    // a reply's client visibility
         public string? TaskTitle { get; set; }
+        public int? TaskID { get; set; }                  // the saved task -- in-app inbox rows
+                                                            // deep-link to it (drawer + editor)
         public int? OldTaskStatus { get; set; }
         public int? NewTaskStatus { get; set; }
         public int? TaskAssigneeID { get; set; }          // new assignee user id -- resolve email by this
