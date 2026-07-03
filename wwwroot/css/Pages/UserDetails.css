@@ -5,7 +5,9 @@
 .ud-app {
   font-family: "Spline Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   min-height: calc(100vh - 56px);
-  background: var(--row-hover);
+  /* Page canvas, like every other page. row-hover here inverted the
+     light/dark relationship against the panel cards. */
+  background: var(--canvas);
   color: var(--text);
   box-sizing: border-box;
   padding: 28px 20px 56px;
