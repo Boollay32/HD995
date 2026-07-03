@@ -106,7 +106,9 @@
   z-index: 70;
   display: flex;
   flex-direction: column;
-  background: var(--td-panel);
+  /* Surface tone, not panel: the drawer covers td-panel panes, so it
+     needs its own shade to read as a separate layer (both themes). */
+  background: var(--td-surface);
   border-right: 1px solid var(--td-border);
   transform: translateX(calc(-100% - 46px));
   visibility: hidden;
