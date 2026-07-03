@@ -14,6 +14,7 @@ namespace HelpDeskNet8.Models.RFCs
         public string CreatedBy { get; set; }
         public string AssignedTech { get; set; }
         public DateTime? TargetDate { get; set; }
+        public DateTime? Created { get; set; }
         public string Priority { get; set; }
 
 
@@ -29,7 +30,7 @@ namespace HelpDeskNet8.Models.RFCs
                     Title = (string)reader["ChangeRequestTitle"],
                     Status = (string)reader["ChangeRequestStatusDesc"],
                     CreatedBy = (string)reader["Change Request Originator"],
-                    //CreatedDate = (DateTime?)reader["ChangeRequestCreateDate"],                   
+                    Created = reader["ChangeRequestCreateDate"] as DateTime?,
                     AssignedTech = (string)reader["AssignedTechName"],
                     Priority = (string)reader["ChangeRequestPriorityDesc"],
                     TargetDate = (DateTime?)reader["TargetDate"],

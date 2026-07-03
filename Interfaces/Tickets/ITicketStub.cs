@@ -12,6 +12,7 @@
         string Status { get; set; }
         string AssignedTech { get; set; }
         int? AssignedTechID { get; set; }
+        DateTime? TargetDate { get; set; }
         string Authority { get; set; }
     }
 }

@@ -148,8 +148,9 @@ class DashboardPage extends PageBase {
             if (pct <= w.red) return { cls: 'red', label, due, overdue, today };
             if (pct <= w.amber) return { cls: 'amber', label, due, overdue, today };
         }
-        // No created date on the row (e.g. RFC lists): proportional maths is
-        // impossible, so stay neutral until overdue.
+        // No created date on the row: proportional maths is impossible, so
+        // stay neutral until overdue (defensive -- every current source now
+        // supplies both ends).
         return { cls: 'neutral', label, due, overdue, today };
     }
 
@@ -190,9 +191,7 @@ class DashboardPage extends PageBase {
                 ref: `#${r.ticketID}`,
                 title: r.subject || '',
                 status: r.statusDesc || '',
-                // Ticket LIST rows carry no target date (stub limitation --
-                // ledger note): chips stay neutral until the proc adds it.
-                dl: this._deadline(null, null),
+                dl: this._deadline(r.created, r.targetDate),
                 reply: this._needsMyReply(r),
                 updated: this._date(r.updated),
                 nav: { kind: 'ticket', ticketId: r.ticketID },
@@ -216,7 +215,7 @@ class DashboardPage extends PageBase {
                 ref: `RFC-${r.rfcID}`,
                 title: r.title || '',
                 status: r.status || '',
-                dl: this._deadline(null, r.targetDate),
+                dl: this._deadline(r.created, r.targetDate),
                 reply: false,
                 updated: null,
                 nav: { kind: 'rfc', rfcId: r.rfcID },
@@ -266,7 +265,7 @@ class DashboardPage extends PageBase {
                 ref: `#${r.ticketID}`,
                 title: r.subject || '',
                 withWho: r.assignedTech || 'unassigned',
-                dl: this._deadline(null, null),
+                dl: this._deadline(r.created, r.targetDate),
                 idle: this._idleDays(r.updated),
                 nav: { kind: 'ticket', ticketId: r.ticketID },
             }));
@@ -289,7 +288,7 @@ class DashboardPage extends PageBase {
                 ref: `RFC-${r.rfcID}`,
                 title: r.title || '',
                 withWho: r.assignedTech || 'unassigned',
-                dl: this._deadline(null, r.targetDate),
+                dl: this._deadline(r.created, r.targetDate),
                 idle: null,
                 nav: { kind: 'rfc', rfcId: r.rfcID },
             }));

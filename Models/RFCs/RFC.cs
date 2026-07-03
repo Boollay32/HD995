@@ -20,12 +20,14 @@ namespace HelpDeskNet8.Models.RFCs
         public string ChangeRequestOriginator { get; set; }
         public int? LastUpdatedUserID { get; set; }
         public string OriginatorEmail { get; set; }
+        public int? OriginatorID { get; set; }
         public DateTime? ChangeRequestCreateDate { get; set; }
         public string Title { get; set; }
         public DateTime? CloseDate { get; set; }
         public string Status { get; set; }
         public string AssignedTechName { get; set; }
         public string AssignedTechEmail { get; set; }
+        public int? AssignedTechID { get; set; }
         public string Priority { get; set; }
         public string Description { get; set; }
         public string Environment { get; set; }
@@ -57,6 +59,7 @@ namespace HelpDeskNet8.Models.RFCs
                     ChangeRequestID = reader["ChangeRequestID"] as int?,
                     ChangeRequestOriginator = reader["Change Request Originator"] as string,
                     OriginatorEmail = reader["OriginatorEmail"] as string,
+                    OriginatorID = reader["OriginatorID"] as int?,
                     ChangeRequestCreateDate = reader["ChangeRequestCreateDate"] as DateTime?,
                     Title = reader["ChangeRequestTitle"] as string,
                     Description = reader["ChangeRequestDescription"] as string,
@@ -65,6 +68,7 @@ namespace HelpDeskNet8.Models.RFCs
                     Environment = reader["ChangeRequestEnvironmentDesc"] as string,
                     AssignedTechName = reader["AssignedTechName"] as string,
                     AssignedTechEmail = reader["AssignedTechEmail"] as string,
+                    AssignedTechID = reader["AssignedTechID"] as int?,
                     LastUpdatedBy = reader["Last Updated By"] as string,
                     LastUpdateDate = reader["LastUpdateDate"] as DateTime?,
                     AffectedBusinessSystemsOrServices = reader["AffectedBusinessSystemsOrServices"] as string,

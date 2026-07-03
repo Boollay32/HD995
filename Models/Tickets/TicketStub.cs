@@ -48,6 +48,8 @@ namespace HelpDeskNet8.Models.Tickets
 
         public string Notify { get; set; }
 
+        public DateTime? TargetDate { get; set; }
+
         internal static TicketStub FromReader(IDataReader reader)
         {
             TicketStub newTicketStub = null;
@@ -77,7 +79,8 @@ namespace HelpDeskNet8.Models.Tickets
                         // TicketManager still adds it to the list -- crashing every
                         // queue-side filter/render that dereferences it). '2' = no
                         // active notification, matching NULL's real meaning.
-                        Notify = reader["Notify"] is DBNull ? "2" : (string)reader["Notify"]
+                        Notify = reader["Notify"] is DBNull ? "2" : (string)reader["Notify"],
+                        TargetDate = reader["TargetDate"] as DateTime?
                     };
                 }
             }
