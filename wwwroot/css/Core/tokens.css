@@ -75,7 +75,7 @@ html[data-font="large"] { font-size: 125%; }
 html[data-theme="dark"] {
     --panel: #2B2724;        /* warm charcoal panel */
     --text: #E8E0D6;         /* warm off-white: 11.33 on panel */
-    --border: #544D45;
+    --border: #4A433C;           /* aligned to the (deleted) Queue.css dark value */
     --row-hover: #34302C;
     --chip-bg: #3D362C;
     --canvas: #1E1B19;       /* darker warm canvas: sections lift */
@@ -220,4 +220,36 @@ textarea.field-invalid {
    :focus-visible rule -- including id-scoped ones -- so none leak through. */
 html:not([data-tabfocus="on"]) :focus-visible:is(#_, *) {
     outline: none !important;
+}
+
+/* ==== QUEUE-RELOCATED THEME VARIABLES ====
+   Moved verbatim from Queue.css theme blocks so the full palette
+   resolves on every page (single theming source of truth). */
+:root {
+    --bg: var(--canvas);
+    --row-border: #F0E4D4;
+    --header-bg: #FBF6EF;
+    --scrim: rgba(38,28,18,.30);
+    --accent-soft: #FDEFE0;
+    --badge-fg: #4A443C; --badge-bg: #EDE4D6;
+    --info-fg: #1D4ED8;
+    --warn-fg: #8A5318;
+    --ok-fg: #1F5249;
+    --bad-fg: #9A2018;  --bad-bg: #FAE3DF;
+    --neutral-fg: #6B6052; --neutral-bg: #F0E8DC;
+    --pri-urgent: #9A2018; --pri-high: #A4561C; --pri-normal: #7A6E60; --pri-low: #7E6A50;
+}
+html[data-theme="dark"] {
+    --bg: var(--canvas);
+    --row-border: #3A342E;
+    --header-bg: #211E1B;
+    --scrim: rgba(9,6,3,.6);
+    --accent-soft: #3A2C1C;
+    --badge-fg: #C5BBAD; --badge-bg: #3A342E;
+    --info-fg: #88A7F2;
+    --warn-fg: #F2B872;
+    --ok-fg: #7FD6C5;
+    --bad-fg: #F0867A;  --bad-bg: #3A2220;
+    --neutral-fg: #C5BBAD; --neutral-bg: #3A342E;
+    --pri-urgent: #F0867A; --pri-high: #F2B872; --pri-normal: #C5BBAD; --pri-low: #A89C8E;
 }
