@@ -179,6 +179,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
+  margin: 0; /* now an h1 */
 }
 
 .ud-role {

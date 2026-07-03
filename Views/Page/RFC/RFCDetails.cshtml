@@ -89,7 +89,7 @@
 
     <section class="td-overview" id="RFC-Overview" aria-label="RFC overview">
 
-        <label class="td-details-subject Value" id="Title"></label>
+        <h1 class="td-details-subject Value" id="Title"></h1>
 
         <div class="td-topbar-meta td-ov-pills" id="Topbar-Meta">
             <div class="td-meta-group">
@@ -115,11 +115,11 @@
                 <div class="td-ov-grid">
                     <div class="td-ov-cell">
                         <span class="td-ov-lbl">Originator</span>
-                        <label class="Value td-ov-val" id="changeRequestOriginator"></label>
+                        <span class="Value td-ov-val" id="changeRequestOriginator"></span>
                     </div>
                     <div class="td-ov-cell">
                         <span class="td-ov-lbl">Originator Email</span>
-                        <label class="Value td-ov-val" id="originatorEmail"></label>
+                        <span class="Value td-ov-val" id="originatorEmail"></span>
                     </div>
                     <div class="td-ov-cell">
                         <label class="td-ov-lbl" for="assignedTechName">Assigned Tech</label>
@@ -134,7 +134,7 @@
                 <div class="td-ov-grid">
                     <div class="td-ov-cell">
                         <span class="td-ov-lbl">Created</span>
-                        <label class="Value td-ov-val" id="changeRequestCreateDate"></label>
+                        <span class="Value td-ov-val" id="changeRequestCreateDate"></span>
                     </div>
                     <div class="td-ov-cell">
                         <label class="td-ov-lbl" for="TargetDate">Target Date</label>
@@ -150,7 +150,7 @@
             @* --- Description --- *@
             <div class="td-ov-group">
                 <div class="td-ov-grp-head">Description</div>
-                <textarea class="Value rfc-ov-desc" id="Description" required maxlength="2000"></textarea>
+                <textarea class="Value rfc-ov-desc" id="Description" aria-label="Description" required maxlength="2000"></textarea>
             </div>
         </div>
 
@@ -158,8 +158,8 @@
 
         @* hidden source selects for the editable Status / Priority pills (Stage 3 RFCPillEdit reads these) *@
         <div id="rfc-meta-selects" hidden>
-            <select class="Value td-select" id="rfcStatus" required></select>
-            <select class="Value td-select" id="priority" required></select>
+            <select class="Value td-select" id="rfcStatus" aria-label="Status" required></select>
+            <select class="Value td-select" id="priority" aria-label="Priority" required></select>
         </div>
     </section>
 
@@ -194,7 +194,7 @@
                     <div class="td-composer-dock" id="RFCNotes-Compose">
 
                         <div class="td-composer" id="rfc-note-composer-box">
-                            <textarea id="rfc-note-textarea"
+                            <textarea id="rfc-note-textarea" aria-label="Add a note"
                                       class="td-composer-input"
                                       placeholder="Add a note…"
                                       maxlength="2000"
