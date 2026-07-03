@@ -287,10 +287,10 @@ nav.Nav-Bar #navbar-menu .nav-ind {
   text-align:left; border:none; border-bottom:1px solid var(--border);
   background:var(--row-hover); padding:10px 14px; cursor:pointer;
   color:var(--text); position:relative; font-family:inherit; }
-.qv-bell-row.is-read{ background:none; opacity:.7; }
+.qv-bell-row.is-read{ background:none; color:var(--muted); }
 .qv-bell-row:hover{ background:var(--row-hover); opacity:1; }
 .qv-bell-msg{ font-size:0.75rem; line-height:1.4; padding-right:14px; }
-.qv-bell-when{ font-size:0.625rem; opacity:.6; }
+.qv-bell-when{ font-size:0.625rem; color:var(--muted); }
 .qv-bell-dot{ position:absolute; top:12px; right:12px; width:7px; height:7px;
   border-radius:50%; background:var(--accent); }
-.qv-bell-empty{ font-size:0.75rem; opacity:.6; margin:12px 14px; }
+.qv-bell-empty{ font-size:0.75rem; color:var(--muted); margin:12px 14px; }

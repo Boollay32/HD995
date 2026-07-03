@@ -28,7 +28,7 @@
 }
 .dash-sub {
   font-size: 0.75rem;
-  opacity: 0.65;
+  color: var(--muted);
   margin-top: 2px;
 }
 .dash-head-spacer { flex: 1; }
@@ -58,7 +58,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  opacity: 0.65;
+  color: var(--muted);
 }
 
 .dash-refresh {
@@ -99,7 +99,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  opacity: 0.7;
+  color: var(--muted);
   margin: 0 0 8px 2px;
 }
 
@@ -180,7 +180,7 @@
 .dash-ref {
   flex-shrink: 0;
   font-size: 0.75rem;
-  opacity: 0.65;
+  color: var(--muted);
 }
 .dash-title {
   flex: 1;
@@ -200,7 +200,7 @@
 .dash-with {
   flex-shrink: 0;
   font-size: 0.6875rem;
-  opacity: 0.65;
+  color: var(--muted);
 }
 
 .dash-reply-dot {
@@ -220,7 +220,7 @@
 }
 .dash-chip--red { background: var(--danger-bg); color: var(--danger); }
 .dash-chip--amber { background: var(--warn-bg); color: var(--warn); }
-.dash-chip--neutral { background: var(--row-hover); color: var(--text); opacity: 0.75; }
+.dash-chip--neutral { background: var(--row-hover); color: var(--muted); }
 
 /* ---- Project cards ---- */
 .dash-proj {
@@ -265,7 +265,7 @@
   align-items: baseline;
   gap: 4px;
   font-size: 0.6875rem;
-  opacity: 0.7;
+  color: var(--muted);
 }
 .dash-proj-idle { margin-left: auto; }
 .dash-proj-idle.is-amber { color: var(--warn); opacity: 1; }
@@ -273,7 +273,7 @@
 /* ---- States ---- */
 .dash-empty {
   font-size: 0.8125rem;
-  opacity: 0.6;
+  color: var(--muted);
   margin: 4px 2px;
 }
 #dash-feed[aria-busy="true"] { opacity: 0.55; }
