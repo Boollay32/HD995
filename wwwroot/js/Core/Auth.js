@@ -48,13 +48,13 @@ const Auth = {
             });
 
             if (!data?.userID) {
-                BuildMessageBox('Your session has timed out.', 'Index');
+                MessageBox.sessionTimeout();
             } else {
                 UI.showByTag('body');
             }
         } catch (error) {
             console.error('Authentication error:', error);
-            BuildMessageBox('Your Session has timed out.', 'Index');
+            MessageBox.sessionTimeout();
         }
     },
 

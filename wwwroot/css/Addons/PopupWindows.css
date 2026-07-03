@@ -58,7 +58,7 @@
   height: 100%;
 }
 #MessageBox-ScreenCover-Div #MessageBox-Outer-Div #MessageBox-Message {
-  text-align: center;
+  text-align: left;
   margin: 0;
   position: relative;
   box-sizing: border-box;
@@ -76,7 +76,7 @@
 }
 #MessageBox-ScreenCover-Div #MessageBox-Outer-Div #Button-Div {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 9px;
   margin-top: auto;
 }
@@ -156,3 +156,32 @@
 @keyframes mb-dialog-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
 #MessageBox-ScreenCover-Div { animation: mb-backdrop-in 0.16s ease both; }
 #MessageBox-ScreenCover-Div #MessageBox-Outer-Div { animation: mb-dialog-in 0.18s ease both; }
+
+/* ---- Titled message boxes: same idiom as the Confirm dialogs ---- */
+#MessageBox-Outer-Div .mb-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 10px;
+}
+#MessageBox-Outer-Div .mb-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--brand-pale);
+  color: var(--brand);
+}
+#MessageBox-Outer-Div .mb-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+#MessageBox-Outer-Div .mb-msg-titled {
+  padding-left: 49px;
+  color: var(--muted);
+}
