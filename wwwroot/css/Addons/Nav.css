@@ -257,3 +257,34 @@ nav.Nav-Bar #navbar-menu .nav-ind {
 .qv-set-num-lbl{ display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; }
 .qv-set-num{ width:52px; padding:2px 4px; border:1px solid var(--border);
   border-radius:6px; background:var(--panel); color:var(--text); font-family:inherit; }
+
+/* ---- Notification bell (NotificationBell.js) ---- */
+.qv-bell{ position:relative; display:inline-flex; align-items:center; }
+.qv-bell-btn{ position:relative; width:30px; height:30px; border:none; border-radius:8px;
+  background:none; color:inherit; display:grid; place-items:center; cursor:pointer; }
+.qv-bell-btn:hover{ background:var(--row-hover); }
+.qv-bell-badge{ position:absolute; top:0; right:0; min-width:15px; height:15px;
+  border-radius:8px; background:var(--accent); color:#fff; font-size:0.5625rem;
+  line-height:15px; text-align:center; padding:0 3px; }
+.qv-bell-badge.hidden{ display:none; }
+.qv-bell-panel{ position:absolute; top:calc(100% + 8px); right:0; z-index:1200;
+  width:340px; max-height:420px; overflow:auto; background:var(--panel);
+  border:1px solid var(--border); border-radius:11px;
+  box-shadow:0 10px 28px rgba(0,0,0,.18); color:var(--text); }
+.qv-bell-panel[hidden]{ display:none; }
+.qv-bell-head{ display:flex; align-items:center; justify-content:space-between;
+  padding:10px 14px; border-bottom:1px solid var(--border);
+  font-size:0.75rem; font-weight:700; }
+.qv-bell-markall{ border:none; background:none; color:var(--accent);
+  font-size:0.6875rem; cursor:pointer; padding:0; }
+.qv-bell-row{ display:flex; flex-direction:column; gap:2px; width:100%;
+  text-align:left; border:none; border-bottom:1px solid var(--border);
+  background:var(--row-hover); padding:10px 14px; cursor:pointer;
+  color:var(--text); position:relative; font-family:inherit; }
+.qv-bell-row.is-read{ background:none; opacity:.7; }
+.qv-bell-row:hover{ background:var(--row-hover); opacity:1; }
+.qv-bell-msg{ font-size:0.75rem; line-height:1.4; padding-right:14px; }
+.qv-bell-when{ font-size:0.625rem; opacity:.6; }
+.qv-bell-dot{ position:absolute; top:12px; right:12px; width:7px; height:7px;
+  border-radius:50%; background:var(--accent); }
+.qv-bell-empty{ font-size:0.75rem; opacity:.6; margin:12px 14px; }

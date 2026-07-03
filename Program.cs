@@ -37,6 +37,7 @@ builder.Services.AddScoped<ITaskManager, TaskManager>();
 builder.Services.AddScoped<IProjectManager, ProjectManager>();
 builder.Services.AddScoped<IMiscManager, MiscManager>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<INotificationManager, NotificationManager>();
 builder.Services.AddScoped<IMailPreviewSink, MailPreviewSink>();
 
 builder.Services.AddApplicationInsightsTelemetry();

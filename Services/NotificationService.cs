@@ -28,8 +28,9 @@ namespace HelpDeskNet8.Services
         private readonly IMailPreviewSink _preview;
         private readonly IProjectManager _projectManager;
         private readonly IUserManager _userManager;
+        private readonly INotificationManager _notificationManager;
 
-        public NotificationService(ITicketManager ticketManager, IMiscManager miscManager, IRFCManager rfcManager, IMailPreviewSink preview, IProjectManager projectManager, IUserManager userManager)
+        public NotificationService(ITicketManager ticketManager, IMiscManager miscManager, IRFCManager rfcManager, IMailPreviewSink preview, IProjectManager projectManager, IUserManager userManager, INotificationManager notificationManager)
         {
             _ticketManager = ticketManager;
             _miscManager = miscManager;
@@ -37,7 +38,14 @@ namespace HelpDeskNet8.Services
             _preview = preview;
             _projectManager = projectManager;
             _userManager = userManager;
+            _notificationManager = notificationManager;
         }
+
+        // A resolved notification recipient: the email (for the SMTP send) and,
+        // when known, the numeric user id (for the in-app inbox row). Email-only
+        // recipients -- the shared triage inbox, RFC people until the RFC detail
+        // proc exposes numeric ids -- get the email but never a row.
+        private sealed record Recipient(int? UserID, string Email);
 
         public async Task Notify(int ticketId, NotificationType type, IUser user, NotificationContext? context = null)
         {
@@ -49,8 +57,8 @@ namespace HelpDeskNet8.Services
                 if (ticket == null) return;
 
                 // Same priority order as every other identity resolver in this
-                // file (ResolveAssigneeEmailById / ResolveAssigneeEmail /
-                // ResolveProjectOwnerEmail): UserEmail first, UserLogin as
+                // file (ResolveAssigneeById / ResolveAssigneeByName /
+                // ResolveProjectOwner): UserEmail first, UserLogin as
                 // fallback. Getting this backwards here meant the actor's
                 // "identity string" for self-exclusion never matched the same
                 // person's email as computed by those resolvers, so the actor
@@ -61,19 +69,33 @@ namespace HelpDeskNet8.Services
 
                 var people = await ResolveTicketRecipients(type, ticket, user, context);
 
-                string[] recipients = StripActorAndDedupe(people, actorEmail);
+                Recipient[] recipients = StripActorAndDedupe(people, actorEmail, user?.UserID);
                 if (recipients.Length == 0) return;
 
                 var (subject, headline, facts) = BuildTicketEmail(type, ticketId, ticket, context, user);
                 string body = BuildBody(headline, facts);
 
+                // Dual-write: an in-app inbox row per recipient with a known user
+                // id, from the SAME resolved set as the email -- the two outputs
+                // can never disagree. Task events point at the task so the bell
+                // deep-links into the ticket's drawer; everything else at the
+                // ticket. Rows are written in preview mode too (dev DB).
+                bool isTask = IsTaskEvent(type);
+                await WriteInAppRows(recipients, type, user,
+                    entityType: isTask ? (byte)2 : (byte)1,
+                    entityId: isTask ? (context?.TaskID ?? ticketId) : ticketId,
+                    ticketId: ticketId,
+                    message: subject);
+
+                string[] emails = recipients.Select(r => r.Email).ToArray();
+
                 if (_preview.Enabled)
                 {
-                    _preview.Add(PointLabel(type), recipients, subject, body);
+                    _preview.Add(PointLabel(type), emails, subject, body);
                     return;
                 }
 
-                await _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
+                await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
             }
             catch
             {
@@ -98,32 +120,40 @@ namespace HelpDeskNet8.Services
 
                 // RFCs are internal-only. Assigned (creation) -> the new tech only;
                 // an update or status change -> the RFC owner + the tech.
-                var people = new List<string>();
+                var people = new List<Recipient>();
                 switch (type)
                 {
                     case NotificationType.RFCAssigned:
-                        people.Add(rfc.AssignedTechEmail);
+                        people.Add(new Recipient(null, rfc.AssignedTechEmail));
                         break;
                     case NotificationType.RFCResponded:
                     case NotificationType.RFCStatusChanged:
-                        people.Add(rfc.OriginatorEmail);
-                        people.Add(rfc.AssignedTechEmail);
+                        people.Add(new Recipient(null, rfc.OriginatorEmail));
+                        people.Add(new Recipient(null, rfc.AssignedTechEmail));
                         break;
                 }
 
-                string[] recipients = StripActorAndDedupe(people, actorEmail);
+                Recipient[] recipients = StripActorAndDedupe(people, actorEmail, user?.UserID);
                 if (recipients.Length == 0) return;
 
                 var (subject, headline, facts) = BuildRfcEmail(type, rfc, context, user);
                 string body = BuildBody(headline, facts);
 
+                // No numeric ids on the RFC detail yet, so this writes nothing
+                // today -- it lights up the moment the RFC detail proc exposes
+                // OriginatorID / AssignedTechID (ledger). Emails are unaffected.
+                await WriteInAppRows(recipients, type, user,
+                    entityType: 3, entityId: rfcId, ticketId: null, message: subject);
+
+                string[] emails = recipients.Select(r => r.Email).ToArray();
+
                 if (_preview.Enabled)
                 {
-                    _preview.Add(PointLabel(type), recipients, subject, body);
+                    _preview.Add(PointLabel(type), emails, subject, body);
                     return;
                 }
 
-                await _miscManager.SendMailMessage(FromAddress, recipients, subject, body);
+                await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
             }
             catch
             {
@@ -135,25 +165,50 @@ namespace HelpDeskNet8.Services
 
         // Drop blanks, the acting user (never self-notify -- the global caveat),
         // and duplicates, case-insensitively.
-        private static string[] StripActorAndDedupe(IEnumerable<string> people, string actorEmail)
+        private static Recipient[] StripActorAndDedupe(IEnumerable<Recipient> people, string actorEmail, int? actorId)
         {
             return people
-                .Where(e => !string.IsNullOrWhiteSpace(e))
-                .Where(e => string.IsNullOrWhiteSpace(actorEmail)
-                    || !string.Equals(e, actorEmail, System.StringComparison.OrdinalIgnoreCase))
-                .Distinct(System.StringComparer.OrdinalIgnoreCase)
+                .Where(r => r != null && !string.IsNullOrWhiteSpace(r.Email))
+                .Where(r => !(actorId.HasValue && r.UserID.HasValue && r.UserID.Value == actorId.Value))
+                .Where(r => string.IsNullOrWhiteSpace(actorEmail)
+                    || !string.Equals(r.Email, actorEmail, System.StringComparison.OrdinalIgnoreCase))
+                .GroupBy(r => r.Email, System.StringComparer.OrdinalIgnoreCase)
+                .Select(g => g.FirstOrDefault(x => x.UserID.HasValue) ?? g.First())
                 .ToArray();
+        }
+
+        private static bool IsTaskEvent(NotificationType type)
+        {
+            return type == NotificationType.TaskCreated
+                || type == NotificationType.TaskUpdated
+                || type == NotificationType.TaskStatusChanged
+                || type == NotificationType.TaskAssigned;
+        }
+
+        // In-app inbox rows (tblNotification) for every recipient with a known
+        // user id. Never throws into the caller -- same contract as the mail
+        // send (a notification failure must not break the originating save).
+        private async Task WriteInAppRows(Recipient[] recipients, NotificationType type,
+            IUser user, byte entityType, int entityId, int? ticketId, string message)
+        {
+            foreach (var r in recipients)
+            {
+                if (!r.UserID.HasValue || r.UserID.Value <= 0) continue;
+                await _notificationManager.Write(r.UserID.Value, user?.UserID,
+                    (byte)type, entityType, entityId, ticketId, message);
+            }
         }
 
         // Build the recipient set for a ticket/task event, keyed on the event and
         // on whether the actor is an internal (Govtech) user or a client.
-        private async Task<List<string>> ResolveTicketRecipients(
+        private async Task<List<Recipient>> ResolveTicketRecipients(
             NotificationType type, ITicket ticket, IUser user, NotificationContext? context)
         {
-            var people = new List<string>();
+            var people = new List<Recipient>();
 
-            string tech = ticket.AssignedTechEmail;     // the ticket's assigned tech
-            string owner = await ResolveTicketOwnerEmail(ticket);  // the ticket originator / owner
+            // the ticket's assigned tech (numeric id lives on the detail row)
+            var tech = new Recipient(ticket.AssignedTechID, ticket.AssignedTechEmail);
+            Recipient owner = await ResolveTicketOwner(ticket);  // the ticket originator / owner
             bool actorInternal = ActorIsInternal(user);
             bool clientTicket = IsClientTicket(ticket);
 
@@ -163,7 +218,7 @@ namespace HelpDeskNet8.Services
                     if (!actorInternal)
                     {
                         // A client raised the ticket -> the shared triage inbox.
-                        people.Add(FromAddress);
+                        people.Add(new Recipient(null, FromAddress));
                     }
                     else if (clientTicket)
                     {
@@ -174,7 +229,7 @@ namespace HelpDeskNet8.Services
                     else
                     {
                         // An internal ticket -> the project owner + the assigned tech.
-                        people.Add(await ResolveProjectOwnerEmail(ticket, user));
+                        people.Add(await ResolveProjectOwner(ticket, user));
                         people.Add(tech);
                     }
                     break;
@@ -193,7 +248,7 @@ namespace HelpDeskNet8.Services
                     else
                     {
                         // Internal -> the project owner + ticket owner + assigned tech.
-                        people.Add(await ResolveProjectOwnerEmail(ticket, user));
+                        people.Add(await ResolveProjectOwner(ticket, user));
                         people.Add(owner);
                         // HD44: a save that also reassigned the ticket sends the
                         // brand-new tech the "assigned" mail, not this status one.
@@ -229,19 +284,19 @@ namespace HelpDeskNet8.Services
                     // ticket owner (the actor-strip drops them when they raised
                     // it) and the project owner.
                     if (!clientTicket) people.Add(owner);
-                    people.Add(await ResolveProjectOwnerEmail(ticket, user));
+                    people.Add(await ResolveProjectOwner(ticket, user));
                     break;
 
                 case NotificationType.TaskUpdated:
                     // HD44: the task's own assigned tech (always) + the ticket owner
                     // (dropped if they are the actor).
-                    people.Add(await ResolveTaskAssigneeEmail(context));
+                    people.Add(await ResolveTaskAssignee(context));
                     if (!clientTicket) people.Add(owner);
                     break;
 
                 case NotificationType.TaskAssigned:
                     // -> the newly assigned task assignee (id first, name as fallback).
-                    people.Add(await ResolveTaskAssigneeEmail(context));
+                    people.Add(await ResolveTaskAssignee(context));
                     break;
             }
 
@@ -266,7 +321,7 @@ namespace HelpDeskNet8.Services
         // Prefers the reliable numeric raiser id; falls back to the ticket's
         // own Email column (presumably join-based and not reliably populated
         // for every ticket type) only if that id is unavailable.
-        private async Task<string> ResolveTicketOwnerEmail(ITicket ticket)
+        private async Task<Recipient> ResolveTicketOwner(ITicket ticket)
         {
             if (ticket.RaisedByID.HasValue && ticket.RaisedByID.Value > 0)
             {
@@ -276,83 +331,87 @@ namespace HelpDeskNet8.Services
                     string email = person == null
                         ? string.Empty
                         : (string.IsNullOrWhiteSpace(person.UserEmail) ? person.UserLogin : person.UserEmail) ?? string.Empty;
-                    if (!string.IsNullOrWhiteSpace(email)) return email;
+                    if (!string.IsNullOrWhiteSpace(email)) return new Recipient(ticket.RaisedByID, email);
                 }
                 catch
                 {
                     // fall through to the Email column below
                 }
             }
-            return ticket.Email ?? string.Empty;
+            // Email-column fallback: no reliable id, so no in-app row.
+            return new Recipient(null, ticket.Email ?? string.Empty);
         }
 
-        private async Task<string> ResolveProjectOwnerEmail(ITicket ticket, IUser user)
+        private async Task<Recipient> ResolveProjectOwner(ITicket ticket, IUser user)
         {
-            if (!ticket.ProjectID.HasValue || ticket.ProjectID.Value <= 0) return string.Empty;
+            if (!ticket.ProjectID.HasValue || ticket.ProjectID.Value <= 0) return new Recipient(null, string.Empty);
 
             IProject? project = await _projectManager.GetProjectDetail(user, ticket.ProjectID.Value);
-            if (project == null || project.OwnerID <= 0) return string.Empty;
+            if (project == null || project.OwnerID <= 0) return new Recipient(null, string.Empty);
 
             IUser? owner = await _userManager.GetUserDetail(project.OwnerID);
-            if (owner == null) return string.Empty;
+            if (owner == null) return new Recipient(null, string.Empty);
 
-            return (string.IsNullOrWhiteSpace(owner.UserEmail) ? owner.UserLogin : owner.UserEmail) ?? string.Empty;
+            string email = (string.IsNullOrWhiteSpace(owner.UserEmail) ? owner.UserLogin : owner.UserEmail) ?? string.Empty;
+            return new Recipient(project.OwnerID, email);
         }
 
         // Tries the reliable id-based lookup first; only falls back to the
         // fragile cross-proc name match below if no id was captured.
-        private async Task<string> ResolveTaskAssigneeEmail(NotificationContext? context)
+        private async Task<Recipient> ResolveTaskAssignee(NotificationContext? context)
         {
-            string byId = await ResolveAssigneeEmailById(context?.TaskAssigneeID);
-            if (!string.IsNullOrEmpty(byId)) return byId;
-            return await ResolveAssigneeEmail(context?.TaskAssigneeName);
+            Recipient byId = await ResolveAssigneeById(context?.TaskAssigneeID);
+            if (!string.IsNullOrEmpty(byId.Email)) return byId;
+            return await ResolveAssigneeByName(context?.TaskAssigneeName);
         }
 
         // Reliable path: resolve directly by user id (the task save always has
         // this). Avoids matching a display name across two independent procs
-        // (see ResolveAssigneeEmail below, kept as a fallback only).
-        private async Task<string> ResolveAssigneeEmailById(int? assigneeId)
+        // (see ResolveAssigneeByName below, kept as a fallback only).
+        private async Task<Recipient> ResolveAssigneeById(int? assigneeId)
         {
-            if (!assigneeId.HasValue || assigneeId.Value <= 0) return string.Empty;
+            if (!assigneeId.HasValue || assigneeId.Value <= 0) return new Recipient(null, string.Empty);
             try
             {
                 IUser? person = await _userManager.GetUserDetail(assigneeId.Value);
-                if (person == null) return string.Empty;
-                return (string.IsNullOrWhiteSpace(person.UserEmail) ? person.UserLogin : person.UserEmail) ?? string.Empty;
+                if (person == null) return new Recipient(null, string.Empty);
+                string email = (string.IsNullOrWhiteSpace(person.UserEmail) ? person.UserLogin : person.UserEmail) ?? string.Empty;
+                return new Recipient(assigneeId, email);
             }
             catch
             {
-                return string.Empty;
+                return new Recipient(null, string.Empty);
             }
         }
 
-        // Fallback only, and only reached when ResolveAssigneeEmailById has no id.
+        // Fallback only, and only reached when ResolveAssigneeById has no id.
         // Best-effort: a task stores only the assignee's display NAME, so match it
         // against the user list and resolve their email. Fragile by nature
         // (duplicate / mismatched names, or -- as turned out to be the actual bug
         // here -- two different procs formatting the same person's name
         // differently) -- returns empty when there is no clean single match, and
         // never throws into the caller.
-        private async Task<string> ResolveAssigneeEmail(string? assigneeName)
+        private async Task<Recipient> ResolveAssigneeByName(string? assigneeName)
         {
-            if (string.IsNullOrWhiteSpace(assigneeName)) return string.Empty;
+            if (string.IsNullOrWhiteSpace(assigneeName)) return new Recipient(null, string.Empty);
             try
             {
                 var users = await _userManager.GetUsers(new Filter());
-                if (users == null) return string.Empty;
+                if (users == null) return new Recipient(null, string.Empty);
 
                 var match = users.FirstOrDefault(u =>
                     !string.IsNullOrWhiteSpace(u.UserName)
                     && string.Equals(u.UserName.Trim(), assigneeName.Trim(), System.StringComparison.OrdinalIgnoreCase));
-                if (match == null || !match.UserID.HasValue) return string.Empty;
+                if (match == null || !match.UserID.HasValue) return new Recipient(null, string.Empty);
 
                 IUser? person = await _userManager.GetUserDetail(match.UserID.Value);
-                if (person == null) return string.Empty;
-                return (string.IsNullOrWhiteSpace(person.UserEmail) ? person.UserLogin : person.UserEmail) ?? string.Empty;
+                if (person == null) return new Recipient(null, string.Empty);
+                string email = (string.IsNullOrWhiteSpace(person.UserEmail) ? person.UserLogin : person.UserEmail) ?? string.Empty;
+                return new Recipient(match.UserID, email);
             }
             catch
             {
-                return string.Empty;
+                return new Recipient(null, string.Empty);
             }
         }
 
