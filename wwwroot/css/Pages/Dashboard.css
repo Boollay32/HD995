@@ -54,7 +54,7 @@
 .dash-kpi-n.is-amber { color: var(--warn); }
 .dash-kpi-n.is-accent { color: var(--accent); }
 .dash-kpi-lbl {
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;

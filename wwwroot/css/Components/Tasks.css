@@ -348,7 +348,7 @@
 .td-ed-dirty::before {
   content: "\25CF";
   margin-right: 5px;
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
   vertical-align: middle;
 }
 .td-ed-foot-btns {
