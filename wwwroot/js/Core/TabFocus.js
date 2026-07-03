@@ -32,7 +32,8 @@ const TabFocus = {
     mount() {
         const slot = document.querySelector('#qv-settings-panel [data-set-slot="tabfocus"]');
         if (!slot || slot.querySelector('.qv-tabfocus')) return !!slot;
-        const wrap = document.createElement('label');
+        // span, not label: see Theme.js -- empty <label> is a WAVE error.
+        const wrap = document.createElement('span');
         wrap.className = 'qv-tabfocus';
         wrap.innerHTML = '<button type="button" class="qv-tf-sw" role="switch" ' +
             'aria-label="Toggle tab highlight"><span class="qv-tf-knob"></span></button>';

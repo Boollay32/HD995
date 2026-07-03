@@ -67,11 +67,11 @@ const NotificationBell = {
         wrap.id = 'qv-bell';
         wrap.innerHTML =
             '<button type="button" class="qv-bell-btn" id="qv-bell-btn" ' +
-                'aria-label="Notifications" aria-haspopup="true" aria-expanded="false">' +
+                'aria-label="Notifications" aria-expanded="false" aria-controls="qv-bell-panel">' +
                 NotificationBell.BELL +
                 '<span class="qv-bell-badge mono hidden" id="qv-bell-badge"></span>' +
             '</button>' +
-            '<div class="qv-bell-panel" id="qv-bell-panel" role="menu" hidden>' +
+            '<div class="qv-bell-panel" id="qv-bell-panel" hidden>' +
                 '<div class="qv-bell-head">' +
                     '<span>Notifications</span>' +
                     '<button type="button" class="qv-bell-markall" id="qv-bell-markall">Mark all read</button>' +

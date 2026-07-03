@@ -34,7 +34,9 @@ const Theme = {
     mount() {
         const bar = document.querySelector('#qv-settings-panel [data-set-slot="theme"]');
         if (!bar || bar.querySelector('.qv-theme')) return !!bar;   // done (or nothing to mount into)
-        const wrap = document.createElement('label');
+        // span, not label: a <label> with no text and no labeled input is a
+        // WAVE 'empty form label' error; the button has its own aria-label.
+        const wrap = document.createElement('span');
         wrap.className = 'qv-theme';
         wrap.innerHTML = '<span class="qv-theme-lbl"></span>' +
             '<button type="button" class="qv-sw" role="switch" aria-label="Toggle dark mode"><span class="qv-knob"></span></button>';
