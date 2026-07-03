@@ -97,7 +97,7 @@ const Confirm = (() => {
         return new Promise((resolve) => {
             const html = `
                 <div class="cf-dialog ${danger ? 'cf-danger' : ''}" role="alertdialog"
-                     aria-modal="true" aria-labelledby="cf-title" aria-describedby="cf-msg">
+                     aria-modal="true" aria-labelledby="cf-title"${message ? ' aria-describedby="cf-msg"' : ''}>
                     <div class="cf-head">
                         <span class="cf-icon">${_icon(danger)}</span>
                         <h2 class="cf-title" id="cf-title">${_escape(title)}</h2>
@@ -132,7 +132,7 @@ const Confirm = (() => {
         return new Promise((resolve) => {
             const html = `
                 <div class="cf-dialog" role="alertdialog" aria-modal="true"
-                     aria-labelledby="cf-title" aria-describedby="cf-msg">
+                     aria-labelledby="cf-title"${message ? ' aria-describedby="cf-msg"' : ''}>
                     <div class="cf-head">
                         <span class="cf-icon">${_icon(false)}</span>
                         <h2 class="cf-title" id="cf-title">${_escape(title)}</h2>

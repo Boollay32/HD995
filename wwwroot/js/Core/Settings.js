@@ -39,9 +39,9 @@ const Settings = {
         wrap.id = 'qv-settings';
         wrap.innerHTML =
             '<button type="button" class="qv-settings-btn" id="qv-settings-btn" ' +
-                'aria-label="Settings" aria-haspopup="true" aria-expanded="false">' +
+                'aria-label="Settings" aria-expanded="false" aria-controls="qv-settings-panel">' +
                 this.GEAR + '</button>' +
-            '<div class="qv-settings-panel" id="qv-settings-panel" role="menu" hidden>' +
+            '<div class="qv-settings-panel" id="qv-settings-panel" hidden>' +
                 '<div class="qv-set-title">Settings</div>' +
                 '<div class="qv-set-row">' +
                     '<span class="qv-set-lbl">Dark mode</span>' +
