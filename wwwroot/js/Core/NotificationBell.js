@@ -32,13 +32,29 @@ const NotificationBell = {
     _btn()   { return document.getElementById('qv-bell-btn'); },
     _badge() { return document.getElementById('qv-bell-badge'); },
 
+    _gateStarted: false,
+
     mount() {
         const bar = document.querySelector('nav.Nav-Bar #navbar-logout');
         if (!bar) return false;
-        if (bar.querySelector('#qv-bell')) return true;
+        if (NotificationBell._gateStarted) return true;
+        NotificationBell._gateStarted = true;
 
-        // Clients never get the bell; report mounted so the poll stops.
-        if (!NotificationBell.ALLOW.has(sessionStorage.getItem('Admin'))) return true;
+        // Gate through the SAME source as the nav menu gating: the
+        // cached-per-session admin level (Auth.getAdminLevel). The
+        // login-only 'Admin' key is never populated on app pages --
+        // gating on it meant the bell never mounted for anyone.
+        // Clients never get the bell; resolving without building is
+        // the intended outcome for them.
+        Auth.getAdminLevel().then((level) => {
+            if (!NotificationBell.ALLOW.has(String(level))) return;
+            NotificationBell._build(bar);
+        }).catch(() => { /* no level, no bell */ });
+        return true;
+    },
+
+    _build(bar) {
+        if (bar.querySelector('#qv-bell')) return;
 
         const wrap = document.createElement('div');
         wrap.className = 'qv-bell';
@@ -62,7 +78,6 @@ const NotificationBell = {
 
         NotificationBell._bind();
         NotificationBell.load();
-        return true;
     },
 
     _bind() {
