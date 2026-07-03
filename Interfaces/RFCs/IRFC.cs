@@ -9,8 +9,10 @@
         DateTime? ChangeRequestCreateDate { get; set; }
         String ChangeRequestOriginator { get; set; }
         String OriginatorEmail { get; set; }
+        int? OriginatorID { get; set; }
         String AssignedTechName { get; set; }
         String AssignedTechEmail { get; set; }
+        int? AssignedTechID { get; set; }
         string Priority { get; set; }
         String Description { get; set; }
         String Environment { get; set; }

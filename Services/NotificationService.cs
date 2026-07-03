@@ -124,12 +124,12 @@ namespace HelpDeskNet8.Services
                 switch (type)
                 {
                     case NotificationType.RFCAssigned:
-                        people.Add(new Recipient(null, rfc.AssignedTechEmail));
+                        people.Add(new Recipient(rfc.AssignedTechID, rfc.AssignedTechEmail));
                         break;
                     case NotificationType.RFCResponded:
                     case NotificationType.RFCStatusChanged:
-                        people.Add(new Recipient(null, rfc.OriginatorEmail));
-                        people.Add(new Recipient(null, rfc.AssignedTechEmail));
+                        people.Add(new Recipient(rfc.OriginatorID, rfc.OriginatorEmail));
+                        people.Add(new Recipient(rfc.AssignedTechID, rfc.AssignedTechEmail));
                         break;
                 }
 
@@ -139,9 +139,9 @@ namespace HelpDeskNet8.Services
                 var (subject, headline, facts) = BuildRfcEmail(type, rfc, context, user);
                 string body = BuildBody(headline, facts);
 
-                // No numeric ids on the RFC detail yet, so this writes nothing
-                // today -- it lights up the moment the RFC detail proc exposes
-                // OriginatorID / AssignedTechID (ledger). Emails are unaffected.
+                // RFC recipients carry numeric ids (RFCGetDetail exposes
+                // OriginatorID / AssignedTechID), so RFC events write in-app
+                // inbox rows exactly like ticket and task events.
                 await WriteInAppRows(recipients, type, user,
                     entityType: 3, entityId: rfcId, ticketId: null, message: subject);
 
