@@ -589,39 +589,11 @@
   color: var(--muted);
 }
 
-/* HD32-THEME-LAYER v1 */
-/* =============================================================================
-   Theme layer: white / grey / orange / black, light + dark.
-   Every queue surface colour routes through a variable; [data-theme] flips them.
-   ============================================================================= */
-:root, html[data-theme="light"]{
-  --bg:var(--canvas); --panel:#FFFFFF; --text:#33302C; --muted:#675D50;
-  --border:#E5D8C6; --row-border:#F0E4D4; --row-hover:#FBF6EF;
-  --header-bg:#FBF6EF; --scrim:rgba(38,28,18,.30);
-  --accent:#B5530E; --accent-strong:#964307; --accent-soft:#FDEFE0; --on-accent:#FFFFFF;
-  --badge-fg:#4A443C; --badge-bg:#EDE4D6;
-  --info-fg:#1D4ED8; --info-bg:#E2EBF9;
-  --warn-fg:#8A5318; --warn-bg:#FBE6CF;
-  --ok-fg:#1F5249;   --ok-bg:#D7EDE9;
-  --bad-fg:#9A2018;  --bad-bg:#FAE3DF;
-  --neutral-fg:#6B6052; --neutral-bg:#F0E8DC;
-  --pri-urgent:#9A2018; --pri-high:#A4561C; --pri-normal:#7A6E60; --pri-low:#7E6A50;
-}
-html[data-theme="dark"]{
-  /* inspired by GitHub "Dim": softer than pure black, layered surfaces
-     (page dark, cards lifted lighter so rows stand out), high-contrast text */
-  --bg:var(--canvas); --panel:#2B2724; --text:#E8E0D6; --muted:#A89C8E;
-  --border:#4A433C; --row-border:#3A342E; --row-hover:#34302C;
-  --header-bg:#211E1B; --scrim:rgba(9,6,3,.6);
-  --accent:#F0843A; --accent-strong:#FF9A55; --accent-soft:#3A2C1C; --on-accent:#2A1B0E;
-  --badge-fg:#C5BBAD; --badge-bg:#3A342E;
-  --info-fg:#88A7F2; --info-bg:#1E2A44;
-  --warn-fg:#F2B872; --warn-bg:#3D3322;
-  --ok-fg:#7FD6C5;   --ok-bg:#234640;
-  --bad-fg:#F0867A;  --bad-bg:#3A2220;
-  --neutral-fg:#C5BBAD; --neutral-bg:#3A342E;
-  --pri-urgent:#F0867A; --pri-high:#F2B872; --pri-normal:#C5BBAD; --pri-low:#A89C8E;
-}
+/* HD32-THEME-LAYER v1 -- relocated.
+   The theme variable blocks that lived here were moved verbatim to
+   Core/tokens.css (single theming source of truth); the one drifted value
+   (dark --border) was resolved to the queue value there. Queue rules below
+   consume the same variable names, now defined globally. */
 
 /* re-point the queue's surfaces at the variables (later source order wins) */
 .qv{ background:var(--bg); color:var(--text); }
@@ -682,7 +654,7 @@ html[data-theme="dark"]{
    Stronger than the generic .qv-unread "awaiting reply" dot. */
 .qv-unread.qv-mine {
   background: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-bg, rgba(181,83,14,0.18));
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 /* loading shimmer: skeleton rows while the queue fetches */
