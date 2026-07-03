@@ -130,23 +130,24 @@ class DashboardPage extends PageBase {
         const today = !overdue && now.toDateString() === due.toDateString();
 
         let label;
+        let overDays = 0;
         if (overdue) {
-            const d = Math.max(1, Math.floor(this._days(now - endOfDue)) + 1);
-            label = `Overdue ${d}d`;
+            overDays = Math.max(1, Math.floor(this._days(now - endOfDue)) + 1);
+            label = `Overdue ${overDays}d`;
         } else if (today) {
             label = 'Today';
         } else {
             label = due.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
         }
 
-        if (overdue) return { cls: 'red', label, due, overdue, today };
+        if (overdue) return { cls: 'red', label, due, overdue, today, overDays, pct: 0 };
 
         const created = this._date(createdV);
         const w = DeadlineWindows.get();
         if (created && endOfDue > created) {
-            const pct = (endOfDue - now) / (endOfDue - created) * 100;
-            if (pct <= w.red) return { cls: 'red', label, due, overdue, today };
-            if (pct <= w.amber) return { cls: 'amber', label, due, overdue, today };
+            const pct = Math.round((endOfDue - now) / (endOfDue - created) * 100);
+            if (pct <= w.red) return { cls: 'red', label, due, overdue, today, overDays: 0, pct };
+            if (pct <= w.amber) return { cls: 'amber', label, due, overdue, today, overDays: 0, pct };
         }
         // No created date on the row: proportional maths is impossible, so
         // stay neutral until overdue (defensive -- every current source now
@@ -406,6 +407,39 @@ class DashboardPage extends PageBase {
         }).join('');
     }
 
+    // Slipping rule (HD59 item 6): overdue, red or amber deadline window,
+    // or no update for 7+ days. Returns null for on-track items.
+    _slip(it) {
+        if (it.dl.overdue) {
+            const d = it.dl.overDays || 1;
+            return { sev: 0, key: -d, chip: `${d}d over`, tone: 'red' };
+        }
+        if (it.dl.cls === 'red' || it.dl.cls === 'amber') {
+            const chip = it.dl.pct != null ? `${Math.max(0, it.dl.pct)}% left` : it.dl.label;
+            return { sev: it.dl.cls === 'red' ? 1 : 2, key: it.dl.pct ?? 99, chip, tone: it.dl.cls };
+        }
+        if ((it.idle ?? 0) >= 7) {
+            return { sev: 3, key: -it.idle, chip: `idle ${it.idle}d`, tone: 'amber' };
+        }
+        return null;
+    }
+
+    _slipRow(it, s) {
+        const due = it.dl.due
+            ? 'due ' + it.dl.due.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+            : 'no target date';
+        const upd = it.idle == null ? ''
+            : it.idle === 0 ? ' \u00b7 updated today' : ` \u00b7 last update ${it.idle}d ago`;
+        return `<button type="button" class="dash-slip-row${s.tone === 'amber' ? ' is-amber' : ''}" ${this._navAttrs(it.nav)}>` +
+            '<span class="dash-slip-top">' +
+                `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
+                `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
+                `<span class="dash-slip-chip mono is-${s.tone}">${Format.escapeHtml(s.chip)}</span>` +
+            '</span>' +
+            `<span class="dash-slip-meta">with ${Format.escapeHtml(it.withWho)} \u00b7 ${due}${upd}</span>` +
+        '</button>';
+    }
+
     _renderRaised(raised) {
         const el = document.getElementById('dash-raised');
         if (!el) return;
@@ -413,15 +447,31 @@ class DashboardPage extends PageBase {
             el.innerHTML = '<p class="dash-empty">Nothing you\u2019ve raised is with anyone else.</p>';
             return;
         }
-        el.innerHTML = raised.map(it =>
-            `<button type="button" class="dash-row dash-row--slim" ${this._navAttrs(it.nav)}>` +
-                `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
-                `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
-                `<span class="dash-with">with ${Format.escapeHtml(it.withWho)}</span>` +
-                (it.idle != null && it.dl.cls === 'none'
-                    ? `<span class="dash-chip dash-chip--neutral mono">${it.idle === 0 ? 'updated today' : `idle ${it.idle}d`}</span>`
-                    : this._chip(it.dl)) +
-            '</button>').join('');
+
+        const slipping = [];
+        const onTrack = [];
+        raised.forEach(it => {
+            const s = this._slip(it);
+            if (s) slipping.push({ it, s }); else onTrack.push(it);
+        });
+        slipping.sort((a, b) => (a.s.sev - b.s.sev) || (a.s.key - b.s.key));
+
+        let html = '';
+        if (slipping.length) {
+            html += `<p class="dash-slip-head">Slipping \u00b7 ${slipping.length}</p>` +
+                slipping.map(x => this._slipRow(x.it, x.s)).join('');
+        }
+        if (onTrack.length) {
+            if (slipping.length) html += `<p class="dash-ontrack-head">On track \u00b7 ${onTrack.length}</p>`;
+            html += onTrack.map(it =>
+                `<button type="button" class="dash-row dash-row--slim" ${this._navAttrs(it.nav)}>` +
+                    `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
+                    `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
+                    `<span class="dash-with">with ${Format.escapeHtml(it.withWho)}</span>` +
+                    `<span class="dash-chip dash-chip--neutral mono">${it.idle === 0 ? 'updated today' : it.dl.cls !== 'none' && it.dl.label ? Format.escapeHtml(it.dl.label) : 'on track'}</span>` +
+                '</button>').join('');
+        }
+        el.innerHTML = html;
     }
 
     // -------------------------  Navigation  ------------------------- //

@@ -277,3 +277,48 @@
   margin: 4px 2px;
 }
 #dash-feed[aria-busy="true"] { opacity: 0.55; }
+
+/* ---- Raised-by-you slippage shelf (HD59 item 6) ---- */
+.dash-slip-head {
+  margin: 2px 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--danger);
+}
+.dash-ontrack-head {
+  margin: 12px 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dash-slip-row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: var(--row-hover);
+  border: 0;
+  border-left: 3px solid var(--danger);
+  border-radius: 0;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+}
+.dash-slip-row.is-amber { border-left-color: var(--warn); }
+.dash-slip-row:hover { background: var(--border); }
+.dash-slip-top { display: flex; align-items: center; gap: 8px; }
+.dash-slip-top .dash-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dash-slip-chip { font-size: 0.6875rem; white-space: nowrap; }
+.dash-slip-chip.is-red { color: var(--danger); }
+.dash-slip-chip.is-amber { color: var(--warn); }
+.dash-slip-meta {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--muted);
+  margin-top: 3px;
+}
