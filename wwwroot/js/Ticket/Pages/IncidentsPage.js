@@ -144,7 +144,7 @@ class IncidentPage extends PageBase {
                   <span class="qv-pv-dt">Type</span><span class="qv-pv-dd">${Format.escapeHtml(r.requestType)}</span>
                   <span class="qv-pv-dt">Opened</span><span class="qv-pv-dd">${TQdate(r.created)}</span>
                   <span class="qv-pv-dt">Last activity</span><span class="qv-pv-dd">${TQago(r.updated)}</span>
-                  ${r.notify ? '<span class="qv-pv-dt">Status</span><span class="qv-pv-dd" style="color:var(--accent-strong);font-weight:600">\u25cf Awaiting reply</span>' : ''}
+                  ${r.notify === '0' ? '<span class="qv-pv-dt">Reply</span><span class="qv-pv-dd" style="color:var(--accent-strong);font-weight:600">\u25cf Reply needed</span>' : r.notify === '1' ? '<span class="qv-pv-dt">Reply</span><span class="qv-pv-dd" style="color:var(--muted);font-weight:600">\u25cf Awaiting client</span>' : ''}
                 </div>
                 ${snippet ? `<h3 class="qv-pv-h">Latest note</h3><div style="font-size:0.78125rem;line-height:1.6">${Format.escapeHtml(snippet)}</div>` : ''}`;
             },

@@ -25,11 +25,13 @@ namespace HelpDeskNet8.Controllers.Tickets
         ITaskManager taskManager,
         IAttachmentManager attachmentManager,
         IHistory history,
-        INotificationService notificationService) : ControllerBase
+        INotificationService notificationService,
+        IUserManager userManager) : ControllerBase
     {
         private readonly ITicketManager _ticketManager = ticketManager;
         private readonly INoteManager _noteManager = noteManager;
         private readonly ITaskManager _taskManager = taskManager;
+        private readonly IUserManager _userManager = userManager;
         private readonly IAttachmentManager _attachmentManager = attachmentManager;
         private readonly IHistory _history = history;
         private readonly INotificationService _notificationService = notificationService;
@@ -200,6 +202,17 @@ namespace HelpDeskNet8.Controllers.Tickets
             {
                 var savedTask = (await _taskManager.GetTaskDetail(user, result.ObjectID.Value)).FirstOrDefault();
                 if (savedTask != null) newAssigneeName = savedTask.AssignedTech;
+            }
+            // Creates do not always return the new task id, so the refetch
+            // above can miss -- and the raw posted ID then leaked into the
+            // notification wording ("assigned ... to 1000935"). People are
+            // not robots: if the "name" still parses as a number and we have
+            // the id, resolve the display name from the user record.
+            if (newAssigneeId.HasValue && int.TryParse(newAssigneeName, out _))
+            {
+                var assigneeUser = await _userManager.GetUserDetail(newAssigneeId.Value);
+                if (!string.IsNullOrWhiteSpace(assigneeUser?.UserName))
+                    newAssigneeName = assigneeUser.UserName;
             }
 
             // HD44: route the task event(s). Create, status change and assignee

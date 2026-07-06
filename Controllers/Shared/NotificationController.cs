@@ -32,6 +32,7 @@ namespace HelpDeskNet8.Controllers.Shared
                 {
                     (byte)NotificationType.NoteResponded,
                     (byte)NotificationType.TicketStatusChanged,
+                    (byte)NotificationType.TicketAssigned,
                 };
                 notifications = notifications.Where(n => allowed.Contains(n.EventType)).ToList();
                 unreadCount = notifications.Count(n => n.ReadDate == null);
