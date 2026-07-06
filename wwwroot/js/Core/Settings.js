@@ -56,11 +56,6 @@ const Settings = {
                         '<small>focus outline when tabbing</small></span>' +
                     '<span class="qv-set-slot" data-set-slot="tabfocus"></span>' +
                 '</div>' +
-                '<div class="qv-set-row">' +
-                    '<span class="qv-set-lbl">Deadline warnings' +
-                        '<small>% of timeline remaining</small></span>' +
-                    '<span class="qv-set-slot" data-set-slot="deadline"></span>' +
-                '</div>' +
             '</div>';
         bar.insertBefore(wrap, bar.firstChild);
 

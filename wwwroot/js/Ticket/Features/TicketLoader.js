@@ -164,13 +164,12 @@ const TicketLoader = {
                     }
 
                     // HD36 1d: when Extended Information is empty there is nothing
-                    // to show in the group -- hide it. For a client (whose Details
-                    // tab is the only Workspace tab), an empty group means the whole
-                    // Workspace is empty.
-                    // HD39 1b: clients START in RIGHT_ONLY (messages-only) to avoid
-                    // flashing the Workspace before this async check; reveal BOTH only
-                    // when it has content. If the field fetch fails, no fields build
-                    // -> empty -> staying messages-only is correct.
+                    // to show in the group -- hide it and show the "no extra
+                    // details" empty state instead.
+                    // HD60: clients now start (and stay) in the full BOTH layout
+                    // -- resolve() + the server boot stamp agree -- so no layout
+                    // flip happens here any more; this check governs only the
+                    // Extended Information group's visibility.
                     var cfContainer = document.getElementById('CustomFields-Container');
                     var isEmpty = !cfContainer || cfContainer.children.length === 0;
                     var detailsEmpty = document.getElementById('Details-Empty');
@@ -181,9 +180,6 @@ const TicketLoader = {
                         detailsEmpty?.removeAttribute('hidden');
                     } else {
                         detailsEmpty?.setAttribute('hidden', '');
-                        if (State.clientView) {
-                            PaneLayout.apply(TDLAYOUT.BOTH);
-                        }
                     }
 
                     // HD43 Ticket-g: fields are fully populated now -- snapshot
