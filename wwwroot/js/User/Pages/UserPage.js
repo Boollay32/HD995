@@ -74,9 +74,20 @@ class UserPage extends PageBase {
             const key = String(r.userID ?? '');
             if (!key || seen.has(key)) continue;
             seen.add(key);
+            // GDPR-scrubbed accounts: the DB-side scrub writes these literal
+            // placeholders into the name/email. They are not users any more
+            // -- dropping them here removes them from the queue, the search
+            // and every filter chip in one place.
+            if (this._isScrubbed(r)) continue;
             rows.push(r);
         }
         return rows;
+    }
+
+    _isScrubbed(r) {
+        const n = String(r.userName ?? '').trim();
+        const e = String(r.email ?? '').trim();
+        return n === 'GDPR - user removed' || e === 'GDPR - Email removed';
     }
 
     _open(row) {
