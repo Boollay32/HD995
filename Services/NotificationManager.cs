@@ -88,6 +88,30 @@ namespace HelpDeskNet8.Services
             return (list, unread);
         }
 
+        public async Task PurgeRead(int userId)
+        {
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[dbo].[usp_Helpdesk_NotificationPurgeRead]";
+            command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = userId });
+
+            await conn.OpenAsync();
+            try
+            {
+                await command.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                // Never let a purge failure surface into the login path.
+                AppLogger.Error(nameof(NotificationManager), ex);
+            }
+            finally
+            {
+                await conn.CloseAsync();
+            }
+        }
+
         public async Task MarkRead(int userId, int? notificationId)
         {
             var conn = (SqlConnection)_connection;
