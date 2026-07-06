@@ -51,14 +51,16 @@ let defaultPassword = "";
 let mustChangePassword = false;
 let pinVerified = false;
 
-// Redirect into the app after both walls pass: RFC-only users (level 4) -> RFC,
-// clients (level 0) -> TicketPage, internal techs -> the Dashboard landing
-// page. Mirrors the guard in PageController.Dashboard so the two agree.
+// Redirect into the app after both walls pass. FAIL-CLOSED: the Dashboard
+// is allow-listed to internal techs (1, 2); every other value -- clients,
+// RFC-only, null, or anything unexpected -- goes to its own home, with
+// TicketPage as the safe default. (The old form defaulted unknown values
+// TO the Dashboard: a gate that fails open.) Mirrors PageController.Dashboard.
 function enterApp() {
     const level = sessionStorage.getItem("Admin");
-    const destination = level === "4" ? "RFC"
-        : level === "0" ? "TicketPage"
-        : "Dashboard";
+    const destination = (level === "1" || level === "2") ? "Dashboard"
+        : level === "4" ? "RFC"
+        : "TicketPage";
     OkayButtonPress(destination);
 }
 
