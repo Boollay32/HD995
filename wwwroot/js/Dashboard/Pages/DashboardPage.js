@@ -10,9 +10,9 @@
 // name (same approach as TasksPage -- known limitation).
 //
 // Deadline chips are PROPORTIONAL: amber/red when the remaining time falls
-// below a % of the item's own created->due timeline (DeadlineWindows.get(),
-// user-configurable in Settings), so a 3-day task and a 6-month project share
-// one rule. No due date, or the 1900-01-01 sentinel, renders neutral.
+// below a fixed % of the item's own created->due timeline (amber 25%, red
+// 10% -- locked, HD60), so a 3-day task and a 6-month project share one
+// rule. No due date, or the 1900-01-01 sentinel, renders neutral.
 //
 // Data: five existing list endpoints, fetched on load and on the refresh
 // button only (no polling). Project cards come entirely from GetProjects --
@@ -35,6 +35,16 @@ class DashboardPage extends PageBase {
 
     async init() {
         if (!await this.checkAuth()) return;
+
+        // Belt-and-braces (HD60): the login destination, the nav menu, and
+        // the server route all already exclude clients/RFC-only users, but
+        // the page itself bounces them too, so no residual path (bfcache,
+        // stale tab, direct URL) ever shows a client the dashboard.
+        const level = parseInt(await Auth.getAdminLevel(), 10);
+        if (level !== 1 && level !== 2) {
+            window.location.replace(level === 4 ? '/RFC' : '/TicketPage');
+            return;
+        }
         if (typeof SetActivePage === 'function') SetActivePage('Dashboard');
 
         this._identity();
@@ -143,7 +153,9 @@ class DashboardPage extends PageBase {
         if (overdue) return { cls: 'red', label, due, overdue, today, overDays, pct: 0 };
 
         const created = this._date(createdV);
-        const w = DeadlineWindows.get();
+        // HD60: thresholds locked at amber 25% / red 10% of the item's own
+        // timeline (no longer user-configurable; DeadlineWindows removed).
+        const w = { amber: 25, red: 10 };
         if (created && endOfDue > created) {
             const pct = Math.round((endOfDue - now) / (endOfDue - created) * 100);
             if (pct <= w.red) return { cls: 'red', label, due, overdue, today, overDays: 0, pct };

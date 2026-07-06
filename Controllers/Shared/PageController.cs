@@ -35,16 +35,12 @@ namespace HelpDeskNet8.Controllers.Shared
         public IActionResult ProjectForm() => View("~/Views/Page/Projects/ProjectForm.cshtml");
 
         [Route("TicketDetails")]
-        public async Task<IActionResult> TicketDetails()
+        public IActionResult TicketDetails()
         {
-            // HD39: stamp the boot layout server-side so a client's Workspace is hidden
-            // from first paint (no flash). Uses the same CheckAdmin the JS resolve uses,
-            // so the stamped value and the JS-applied layout agree. Nothing is cached
-            // client-side -- recomputed each render, so there is no editable stored value.
-            IUser user = this.GetAuthenticatedUser();
-            bool isClient = user != null
-                && await authenticator.CheckAdmin(user) == Constants.AdminLevel.Authority;
-            ViewBag.BootLayout = isClient ? "right-only" : "both";
+            // HD60: clients get the full ticket view too (read-only via the JS
+            // field lockdown + the server-side SaveTicket data lock), so the
+            // boot layout is 'both' for everyone.
+            ViewBag.BootLayout = "both";
             return View("~/Views/Page/Ticket/TicketDetails.cshtml");
         }
 

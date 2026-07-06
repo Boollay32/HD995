@@ -277,3 +277,16 @@
 .dform #Notes .td-note-compose {
   margin-top: 14px;
 }
+/* ---- Custom-field checkbox groups (Dropdowns._populateCheckboxGroup) ----
+   These had no rule at all, so their labels inherited the page default and
+   sat visibly out of scale with the .Value fields around them. */
+.dform .CheckboxDiv {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.dform .CheckboxDiv label {
+  font-family: var(--font-sans);
+  font-size: 0.84375rem;
+  color: var(--text);
+}

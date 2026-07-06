@@ -105,9 +105,13 @@ const PaneLayout = {
         // async custom-field emptiness check (TicketLoader) reveals it if non-empty.
         if (!isAdmin) {
             State.clientView = true;
-            // Messages is the RIGHT pane post shell-flip, so messages-only
-            // is right-only (matches the server-stamped BootLayout).
-            return TDLAYOUT.RIGHT_ONLY;
+            // HD60: clients get the FULL view on every ticket -- overview,
+            // Details tab, and Messages -- with clientView driving the
+            // read-only lockdown (fields disabled, pills locked, internal
+            // tabs hidden). Previously RIGHT_ONLY until the Extended
+            // Information check revealed it, which left tickets without
+            // custom fields showing nothing but messages.
+            return TDLAYOUT.BOTH;
         }
         State.clientView = false;
         // Internal tickets keep the Messages pane PRESENT (started collapsed
