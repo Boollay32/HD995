@@ -48,14 +48,19 @@ namespace HelpDeskNet8.Models.Users
                 {
                     newUserStub = new UserStub
                     {
+                        // Null-safe reads throughout: the old hard casts threw
+                        // on DBNull and the per-row catch swallowed it, so any
+                        // user with a NULL email / authority / locked state /
+                        // admin level / last login silently VANISHED from the
+                        // user list (never-logged-in accounts most commonly).
                         UserID = (int?)reader["User ID"],
-                        UserName = (string)reader["User Name"] as String,
-                        Phone = reader["Phone"] as String,
-                        Authority = (string)reader["Authority"] as String,
-                        Email = (string)reader["Email"] as String,
-                        Locked = (int?)reader["Locked"],
-                        LastLoginDate = (DateTime)reader["Last Login Date"],
-                        AdminLevel = (string)reader["AdminLevel"] as String,
+                        UserName = reader["User Name"] as string,
+                        Phone = reader["Phone"] as string,
+                        Authority = reader["Authority"] as string,
+                        Email = reader["Email"] as string,
+                        Locked = reader["Locked"] as int?,
+                        LastLoginDate = reader["Last Login Date"] as DateTime?,
+                        AdminLevel = reader["AdminLevel"] as string,
                     };
                 }
             }
