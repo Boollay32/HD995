@@ -68,12 +68,15 @@ class UserManager extends PageBase {
         const data = await UserLoader.getDetail(this.userLogin);
         if (data) {
             FillUserDetail(data);
-            // The list row only carries the contact Email (UserStub.Email), which
-            // is NOT guaranteed to equal the account UserLogin the UserManage proc
-            // matches on. Stash the canonical UserLogin from GetUserDetail so the
-            // save / manage / reset / delete ops key on the right value. (HD41 7a)
-            if (data.userLogin) {
-                sessionStorage.setItem(STORAGE_KEYS.VIEW_USER_LOGIN, data.userLogin);
+            // Re-stamp the ops key from the detail payload on EVERY load.
+            // usp_Helpdesk_GetUserDetail aliases UserLogin AS Email, so
+            // userEmail IS the canonical account login; userLogin is used
+            // first if the proc ever returns it unaliased. This self-heals
+            // any stale key (including the legacy literal "undefined") so
+            // reset / delete / update always key on the right account.
+            const canonicalLogin = data.userLogin || data.userEmail;
+            if (canonicalLogin) {
+                sessionStorage.setItem(STORAGE_KEYS.VIEW_USER_LOGIN, canonicalLogin);
             }
         }
         // Raw lock state (the Locked select cannot represent 99/deactivated)
