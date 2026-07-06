@@ -16,5 +16,9 @@ namespace HelpDeskNet8.Interfaces.Shared
         // Mark one row (or all, when notificationId is null) read. The proc
         // keys every UPDATE on the recipient id -- the IDOR backstop.
         Task MarkRead(int userId, int? notificationId);
+
+        // Delete the user's already-read rows. Called at login so read
+        // notifications survive only the session they were read in.
+        Task PurgeRead(int userId);
     }
 }

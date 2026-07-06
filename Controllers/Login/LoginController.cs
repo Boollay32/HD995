@@ -10,9 +10,10 @@ namespace HelpDeskNet8.Controllers.Login
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class LoginController(IAuthenticator auth) : ControllerBase
+    public class LoginController(IAuthenticator auth, INotificationManager notificationManager) : ControllerBase
     {
         private readonly IAuthenticator _authenticator = auth;
+        private readonly INotificationManager _notificationManager = notificationManager;
 
         [HttpPost]
         [EnableRateLimiting("login")]
@@ -21,6 +22,14 @@ namespace HelpDeskNet8.Controllers.Login
         {
             IUser? user = await _authenticator.AuthenticateByPassword(
                 request.UserName, request.Password, request.UTC, request.NewPassword);
+
+            // Read notifications live only for the session they were read in:
+            // a new login sweeps them. Fire-safe -- PurgeRead swallows its own
+            // errors, so this can never block a login.
+            if (user?.UserID != null)
+            {
+                await _notificationManager.PurgeRead(user.UserID.Value);
+            }
 
             return Ok(new TransferObject
             {
