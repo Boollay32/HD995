@@ -430,9 +430,11 @@ const NotesPanel = (() => {
         ta.value = note.Body ?? '';
         editor.appendChild(ta);
 
+        // Chips live INSIDE the edit bar, after the attach button (add icon
+        // first, then any existing attachments) -- created here, appended
+        // once the bar exists below.
         const attachWrap = document.createElement('div');
         attachWrap.className = 'td-note-edit-attachments';
-        editor.appendChild(attachWrap);
 
         const bar = document.createElement('div');
         bar.className = 'td-note-edit-bar';
@@ -464,6 +466,7 @@ const NotesPanel = (() => {
         actions.appendChild(saveBtn);
 
         bar.appendChild(addLabel);
+        bar.appendChild(attachWrap);
         bar.appendChild(actions);
         editor.appendChild(bar);
 
