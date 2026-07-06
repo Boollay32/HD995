@@ -258,8 +258,12 @@ namespace HelpDeskNet8.Services
                     break;
 
                 case NotificationType.TicketAssigned:
-                    // Internal-only -> the newly assigned tech.
+                    // The newly assigned tech, AND the ticket owner: the person
+                    // who raised the ticket should know it has been picked up.
+                    // The wording is already neutral ("X assigned ticket #n to
+                    // Y"), so one message serves both.
                     people.Add(tech);
+                    people.Add(owner);
                     break;
 
                 case NotificationType.NoteResponded:
