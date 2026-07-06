@@ -250,8 +250,9 @@
 .td-note-edit-save:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
 .td-note-edit-cancel:disabled,
 .td-note-edit-save:disabled { opacity: 0.5; cursor: not-allowed; }
-.td-note-edit-attachments { display: flex; flex-wrap: wrap; gap: 4px; }
+.td-note-edit-attachments { display: flex; flex-wrap: wrap; gap: 4px; flex: 1; min-width: 0; }
 .td-note-edit-attachments:empty { display: none; }
+.td-note-edit-attachments .td-attach-list { margin-top: 0; }
 .td-note-edit-bar { display: flex; align-items: center; gap: 8px; }
 .td-note-edit-bar .td-note-edit-actions { margin-left: auto; }
 

@@ -15,6 +15,11 @@
   gap: 16px 18px;
   margin-top: 8px;
 }
+/* The hidden attribute must actually hide: the display:flex author rule
+   above otherwise overrides the UA [hidden] { display:none }, leaving
+   "hidden" chip lists visible (seen as a duplicated attachment below the
+   note editor). */
+.td-attach-list[hidden] { display: none; }
 .td-attach {
   position: relative;
   display: inline-flex;
