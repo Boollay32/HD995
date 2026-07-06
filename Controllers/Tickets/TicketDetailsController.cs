@@ -198,10 +198,22 @@ namespace HelpDeskNet8.Controllers.Tickets
             int? newAssigneeId = int.TryParse(task.AssignedTech, out int parsedAssigneeId) ? parsedAssigneeId : (int?)null;
 
             string newAssigneeName = task.AssignedTech;
-            if (result.ObjectID.HasValue)
+            // usp_Helpdesk_ManageTask returns the id only from its INSERT
+            // branch -- updates return nothing -- so fall back to the posted
+            // TaskID. Without this, edits skipped the refetch, an untouched
+            // assignee (the keep option omits the field) stayed null, and
+            // null-vs-old-name read as "assignee changed": a spurious
+            // assignment email on ordinary edits. Also feeds ctx.TaskID so
+            // update notifications deep-link correctly.
+            int? savedTaskId = result.ObjectID ?? task.TaskID;
+            if (savedTaskId.HasValue && savedTaskId.Value != 0)
             {
-                var savedTask = (await _taskManager.GetTaskDetail(user, result.ObjectID.Value)).FirstOrDefault();
+                var savedTask = (await _taskManager.GetTaskDetail(user, savedTaskId.Value)).FirstOrDefault();
                 if (savedTask != null) newAssigneeName = savedTask.AssignedTech;
+            }
+            if (string.IsNullOrWhiteSpace(task.AssignedTech) && string.IsNullOrWhiteSpace(newAssigneeName))
+            {
+                newAssigneeName = oldTaskAssignee; // untouched assignee: unchanged
             }
             // Creates do not always return the new task id, so the refetch
             // above can miss -- and the raw posted ID then leaked into the
@@ -223,7 +235,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             var taskCtx = new NotificationContext
             {
                 TaskTitle = task.Title,
-                TaskID = result.ObjectID,
+                TaskID = savedTaskId,
                 TaskAssigneeID = newAssigneeId,
                 TaskAssigneeName = newAssigneeName,
                 OldTaskAssigneeName = oldTaskAssignee,

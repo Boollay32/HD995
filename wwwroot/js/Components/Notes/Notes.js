@@ -234,13 +234,18 @@ const Notes = (() => {
                 noteDescription: text,
                 visibleToClient: note.IsVisibleToClient ? '1' : '0',
             });
-            const existing = (note.Attachments ?? [])
-                .filter(a => a && a.base64)
-                .map(a => ({
-                    AttachmentName: a.name,
-                    AttachmentByteArray: a.base64,
-                    AttachmentImageType: 0,
-                }));
+            // Fetched attachments carry attachmentByteArray/attachmentName
+            // (the stub wire shape); optimistic ones carry base64/name. The
+            // old filter read only the optimistic shape, so the echo was
+            // permanently empty and every edit-save wiped the note's saved
+            // attachments (the proc delete-and-reinserts on update).
+            const existing = (note.Attachments ?? note.attachments ?? [])
+                .map(a => a && {
+                    AttachmentName: a.attachmentName ?? a.name,
+                    AttachmentByteArray: a.attachmentByteArray ?? a.base64,
+                    AttachmentImageType: a.attachmentImageType ?? 0,
+                })
+                .filter(a => a && a.AttachmentByteArray);
             const added = await Composer.encode(addedFiles);
             const attachments = existing.concat(added);
             const data = await API.post(
