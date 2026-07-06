@@ -53,14 +53,18 @@ namespace HelpDeskNet8.Controllers.Shared
         [Route("Dashboard")]
         public async Task<IActionResult> Dashboard()
         {
-            // Internal landing page. Clients and RFC-only users are bounced to
-            // their own home; the split mirrors Login.js enterApp so the menu,
-            // the login destination, and this route always agree.
+            // Internal landing page. FAIL-CLOSED: the Dashboard is allow-listed
+            // to internal levels (StandardGovtech, Admin); every other level --
+            // client, RFC-only, or anything unexpected -- is bounced to its own
+            // home. The old form listed who to exclude and admitted the rest,
+            // which let odd/unknown levels straight in. Mirrors Login.js enterApp.
             IUser user = this.GetAuthenticatedUser();
             int level = user == null ? -1 : await authenticator.CheckAdmin(user);
-            if (level == Constants.AdminLevel.Authority) return Redirect("/TicketPage");
-            if (level == Constants.AdminLevel.RfcOnly) return Redirect("/RFC");
-            return View("~/Views/Page/Dashboard/Dashboard.cshtml");
+            if (level == Constants.AdminLevel.StandardGovtech || level == Constants.AdminLevel.Admin)
+            {
+                return View("~/Views/Page/Dashboard/Dashboard.cshtml");
+            }
+            return Redirect(level == Constants.AdminLevel.RfcOnly ? "/RFC" : "/TicketPage");
         }
 
         [Route("Incidents")]
