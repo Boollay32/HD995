@@ -65,7 +65,23 @@ builder.Services.AddHealthChecks()
     });
 
 // CSRF: validate the anti-forgery token sent as a header by CSRF.js on POSTs.
-builder.Services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
+// The antiforgery cookie is pinned to HTTPS-only (framework default is
+// SameAsRequest, which would mint it over HTTP if HTTP were ever reachable).
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
+// HSTS: the UseHsts() default is max-age 30 days with no subdomain coverage.
+// A year plus IncludeSubDomains is the sensible floor for an HTTPS-only site.
+// Preload is deliberately not enabled -- submitting to the browser preload
+// list is a domain-wide, months-to-undo commitment to make explicitly.
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromDays(365);
+    options.IncludeSubDomains = true;
+});
 
 if (!builder.Environment.IsDevelopment())
 {

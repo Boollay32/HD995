@@ -82,7 +82,8 @@ class CookieConsent {
     setCookie(value) {
         const expireDate = new Date();
         expireDate.setTime(expireDate.getTime() + (this.options.expireDays * 86400000));
-        document.cookie = `${this.cookieName}=${value}; expires=${expireDate.toUTCString()}; path=/`;
+        // secure + samesite: no cookie from this app should ride plain HTTP.
+        document.cookie = `${this.cookieName}=${value}; expires=${expireDate.toUTCString()}; path=/; secure; samesite=lax`;
     }
 
     isEnabled() {
