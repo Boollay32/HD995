@@ -14,10 +14,21 @@ class UserSave extends PageBase {
 
     // -------------------------  Update  ------------------------- //
 
+    // One gate for every op: the stored login key must be a real value.
+    // Null (cleared), '' or the literal 'undefined'/'null' (legacy bad
+    // writes) all mean this account has no usable login to key on.
+    _requireLogin() {
+        const v = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+        if (v && v !== 'undefined' && v !== 'null') return v;
+        MessageBox.show('This account has no login to operate on \u2014 it may have been scrubbed or deactivated.');
+        return null;
+    }
+
     async updateUser() {
         try {
             const phone = document.getElementById('UserPhone')?.value;
-            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+            const userLogin = this._requireLogin();
+            if (!userLogin) return;
 
             await API.post('User/UpdateUser', API.authPayload({
                 userLogin,
@@ -45,7 +56,8 @@ class UserSave extends PageBase {
                 return;
             }
             const phone = document.getElementById('UserPhone')?.value;
-            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+            const userLogin = this._requireLogin();
+            if (!userLogin) return;
             // ManageUserRequest declares these as C# strings; STJ rejects JSON
             // numbers for string props (400), so send the raw select values.
             //
@@ -86,7 +98,8 @@ class UserSave extends PageBase {
     async activateUser() {
         UI.toggleWaiting();
         try {
-            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+            const userLogin = this._requireLogin();
+            if (!userLogin) return;
             const phone = document.getElementById('UserPhone')?.value;
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
@@ -115,7 +128,8 @@ class UserSave extends PageBase {
     async unlockUser() {
         UI.toggleWaiting();
         try {
-            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+            const userLogin = this._requireLogin();
+            if (!userLogin) return;
             const phone = document.getElementById('UserPhone')?.value;
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
 
@@ -155,7 +169,8 @@ class UserSave extends PageBase {
     async resetUser() {
         UI.toggleWaiting();
         try {
-            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+            const userLogin = this._requireLogin();
+            if (!userLogin) return;
 
             const data = await API.post('User/ResetUser',
                 API.authPayload({ userLogin })
@@ -192,7 +207,8 @@ class UserSave extends PageBase {
     async deleteUser() {
         UI.toggleWaiting();
         try {
-            const userLogin = sessionStorage.getItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+            const userLogin = this._requireLogin();
+            if (!userLogin) return;
 
             const data = await API.post('User/DeleteUser',
                 API.authPayload({ userLogin })
