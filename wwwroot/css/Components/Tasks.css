@@ -558,7 +558,7 @@
   gap: 5px;
 }
 /* HD41 1a: attach button sizing is global now (.td-attach-btn in Attachments.css). */
-.td-att-wrap .td-att-chips { order: 1; }
+/* (order:1 compensation removed: the DOM itself is button-then-chips now.) */
 .td-att-wrap .td-attach-list { margin-top: 0; }
 .td-att-add {
   display: inline-flex;

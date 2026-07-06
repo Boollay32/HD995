@@ -169,10 +169,13 @@ const Notes = (() => {
         };
 
         const bar = document.createElement('div');
-        bar.className = 'td-note-edit-actions';
+        bar.className = 'td-note-edit-bar';
+
+        const actions = document.createElement('div');
+        actions.className = 'td-note-edit-actions';
 
         const addLabel = document.createElement('label');
-        addLabel.className = 'td-note-edit-attach td-attach-btn';
+        addLabel.className = 'td-attach-btn';
         addLabel.setAttribute('aria-label', 'Add attachment to note');
         addLabel.title = 'Add attachment';
         const addInput = document.createElement('input');
@@ -197,8 +200,11 @@ const Notes = (() => {
         save.type = 'button'; save.className = 'td-note-edit-save'; save.textContent = 'Save';
         const cancel = document.createElement('button');
         cancel.type = 'button'; cancel.className = 'td-note-edit-cancel'; cancel.textContent = 'Cancel';
-        bar.appendChild(addLabel); bar.appendChild(save); bar.appendChild(cancel);
-        wrap.appendChild(ta); wrap.appendChild(pendingWrap); wrap.appendChild(bar);
+        // Icon first, then pending chips inline, actions right -- one bar,
+        // matching the messages-pane editor.
+        actions.appendChild(save); actions.appendChild(cancel);
+        bar.appendChild(addLabel); bar.appendChild(pendingWrap); bar.appendChild(actions);
+        wrap.appendChild(ta); wrap.appendChild(bar);
         body.replaceWith(wrap);
         ta.focus();
 

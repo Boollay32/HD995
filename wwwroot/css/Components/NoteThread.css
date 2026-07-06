@@ -147,7 +147,7 @@
   display: grid;
   place-items: center;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   border: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -191,7 +191,7 @@
   flex-shrink: 0;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.td-note-edit:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.td-note-edit:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .td-note-edit:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .td-note-delete {
   width: 28px;
@@ -206,7 +206,7 @@
   flex-shrink: 0;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.td-note-delete:hover { background: var(--danger); border-color: var(--danger); color: #fff; }
+.td-note-delete:hover { background: var(--danger); border-color: var(--danger); color: var(--on-accent); }
 .td-note-delete:focus-visible { outline: 2px solid var(--danger); outline-offset: 1px; }
 .td-note-body.is-removed { color: var(--muted); font-style: italic; }
 .td-note-editor { display: flex; flex-direction: column; gap: 8px; }
@@ -284,9 +284,5 @@
 .td-note-compose .td-composer-attachments { order: 3; }
 .td-note-compose .td-charcount { order: 4; flex: 0 0 auto; margin-left: auto; }
 
-/* ===== HD Issues 29 - Group-3 step 2: note edit-mode attachments (3a, 3b) ===== */
-/* 3a: existing-attachment remove-X is interactive only while editing the note. */
-/* 3b: files staged while editing, shown as chips above the Save/Cancel bar. */
-.td-note-edit-attachments { display: flex; flex-wrap: wrap; gap: 6px; }
-.td-note-edit-attachments:empty { display: none; }
-.td-note-edit-attach { order: -1; margin-right: auto; }
+/* (HD29 Group-3 legacy block removed: chips now live INSIDE the edit bar --
+   see .td-note-edit-bar / .td-note-edit-attachments above.) */
