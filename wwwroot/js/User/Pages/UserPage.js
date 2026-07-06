@@ -81,7 +81,17 @@ class UserPage extends PageBase {
 
     _open(row) {
         sessionStorage.setItem(STORAGE_KEYS.USER_ID, row.userID);
-        sessionStorage.setItem(STORAGE_KEYS.VIEW_USER_LOGIN, row.email);
+        // Store the ops key only when the row HAS an email; otherwise CLEAR
+        // it. Storing a missing value wrote the literal string "undefined"
+        // (the "undefined could not be reset" bug), and merely skipping
+        // would leak the previously viewed user's login into this user's
+        // reset/delete/update -- the wrong account would be operated on.
+        // GetUserDetail re-stamps the canonical login on load (HD41 7a).
+        if (row.email) {
+            sessionStorage.setItem(STORAGE_KEYS.VIEW_USER_LOGIN, row.email);
+        } else {
+            sessionStorage.removeItem(STORAGE_KEYS.VIEW_USER_LOGIN);
+        }
         this.navigateToUserDetails();
     }
 
