@@ -12,7 +12,7 @@ const RQ_STATUS_COLOR = {
     'In Progress': ['var(--warn-fg)', 'var(--warn-bg)'],
     'On Hold':     ['var(--neutral-fg)', 'var(--neutral-bg)'],
     Approved:      ['var(--ok-fg)', 'var(--ok-bg)'],
-    Completed:     ['var(--ok-fg)', 'var(--ok-bg)'],
+    Completed:     ['var(--accent-2)', 'var(--accent-2-bg)'],
     Rejected:      ['var(--bad-fg)', 'var(--bad-bg)'],
 };
 const RQ_DONE = ['Completed', 'Rejected', 'Closed', 'Cancelled'];
