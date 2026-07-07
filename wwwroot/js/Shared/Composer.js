@@ -226,12 +226,19 @@ const Composer = (() => {
             }
             const toAdd = Array.from(files).slice(0, remaining);
             const rejected = [];
+            const rejectedEmpty = [];
             toAdd.forEach(file => {
                 if (file.size > MAX_FILE_SIZE_B) { rejected.push(file.name); return; }
+                // Reject 0-byte files uniformly (Messages let them through
+                // while the Notes tab caught them -- inconsistent).
+                if (file.size === 0) { rejectedEmpty.push(file.name); return; }
                 pendingFiles.push(file);
             });
             if (rejected.length > 0) {
                 UI.toast?.(`${rejected.join(', ')} exceeded ${MAX_FILE_SIZE_MB}MB limit`, 'warning');
+            }
+            if (rejectedEmpty.length > 0) {
+                UI.toast?.(`${rejectedEmpty.join(', ')} is empty and can\u2019t be attached`, 'warning');
             }
             _renderChips();
             if (fileInput) fileInput.value = ''; // allow re-adding same file after removal

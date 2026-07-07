@@ -142,10 +142,16 @@ const Notes = (() => {
         if (!body) return;
         const original = note.Body ?? '';
 
-        // Edit mode lets the creator remove existing attachments (gated by
-        // .is-editing) and stage new ones below until Save.
+        // Edit mode: existing attachments + newly staged files live in ONE
+        // inline bar. Seed `pending` with the note's current attachments so
+        // they render inside the editor bar (icon-first, removable) instead of
+        // being stranded in the read-view list below; hide that list while
+        // editing. _submitNoteEdit reads both the saved shape and File objects,
+        // so the kept set round-trips on save.
         card.classList.add('is-editing');
-        let pending = [];
+        let pending = (note.Attachments ?? note.attachments ?? []).slice();
+        card.querySelector('.td-note-body ~ .td-attach-list, .td-note-attachments')
+            ?.setAttribute('hidden', '');
 
         const wrap = document.createElement('div');
         wrap.className = 'td-note-editor';
