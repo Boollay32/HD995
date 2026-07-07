@@ -11,6 +11,7 @@ namespace HelpDeskNet8.Models.Attachments
     {        
         public int AttachmentID { get; set; }        
         public int NoteID { get; set; }        
+        public int TaskID { get; set; }        
         public String AttachmentByteArray { get; set; }        
         public String AttachmentName { get; set; }        
         public int AttachmentImageType { get; set; }        
@@ -63,16 +64,20 @@ namespace HelpDeskNet8.Models.Attachments
         {
             try
             {
-                // Note attachments expose NoteID; task attachments expose TaskID.
-                // Either way the owning id is stored in NoteID on the stub.
-                int ownerId = HasColumn(reader, "NoteID")
-                    ? (int)reader["NoteID"]
-                    : (int)reader["TaskID"];
+                // Note attachments expose a NoteID column; task attachments a
+                // TaskID column. Populate the MATCHING stub property so the wire
+                // item carries the right key (noteID for notes, taskID for
+                // tasks) -- the client groups task attachments by taskID, which
+                // was previously undefined because the id was mislabelled as
+                // noteID, so every task attachment was silently dropped.
+                bool hasNote = HasColumn(reader, "NoteID");
+                int ownerId = hasNote ? (int)reader["NoteID"] : (int)reader["TaskID"];
 
                 return new AttachmentStub
                 {
                     AttachmentID = (int)reader["AttachmentID"],
-                    NoteID = ownerId,
+                    NoteID = hasNote ? ownerId : 0,
+                    TaskID = hasNote ? 0 : ownerId,
                     AttachmentByteArray = ToBase64(reader["Attachment"]),
                     AttachmentDate = (DateTime)reader["AttachmentDate"],
                     AttachmentName = (string)reader["AttachmentInfo"],
