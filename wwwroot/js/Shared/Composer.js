@@ -123,9 +123,12 @@ const Composer = (() => {
         }
     }
 
-    // Fetch all task attachments for a ticket, grouped by taskID. Mirrors
-    // fetchNoteAttachments; GetAttachmentsTasks returns rows keyed by
-    // noteID, which carries the TaskID for tasks.
+    // Fetch all task attachments for a ticket, grouped by taskID.
+    // GetAttachmentsTasks SELECTs b.TaskID (wire: taskID) -- NOT noteID. The
+    // old code grouped on a.noteID, which is absent on task rows, so every
+    // key was null, the guard dropped every row, and tasks showed no
+    // attachments though the server returned them. Key on taskID, normalised
+    // to String to match how Tasks.js reads the map back.
     async function fetchTaskAttachments(ticketId) {
         try {
             const data = await API.post(
@@ -134,8 +137,8 @@ const Composer = (() => {
             );
             const map = new Map();
             (Array.isArray(data) ? data : []).forEach(a => {
-                const tid = a.noteID;
-                if (tid == null) return;
+                if (a.taskID == null) return;
+                const tid = String(a.taskID);
                 if (!map.has(tid)) map.set(tid, []);
                 map.get(tid).push(a);
             });
