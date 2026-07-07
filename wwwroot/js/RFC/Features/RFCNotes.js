@@ -9,8 +9,10 @@
 
 const RFCNotes = (() => {
 
+    let _handle = null;
+
     function init(rfcId) {
-        return NotesPanel.init({
+        _handle = NotesPanel.init({
             ownerId: parseInt(rfcId, 10),
             ownerField: 'RFCID',
             getEndpoint: 'Note/GetRFCNotes',
@@ -28,11 +30,14 @@ const RFCNotes = (() => {
                 composerDock: 'RFCNotes-Compose',
             },
         });
+        return _handle;
     }
 
     return {
         init,
-        refresh: () => NotesPanel.refresh(),
+        // Route through the instance handle init returned (NotesPanel is a
+        // factory now; there is no singleton NotesPanel.refresh).
+        refresh: () => _handle && _handle.refresh(),
     };
 
 })();

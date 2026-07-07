@@ -21,16 +21,7 @@ const NotesPanel = (() => {
 
     const CHAR_LIMIT = 2000;
 
-    const State = {
-        config: null,
-        notes: [],
-        description: null,
-    };
-
-    const Dom = {
-        thread: () => document.getElementById(State.config.ids.thread),
-    };
-
+    // Session is stateless (reads sessionStorage live) -> module-shared.
     const Session = {
         get userName() { return sessionStorage.getItem(STORAGE_KEYS.USER_NAME); },
         get userId() {
@@ -38,8 +29,6 @@ const NotesPanel = (() => {
             return Number.isNaN(id) ? null : id;
         },
     };
-
-    let composer = null;
 
     // -------------------------  ObjectInfo builder  ------------------------- //
     // Builds the pipe-backtick string matching SaveNoteRequest.ObjectInfo:
@@ -61,8 +50,15 @@ const NotesPanel = (() => {
 
     // -------------------------  Init  ------------------------- //
 
-    function init(config) {
-        State.config = config;
+    // Factory: each call gets its own State + composer, so multiple panes
+    // (internal Notes tab + client Messages pane on the same ticket) never
+    // share config. All handlers below close over THIS call's `State`.
+    function _create(config) {
+        const State = { config: config, notes: [], description: null };
+        const Dom = {
+            thread: () => document.getElementById(State.config.ids.thread),
+        };
+        let composer = null;
 
         composer = Composer.create({
             textarea: config.ids.textarea,
@@ -79,10 +75,10 @@ const NotesPanel = (() => {
         // Optional scope reminder (opt-in via config.scope); no-op otherwise.
         _initScope();
 
-        // Return the load promise so the caller can await the notes alongside
-        // the rest of the page data.
-        return _getNotes();
-    }
+        // Kick off the initial load; expose the promise on the handle so a
+        // caller can await it alongside the rest of the page data.
+        const loadPromise = _getNotes();
+
 
     // -------------------------  Scope reminder (opt-in)  ------------------------- //
     // Dismissible, session-only "internal only" banner. Active only when the
@@ -761,11 +757,20 @@ const NotesPanel = (() => {
         }
     }
 
+        // -------------------------  Instance handle  ------------------------- //
+        // refresh re-fetches THIS instance's notes (used by RFCNotes.refresh).
+        return {
+            refresh: _getNotes,
+            load: loadPromise,
+        };
+    }
+
     // -------------------------  Public API  ------------------------- //
 
     return {
-        init,
-        refresh: _getNotes,
+        // init builds an instance and returns its handle; callers that need
+        // to refresh later keep the returned object.
+        init: _create,
     };
 
 })();
