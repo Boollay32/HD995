@@ -1,6 +1,4 @@
-﻿using HelpDeskNet8.Infrastructure;
-using HelpDeskNet8.Interfaces.Notes;
-using HelpDeskNet8.Interfaces.Shared;
+﻿using HelpDeskNet8.Interfaces.Notes;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +7,12 @@ namespace HelpDeskNet8.Controllers.Shared
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class NoteController(INoteManager notesM, IAuthenticator auth) : ControllerBase
+    public class NoteController(
+        INoteManager notesM,
+        INoteService noteService) : ControllerBase
     {
         private readonly INoteManager _notesManager = notesM;
-        private readonly IAuthenticator _authenticator = auth;
+        private readonly INoteService _noteService = noteService;
 
         [HttpPost]
         public async Task<IActionResult> GetNotes([FromBody] GetNotesRequest request)
@@ -20,8 +20,8 @@ namespace HelpDeskNet8.Controllers.Shared
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = await _notesManager.GetNotes(user, request.TicketId);
-            return Ok(result);
+            var notes = await _noteService.GetNotes(user, request.TicketId);
+            return Ok(notes);
         }
 
         [HttpPost]
@@ -31,11 +31,9 @@ namespace HelpDeskNet8.Controllers.Shared
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            INote note = NoteMapper.Map(request.ObjectInfo);
-            if (note == null) return BadRequest("Invalid note data.");
-
-            var result = await _notesManager.SaveNote(note, request.Attachments, user.UserID, request.RFC, request.UTC);
-            return Ok(result);
+            var (ok, error, notes) = await _noteService.SaveNote(user, request);
+            if (!ok) return BadRequest(error);
+            return Ok(notes);
         }
 
         [HttpPost]

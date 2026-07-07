@@ -96,7 +96,7 @@ const Notes = (() => {
             const attachments = await Composer.encode(files);
 
             const data = await API.post(
-                'TicketDetails/SaveNote',
+                'Note/SaveNote',
                 API.authPayload({ objectInfo, attachments, rfc: false })
             );
 
@@ -249,7 +249,7 @@ const Notes = (() => {
             const added = await Composer.encode(addedFiles);
             const attachments = existing.concat(added);
             const data = await API.post(
-                'TicketDetails/SaveNote',
+                'Note/SaveNote',
                 API.authPayload({ objectInfo, attachments, rfc: false })
             );
             if (!data) throw new Error('SaveNote returned null');
@@ -282,7 +282,7 @@ const Notes = (() => {
                 visibleToClient: note.IsVisibleToClient ? '1' : '0',
             });
             const data = await API.post(
-                'TicketDetails/SaveNote',
+                'Note/SaveNote',
                 API.authPayload({ objectInfo, attachments: kept, rfc: false })
             );
             if (!data) throw new Error('SaveNote returned null');
@@ -299,7 +299,7 @@ const Notes = (() => {
     async function _getNotes() {
         try {
             const [data, attMap] = await Promise.all([
-                API.post('TicketDetails/GetNotes', API.authPayload({ ticketId: State.ticketId })),
+                API.post('Note/GetNotes', API.authPayload({ ticketId: State.ticketId })),
                 Composer.fetchNoteAttachments(State.ticketId, 0),
             ]);
             if (!Array.isArray(data)) return;

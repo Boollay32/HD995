@@ -22,6 +22,7 @@ namespace HelpDeskNet8.Controllers.Tickets
     public class TicketDetailsController(
         ITicketManager ticketManager,
         INoteManager noteManager,
+        INoteService noteService,
         ITaskManager taskManager,
         IAttachmentManager attachmentManager,
         IHistory history,
@@ -30,6 +31,7 @@ namespace HelpDeskNet8.Controllers.Tickets
     {
         private readonly ITicketManager _ticketManager = ticketManager;
         private readonly INoteManager _noteManager = noteManager;
+        private readonly INoteService _noteService = noteService;
         private readonly ITaskManager _taskManager = taskManager;
         private readonly IUserManager _userManager = userManager;
         private readonly IAttachmentManager _attachmentManager = attachmentManager;
@@ -66,9 +68,8 @@ namespace HelpDeskNet8.Controllers.Tickets
 
             if (request.TicketId <= 0) return BadRequest("Invalid ticket ID.");
 
-            if (await CannotSeeTicket(user, request.TicketId)) return NotFound();
-
-            var notes = await _noteManager.GetNotes(user, request.TicketId);
+            // Delegated to the shared NoteService (single source of truth).
+            var notes = await _noteService.GetNotes(user, request.TicketId);
             return Ok(notes);
         }
 
@@ -78,59 +79,11 @@ namespace HelpDeskNet8.Controllers.Tickets
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var note = NoteMapper.Map(request.ObjectInfo);
-            if (note == null) return BadRequest("Invalid note data.");
-
-            if (string.IsNullOrWhiteSpace(note.NoteDescription))
-                return BadRequest("Note description is required.");
-
-            // Editing an existing note (NoteID present): only the creator may
-            // edit it. Verify ownership server-side -- the client hides the edit
-            // affordance for non-creators, but that is UX only, not security.
-            if (note.NoteID.HasValue && note.NoteID.Value != 0)
-            {
-                var existing = (await _noteManager.GetNotes(user, note.TicketID ?? 0))
-                    .FirstOrDefault(n => n.NoteID == note.NoteID.Value);
-                if (existing == null)
-                    return NotFound("Note not found.");
-                if (existing.NotesUserID != user.UserID)
-                    return StatusCode(403, "You can only edit your own notes.");
-            }
-
-            var attachments = _mapAttachments(request.Attachments);
-
-            // Stamp server-side user fields
-            note.NotesUserID = user.UserID;
-            note.AuthorityID = user.AuthorityID;
-
-            var result = await _noteManager.SaveNote(
-                note,
-                attachments,
-                user.UserID,
-                rfc: request.RFC,
-                UTC: request.UTC);
-
-            if (!result.IsSuccess)
-                return BadRequest(result.Error);
-
-            // Notify on a ticket reply (RFC notes are internal-only, no routing).
-            // New notes only: editing an existing note (NoteID present) must not
-            // re-send the reply notification -- an edit is not a new reply.
-            // The OPENING note (IsOriginal) is the creation description, not a
-            // reply: it must NOT email the originator. Instead notify the
-            // helpdesk that a new ticket was raised. HD35 B1/B3.
-            bool isNewNote = !(note.NoteID.HasValue && note.NoteID.Value != 0);
-            if (!request.RFC && isNewNote)
-            {
-                if (request.IsOriginal)
-                    await _notificationService.Notify(note.TicketID ?? 0, NotificationType.TicketCreated, user);
-                else
-                    await _notificationService.Notify(note.TicketID ?? 0, NotificationType.NoteResponded, user,
-                        new NotificationContext { NoteVisibleToClient = note.VisibleToClient });
-            }
-
-            // Return updated notes so UI can re-render without a second call
-            var notes = await _noteManager.GetNotes(user, note.TicketID ?? 0);
+            // Delegated to the shared NoteService (single source of truth for
+            // ownership check, attachment mapping, notification routing and the
+            // refreshed-list return shape).
+            var (ok, error, notes) = await _noteService.SaveNote(user, request);
+            if (!ok) return BadRequest(error);
             return Ok(notes);
         }
 
