@@ -158,11 +158,21 @@ namespace HelpDeskNet8.Controllers.Tickets
             // null-vs-old-name read as "assignee changed": a spurious
             // assignment email on ordinary edits. Also feeds ctx.TaskID so
             // update notifications deep-link correctly.
+            // Change detection compares NAMES from the same source (GetTaskDetail)
+            // on both sides -- never the posted id -- so re-picking the same
+            // assignee does not read as a change. afterAssigneeName is that
+            // canonical post-save name; newAssigneeName (below) is only for the
+            // notification wording.
+            string afterAssigneeName = oldTaskAssignee;
             int? savedTaskId = result.ObjectID ?? task.TaskID;
             if (savedTaskId.HasValue && savedTaskId.Value != 0)
             {
                 var savedTask = (await _taskManager.GetTaskDetail(user, savedTaskId.Value)).FirstOrDefault();
-                if (savedTask != null) newAssigneeName = savedTask.AssignedTech;
+                if (savedTask != null)
+                {
+                    afterAssigneeName = savedTask.AssignedTech;
+                    newAssigneeName = savedTask.AssignedTech;
+                }
             }
             if (string.IsNullOrWhiteSpace(task.AssignedTech) && string.IsNullOrWhiteSpace(newAssigneeName))
             {
@@ -205,7 +215,7 @@ namespace HelpDeskNet8.Controllers.Tickets
             }
             else
             {
-                bool taskAssigneeChanged = !string.Equals(oldTaskAssignee ?? "", newAssigneeName ?? "", System.StringComparison.OrdinalIgnoreCase);
+                bool taskAssigneeChanged = !string.Equals(oldTaskAssignee ?? "", afterAssigneeName ?? "", System.StringComparison.OrdinalIgnoreCase);
                 bool taskStatusChanged = oldTaskStatus != task.Status;
                 if (taskAssigneeChanged)
                     await _notificationService.Notify(taskTicketId, NotificationType.TaskAssigned, user, taskCtx);
