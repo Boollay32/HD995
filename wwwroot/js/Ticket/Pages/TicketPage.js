@@ -11,7 +11,7 @@ const TQ_STATUS_COLOR = {
     Open:      ['var(--info-fg)', 'var(--info-bg)'],
     Pending:   ['var(--warn-fg)', 'var(--warn-bg)'],
     'On Hold': ['var(--neutral-fg)', 'var(--neutral-bg)'],
-    Closed:    ['var(--ok-fg)', 'var(--ok-bg)'],
+    Closed:    ['var(--accent-2)', 'var(--accent-2-bg)'],
     Solved:    ['var(--ok-fg)', 'var(--ok-bg)'],
 };
 const TQisOpen = r => !['Closed', 'Solved'].includes(r.status);

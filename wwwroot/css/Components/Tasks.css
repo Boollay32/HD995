@@ -242,26 +242,27 @@
   border-radius: 20px;
   letter-spacing: 0.02em;
 }
+/* Collapsed onto the global traffic-light tokens (one source of truth). */
 .td-task-status.st-new {
-  background: var(--td-border-2);
-  color: var(--td-muted-2);
+  background: var(--info-bg);
+  color: var(--info-fg);
 }
 .td-task-status.st-progress {
-  background: var(--td-warn-bg);
-  color: var(--td-warn);
+  background: var(--warn-bg);
+  color: var(--warn-fg);
 }
 .td-task-status.st-done {
-  background: var(--td-ok-bg);
-  color: var(--td-ok);
+  background: var(--ok-bg);
+  color: var(--ok-fg);
 }
 .td-task-status.st-withdrawn {
-  background: var(--td-border-2);
-  color: var(--td-muted);
+  background: var(--neutral-bg);
+  color: var(--neutral-fg);
 }
 .td-task-status.st-draft {
-  background: var(--td-surface);
-  color: var(--td-muted);
-  border: 1px solid var(--td-border-2);
+  background: var(--panel);
+  color: var(--muted);
+  border: 1px solid var(--border);
 }
 .td-task-editor {
   border-top: 1px solid var(--td-border-2);
