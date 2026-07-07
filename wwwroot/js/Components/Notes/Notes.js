@@ -232,7 +232,7 @@ const Notes = (() => {
     // Re-submit an existing note with new text. The proc updates in place
     // when NoteID is present; it also wipes + re-inserts attachments, so we
     // re-send the note's existing attachments to preserve them.
-    async function _submitNoteEdit(note, text, addedFiles = []) {
+    async function _submitNoteEdit(note, text, keptAndNew = []) {
         try {
             const objectInfo = _buildObjectInfo({
                 TicketID: State.ticketId,
@@ -240,19 +240,21 @@ const Notes = (() => {
                 noteDescription: text,
                 visibleToClient: note.IsVisibleToClient ? '1' : '0',
             });
-            // Fetched attachments carry attachmentByteArray/attachmentName
-            // (the stub wire shape); optimistic ones carry base64/name. The
-            // old filter read only the optimistic shape, so the echo was
-            // permanently empty and every edit-save wiped the note's saved
-            // attachments (the proc delete-and-reinserts on update).
-            const existing = (note.Attachments ?? note.attachments ?? [])
-                .map(a => a && {
-                    AttachmentName: a.attachmentName ?? a.name,
-                    AttachmentByteArray: a.attachmentByteArray ?? a.base64,
-                    AttachmentImageType: a.attachmentImageType ?? 0,
-                })
-                .filter(a => a && a.AttachmentByteArray);
-            const added = await Composer.encode(addedFiles);
+            // `keptAndNew` is the editor's single pending list: existing
+            // attachments (carry base64 already) plus newly added File objects.
+            // Split by which -- File objects have no base64 and must be encoded;
+            // existing ones map straight to the wire shape. (This is the single
+            // source of truth now; note.Attachments is NOT re-read, which was
+            // the #525 double-source that fed non-Files to encode and threw.)
+            const isFile = (a) => typeof File !== 'undefined' && a instanceof File;
+            const existingItems = keptAndNew.filter(a => a && !isFile(a));
+            const newFiles = keptAndNew.filter(a => isFile(a));
+            const existing = existingItems.map(a => ({
+                AttachmentName: a.attachmentName ?? a.name,
+                AttachmentByteArray: a.attachmentByteArray ?? a.base64,
+                AttachmentImageType: a.attachmentImageType ?? 0,
+            })).filter(a => a.AttachmentByteArray);
+            const added = await Composer.encode(newFiles);
             const attachments = existing.concat(added);
             const data = await API.post(
                 'Note/SaveNote',
