@@ -1,6 +1,5 @@
 ﻿using HelpDeskNet8.Controllers.Tickets;
 using HelpDeskNet8.Infrastructure;
-using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Tasks;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Shared;
@@ -11,10 +10,9 @@ namespace HelpDeskNet8.Controllers.Tasks
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class TaskController(ITaskManager taskM, IAuthenticator auth) : ControllerBase
+    public class TaskController(ITaskService taskService) : ControllerBase
     {
-        private readonly ITaskManager _taskManager = taskM;
-        private readonly IAuthenticator _authenticator = auth;
+        private readonly ITaskService _taskService = taskService;
 
         [HttpPost]
         public async Task<IActionResult> GetTasks([FromBody] GetTasksRequest request)
@@ -23,7 +21,7 @@ namespace HelpDeskNet8.Controllers.Tasks
             if (user == null) return Unauthorized();
 
             Filter filter = TicketFilterMapper.Map(request.Filters);
-            var result = await _taskManager.GetTasks(user, filter, request.UTC);
+            var result = await _taskService.GetTasks(user, filter);
             return Ok(result);
         }
 
@@ -33,7 +31,7 @@ namespace HelpDeskNet8.Controllers.Tasks
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var result = await _taskManager.GetTaskDetail(user, request.TaskId);
+            var result = await _taskService.GetTaskDetail(user, request.TaskId);
             return Ok(result);
         }
 
@@ -43,13 +41,9 @@ namespace HelpDeskNet8.Controllers.Tasks
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            ITask task = TaskMapper.Map(request.ObjectInfo);
-            if (task == null) return BadRequest("Invalid task data.");
-
-            SaveResult result = await _taskManager.SaveTask(task, request.Attachments, user.UserID, request.UTC);
-            if (!result.IsSuccess) return BadRequest(result.Error);
-
-            return Ok(result);
+            var (ok, error, tasks) = await _taskService.SaveTask(user, request);
+            if (!ok) return BadRequest(error);
+            return Ok(tasks);
         }
     }
 }
