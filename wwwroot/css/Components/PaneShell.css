@@ -200,20 +200,26 @@ html[data-theme="dark"] {
   background: var(--neutral-fg);
 }
 
-/* Priority: true traffic-light ramp -- high red, medium amber, low green. */
-.td-meta-pill.priority-high {
+/* Priority: 4-level traffic-light ramp matching the queue --
+   Urgent red, High amber, Medium green, Low grey. */
+.td-meta-pill.priority-urgent {
   background: var(--bad-bg);
   color: var(--bad-fg);
 }
 
-.td-meta-pill.priority-medium {
+.td-meta-pill.priority-high {
   background: var(--warn-bg);
   color: var(--warn-fg);
 }
 
-.td-meta-pill.priority-low {
+.td-meta-pill.priority-medium {
   background: var(--ok-bg);
   color: var(--ok-fg);
+}
+
+.td-meta-pill.priority-low {
+  background: var(--neutral-bg);
+  color: var(--neutral-fg);
 }
 
 .td-meta-pill.sla-ok {
