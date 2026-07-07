@@ -53,5 +53,28 @@ namespace HelpDeskNet8.Controllers.Shared
             await _notificationManager.MarkRead(user.UserID.Value, request.NotificationID);
             return Ok();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> TicketPips([FromBody] TicketPipsRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null || !user.UserID.HasValue) return Unauthorized();
+
+            var (note, task) = await _notificationManager.GetTicketPips(user.UserID.Value, request.TicketId);
+            return Ok(new { noteUnread = note, taskUnread = task });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkPipRead([FromBody] MarkPipReadRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null || !user.UserID.HasValue) return Unauthorized();
+
+            // The proc keys the UPDATE on the caller's own user id (IDOR
+            // backstop) and on the ticket + kind, so a forged request can only
+            // touch the caller's own rows.
+            await _notificationManager.MarkReadByKind(user.UserID.Value, request.TicketId, request.Kind);
+            return Ok();
+        }
     }
 }

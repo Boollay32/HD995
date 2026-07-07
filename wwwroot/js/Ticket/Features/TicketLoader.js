@@ -82,6 +82,11 @@ const TicketLoader = {
             TicketLoader._clearNotificationIfMine(data);
             TicketLoader._delegateModules(data);
 
+            // Fill the Notes/Tasks tab pips with this user's unread counts.
+            if (typeof TicketPips !== 'undefined' && !State.clientView) {
+                TicketPips.load(ticketId);
+            }
+
         } catch (err) {
             console.error('TicketLoader.load:', err);
         }
