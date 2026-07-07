@@ -85,14 +85,21 @@ const Tasks = (() => {
     // so they are preserved (not wiped) on save.
     function _echoAttachments(task) {
         const list = Array.isArray(task?.attachments) ? task.attachments : [];
+        // Task attachments come from GetAttachmentsTasks as { attachment (base64),
+        // attachmentInfo (filename), attachmentImageType }. Tolerate that raw
+        // shape AND the normalised/optimistic one (attachmentByteArray/base64,
+        // attachmentName/name) so both fetched and freshly-added items survive.
         return list
-            .filter(a => a && a.attachmentByteArray)
-            .slice(0, 5)
-            .map(a => ({
-                attachmentByteArray: a.attachmentByteArray,
-                attachmentName: a.attachmentName ?? '',
-                attachmentImageType: a.attachmentImageType ?? 0,
-            }));
+            .map(a => {
+                if (!a) return null;
+                const bytes = a.attachmentByteArray ?? a.base64 ?? a.attachment ?? null;
+                if (!bytes) return null;
+                const name = a.attachmentName ?? a.name ?? a.attachmentInfo ?? '';
+                const imageType = a.attachmentImageType ?? 0;
+                return { attachmentByteArray: bytes, attachmentName: name, attachmentImageType: imageType };
+            })
+            .filter(Boolean)
+            .slice(0, 5);
     }
 
 
