@@ -18,10 +18,14 @@
     function _colourClass(kind, label) {
         var t = String(label || '').trim().toLowerCase();
         if (kind === 'meta-status') {
-            if (t.indexOf('open') === 0 || t === 'new') return 'status-open';
-            if (t.indexOf('progress') !== -1 || t === 'pending' || t === 'active') return 'status-pending';
-            if (t.indexOf('resolv') !== -1 || t.indexOf('solv') !== -1 || t === 'complete') return 'status-resolved';
-            if (t.indexOf('closed') !== -1 || t.indexOf('withdrawn') !== -1 || t.indexOf('reject') !== -1) return 'status-closed';
+            // Open/info: newly submitted or open.
+            if (t.indexOf('open') === 0 || t === 'new' || t.indexOf('submit') !== -1) return 'status-open';
+            // Amber/in-progress (incl. on hold).
+            if (t.indexOf('progress') !== -1 || t === 'pending' || t === 'active' || t.indexOf('hold') !== -1) return 'status-pending';
+            // Green/done: approved, resolved, solved, completed.
+            if (t.indexOf('approv') !== -1 || t.indexOf('resolv') !== -1 || t.indexOf('solv') !== -1 || t.indexOf('complet') !== -1) return 'status-resolved';
+            // Terminal: closed, withdrawn, rejected, cancelled.
+            if (t.indexOf('closed') !== -1 || t.indexOf('withdrawn') !== -1 || t.indexOf('reject') !== -1 || t.indexOf('cancel') !== -1) return 'status-closed';
             return 'status-open';
         }
         if (t.indexOf('high') !== -1 || t.indexOf('urgent') !== -1) return 'priority-high';

@@ -134,17 +134,18 @@
   padding: 2px 7px;
   border-radius: 20px;
 }
+/* Traffic-light ramp on global tokens. */
 .td-task-priority.priority-high {
-  background: var(--td-danger-bg);
-  color: var(--td-danger);
+  background: var(--bad-bg);
+  color: var(--bad-fg);
 }
 .td-task-priority.priority-medium {
-  background: var(--td-warn-bg);
-  color: var(--td-warn);
+  background: var(--warn-bg);
+  color: var(--warn-fg);
 }
 .td-task-priority.priority-low {
-  background: var(--td-ok-bg);
-  color: var(--td-ok);
+  background: var(--ok-bg);
+  color: var(--ok-fg);
 }
 .td-task-actions {
   display: flex;
