@@ -12,6 +12,12 @@ const Tabs = {
     activate(name) {
         State.activeTab = name;
 
+        // Opening the Notes or Tasks tab clears that tab's unread pip.
+        if ((name === 'notes' || name === 'tasks') && typeof TicketPips !== 'undefined') {
+            const tid = Session.ticketId;
+            if (tid) TicketPips.clear(tid, name === 'tasks' ? 'task' : 'note');
+        }
+
         Dom.tabs().forEach(tab => {
             const isActive = tab.id === `tab-${name}`;
             tab.setAttribute('aria-selected', isActive ? 'true' : 'false');

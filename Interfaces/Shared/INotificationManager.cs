@@ -20,5 +20,13 @@ namespace HelpDeskNet8.Interfaces.Shared
         // Delete the user's already-read rows. Called at login so read
         // notifications survive only the session they were read in.
         Task PurgeRead(int userId);
+
+        // Tab pips: the caller's UNREAD note/task notification counts for one
+        // ticket (per-user; drives the Notes/Tasks tab pips).
+        Task<(int NoteUnread, int TaskUnread)> GetTicketPips(int userId, int ticketId);
+
+        // Mark all the caller's unread note- or task-kind notifications for one
+        // ticket read (tab-open clears that pip). kind is "note" or "task".
+        Task MarkReadByKind(int userId, int ticketId, string kind);
     }
 }

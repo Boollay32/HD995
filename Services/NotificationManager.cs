@@ -88,6 +88,62 @@ namespace HelpDeskNet8.Services
             return (list, unread);
         }
 
+        public async Task<(int NoteUnread, int TaskUnread)> GetTicketPips(int userId, int ticketId)
+        {
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[dbo].[usp_Helpdesk_NotificationTicketPips]";
+            command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = userId });
+            command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ticketId });
+
+            int note = 0, task = 0;
+            await conn.OpenAsync();
+            try
+            {
+                using SqlDataReader reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    note = reader["NoteUnread"] as int? ?? 0;
+                    task = reader["TaskUnread"] as int? ?? 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(nameof(NotificationManager), ex);
+            }
+            finally
+            {
+                await conn.CloseAsync();
+            }
+            return (note, task);
+        }
+
+        public async Task MarkReadByKind(int userId, int ticketId, string kind)
+        {
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[dbo].[usp_Helpdesk_NotificationMarkReadByKind]";
+            command.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = userId });
+            command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ticketId });
+            command.Parameters.Add(new SqlParameter("@Kind", SqlDbType.VarChar, 8) { Value = kind ?? string.Empty });
+
+            await conn.OpenAsync();
+            try
+            {
+                await command.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(nameof(NotificationManager), ex);
+            }
+            finally
+            {
+                await conn.CloseAsync();
+            }
+        }
+
         public async Task PurgeRead(int userId)
         {
             var conn = (SqlConnection)_connection;
