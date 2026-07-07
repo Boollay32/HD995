@@ -7,17 +7,22 @@
 
 const RQ_PRIORITY_COLOR = { Urgent: 'var(--pri-urgent)', High: 'var(--pri-high)', Normal: 'var(--pri-normal)', Low: 'var(--pri-low)' };
 const RQ_PRIORITY_ORDER = { Urgent: 0, High: 1, Normal: 2, Low: 3 };
-const RQ_STATUS_COLOR = {
-    Submitted:     ['var(--info-fg)', 'var(--info-bg)'],
-    'In Progress': ['var(--warn-fg)', 'var(--warn-bg)'],
-    'On Hold':     ['var(--neutral-fg)', 'var(--neutral-bg)'],
-    Approved:      ['var(--ok-fg)', 'var(--ok-bg)'],
-    Completed:     ['var(--accent-2)', 'var(--accent-2-bg)'],
-    Rejected:      ['var(--bad-fg)', 'var(--bad-bg)'],
+// CR statuses (from the DB dropdown): CR Open, CR Assigned, CR Complete,
+// CR Withdrawn. Resolved by substring so the 'CR ' prefix / spacing don't
+// matter. Traffic-light: Open blue (new), Assigned amber (in progress),
+// Complete green (done), Withdrawn grey (dormant).
+const RQstatusColor = s => {
+    const t = String(s || '').toLowerCase();
+    if (t.indexOf('complete') !== -1) return ['var(--ok-fg)', 'var(--ok-bg)'];
+    if (t.indexOf('withdrawn') !== -1 || t.indexOf('cancel') !== -1) return ['var(--neutral-fg)', 'var(--neutral-bg)'];
+    if (t.indexOf('assigned') !== -1) return ['var(--warn-fg)', 'var(--warn-bg)'];
+    if (t.indexOf('open') !== -1) return ['var(--info-fg)', 'var(--info-bg)'];
+    return ['var(--neutral-fg)', 'var(--neutral-bg)'];
 };
-const RQ_DONE = ['Completed', 'Rejected', 'Closed', 'Cancelled'];
-const RQisOpen = r => !RQ_DONE.includes(r.status);
-const RQstatusColor = s => RQ_STATUS_COLOR[s] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
+// Done = hidden from the 'open' queue filters. Both Complete and Withdrawn
+// are terminal.
+const RQisDone = s => { const t = String(s || '').toLowerCase(); return t.indexOf('complete') !== -1 || t.indexOf('withdrawn') !== -1 || t.indexOf('cancel') !== -1; };
+const RQisOpen = r => !RQisDone(r.status);
 const RQdate = iso => {
     if (!iso) return '—';
     const d = new Date(iso);
