@@ -18,14 +18,13 @@
     function _colourClass(kind, label) {
         var t = String(label || '').trim().toLowerCase();
         if (kind === 'meta-status') {
-            // Open/info: newly submitted or open.
-            if (t.indexOf('open') === 0 || t === 'new' || t.indexOf('submit') !== -1) return 'status-open';
-            // Amber/in-progress (incl. on hold).
-            if (t.indexOf('progress') !== -1 || t === 'pending' || t === 'active' || t.indexOf('hold') !== -1) return 'status-pending';
-            // Green/done: approved, resolved, solved, completed.
-            if (t.indexOf('approv') !== -1 || t.indexOf('resolv') !== -1 || t.indexOf('solv') !== -1 || t.indexOf('complet') !== -1) return 'status-resolved';
-            // Terminal: closed, withdrawn, rejected, cancelled.
-            if (t.indexOf('closed') !== -1 || t.indexOf('withdrawn') !== -1 || t.indexOf('reject') !== -1 || t.indexOf('cancel') !== -1) return 'status-closed';
+            // CR statuses: CR Open (blue), CR Assigned (amber), CR Complete
+            // (green), CR Withdrawn (grey). Order matters -- test the more
+            // specific terminal words before the generic ones.
+            if (t.indexOf('complete') !== -1 || t.indexOf('approv') !== -1 || t.indexOf('resolv') !== -1) return 'status-resolved';
+            if (t.indexOf('withdrawn') !== -1 || t.indexOf('closed') !== -1 || t.indexOf('cancel') !== -1 || t.indexOf('reject') !== -1) return 'status-closed';
+            if (t.indexOf('assigned') !== -1 || t.indexOf('progress') !== -1 || t === 'pending' || t === 'active' || t.indexOf('hold') !== -1) return 'status-pending';
+            if (t.indexOf('open') !== -1 || t === 'new' || t.indexOf('submit') !== -1) return 'status-open';
             return 'status-open';
         }
         if (t.indexOf('high') !== -1 || t.indexOf('urgent') !== -1) return 'priority-high';
