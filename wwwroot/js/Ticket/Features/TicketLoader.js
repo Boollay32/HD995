@@ -232,7 +232,7 @@ const NotesLeft = {
         NotesPanel.init({
             ownerId: parseInt(ticketId, 10),
             ownerField: 'TicketID',
-            getEndpoint: 'TicketDetails/GetNotes',
+            getEndpoint: 'Note/GetNotes',
             getPayloadKey: 'ticketId',
             attachmentOwnerType: 0,
             rfc: false,
@@ -265,7 +265,7 @@ const MessagesLeft = {
         NotesPanel.init({
             ownerId: parseInt(ticketId, 10),
             ownerField: 'TicketID',
-            getEndpoint: 'TicketDetails/GetNotes',
+            getEndpoint: 'Note/GetNotes',
             getPayloadKey: 'ticketId',
             attachmentOwnerType: 0,
             rfc: false,

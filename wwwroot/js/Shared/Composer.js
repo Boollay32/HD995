@@ -333,7 +333,7 @@ async function SaveOriginalNote(files, isRfc, note, id) {
     // notification for it. (It routes a new-ticket notice to the helpdesk
     // instead.) HD35 B1/B3.
     return API.post(
-        isRfc ? 'Note/SaveNote' : 'TicketDetails/SaveNote',
+        isRfc ? 'Note/SaveNote' : 'Note/SaveNote',
         API.authPayload({ objectInfo, attachments, rfc: !!isRfc, isOriginal: true })
     );
 }
