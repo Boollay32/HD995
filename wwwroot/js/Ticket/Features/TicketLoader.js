@@ -133,7 +133,7 @@ const TicketLoader = {
         if (State.notesLeft) {
             NotesLeft.init(ticketId);
         } else {
-            if (typeof Notes !== 'undefined') Notes.init(ticketId);
+            NotesTab.init(ticketId);
             MessagesLeft.init(ticketId, State.adminLevel);
         }
         if (typeof Tasks !== 'undefined') Tasks.init(ticketId);
@@ -246,6 +246,41 @@ const NotesLeft = {
                 fileInput: 'msg-file-input',
                 attachList: 'msg-attachment-list',
                 composerDock: 'Messages-Compose',
+            },
+        });
+    },
+
+};
+
+
+// Internal Notes tab (Workspace): the SAME shared NotesPanel as the messages
+// pane, config-driven -- internal-only (client-visible notes live in the
+// Messages pane, so they are filtered out here and new notes are sent
+// internal). This replaces the retired standalone Notes.js so there is one
+// note editor, not two that drift.
+const NotesTab = {
+
+    init(ticketId) {
+        if (typeof NotesPanel === 'undefined') return;
+        NotesPanel.init({
+            ownerId: parseInt(ticketId, 10),
+            ownerField: 'TicketID',
+            getEndpoint: 'Note/GetNotes',
+            getPayloadKey: 'ticketId',
+            attachmentOwnerType: 0,
+            rfc: false,
+            extraSaveFields: { visibleToClient: '0' },
+            filter: n => n.visibleToClient !== true,
+            noun: 'note',
+            scope: { banner: 'note-scope-banner', dismiss: 'note-scope-dismiss', dismissKey: 'td-note-scope-dismissed' },
+            ids: {
+                thread: 'Notes-Thread',
+                textarea: 'note-textarea',
+                sendBtn: 'note-send-btn',
+                charcount: 'note-charcount',
+                fileInput: 'note-file-input',
+                attachList: 'note-attachment-list',
+                composerDock: 'Notes-Compose',
             },
         });
     },
