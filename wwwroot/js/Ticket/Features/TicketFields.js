@@ -41,12 +41,16 @@ const Topbar = {
     },
 
     priorityClass(priorityId) {
-        const map = {
-            1: 'priority-low',
-            2: 'priority-medium',
-            3: 'priority-high',
-        };
-        return map[priorityId] ?? 'priority-low';
+        // Colour by the resolved LABEL (from the live dropdown, the same
+        // source priorityLabel uses) rather than a hardcoded id map -- the DB
+        // priority ids are not fixed here, and the set is 4 levels
+        // (Urgent/High/Medium/Low), so an id map missed Urgent entirely.
+        const label = (Topbar._optionText('priority', priorityId) || '').toLowerCase();
+        if (label.indexOf('urgent') !== -1 || label.indexOf('critical') !== -1) return 'priority-urgent';
+        if (label.indexOf('high') !== -1) return 'priority-high';
+        if (label.indexOf('medium') !== -1 || label.indexOf('normal') !== -1) return 'priority-medium';
+        if (label.indexOf('low') !== -1) return 'priority-low';
+        return 'priority-medium';
     },
 
     priorityLabel(priorityId) {
