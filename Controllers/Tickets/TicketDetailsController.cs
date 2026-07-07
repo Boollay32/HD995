@@ -24,6 +24,7 @@ namespace HelpDeskNet8.Controllers.Tickets
         INoteManager noteManager,
         INoteService noteService,
         ITaskManager taskManager,
+        ITaskService taskService,
         IAttachmentManager attachmentManager,
         IHistory history,
         INotificationService notificationService,
@@ -33,6 +34,7 @@ namespace HelpDeskNet8.Controllers.Tickets
         private readonly INoteManager _noteManager = noteManager;
         private readonly INoteService _noteService = noteService;
         private readonly ITaskManager _taskManager = taskManager;
+        private readonly ITaskService _taskService = taskService;
         private readonly IUserManager _userManager = userManager;
         private readonly IAttachmentManager _attachmentManager = attachmentManager;
         private readonly IHistory _history = history;
@@ -108,126 +110,11 @@ namespace HelpDeskNet8.Controllers.Tickets
             IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
-            var task = TaskMapper.Map(request.ObjectInfo);
-            if (task == null) return BadRequest("Invalid task data.");
-
-            if (string.IsNullOrWhiteSpace(task.Title))
-                return BadRequest("Task title is required.");
-
-            var attachments = _mapAttachments(request.Attachments);
-
-            // Stamp server-side user
-            task.UserID = user.UserID;
-
-            // HD43: detect create vs update vs status-change to route the task
-            // notification. The old status must be read BEFORE the save mutates it.
-            bool isNewTask = !(task.TaskID.HasValue && task.TaskID.Value != 0);
-            int? oldTaskStatus = null;
-            string oldTaskAssignee = null;
-            if (!isNewTask)
-            {
-                var beforeTask = (await _taskManager.GetTaskDetail(user, task.TaskID.Value)).FirstOrDefault();
-                oldTaskStatus = beforeTask?.Status;
-                oldTaskAssignee = beforeTask?.AssignedTech;
-            }
-
-            var result = await _taskManager.SaveTask(
-                task,
-                attachments,
-                user.UserID,
-                UTC: 0);
-
-            if (!result.IsSuccess)
-                return BadRequest(result.Error);
-
-            // The task form sends the assignee's user id; re-read the saved task
-            // to get the display name so the wording shows the name (not the id),
-            // the assignee resolves to a recipient, and the assignee-changed check
-            // below compares name-to-name (not name-to-id, always "changed").
-            // The form sends the assignee's user id as task.AssignedTech; capture
-            // it now, before the re-read below overwrites the same variable name
-            // with the display name for wording. ResolveAssigneeEmailById resolves
-            // the recipient from this id directly -- no cross-proc name matching.
-            int? newAssigneeId = int.TryParse(task.AssignedTech, out int parsedAssigneeId) ? parsedAssigneeId : (int?)null;
-
-            string newAssigneeName = task.AssignedTech;
-            // usp_Helpdesk_ManageTask returns the id only from its INSERT
-            // branch -- updates return nothing -- so fall back to the posted
-            // TaskID. Without this, edits skipped the refetch, an untouched
-            // assignee (the keep option omits the field) stayed null, and
-            // null-vs-old-name read as "assignee changed": a spurious
-            // assignment email on ordinary edits. Also feeds ctx.TaskID so
-            // update notifications deep-link correctly.
-            // Change detection compares NAMES from the same source (GetTaskDetail)
-            // on both sides -- never the posted id -- so re-picking the same
-            // assignee does not read as a change. afterAssigneeName is that
-            // canonical post-save name; newAssigneeName (below) is only for the
-            // notification wording.
-            string afterAssigneeName = oldTaskAssignee;
-            int? savedTaskId = result.ObjectID ?? task.TaskID;
-            if (savedTaskId.HasValue && savedTaskId.Value != 0)
-            {
-                var savedTask = (await _taskManager.GetTaskDetail(user, savedTaskId.Value)).FirstOrDefault();
-                if (savedTask != null)
-                {
-                    afterAssigneeName = savedTask.AssignedTech;
-                    newAssigneeName = savedTask.AssignedTech;
-                }
-            }
-            if (string.IsNullOrWhiteSpace(task.AssignedTech) && string.IsNullOrWhiteSpace(newAssigneeName))
-            {
-                newAssigneeName = oldTaskAssignee; // untouched assignee: unchanged
-            }
-            // Creates do not always return the new task id, so the refetch
-            // above can miss -- and the raw posted ID then leaked into the
-            // notification wording ("assigned ... to 1000935"). People are
-            // not robots: if the "name" still parses as a number and we have
-            // the id, resolve the display name from the user record.
-            if (newAssigneeId.HasValue && int.TryParse(newAssigneeName, out _))
-            {
-                var assigneeUser = await _userManager.GetUserDetail(newAssigneeId.Value);
-                if (!string.IsNullOrWhiteSpace(assigneeUser?.UserName))
-                    newAssigneeName = assigneeUser.UserName;
-            }
-
-            // HD44: route the task event(s). Create, status change and assignee
-            // change are distinct events (mirroring tickets): a single save that
-            // changes more than one fires each. A new task with an assignee fires
-            // both Created and Assigned. The context carries the title, the new and
-            // previous assignee, and the old->new status for the wording.
-            var taskCtx = new NotificationContext
-            {
-                TaskTitle = task.Title,
-                TaskID = savedTaskId,
-                TaskAssigneeID = newAssigneeId,
-                TaskAssigneeName = newAssigneeName,
-                OldTaskAssigneeName = oldTaskAssignee,
-                OldTaskStatus = oldTaskStatus,
-                NewTaskStatus = task.Status,
-            };
-            int taskTicketId = task.TicketID ?? 0;
-
-            if (isNewTask)
-            {
-                await _notificationService.Notify(taskTicketId, NotificationType.TaskCreated, user, taskCtx);
-                if (!string.IsNullOrWhiteSpace(newAssigneeName))
-                    await _notificationService.Notify(taskTicketId, NotificationType.TaskAssigned, user, taskCtx);
-            }
-            else
-            {
-                bool taskAssigneeChanged = !string.Equals(oldTaskAssignee ?? "", afterAssigneeName ?? "", System.StringComparison.OrdinalIgnoreCase);
-                bool taskStatusChanged = oldTaskStatus != task.Status;
-                if (taskAssigneeChanged)
-                    await _notificationService.Notify(taskTicketId, NotificationType.TaskAssigned, user, taskCtx);
-                if (taskStatusChanged)
-                    await _notificationService.Notify(taskTicketId, NotificationType.TaskStatusChanged, user, taskCtx);
-                if (!taskAssigneeChanged && !taskStatusChanged)
-                    await _notificationService.Notify(taskTicketId, NotificationType.TaskUpdated, user, taskCtx);
-            }
-
-            // Return updated task list scoped to same ticket
-            var filter = new Filter { TicketID = task.TicketID };
-            var tasks = await _taskManager.GetTasks(user, filter, UTC: 0);
+            // Delegated to the shared TaskService (single source of truth for
+            // attachment mapping, notification routing incl. the assignee-change
+            // detection, and the refreshed ticket-scoped list return).
+            var (ok, error, tasks) = await _taskService.SaveTask(user, request);
+            if (!ok) return BadRequest(error);
             return Ok(tasks);
         }
 
@@ -255,22 +142,6 @@ namespace HelpDeskNet8.Controllers.Tickets
             if (user.AuthorityID == Constants.Authority.Govtech) return false;
             var t = await _ticketManager.GetTicketDetail(ticketId, user);
             return t == null || t.UserAuthorityID != user.AuthorityID;
-        }
-
-        private static IEnumerable<IAttachment> _mapAttachments(
-            IEnumerable<IAttachment>? attachments)
-        {
-            if (attachments == null) return Enumerable.Empty<IAttachment>();
-
-            return attachments
-                .Where(a => !string.IsNullOrWhiteSpace(a.AttachmentByteArray))
-                .Select(a => new AttachmentStub
-                {
-                    AttachmentByteArray = a.AttachmentByteArray,
-                    AttachmentName = a.AttachmentName ?? string.Empty,
-                    AttachmentImageType = a.AttachmentImageType,
-                })
-                .ToList();
         }
     }
 }

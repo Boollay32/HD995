@@ -30,6 +30,7 @@ builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IDropdowns, DropdownManager>();
 builder.Services.AddScoped<INoteManager, NoteManager>();
 builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IHistory, HistoryManager>();
 builder.Services.AddScoped<IAttachmentManager, AttachmentManager>();
 builder.Services.AddScoped<IRFCManager, RFCManager>();

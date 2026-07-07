@@ -5,7 +5,7 @@
 // description, progressLog, assignedTech (name), status (int),
 // important (bool), requiredDate, completed, attachments[].
 //
-// Saves the full field set through TicketDetails/SaveTask using the
+// Saves the full field set through Task/SaveTask using the
 // objectInfo keys TaskMapper accepts. Existing attachments are echoed
 // back on every save so they are never silently dropped.
 //
@@ -146,7 +146,7 @@ const Tasks = (() => {
         State.isLoading = true;
         try {
             const data = await API.post(
-                'TicketDetails/GetTasks',
+                'Task/GetTasks',
                 API.authPayload({ filters: { TicketID: String(State.ticketId) } })
             );
             State.tasks = Array.isArray(data) ? data : [];
@@ -622,7 +622,7 @@ const Tasks = (() => {
 
         try {
             const data = await API.post(
-                'TicketDetails/SaveTask',
+                'Task/SaveTask',
                 API.authPayload({ objectInfo, attachments: attachments ?? [] })
             );
             if (!data) throw new Error('SaveTask returned null');
@@ -680,7 +680,7 @@ const Tasks = (() => {
                 status: 4,
             });
             const data = await API.post(
-                'TicketDetails/SaveTask',
+                'Task/SaveTask',
                 API.authPayload({ objectInfo, attachments: [] })
             );
             if (!data) throw new Error('Delete returned null');
