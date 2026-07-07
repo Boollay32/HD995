@@ -7,7 +7,6 @@
 @section AddJSToHead {
     <script src="~/js/Components/CustomFields/CustomFieldBuilder.js" asp-append-version="true"></script>
     <script src="~/js/Components/Notes/NotesPanel.js" asp-append-version="true"></script>
-    <script src="~/js/Components/Notes/Notes.js" asp-append-version="true"></script>
     <script src="~/js/Tasks/Features/TaskPopulation.js" asp-append-version="true"></script>
     <script src="~/js/Tasks/Features/Tasks.js" asp-append-version="true"></script>
     <script src="~/js/Components/Activity/Activity.js" asp-append-version="true"></script>
@@ -364,7 +363,7 @@
                          aria-labelledby="tab-notes"
                          class="td-ws-inner" hidden>
 
-                        <!-- scope banner — id required by Notes.js Dom.scopeNote() -->
+                        <!-- scope banner — id required by NotesPanel (NotesTab config) -->
                         <div class="td-scope-note" id="note-scope-banner" hidden>
                             <button type="button" class="td-scope-dismiss"
                                     id="note-scope-dismiss" aria-label="Dismiss reminder">&times;</button>
@@ -378,7 +377,7 @@
                              aria-live="polite" aria-label="Internal notes">
                         </div>
 
-                        <!-- compose dock — id required by Notes.js Dom.composeDock() -->
+                        <!-- compose dock — id required by NotesPanel (NotesTab config) -->
                         <div class="td-note-compose" id="Notes-Compose">
                             <div class="td-note-compose-row">
                             <textarea id="note-textarea"
