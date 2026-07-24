@@ -48,10 +48,10 @@ class SnowEffect {
     }
 
     createSnowContainer() {
-        const existing = document.getElementById('snow-overlay');
-        if (existing) {
-            existing.remove();
-        }
+        // Remove any prior container of either flavour - re-init previously
+        // left an old #navbar-snow in place and doubled the flakes.
+        document.getElementById('snow-overlay')?.remove();
+        document.getElementById('navbar-snow')?.remove();
 
         this.snowContainer = document.createElement('div');
         this.snowContainer.id = this.options.navbarOnly ? 'navbar-snow' : 'snow-overlay';

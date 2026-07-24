@@ -53,8 +53,12 @@ const Layout = {
     chooseSeason() {
         const month = new Date().getMonth();
 
-        // December — month index 11
+        // December — month index 11. Skipped when the user has turned the
+        // snow setting off (Snow.js persists 'hd32-snow'); read storage
+        // directly so this works regardless of boot order.
         if (month === 11) {
+            if (typeof PersistedToggle !== 'undefined'
+                && PersistedToggle.get('hd32-snow') === 'off') return;
             const nav = document.getElementById('DisplayLayerNav');
             if (!nav) return;
             nav.style.backgroundImage = 'url(images/snowFlake.jpg)';
