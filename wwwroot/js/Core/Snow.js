@@ -1,10 +1,12 @@
 // =============================  Snow.js  ============================= //
-// Seasonal snow, user-controllable. Falling flakes run ONLY over the nav bar
-// (SnowEffect navbarOnly); rested drifts (Snow.css, gated on
-// html[data-snow="on"]) sit along the navbar's bottom edge and on project
-// cards. Default is on during the festive window (Dec 1 - Jan 7) and off the
-// rest of the year; the setting overrides the season BOTH ways and persists.
-// Mounts a switch into the settings panel, mirroring TabFocus.js.
+// Seasonal snow, user-controllable (rewritten clean, v3). Falling flakes run
+// over the nav bar on app pages and as a sparse full-page fall on the login
+// page (which hides the nav); rested drifts (Snow.css, gated on
+// html[data-snow="on"]) sit on the navbar edge, project cards, ticket pane
+// headers, and the login card. Default is on during the festive window
+// (Dec 1 - Jan 7), off otherwise; the setting overrides the season BOTH ways
+// and persists. Mounts a switch into the settings panel, mirroring
+// TabFocus.js.
 
 const Snow = {
     KEY: 'hd32-snow',
@@ -31,16 +33,14 @@ const Snow = {
         document.documentElement.setAttribute('data-snow', v);
         this._set(v);
 
-        // Falling flakes: construct with enabled:false so SnowEffect's own
-        // seasonal gate never runs - the toggle IS the gate here.
         if (v === 'on') {
             if (!this._fx && typeof SnowEffect !== 'undefined') {
                 // The login page hides the app nav (#nav display:none) and
                 // gets the sparse full-page fall instead, behind the card.
                 const loginPage = !!document.querySelector('.auth-container');
-                this._fx = new SnowEffect({ enabled: false, navbarOnly: !loginPage, snowflakeCount: loginPage ? 30 : 28 });
+                this._fx = new SnowEffect({ navbarOnly: !loginPage, snowflakeCount: loginPage ? 30 : 28 });
             }
-            if (this._fx && !this._fx.snowContainer) this._fx.init();
+            if (this._fx) this._fx.init();     // no-op if already running
         } else if (this._fx) {
             this._fx.stop();
         }
