@@ -28,10 +28,13 @@ const Snow = {
         return this._inSeason() ? 'on' : 'off';
     },
 
-    apply(v) {
+    // persist=true ONLY for an explicit user toggle. Automatic calls (boot,
+    // mount) must not write, or the seasonal default is frozen into storage
+    // as a user choice and the festive window can never turn snow on.
+    apply(v, persist) {
         if (v !== 'on') v = 'off';
         document.documentElement.setAttribute('data-snow', v);
-        this._set(v);
+        if (persist) this._set(v);
 
         if (v === 'on') {
             if (!this._fx && typeof SnowEffect !== 'undefined') {
@@ -50,7 +53,7 @@ const Snow = {
     },
 
     toggle() {
-        this.apply(document.documentElement.getAttribute('data-snow') === 'on' ? 'off' : 'on');
+        this.apply(document.documentElement.getAttribute('data-snow') === 'on' ? 'off' : 'on', true);
     },
 
     mount() {
