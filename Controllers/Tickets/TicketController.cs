@@ -56,6 +56,35 @@ namespace HelpDeskNet8.Controllers.Tickets
         }
 
         [HttpPost]
+        public async Task<IActionResult> GetUnassignedCRs([FromBody] GetTicketsRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null) return Unauthorized();
+
+            // The CR pool is Govtech-only; non-Govtech callers get an empty set.
+            if (user.AuthorityID != Constants.Authority.Govtech) return Ok(System.Array.Empty<object>());
+
+            Filter filter = TicketFilterMapper.Map(request.Filters);
+            var pool = await _ticketManager.GetUnassignedCRs(user, filter, request.MyTicket, request.UTC);
+            return Ok(pool);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetTicketProject([FromBody] SetTicketProjectRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null) return Unauthorized();
+
+            // Moving a CR between the pool and a project is Govtech-Admin only
+            // (level 2), the same gate as SaveProject.
+            if (await auth.CheckAdmin(user) != Constants.AdminLevel.Admin) return Forbid();
+
+            bool ok = await _ticketManager.SetTicketProject(request.TicketID, request.ProjectID);
+            if (!ok) return NotFound();
+            return Ok(new { success = true });
+        }
+
+        [HttpPost]
         public async Task<IActionResult> SaveTicket([FromBody] SaveTicketRequest request)
         {
             IUser user = this.GetAuthenticatedUser();

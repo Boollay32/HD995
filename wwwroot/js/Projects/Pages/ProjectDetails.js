@@ -42,10 +42,13 @@ class ProjectDetails extends PageBase {
     }
 
     async _setupEdit() {
-        // Only Govtech Admins (level 2) can edit a project.
+        // Only Govtech Admins (level 2) can edit a project - the same gate
+        // covers moving CRs between this project and the pool.
         try {
             const level = await AdminContext.resolve();
+            this._isAdmin = (level === 2);
             if (level === 2) {
+                this._wirePool();
                 const btn = document.getElementById('pjd-edit');
                 if (btn) {
                     btn.style.display = '';
@@ -141,11 +144,82 @@ class ProjectDetails extends PageBase {
               <td class="pjd-ttype">${this._esc(t.requestType ?? '')}</td>
               <td class="pjd-ttech">${this._esc(t.assignedTechName || '—')}</td>
               <td class="pjd-tdate mono">${t.targetDate && !String(t.targetDate).startsWith('1900-01-01') ? this._fmtDate(t.targetDate) : '—'}</td>
+              <td class="pjd-tact">${this._isAdmin && !closed ? `<button type="button" class="pjd-unassign" data-un="${t.ticketID}" title="Return this CR to the pool">Unassign</button>` : ''}</td>
             </tr>`;
         }).join('');
 
         tbody.querySelectorAll('.pjd-trow[data-ticket]').forEach(row =>
             row.addEventListener('click', () => this._openTicket(parseInt(row.dataset.ticket, 10))));
+
+        // Unassign: send the CR back to the pool. The proc clears its target
+        // date (pool tickets carry no deadline). stopPropagation so the row's
+        // open-ticket click does not also fire.
+        tbody.querySelectorAll('.pjd-unassign[data-un]').forEach(btn =>
+            btn.addEventListener('click', async e => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.un, 10);
+                if (!Number.isFinite(id)) return;
+                if (!confirm(`Return ticket #${id} to the CR pool? Its target date will be cleared.`)) return;
+                btn.disabled = true;
+                try {
+                    await API.post('Ticket/SetTicketProject',
+                        API.authPayload({ ticketID: id, projectID: null }));
+                    await this._load();
+                } catch (err) {
+                    console.error('ProjectDetails unassign:', err);
+                    btn.disabled = false;
+                }
+            }));
+    }
+
+    // ---- CR pool picker: list unassigned CRs, add one to this project ----
+    _wirePool() {
+        const btn = document.getElementById('pjd-add-pool');
+        if (!btn) return;
+        btn.style.display = '';
+        btn.addEventListener('click', () => this._togglePoolPicker());
+    }
+
+    async _togglePoolPicker() {
+        const panel = document.getElementById('pjd-pool-picker');
+        if (!panel) return;
+        if (!panel.hidden) { panel.hidden = true; return; }
+        panel.hidden = false;
+        panel.innerHTML = '<p class="pjd-pool-empty">Loading\u2026</p>';
+        try {
+            const data = await API.post('Ticket/GetUnassignedCRs',
+                API.authPayload({ myTicket: 0, filters: {} }));
+            const rows = Array.isArray(data) ? data : [];
+            if (!rows.length) {
+                panel.innerHTML = '<p class="pjd-pool-empty">The CR pool is empty.</p>';
+                return;
+            }
+            panel.innerHTML = rows.map(r => `
+                <div class="pjd-pool-row">
+                  <span class="pjd-pool-id mono">#${r.ticketID}</span>
+                  <span class="pjd-pool-subj">${this._esc(r.subject ?? '')}</span>
+                  <span class="pjd-pool-type">${this._esc(r.requestType ?? '')}</span>
+                  <button type="button" class="pjd-pool-add" data-add="${r.ticketID}">Add</button>
+                </div>`).join('');
+            panel.querySelectorAll('.pjd-pool-add[data-add]').forEach(b =>
+                b.addEventListener('click', async () => {
+                    const id = parseInt(b.dataset.add, 10);
+                    if (!Number.isFinite(id)) return;
+                    b.disabled = true;
+                    try {
+                        await API.post('Ticket/SetTicketProject',
+                            API.authPayload({ ticketID: id, projectID: parseInt(this.projectId, 10) }));
+                        panel.hidden = true;
+                        await this._load();
+                    } catch (err) {
+                        console.error('ProjectDetails add-from-pool:', err);
+                        b.disabled = false;
+                    }
+                }));
+        } catch (err) {
+            console.error('ProjectDetails pool picker:', err);
+            panel.innerHTML = '<p class="pjd-pool-empty">Couldn\u2019t load the pool.</p>';
+        }
     }
 
     // Projects-a: client-side status filter over the already-loaded ticket

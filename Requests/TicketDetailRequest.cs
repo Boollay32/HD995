@@ -8,6 +8,12 @@ namespace HelpDeskNet8.Requests
         public Dictionary<string, string> Filters { get; set; }
     }
 
+    public class SetTicketProjectRequest : AuthenticatedRequest
+    {
+        public int TicketID { get; set; }
+        public int? ProjectID { get; set; }   // null = return to the CR pool
+    }
+
     public class GetTicketDetailRequest : AuthenticatedRequest
     {
         public int TicketId { get; set; }

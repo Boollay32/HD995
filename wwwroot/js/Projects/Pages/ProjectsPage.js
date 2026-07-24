@@ -15,6 +15,8 @@ class ProjectsPage extends PageBase {
             SetActivePage('ProjectsMenu');
             if (typeof UserPermissions === 'function') UserPermissions();
             this._wireFilters();
+            document.getElementById('pj-pool')
+                ?.addEventListener('click', () => Router.toCRPoolPage());
             await this._setupNew();
             await this._load();
         } catch (error) {

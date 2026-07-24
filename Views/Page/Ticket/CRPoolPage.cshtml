@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "CR Pool";
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Queue.css" asp-append-version="true" />
+}
+
+@section AddJSToBody {
+    <script src="~/js/Ticket/Pages/CRPoolPage.js" asp-append-version="true"></script>
+}
+
+<div id="queue-mount" class="qv--page"></div>
