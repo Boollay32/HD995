@@ -50,7 +50,9 @@
             tile.setAttribute('aria-label', 'Download ' + name);
             tile.addEventListener('click', function (e) {
                 e.preventDefault();
-                if (window.Composer && Composer.download) Composer.download(name, b64);
+                // typeof, not window.Composer: Composer is a top-level const,
+                // which is never a window property. Same fix as 9e94d6f for Format.
+                if (typeof Composer !== 'undefined' && Composer.download) Composer.download(name, b64);
             });
         } else {
             tile.setAttribute('aria-label', name);
