@@ -96,7 +96,7 @@ nav.Nav-Bar {
         nav.Nav-Bar #navbar-logout #Logout-button {
             padding: 6px 16px;
             background: var(--accent);
-            color: #ffffff !important;
+            color: var(--on-accent) !important;
             border: none;
             border-radius: 6px;
             font-size: 0.75rem;

@@ -185,4 +185,4 @@
     border-radius: 8px;
     cursor: pointer;
 }
-.pj-pool-btn:hover { background: var(--accent); color: #fff; }
+.pj-pool-btn:hover { background: var(--accent); color: var(--on-accent); }

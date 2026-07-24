@@ -198,7 +198,7 @@
 .pjd-newticket-btn {
     font-size: 0.8125rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--on-accent);   /* dark mode: dark text on the bright accent */
     background: var(--accent);
     border: 1px solid var(--accent);
     padding: 6px 14px;
@@ -231,7 +231,7 @@
     color: var(--accent);
     background: transparent;
 }
-.pjd-pool-btn:hover { background: var(--accent); color: #fff; filter: none; }
+.pjd-pool-btn:hover { background: var(--accent); color: var(--on-accent); filter: none; }
 
 .pjd-pool-picker {
     border: 1px solid var(--border);
