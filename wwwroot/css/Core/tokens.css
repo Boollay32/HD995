@@ -18,20 +18,20 @@ html[data-font="large"] { font-size: 125%; }
        pass AA with text, so anything carrying text uses --accent below. */
     --brand:        #E8633C;
     --brand-strong: #C2640F;
-    --brand-deep:   #A4561C;     /* orange AS TEXT (links/nav): 5.35 on white */
+    --brand-deep:   #944D18;     /* orange AS TEXT (links/nav): 4.77 canvas / 5.51 panel (Parchment) */
     --brand-pale:   #FDEFE0;
     --brand-line:   #F6D7BC;
 
     /* Ink / text (warm) */
     --ink:      #33302C;
     --ink-soft: #55504A;
-    --muted:    #675D50;         /* darkened for AA+ contrast: 6.45 white / 5.99 canvas / 5.65 paper-2 (was #7A6E60) */
+    --muted:    #675D50;         /* AA on Parchment: 5.64 panel / 4.88 canvas / 6.14 paper */
 
-    /* Surfaces / lines (warm cream) */
-    --paper:   #FFFFFF;
-    --paper-2: #F7EFE4;
-    --line:    #F0E4D4;
-    --line-2:  #D9C9B4;
+    /* Surfaces / lines (Parchment: no pure white anywhere) */
+    --paper:   #FBF6EC;
+    --paper-2: #EFE5D2;
+    --line:    #E4D6BE;
+    --line-2:  #CBB795;
 
     /* Status */
     --ok:    #3B6D11;            /* traffic-light green, AA on ok-bg */
@@ -42,30 +42,36 @@ html[data-font="large"] { font-size: 125%; }
     --font-sans: "Spline Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-    /* Radii / shadow */
+    /* Radii / shadow. Surface depth is the standard treatment: a 1px inset
+       top highlight (light "from above") plus a soft warm drop shadow.
+       --surface-lift is the reusable pair; --shadow-sm folds the same inset
+       in so existing consumers (form sections) get the lift for free. */
+    --lift-hl: rgba(255, 255, 255, 0.9);
+    --lift-shadow: rgba(74, 60, 38, 0.12);
+    --surface-lift: inset 0 1px 0 var(--lift-hl), 0 1px 3px var(--lift-shadow);
     --radius-sm: 6px;
     --radius-md: 12px;
     --radius-lg: 20px;
-    --shadow-sm: 0 1px 2px rgba(20, 16, 12, .07);
-    --shadow-lg: 0 10px 30px rgba(30, 20, 10, .18);
+    --shadow-sm: inset 0 1px 0 var(--lift-hl), 0 1px 2px rgba(74, 60, 38, .09);
+    --shadow-lg: 0 10px 30px rgba(58, 46, 28, .22);
 }
 
 /* Nav/footer theme vars (lifted from Queue.css so the chrome themes
    app-wide, not only on the list pages -- fixes the unthemed/white footer). */
 :root {
-    --panel: #FFFFFF;
+    --panel: #F6EFE2;        /* Parchment: no pure white; text 11.48, muted 5.64 */
     --text: #33302C;
-    --border: #E5D8C6;
-    --row-hover: #FBF6EF;
-    --chip-bg: #F0E6D4;
-    --canvas: #FBF6EF;       /* warm cream page background behind panels */
+    --border: #D2BE9C;       /* stepped up against the deeper canvas */
+    --row-hover: #EDE2CE;
+    --chip-bg: #E8DAC4;
+    --canvas: #EBDFC7;       /* deepened so lifted panels separate clearly */
     --accent: #B5530E;           /* button orange: AA 4.99 with white text */
     --accent-strong: #964307;    /* hover: 6.77 with white text */
     --on-accent: #FFFFFF;        /* text on accent-filled controls */
     --accent-2: #266A5F;         /* teal companion, AA on accent-2-bg: 5.19 */
     --accent-2-strong: #225F56;
     --accent-2-bg: #D7EDE9;      /* teal tint for 'open' pills (text #1F5249: 7.28) */
-    --border-strong: #9C8362;    /* form-control borders: AA 3:1 on white/cream/canvas */
+    --border-strong: #927B5C;    /* form-control borders: 3.05 canvas / 3.52 panel (3:1 AA) */
     --info: #1D4ED8;
     --ok-bg: #EAF3DE;      /* traffic-light: soft green tint */
     --warn-bg: #FAEEDA;    /* traffic-light: soft amber tint */
@@ -110,6 +116,26 @@ html[data-theme="dark"] {
 html[data-theme="dark"] {
     --scroll-thumb: #4C5560;
     --scroll-thumb-hover: #5F6A77;
+    /* Lift on dark: faint top sheen, deeper drop. Palette untouched. */
+    --lift-hl: rgba(255, 255, 255, 0.07);
+    --lift-shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* =============================================================
+   Surface lift (Parchment depth). Approved surfaces only: project
+   cards, note/message cards, composer, create-page head + panels.
+   Detail-form sections get it via --shadow-sm; the two component
+   rules with their own hardcoded shadows (.pj-card:hover,
+   .td-field-group) have the inset prepended in-place instead,
+   since those later-loading rules would win over this block.
+   Controls, pills, chips, inputs and the nav stay flat.
+   ============================================================= */
+.pj-card,
+.td-note-card,
+.td-note-compose,
+.ca-head,
+.ca-panel {
+    box-shadow: var(--surface-lift);
 }
 
 /* WebKit / Chromium / Edge */

@@ -10,14 +10,18 @@
    ============================================================================ */
 
 :root {
-  --td-panel: #FFFFFF;
+  /* Surface/line/text members were verbatim copies of the global tokens at
+     extraction time; re-pointed so the Parchment overhaul (and any future
+     one) flows through automatically - one source of truth. Status colours
+     below stay local: they are self-contained pill pairs. */
+  --td-panel: var(--panel);
   --td-surface: var(--canvas);
-  --td-text: #33302C;
-  --td-muted: #675D50;
+  --td-text: var(--text);
+  --td-muted: var(--muted);
   --td-muted-2: #4A443C;
-  --td-border: #D9C9B4;
-  --td-border-2: #F0E4D4;
-  --td-row: #F7EFE4;
+  --td-border: var(--line-2);
+  --td-border-2: var(--line);
+  --td-row: var(--paper-2);
   --td-ok: #1F5249;
   --td-ok-bg: #D7EDE9;
   --td-danger: #9A2018;
@@ -32,10 +36,10 @@
 }
 
 html[data-theme="dark"] {
-  --td-panel: #2B2724;
+  --td-panel: var(--panel);
   --td-surface: var(--canvas);
-  --td-text: #E8E0D6;
-  --td-muted: #A89C8E;
+  --td-text: var(--text);
+  --td-muted: var(--muted);
   --td-muted-2: #C5BBAD;
   --td-border: #4A433C;
   --td-border-2: #3A342E;

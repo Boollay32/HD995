@@ -282,7 +282,7 @@ body {
   border: 1px solid var(--td-border-2);
   border-radius: 10px;
   padding: 14px;
-  box-shadow: 0 1px 2px rgba(20, 18, 15, 0.04), 0 6px 18px rgba(20, 18, 15, 0.05);
+  box-shadow: inset 0 1px 0 var(--lift-hl), 0 1px 2px rgba(20, 18, 15, 0.04), 0 6px 18px rgba(20, 18, 15, 0.05);
 }
 /* HD43 Ticket-a: author display:flex above beats the UA [hidden] rule, so
    guard it explicitly -- when the Details empty-state shows, the empty
