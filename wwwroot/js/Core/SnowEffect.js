@@ -45,6 +45,64 @@ class SnowEffect {
     init() {
         this.createSnowContainer();
         this.createSnowflakes();
+        // Navbar mode: motion is frame-driven, not CSS-animated. CSS top/
+        // margin animations pixel-snap (jagged), and transform animations
+        // freeze under software rendering; a JS-set transform each frame
+        // repaints on the main thread with sub-pixel smoothness everywhere.
+        if (this.options.navbarOnly) this._startLoop();
+    }
+
+    _startLoop() {
+        const SPEED = { near: 12, medium: 8.5, far: 5.5 };   // px/s fall
+        const MAXO  = { near: 0.95, medium: 0.8, far: 0.6 };
+        const TRAVEL = 62;         // -8px above the bar to below the fade
+        const FADE_IN_END = 10, FADE_OUT_START = 38, FADE_OUT_END = 52;
+
+        this._flakeState = this.snowflakes.map(el => {
+            const depth = el.classList.contains('near') ? 'near'
+                        : el.classList.contains('medium') ? 'medium' : 'far';
+            el.style.opacity = '0';                 // no first-frame flash
+            return {
+                el,
+                speed: SPEED[depth] * (0.85 + Math.random() * 0.3),
+                phase: Math.random() * TRAVEL,
+                drift: 0.9 + Math.random() * 0.7,   // px/s rightward wind
+                swayAmp: 0.8 + Math.random() * 1.2,
+                swayHz: 0.15 + Math.random() * 0.2,
+                swayOff: Math.random() * 6.283,
+                max: MAXO[depth]
+            };
+        });
+
+        this._t0 = null;
+        const tick = (ts) => {
+            if (!this.snowContainer) return;        // stopped mid-flight
+            if (this._t0 === null) this._t0 = ts;
+            const t = (ts - this._t0) / 1000;
+            for (const f of this._flakeState) {
+                const cyc = (t * f.speed + f.phase) % TRAVEL;
+                const y = cyc - 8;
+                // Wind: steady rightward drift over this fall's elapsed time
+                // plus a faint sway; resets with the cycle while opacity is 0.
+                const x = (cyc / f.speed) * f.drift
+                        + Math.sin(t * f.swayHz * 6.283 + f.swayOff) * f.swayAmp;
+                let o;
+                if (y < FADE_IN_END) o = Math.max(0, (y + 8) / (FADE_IN_END + 8));
+                else if (y > FADE_OUT_START) o = Math.max(0, 1 - (y - FADE_OUT_START) / (FADE_OUT_END - FADE_OUT_START));
+                else o = 1;
+                f.el.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px)';
+                f.el.style.opacity = (o * f.max).toFixed(3);
+            }
+            this._raf = requestAnimationFrame(tick);
+        };
+        this._raf = requestAnimationFrame(tick);
+    }
+
+    _stopLoop() {
+        if (this._raf) cancelAnimationFrame(this._raf);
+        this._raf = null;
+        this._t0 = null;
+        this._flakeState = null;
     }
 
     createSnowContainer() {
@@ -105,6 +163,7 @@ class SnowEffect {
     }
 
     stop() {
+        this._stopLoop();
         if (this.snowContainer) {
             this.snowContainer.remove();
             this.snowContainer = null;
