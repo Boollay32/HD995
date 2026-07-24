@@ -31,12 +31,19 @@
   height: 100%;
   z-index: 4999;
   background-color: rgba(16, 20, 26, 0.42);
+  /* Centring context: MessageBox opens this as display:flex, so the dialog
+     is dead-centre both axes with no transform arithmetic to knock off. */
+  align-items: center;
+  justify-content: center;
 }
 #MessageBox-ScreenCover-Div #MessageBox-Outer-Div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  /* Centred by the flex cover; self-positioning removed. Clamps keep long
+     messages inside the viewport (the old absolute box got this free). */
+  position: relative;
+  margin: 0;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
   background: var(--panel);
   color: var(--text);
   border-radius: 14px;

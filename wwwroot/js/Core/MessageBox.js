@@ -55,8 +55,12 @@ const MessageBox = {
     },
 
     _show() {
-        UI.showById('MessageBox-ScreenCover-Div');
-        UI.showById('MessageBox-Outer-Div');
+        // Show ONLY the cover, and as flex: the generic showById stamps
+        // inline display:block, which clobbered the dialog's flex layout and
+        // knocked the centring off. The cover is the centring context now;
+        // the dialog is visible whenever its cover is and needs no showing.
+        const cover = document.getElementById('MessageBox-ScreenCover-Div');
+        if (cover) cover.style.display = 'flex';
     },
 
     // Alert dialogs (single OK) dismiss on Escape or a backdrop click, then
