@@ -265,3 +265,77 @@ html[data-snow="on"] .pj-card:nth-child(2n)::after {
 .qv-snow-sw[aria-checked="true"] { background: var(--accent); }
 .qv-snow-sw[aria-checked="true"] .qv-snow-knob { transform: translateX(22px);
     background: var(--on-accent); color: var(--accent); }
+
+/* ============= Snow: TicketDetails pane headers (option 1) ============= */
+/* Shallow drift on the two pane headers only (Overview / Messages, shared
+   .td-pane-head; RFC details inherits the shell). Inner section headers stay
+   clean - drifts everywhere read as a border style, not snow. */
+html[data-snow="on"] .td-pane-head { position: relative; }
+html[data-snow="on"] .td-pane-head::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 6px;
+    background: var(--snow-drift-card) center / 100% 100% no-repeat;
+    pointer-events: none;
+}
+html[data-snow="on"] .td-pane--right .td-pane-head::after {
+    background-image: var(--snow-drift-card-2);
+}
+
+/* ============= Snow: login page (full-page fall + card drift) ============= */
+/* The overlay drops behind the content: z-index 0 keeps flakes above the page
+   background but below the (raised) card, so nothing crosses the form. */
+#snow-overlay { z-index: 0; }
+
+/* JS owns motion here too - kill the legacy 100vh CSS animations and the
+   layer-promotion triggers, and match the halved navbar flake sizes. */
+#snow-overlay .snowflake {
+    top: 0;
+    animation: none;
+    filter: none;
+    will-change: auto;
+    backface-visibility: visible;
+    perspective: none;
+}
+#snow-overlay .snowflake.near   { width: 4px; height: 4px; }
+#snow-overlay .snowflake.medium { width: 3px; height: 3px; }
+#snow-overlay .snowflake.far    { width: 2px; height: 2px; }
+#snow-overlay .snowflake.sparkle { animation: sparkle 2s ease-in-out infinite; }
+
+/* Light-mode shading, same treatment as the navbar flakes. */
+html:not([data-theme="dark"]) #snow-overlay .snowflake {
+    background: #FDFEFF;
+    box-shadow: 0 0 0 1px rgba(178, 199, 216, 0.85),
+                0 1.5px 3px rgba(122, 148, 170, 0.5),
+                inset -1px -1px 1.5px rgba(178, 199, 216, 0.6);
+}
+html:not([data-theme="dark"]) #snow-overlay .snowflake.far {
+    background: #EDF3F8;
+    box-shadow: 0 0 0 1px rgba(178, 199, 216, 0.7),
+                0 1px 2px rgba(122, 148, 170, 0.4);
+}
+html:not([data-theme="dark"]) #snow-overlay .snowflake.sparkle { animation: none; }
+
+/* Card drift: 24px bank resting inside the bottom edge, clipped to the card's
+   20px (--r-lg) corner radius so the snow never escapes the box. The active
+   container is raised above the overlay. */
+html[data-snow="on"] .auth-container {
+    position: relative;
+    z-index: 1;
+}
+html[data-snow="on"] .auth-container::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 24px;
+    border-radius: 0 0 calc(var(--r-lg) - 1px) calc(var(--r-lg) - 1px);
+    background: var(--snow-drift-auth) center / 100% 100% no-repeat;
+    pointer-events: none;
+}
+html[data-snow="on"] { --snow-drift-auth: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 280 12%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,12 L0,4 C10,7.5 26,9.4 48,9 C66,8.7 76,6.8 96,7.2 C118,7.6 130,9.6 152,9.2 C174,8.8 186,6.9 208,7.4 C230,7.9 246,9.5 262,9 L280,3.5 L280,12 Z%22 fill=%22%23EAF1F7%22 opacity=%220.85%22/%3E%3Cpath d=%22M0,12 L0,6.5 C14,9.4 34,10.7 56,10.4 C78,10.1 92,8.6 116,9 C140,9.4 156,10.8 180,10.5 C204,10.2 220,8.8 244,9.2 L280,6 L280,12 Z%22 fill=%22%23FFFFFF%22/%3E%3Cpath d=%22M0,6.5 C14,9.4 34,10.7 56,10.4 C78,10.1 92,8.6 116,9 C140,9.4 156,10.8 180,10.5 C204,10.2 220,8.8 244,9.2 L280,6%22 fill=%22none%22 stroke=%22%23A9BFD2%22 stroke-width=%220.8%22 opacity=%220.85%22/%3E%3Ccircle cx=%2288%22 cy=%228%22 r=%221%22 fill=%22%23FFFFFF%22 stroke=%22%23A9BFD2%22 stroke-width=%220.4%22/%3E%3Ccircle cx=%22214%22 cy=%228.3%22 r=%220.9%22 fill=%22%23FFFFFF%22 stroke=%22%23A9BFD2%22 stroke-width=%220.4%22/%3E%3C/svg%3E"); }
+html[data-theme="dark"][data-snow="on"] { --snow-drift-auth: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 280 12%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,12 L0,4 C10,7.5 26,9.4 48,9 C66,8.7 76,6.8 96,7.2 C118,7.6 130,9.6 152,9.2 C174,8.8 186,6.9 208,7.4 C230,7.9 246,9.5 262,9 L280,3.5 L280,12 Z%22 fill=%22%23DCE9F2%22 opacity=%220.35%22/%3E%3Cpath d=%22M0,12 L0,6.5 C14,9.4 34,10.7 56,10.4 C78,10.1 92,8.6 116,9 C140,9.4 156,10.8 180,10.5 C204,10.2 220,8.8 244,9.2 L280,6 L280,12 Z%22 fill=%22%23F4F8FB%22 opacity=%220.85%22/%3E%3Cpath d=%22M0,6.5 C14,9.4 34,10.7 56,10.4 C78,10.1 92,8.6 116,9 C140,9.4 156,10.8 180,10.5 C204,10.2 220,8.8 244,9.2 L280,6%22 fill=%22none%22 stroke=%22%23FFFFFF%22 stroke-width=%220.7%22 opacity=%220.9%22/%3E%3Ccircle cx=%2288%22 cy=%228%22 r=%221%22 fill=%22%23FFFFFF%22 opacity=%220.95%22/%3E%3Ccircle cx=%22214%22 cy=%228.3%22 r=%220.9%22 fill=%22%23FFFFFF%22 opacity=%220.9%22/%3E%3C/svg%3E"); }

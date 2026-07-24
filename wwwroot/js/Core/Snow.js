@@ -35,7 +35,10 @@ const Snow = {
         // seasonal gate never runs - the toggle IS the gate here.
         if (v === 'on') {
             if (!this._fx && typeof SnowEffect !== 'undefined') {
-                this._fx = new SnowEffect({ enabled: false, navbarOnly: true, snowflakeCount: 28 });
+                // The login page hides the app nav (#nav display:none) and
+                // gets the sparse full-page fall instead, behind the card.
+                const loginPage = !!document.querySelector('.auth-container');
+                this._fx = new SnowEffect({ enabled: false, navbarOnly: !loginPage, snowflakeCount: loginPage ? 30 : 28 });
             }
             if (this._fx && !this._fx.snowContainer) this._fx.init();
         } else if (this._fx) {

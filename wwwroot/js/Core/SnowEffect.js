@@ -49,14 +49,24 @@ class SnowEffect {
         // margin animations pixel-snap (jagged), and transform animations
         // freeze under software rendering; a JS-set transform each frame
         // repaints on the main thread with sub-pixel smoothness everywhere.
-        if (this.options.navbarOnly) this._startLoop();
+        this._startLoop();   // both modes: the CSS full-page fall is retired
     }
 
     _startLoop() {
-        const SPEED = { near: 12, medium: 8.5, far: 5.5 };   // px/s fall
-        const MAXO  = { near: 0.95, medium: 0.8, far: 0.6 };
-        const TRAVEL = 62;         // -8px above the bar to below the fade
-        const FADE_IN_END = 10, FADE_OUT_START = 38, FADE_OUT_END = 52;
+        // Mode-tuned: the navbar is a 56px window; full-page (login) falls
+        // the viewport, slower relative to its height and with lower opacity
+        // ceilings so a whole screen of snow still reads as subtle.
+        const nav = this.options.navbarOnly;
+        const SPEED = nav ? { near: 12, medium: 8.5, far: 5.5 }
+                          : { near: 26, medium: 18,  far: 12 };   // px/s fall
+        const MAXO  = nav ? { near: 0.95, medium: 0.8,  far: 0.6 }
+                          : { near: 0.85, medium: 0.65, far: 0.45 };
+        const LEAD = nav ? 8 : 10;             // spawn height above the frame
+        const H = nav ? 56 : Math.max(400, window.innerHeight || 800);
+        const TRAVEL = nav ? 62 : H + 2 * LEAD;
+        const FADE_IN_END    = nav ? 10 : 24;
+        const FADE_OUT_START = nav ? 38 : H - 70;
+        const FADE_OUT_END   = nav ? 52 : H - 20;
 
         this._flakeState = this.snowflakes.map(el => {
             const depth = el.classList.contains('near') ? 'near'
@@ -66,8 +76,10 @@ class SnowEffect {
                 el,
                 speed: SPEED[depth] * (0.85 + Math.random() * 0.3),
                 phase: Math.random() * TRAVEL,
-                drift: 0.9 + Math.random() * 0.7,   // px/s rightward wind
-                swayAmp: 0.8 + Math.random() * 1.2,
+                drift: nav ? 0.9 + Math.random() * 0.7
+                           : 4 + Math.random() * 3,   // px/s rightward wind
+                swayAmp: nav ? 0.8 + Math.random() * 1.2
+                             : 1.2 + Math.random() * 2,
                 swayHz: 0.15 + Math.random() * 0.2,
                 swayOff: Math.random() * 6.283,
                 max: MAXO[depth]
@@ -81,13 +93,13 @@ class SnowEffect {
             const t = (ts - this._t0) / 1000;
             for (const f of this._flakeState) {
                 const cyc = (t * f.speed + f.phase) % TRAVEL;
-                const y = cyc - 8;
+                const y = cyc - LEAD;
                 // Wind: steady rightward drift over this fall's elapsed time
                 // plus a faint sway; resets with the cycle while opacity is 0.
                 const x = (cyc / f.speed) * f.drift
                         + Math.sin(t * f.swayHz * 6.283 + f.swayOff) * f.swayAmp;
                 let o;
-                if (y < FADE_IN_END) o = Math.max(0, (y + 8) / (FADE_IN_END + 8));
+                if (y < FADE_IN_END) o = Math.max(0, (y + LEAD) / (FADE_IN_END + LEAD));
                 else if (y > FADE_OUT_START) o = Math.max(0, 1 - (y - FADE_OUT_START) / (FADE_OUT_END - FADE_OUT_START));
                 else o = 1;
                 f.el.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px)';
