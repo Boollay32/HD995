@@ -56,10 +56,9 @@ const Confirm = (() => {
                </svg>`;
     }
 
+    // Delegates to Format.escapeHtml (Core/Format.js) - single source of truth.
     function _escape(str) {
-        return String(str ?? '')
-            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        return Format.escapeHtml(str);
     }
 
     function _mount(html, safeValue, resolve) {

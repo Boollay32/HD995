@@ -193,7 +193,7 @@ namespace HelpDeskNet8.Services
                 else
                 {
                     command.CommandText = "[dbo].[usp_Helpdesk_WriteNewTicket]";
-                    command.Parameters.Add(new SqlParameter("@AuthorityID", SqlDbType.NVarChar) { Value = user.AuthorityID });
+                    command.Parameters.Add(new SqlParameter("@AuthorityID", SqlDbType.Int) { Value = user.AuthorityID });
                     command.Parameters.Add(new SqlParameter("@StatusID", SqlDbType.Int) { Value = Constants.TicketDefaults.StatusId });
                     command.Parameters.Add(new SqlParameter("@PriorityID", SqlDbType.Int) { Value = Constants.TicketDefaults.PriorityId });
                     command.Parameters.Add(new SqlParameter("@CategoryID", SqlDbType.Int) { Value = Constants.TicketDefaults.CategoryId });

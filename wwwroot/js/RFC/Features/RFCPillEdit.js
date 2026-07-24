@@ -44,10 +44,9 @@
         pill.innerHTML = led + _esc(label);
     }
 
+    // Delegates to Format.escapeHtml (Core/Format.js) - single source of truth.
     function _esc(s) {
-        return String(s).replace(/[&<>"']/g, function (c) {
-            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-        });
+        return Format.escapeHtml(s);
     }
 
     function _close() {

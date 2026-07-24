@@ -48,7 +48,7 @@ class PageBase {
         if (typeof TicketPageView === 'function') {
             TicketPageView();
         } else {
-            window.location.href = '/Page/Tickets';
+            window.location.href = '/Page/TicketPage';
         }
     }
 
@@ -61,8 +61,8 @@ class PageBase {
     }
 
     navigateToRFCList() {
-        if (typeof RFCPageView === 'function') {
-            RFCPageView();
+        if (typeof RFCView === 'function') {
+            RFCView();
         } else {
             window.location.href = '/Page/RFC';
         }
