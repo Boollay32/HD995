@@ -100,7 +100,7 @@ html[data-snow="on"] nav.Nav-Bar::after {
     left: 0;
     right: 0;
     bottom: -1px;
-    height: 13px;
+    height: 16px;
     background: var(--snow-drift-nav) center / 100% 100% no-repeat;
     pointer-events: none;
 }
