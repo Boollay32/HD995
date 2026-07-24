@@ -122,23 +122,6 @@ html[data-snow="on"] .pj-card:nth-child(2n)::after {
     background-image: var(--snow-drift-card-2);
 }
 
-/* TicketDetails: the two pane headers only (Overview / Messages; RFC details
-   inherits the shell). Inner section headers stay clean. */
-html[data-snow="on"] .td-pane-head { position: relative; }
-html[data-snow="on"] .td-pane-head::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 6px;
-    background: var(--snow-drift-card) center / 100% 100% no-repeat;
-    pointer-events: none;
-}
-html[data-snow="on"] .td-pane--right .td-pane-head::after {
-    background-image: var(--snow-drift-card-2);
-}
-
 /* Login card: 24px bank inside the bottom edge, clipped to the card's 20px
    (--r-lg) corner radius so the snow stays in the box; the active container
    is raised above the full-page overlay. */
@@ -170,3 +153,25 @@ html[data-snow="on"] .auth-container::after {
 .qv-snow-sw[aria-checked="true"] { background: var(--accent); }
 .qv-snow-sw[aria-checked="true"] .qv-snow-knob { transform: translateX(22px);
     background: var(--on-accent); color: var(--accent); }
+
+/* Ground layer: settled snow across the bottom of the viewport. Fixed, full
+   width, banked at the corners like the other drifts. z-index -1 keeps it
+   above the page background but behind every piece of content, so it never
+   obscures a row or intercepts a click (it is also pointer-events: none). */
+html[data-snow="on"] {
+    --snow-drift-ground: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 680 30%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,30 L0,9 C22,15 52,19.5 96,18.5 C130,17.7 150,12.5 188,13.5 C230,14.6 254,20 302,19 C342,18.2 362,12.8 402,13.8 C444,14.9 468,19.8 514,18.8 C552,18 574,13 614,13.8 C644,14.4 664,11 680,7 L680,30 Z%22 fill=%22%23EAF1F7%22 opacity=%220.9%22/%3E%3Cpath d=%22M0,30 L0,14 C24,20 56,23.5 100,22.6 C134,21.9 154,17.6 192,18.5 C234,19.5 258,24 306,23.1 C346,22.4 366,18 406,18.9 C448,19.8 472,23.8 518,22.9 C556,22.2 578,18 618,18.7 C648,19.2 666,16 680,12 L680,30 Z%22 fill=%22%23FFFFFF%22/%3E%3Cpath d=%22M0,14 C24,20 56,23.5 100,22.6 C134,21.9 154,17.6 192,18.5 C234,19.5 258,24 306,23.1 C346,22.4 366,18 406,18.9 C448,19.8 472,23.8 518,22.9 C556,22.2 578,18 618,18.7 C648,19.2 666,16 680,12%22 fill=%22none%22 stroke=%22%23A9BFD2%22 stroke-width=%220.8%22 opacity=%220.85%22/%3E%3Ccircle cx=%22146%22 cy=%2218.4%22 r=%221.1%22 fill=%22%23FFFFFF%22 stroke=%22%23A9BFD2%22 stroke-width=%220.35%22/%3E%3Ccircle cx=%22352%22 cy=%2219%22 r=%221%22 fill=%22%23FFFFFF%22 stroke=%22%23A9BFD2%22 stroke-width=%220.35%22/%3E%3Ccircle cx=%22572%22 cy=%2218.6%22 r=%221.1%22 fill=%22%23FFFFFF%22 stroke=%22%23A9BFD2%22 stroke-width=%220.35%22/%3E%3C/svg%3E");
+}
+html[data-theme="dark"][data-snow="on"] {
+    --snow-drift-ground: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 680 30%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,30 L0,9 C22,15 52,19.5 96,18.5 C130,17.7 150,12.5 188,13.5 C230,14.6 254,20 302,19 C342,18.2 362,12.8 402,13.8 C444,14.9 468,19.8 514,18.8 C552,18 574,13 614,13.8 C644,14.4 664,11 680,7 L680,30 Z%22 fill=%22%23DCE9F2%22 opacity=%220.4%22/%3E%3Cpath d=%22M0,30 L0,14 C24,20 56,23.5 100,22.6 C134,21.9 154,17.6 192,18.5 C234,19.5 258,24 306,23.1 C346,22.4 366,18 406,18.9 C448,19.8 472,23.8 518,22.9 C556,22.2 578,18 618,18.7 C648,19.2 666,16 680,12 L680,30 Z%22 fill=%22%23F4F8FB%22 opacity=%220.92%22/%3E%3Cpath d=%22M0,14 C24,20 56,23.5 100,22.6 C134,21.9 154,17.6 192,18.5 C234,19.5 258,24 306,23.1 C346,22.4 366,18 406,18.9 C448,19.8 472,23.8 518,22.9 C556,22.2 578,18 618,18.7 C648,19.2 666,16 680,12%22 fill=%22none%22 stroke=%22%23FFFFFF%22 stroke-width=%220.7%22 opacity=%220.85%22/%3E%3Ccircle cx=%22146%22 cy=%2218.4%22 r=%221.1%22 fill=%22%23FFFFFF%22 opacity=%220.9%22/%3E%3Ccircle cx=%22352%22 cy=%2219%22 r=%221%22 fill=%22%23FFFFFF%22 opacity=%220.9%22/%3E%3Ccircle cx=%22572%22 cy=%2218.6%22 r=%221.1%22 fill=%22%23FFFFFF%22 opacity=%220.9%22/%3E%3C/svg%3E");
+}
+html[data-snow="on"] body::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30px;
+    z-index: -1;
+    background: var(--snow-drift-ground) center bottom / 100% 100% no-repeat;
+    pointer-events: none;
+}
