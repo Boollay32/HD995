@@ -56,6 +56,11 @@ const Settings = {
                         '<small>focus outline when tabbing</small></span>' +
                     '<span class="qv-set-slot" data-set-slot="tabfocus"></span>' +
                 '</div>' +
+                '<div class="qv-set-row">' +
+                    '<span class="qv-set-lbl">Snow' +
+                        '<small>festive flakes on the nav bar</small></span>' +
+                    '<span class="qv-set-slot" data-set-slot="snow"></span>' +
+                '</div>' +
             '</div>';
         bar.insertBefore(wrap, bar.firstChild);
 

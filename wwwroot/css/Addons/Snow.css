@@ -190,7 +190,78 @@
     overflow: hidden;
 }
 
-    #navbar-snow .snowflake {
-        /* Adjust animation for navbar area only */
-        animation-duration: 2s !important;
-    }
+/* Navbar-scoped fall: the page keyframes travel 100vh, so inside the 56px
+   navbar window flakes would flash through in a frame and sit invisible for
+   the rest of the cycle. These fall the height of the bar and fade at its
+   bottom edge instead. (id+class outweighs .snowflake.depth - no !important.) */
+@keyframes snowfall-nav {
+    0%   { transform: translateY(-10px) translateX(0);   opacity: 0; }
+    12%  { opacity: 0.85; }
+    82%  { opacity: 0.7; }
+    100% { transform: translateY(58px) translateX(14px); opacity: 0; }
+}
+#navbar-snow .snowflake.near   { animation: snowfall-nav 3.2s linear infinite; }
+#navbar-snow .snowflake.medium { animation: snowfall-nav 4.6s linear infinite; }
+#navbar-snow .snowflake.far    { animation: snowfall-nav 6.5s linear infinite; }
+#navbar-snow .snowflake.sparkle { animation: snowfall-nav 4.6s linear infinite, sparkle 2s ease-in-out infinite; }
+html[data-snow="off"] #navbar-snow { display: none; }
+
+/* ============= Rested snow drifts (Snow.js, html[data-snow="on"]) ============= */
+/* Inline-SVG banks: cool back layer, white crust, shaded crest line, settled
+   flecks. Corner build-up left/right like real banked snow. Light-theme
+   variants carry a cool hairline so white-on-white still reads; dark-theme
+   variants go translucent with a bright crest. Adjacent project cards
+   alternate a mirrored path so no two skylines match. Pseudo-elements only:
+   zero cost when the setting is off, no markup changes, no hit-testing
+   impact (pseudos hit-test as their parent). */
+
+html[data-snow="on"] {
+    --snow-drift-nav:    url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 680 16%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,16 L0,6 C18,10.5 40,12.5 74,12 C96,11.7 108,9.4 132,9.8 C160,10.3 176,12.6 208,12.2 C238,11.8 252,9 284,9.5 C310,9.9 330,12.4 366,12 C398,11.6 414,9.6 448,10 C476,10.4 494,12.5 528,12.1 C556,11.8 574,9.8 606,10.3 C634,10.7 656,9 680,5.5 L680,16 Z%22 fill=%22%23EAF1F7%22 opacity=%220.75%22/%3E%3Cpath d=%22M0,16 L0,8 C20,12 46,13.6 78,13.1 C102,12.7 116,10.8 142,11.2 C170,11.6 188,13.5 220,13.1 C248,12.8 264,10.6 294,11 C322,11.4 342,13.4 376,13 C406,12.6 424,10.9 456,11.3 C484,11.7 504,13.5 536,13.1 C562,12.8 582,11 612,11.5 C640,11.9 662,10.4 680,7.5 L680,16 Z%22 fill=%22%23FFFFFF%22/%3E%3Cpath d=%22M0,8 C20,12 46,13.6 78,13.1 C102,12.7 116,10.8 142,11.2 C170,11.6 188,13.5 220,13.1 C248,12.8 264,10.6 294,11 C322,11.4 342,13.4 376,13 C406,12.6 424,10.9 456,11.3 C484,11.7 504,13.5 536,13.1 C562,12.8 582,11 612,11.5 C640,11.9 662,10.4 680,7.5%22 fill=%22none%22 stroke=%22%23C9D8E4%22 stroke-width=%220.8%22 opacity=%220.8%22/%3E%3Ccircle cx=%22120%22 cy=%2210.6%22 r=%221.1%22 fill=%22%23FFFFFF%22 stroke=%22%23C9D8E4%22 stroke-width=%220.4%22/%3E%3Ccircle cx=%22333%22 cy=%2212.2%22 r=%220.9%22 fill=%22%23FFFFFF%22 stroke=%22%23C9D8E4%22 stroke-width=%220.4%22/%3E%3Ccircle cx=%22521%22 cy=%2211.6%22 r=%221%22 fill=%22%23FFFFFF%22 stroke=%22%23C9D8E4%22 stroke-width=%220.4%22/%3E%3C/svg%3E");
+    --snow-drift-card:   url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 14%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,14 L0,5 C12,8.5 30,10.6 56,10.2 C78,9.9 90,7.8 114,8.2 C140,8.6 156,10.8 186,10.4 C212,10.1 228,8 254,8.4 C280,8.8 300,7.2 320,4.5 L320,14 Z%22 fill=%22%23F2F7FB%22 opacity=%220.9%22/%3E%3Cpath d=%22M0,14 L0,7.5 C14,10.4 34,11.9 60,11.5 C82,11.2 94,9.6 118,10 C144,10.4 160,12 190,11.7 C216,11.4 232,9.8 258,10.2 C284,10.6 304,9.4 320,7 L320,14 Z%22 fill=%22%23FFFFFF%22/%3E%3Cpath d=%22M0,7.5 C14,10.4 34,11.9 60,11.5 C82,11.2 94,9.6 118,10 C144,10.4 160,12 190,11.7 C216,11.4 232,9.8 258,10.2 C284,10.6 304,9.4 320,7%22 fill=%22none%22 stroke=%22%23C9D8E4%22 stroke-width=%220.8%22 opacity=%220.8%22/%3E%3Ccircle cx=%2274%22 cy=%229.4%22 r=%221%22 fill=%22%23FFFFFF%22 stroke=%22%23C9D8E4%22 stroke-width=%220.4%22/%3E%3Ccircle cx=%22243%22 cy=%228.6%22 r=%220.9%22 fill=%22%23FFFFFF%22 stroke=%22%23C9D8E4%22 stroke-width=%220.4%22/%3E%3C/svg%3E");
+    --snow-drift-card-2: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 14%22 preserveAspectRatio=%22none%22%3E%3Cg transform=%22translate(320 0) scale(-1 1)%22%3E%3Cpath d=%22M0,14 L0,5 C12,8.5 30,10.6 56,10.2 C78,9.9 90,7.8 114,8.2 C140,8.6 156,10.8 186,10.4 C212,10.1 228,8 254,8.4 C280,8.8 300,7.2 320,4.5 L320,14 Z%22 fill=%22%23F2F7FB%22 opacity=%220.9%22/%3E%3Cpath d=%22M0,14 L0,7.5 C14,10.4 34,11.9 60,11.5 C82,11.2 94,9.6 118,10 C144,10.4 160,12 190,11.7 C216,11.4 232,9.8 258,10.2 C284,10.6 304,9.4 320,7 L320,14 Z%22 fill=%22%23FFFFFF%22/%3E%3Cpath d=%22M0,7.5 C14,10.4 34,11.9 60,11.5 C82,11.2 94,9.6 118,10 C144,10.4 160,12 190,11.7 C216,11.4 232,9.8 258,10.2 C284,10.6 304,9.4 320,7%22 fill=%22none%22 stroke=%22%23C9D8E4%22 stroke-width=%220.8%22 opacity=%220.8%22/%3E%3Ccircle cx=%2274%22 cy=%229.4%22 r=%221%22 fill=%22%23FFFFFF%22 stroke=%22%23C9D8E4%22 stroke-width=%220.4%22/%3E%3Ccircle cx=%22243%22 cy=%228.6%22 r=%220.9%22 fill=%22%23FFFFFF%22 stroke=%22%23C9D8E4%22 stroke-width=%220.4%22/%3E%3C/g%3E%3C/svg%3E");
+}
+html[data-theme="dark"][data-snow="on"] {
+    --snow-drift-nav:    url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 680 16%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,16 L0,6 C18,10.5 40,12.5 74,12 C96,11.7 108,9.4 132,9.8 C160,10.3 176,12.6 208,12.2 C238,11.8 252,9 284,9.5 C310,9.9 330,12.4 366,12 C398,11.6 414,9.6 448,10 C476,10.4 494,12.5 528,12.1 C556,11.8 574,9.8 606,10.3 C634,10.7 656,9 680,5.5 L680,16 Z%22 fill=%22%23DCE9F2%22 opacity=%220.35%22/%3E%3Cpath d=%22M0,16 L0,8 C20,12 46,13.6 78,13.1 C102,12.7 116,10.8 142,11.2 C170,11.6 188,13.5 220,13.1 C248,12.8 264,10.6 294,11 C322,11.4 342,13.4 376,13 C406,12.6 424,10.9 456,11.3 C484,11.7 504,13.5 536,13.1 C562,12.8 582,11 612,11.5 C640,11.9 662,10.4 680,7.5 L680,16 Z%22 fill=%22%23F4F8FB%22 opacity=%220.85%22/%3E%3Cpath d=%22M0,8 C20,12 46,13.6 78,13.1 C102,12.7 116,10.8 142,11.2 C170,11.6 188,13.5 220,13.1 C248,12.8 264,10.6 294,11 C322,11.4 342,13.4 376,13 C406,12.6 424,10.9 456,11.3 C484,11.7 504,13.5 536,13.1 C562,12.8 582,11 612,11.5 C640,11.9 662,10.4 680,7.5%22 fill=%22none%22 stroke=%22%23FFFFFF%22 stroke-width=%220.7%22 opacity=%220.9%22/%3E%3Ccircle cx=%22120%22 cy=%2210.6%22 r=%221.1%22 fill=%22%23FFFFFF%22 opacity=%220.95%22/%3E%3Ccircle cx=%22333%22 cy=%2212.2%22 r=%220.9%22 fill=%22%23FFFFFF%22 opacity=%220.9%22/%3E%3Ccircle cx=%22521%22 cy=%2211.6%22 r=%221%22 fill=%22%23FFFFFF%22 opacity=%220.95%22/%3E%3C/svg%3E");
+    --snow-drift-card:   url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 14%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,14 L0,5.5 C14,9 32,10.8 58,10.4 C80,10.1 92,8.2 116,8.6 C142,9 158,10.9 188,10.5 C214,10.2 230,8.4 256,8.8 C282,9.2 302,7.6 320,5 L320,14 Z%22 fill=%22%23DCE9F2%22 opacity=%220.35%22/%3E%3Cpath d=%22M0,14 L0,8 C16,10.8 36,12.1 62,11.8 C84,11.5 96,10 120,10.4 C146,10.8 162,12.2 192,11.9 C218,11.6 234,10.2 260,10.6 C286,11 306,9.8 320,7.6 L320,14 Z%22 fill=%22%23F4F8FB%22 opacity=%220.85%22/%3E%3Cpath d=%22M0,8 C16,10.8 36,12.1 62,11.8 C84,11.5 96,10 120,10.4 C146,10.8 162,12.2 192,11.9 C218,11.6 234,10.2 260,10.6 C286,11 306,9.8 320,7.6%22 fill=%22none%22 stroke=%22%23FFFFFF%22 stroke-width=%220.7%22 opacity=%220.9%22/%3E%3Ccircle cx=%2298%22 cy=%229.7%22 r=%221%22 fill=%22%23FFFFFF%22 opacity=%220.95%22/%3E%3Ccircle cx=%22271%22 cy=%229.9%22 r=%220.9%22 fill=%22%23FFFFFF%22 opacity=%220.9%22/%3E%3C/svg%3E");
+    --snow-drift-card-2: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 14%22 preserveAspectRatio=%22none%22%3E%3Cg transform=%22translate(320 0) scale(-1 1)%22%3E%3Cpath d=%22M0,14 L0,5.5 C14,9 32,10.8 58,10.4 C80,10.1 92,8.2 116,8.6 C142,9 158,10.9 188,10.5 C214,10.2 230,8.4 256,8.8 C282,9.2 302,7.6 320,5 L320,14 Z%22 fill=%22%23DCE9F2%22 opacity=%220.35%22/%3E%3Cpath d=%22M0,14 L0,8 C16,10.8 36,12.1 62,11.8 C84,11.5 96,10 120,10.4 C146,10.8 162,12.2 192,11.9 C218,11.6 234,10.2 260,10.6 C286,11 306,9.8 320,7.6 L320,14 Z%22 fill=%22%23F4F8FB%22 opacity=%220.85%22/%3E%3Cpath d=%22M0,8 C16,10.8 36,12.1 62,11.8 C84,11.5 96,10 120,10.4 C146,10.8 162,12.2 192,11.9 C218,11.6 234,10.2 260,10.6 C286,11 306,9.8 320,7.6%22 fill=%22none%22 stroke=%22%23FFFFFF%22 stroke-width=%220.7%22 opacity=%220.9%22/%3E%3Ccircle cx=%2298%22 cy=%229.7%22 r=%221%22 fill=%22%23FFFFFF%22 opacity=%220.95%22/%3E%3Ccircle cx=%22271%22 cy=%229.9%22 r=%220.9%22 fill=%22%23FFFFFF%22 opacity=%220.9%22/%3E%3C/g%3E%3C/svg%3E");
+}
+
+html[data-snow="on"] nav.Nav-Bar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;               /* sits on the border-bottom */
+    height: 12px;
+    background: var(--snow-drift-nav) center / 100% 100% no-repeat;
+    pointer-events: none;
+}
+
+html[data-snow="on"] .pj-card { position: relative; }
+html[data-snow="on"] .pj-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 10px;
+    border-radius: 0 0 12px 12px;   /* match .pj-card corner radius */
+    background: var(--snow-drift-card) center / 100% 100% no-repeat;
+    pointer-events: none;
+}
+html[data-snow="on"] .pj-card:nth-child(2n)::after {
+    background-image: var(--snow-drift-card-2);
+}
+
+/* ---- Settings switch (Snow.js) - mirrors .qv-tf-sw in Nav.css ---- */
+.qv-snow-sw { position: relative; width: 48px; height: 26px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--row-hover); cursor: pointer;
+    transition: .18s ease; flex-shrink: 0; padding: 0; }
+.qv-snow-knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+    border-radius: 50%; background: var(--accent); color: var(--on-accent);
+    display: flex; align-items: center; justify-content: center;
+    transition: .18s cubic-bezier(.4,0,.2,1); }
+.qv-snow-knob svg { width: 13px; height: 13px; }
+.qv-snow-sw[aria-checked="true"] { background: var(--accent); }
+.qv-snow-sw[aria-checked="true"] .qv-snow-knob { transform: translateX(22px);
+    background: var(--on-accent); color: var(--accent); }
