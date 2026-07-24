@@ -13,6 +13,7 @@ const Router = {
     toProjectForm() { Router._navigate('/ProjectForm'); },
     toProjectsPage() { Router._navigate('/Projects'); },
     toIncidentsPage() { Router._navigate('/Incidents'); },
+    toCRPoolPage() { Router._navigate('/CRPool'); },
     toProjectDetail() { Router._navigate('/ProjectDetails'); },
     toCreateRFC() { Router._navigate('/CreateRFC'); },
     toCreateTicket() { Router._navigate('/CreateTicket'); },

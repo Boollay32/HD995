@@ -89,6 +89,13 @@ class CreateTicket extends PageBase {
         if (incidentContext) sessionStorage.removeItem('NewTicketIncident');
         this._incidentContext = incidentContext;   // remembered for the post-create redirect (6a)
 
+        // From the CR Pool "+ New CR" -> only CR/project types, NO project
+        // stamped: the ticket lands in the pool (ProjectID null, no target
+        // date) until an admin assigns it to a project.
+        const poolContext = sessionStorage.getItem('NewTicketPoolCR') === '1';
+        if (poolContext) sessionStorage.removeItem('NewTicketPoolCR');
+        this._poolContext = poolContext;   // remembered for the post-create redirect
+
         // Govtech (authority 151) raises only Contact Client tickets here; clients
         // raise every other type but never Contact Client (that is Govtech-only).
         const isGovtech = sessionStorage.getItem(STORAGE_KEYS.AUTHORITY_ID) === '151';
@@ -98,6 +105,7 @@ class CreateTicket extends PageBase {
 
         const allowed = (value) =>
             incidentContext        ? value === INCIDENT
+            : poolContext          ? PROJECT_TYPES.includes(value)
             : this._projectContext ? PROJECT_TYPES.includes(value)
             : isGovtech            ? value === CONTACT_CLIENT
             : !MAIN_EXCLUDE.includes(value) && value !== CONTACT_CLIENT;
@@ -111,7 +119,7 @@ class CreateTicket extends PageBase {
         if (incidentContext) {
             select.selectedIndex = 0;
             return INCIDENT;
-        } else if (isGovtech && !this._projectContext) {
+        } else if (isGovtech && !this._projectContext && !poolContext) {
             select.value = CONTACT_CLIENT;
             return CONTACT_CLIENT;
         } else {
@@ -296,8 +304,11 @@ class CreateTicket extends PageBase {
         }
 
         UI.flash(`Created Ticket ${newTicketId}`, 'success');
-        // 6a: incidents return to the Incidents queue, not the main ticket queue.
-        if (this._incidentContext) {
+        // 6a: incidents return to the Incidents queue, pool CRs to the CR Pool,
+        // not the main ticket queue.
+        if (this._poolContext) {
+            Router.toCRPoolPage();
+        } else if (this._incidentContext) {
             Router.toIncidentsPage();
         } else {
             Router.toTicketPage();

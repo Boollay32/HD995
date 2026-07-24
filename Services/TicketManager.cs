@@ -36,6 +36,38 @@ namespace HelpDeskNet8.Services
         public async Task<IEnumerable<ITicketStub>> GetIncidents(IUser user, IFilter filter, Int32 mytickets, int UTC)
             => await RunTicketRead("[dbo].[usp_Helpdesk_GetIncidents]", user, filter, mytickets, UTC);
 
+        public async Task<IEnumerable<ITicketStub>> GetUnassignedCRs(IUser user, IFilter filter, Int32 mytickets, int UTC)
+            => await RunTicketRead("[dbo].[usp_Helpdesk_GetUnassignedCRs]", user, filter, mytickets, UTC);
+
+        // Assign a CR ticket to a project (projectId set) or return it to the
+        // pool (projectId null; the proc also clears the target date). The proc
+        // only touches request types 4/10/11; anything else affects 0 rows.
+        public async Task<bool> SetTicketProject(int ticketId, int? projectId)
+        {
+            var conn = (SqlConnection)_connection;
+            using SqlCommand command = conn.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[dbo].[usp_Helpdesk_TicketSetProject]";
+            command.Parameters.Add(new SqlParameter("@TicketID", SqlDbType.Int) { Value = ticketId });
+            command.Parameters.Add(new SqlParameter("@ProjectID", SqlDbType.Int) { Value = projectId.HasValue ? projectId.Value : (object)DBNull.Value });
+
+            await conn.OpenAsync();
+            try
+            {
+                object result = await command.ExecuteScalarAsync();
+                return result is int rows && rows > 0;
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(nameof(TicketManager), ex);
+                return false;
+            }
+            finally
+            {
+                await conn.CloseAsync();
+            }
+        }
+
         private async Task<IEnumerable<ITicketStub>> RunTicketRead(string proc, IUser user, IFilter filter, Int32 mytickets, int UTC)
         {
             if (filter == null)

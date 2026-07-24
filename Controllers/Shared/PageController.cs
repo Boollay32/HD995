@@ -70,6 +70,9 @@ namespace HelpDeskNet8.Controllers.Shared
         [Route("Incidents")]
         public IActionResult Incidents() => View("~/Views/Page/Ticket/IncidentsPage.cshtml");
 
+        [Route("CRPool")]
+        public IActionResult CRPool() => View("~/Views/Page/Ticket/CRPoolPage.cshtml");
+
         [Route("UserDetails")]
         public IActionResult UserDetails() => View("~/Views/Page/User/UserDetails.cshtml");
 

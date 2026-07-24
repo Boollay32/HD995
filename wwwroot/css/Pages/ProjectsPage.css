@@ -173,3 +173,16 @@
     transition: background 0.15s ease, border-color 0.15s ease;
 }
 .pj-new-btn:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+/* CR Pool link: secondary/outline next to "+ New project". */
+.pj-pool-btn {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--accent);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.pj-pool-btn:hover { background: var(--accent); color: #fff; }

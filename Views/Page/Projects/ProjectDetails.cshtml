@@ -54,9 +54,12 @@
             <h2>Tickets</h2>
             <div class="pjd-tickets-actions">
                 <select class="pjd-status-filter" id="pjd-status-filter" aria-label="Filter tickets by status" hidden></select>
+                <button type="button" class="pjd-newticket-btn pjd-pool-btn" id="pjd-add-pool" style="display:none">+ Add from pool</button>
                 <button type="button" class="pjd-newticket-btn" id="pjd-new-ticket">+ New ticket</button>
             </div>
         </div>
+
+        <div class="pjd-pool-picker" id="pjd-pool-picker" hidden></div>
 
         <p class="pjd-tickets-empty" id="pjd-tickets-empty">No tickets in this project yet.</p>
 
@@ -70,6 +73,7 @@
                         <th class="pjd-h-type">Type</th>
                         <th class="pjd-h-tech">Assigned</th>
                         <th>Target</th>
+                        <th class="pjd-h-act"><span class="sr-only">Actions</span></th>
                     </tr>
                 </thead>
                 <tbody id="pjd-ticket-rows"></tbody>
