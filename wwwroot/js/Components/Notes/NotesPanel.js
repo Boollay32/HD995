@@ -53,6 +53,13 @@ const NotesPanel = (() => {
     // Factory: each call gets its own State + composer, so multiple panes
     // (internal Notes tab + client Messages pane on the same ticket) never
     // share config. All handlers below close over THIS call's `State`.
+    // While the description editor is open, _descEditState exposes its dirty
+    // state and a commit() to the ticket page's global Save (TicketSave.js).
+    // MODULE scope, outside _create: the public descEdit getter reads it, and
+    // it must be one shared binding across both NotesPanel instances (only
+    // one editor can be open at a time -- guarded in _beginDescriptionEdit).
+    let _descEditState = null;
+
     function _create(config) {
         const State = { config: config, notes: [], description: null };
         const Dom = {
@@ -640,12 +647,6 @@ const NotesPanel = (() => {
         chip.appendChild(rm);
         return chip;
     }
-
-    // While the description editor is open, _descEditState exposes its dirty
-    // state and a commit() to the ticket page's global Save (TicketSave.js).
-    // Module-level singleton: only one editor can be open at a time (guarded
-    // in _beginDescriptionEdit), even with two NotesPanel instances mounted.
-    let _descEditState = null;
 
     function _beginDescriptionEdit(note) {
         const group = document.getElementById('ov-desc-group');
