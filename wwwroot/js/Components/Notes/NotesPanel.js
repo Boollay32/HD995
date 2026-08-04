@@ -641,6 +641,12 @@ const NotesPanel = (() => {
         return chip;
     }
 
+    // While the description editor is open, _descEditState exposes its dirty
+    // state and a commit() to the ticket page's global Save (TicketSave.js).
+    // Module-level singleton: only one editor can be open at a time (guarded
+    // in _beginDescriptionEdit), even with two NotesPanel instances mounted.
+    let _descEditState = null;
+
     function _beginDescriptionEdit(note) {
         const group = document.getElementById('ov-desc-group');
         if (!group || group.querySelector('.td-ov-desc-editing')) return;
@@ -653,6 +659,14 @@ const NotesPanel = (() => {
         const kept = (note.Attachments || []).slice();
         const added = [];
 
+        // Dirty vs the note as loaded: text changed, a file added, or a kept
+        // chip removed. Recomputed on demand so reverting cleans it again.
+        const baseText = (note.Body || '').trim();
+        const baseAtts = (note.Attachments || []).map(a => a.name).join('\u001f');
+        const notifyDirty = function () {
+            if (typeof Dirty !== 'undefined') Dirty.recompute();
+        };
+
         const editor = document.createElement('div');
         editor.className = 'td-ov-desc-editing';
 
@@ -660,7 +674,25 @@ const NotesPanel = (() => {
         ta.className = 'td-ov-desc-input';
         ta.value = note.Body || '';
         ta.rows = Math.min(10, Math.max(2, (note.Body || '').split('\n').length));
+        ta.addEventListener('input', notifyDirty);
         editor.appendChild(ta);
+
+        _descEditState = {
+            isDirty: function () {
+                return ta.value.trim() !== baseText
+                    || added.length > 0
+                    || kept.map(a => a.name).join('\u001f') !== baseAtts;
+            },
+            // Commit through the same SaveNote path the old inline Save used.
+            // quiet: the ticket Save that follows toasts + reloads the page.
+            commit: async function () {
+                const text = ta.value.trim();
+                if (!text) { UI.toast?.('Description cannot be empty', 'warning'); return false; }
+                const ok = await _saveDescription(note, text, kept, added, true);
+                if (ok) _descEditState = null;
+                return ok;
+            },
+        };
 
         const chips = document.createElement('div');
         chips.className = 'td-ov-desc-chips';
@@ -669,10 +701,10 @@ const NotesPanel = (() => {
         const renderChips = function () {
             chips.innerHTML = '';
             kept.forEach(function (a, i) {
-                chips.appendChild(_descChip(a.name, function () { kept.splice(i, 1); renderChips(); }, false));
+                chips.appendChild(_descChip(a.name, function () { kept.splice(i, 1); renderChips(); notifyDirty(); }, false));
             });
             added.forEach(function (f, i) {
-                chips.appendChild(_descChip(f.name, function () { added.splice(i, 1); renderChips(); }, true));
+                chips.appendChild(_descChip(f.name, function () { added.splice(i, 1); renderChips(); notifyDirty(); }, true));
             });
         };
         renderChips();
@@ -691,20 +723,18 @@ const NotesPanel = (() => {
             Array.prototype.forEach.call(fileInput.files, function (f) { added.push(f); });
             fileInput.value = '';
             renderChips();
+            notifyDirty();
         });
         addLabel.appendChild(fileInput);
 
-        const save = document.createElement('button');
-        save.type = 'button';
-        save.className = 'td-ov-desc-save';
-        save.textContent = 'Save';
+        // No editor-level Save: description edits dirty the ticket form and
+        // commit through the main "Save Changes" button, like every field.
         const cancel = document.createElement('button');
         cancel.type = 'button';
         cancel.className = 'td-ov-desc-cancel';
         cancel.textContent = 'Cancel';
 
         actions.appendChild(addLabel);
-        actions.appendChild(save);
         actions.appendChild(cancel);
         editor.appendChild(actions);
 
@@ -713,17 +743,14 @@ const NotesPanel = (() => {
         group.appendChild(editor);
         ta.focus();
 
-        cancel.addEventListener('click', function () { _renderDescription(note); });
-        save.addEventListener('click', async function () {
-            const text = ta.value.trim();
-            if (!text) { UI.toast?.('Description cannot be empty', 'warning'); return; }
-            save.disabled = cancel.disabled = true;
-            const ok = await _saveDescription(note, text, kept, added);
-            if (!ok) { save.disabled = cancel.disabled = false; }
+        cancel.addEventListener('click', function () {
+            _descEditState = null;
+            _renderDescription(note);
+            notifyDirty();   // recompute: cleans the form unless fields are dirty
         });
     }
 
-    async function _saveDescription(note, text, kept, added) {
+    async function _saveDescription(note, text, kept, added, quiet) {
         try {
             const keptMapped = (kept || [])
                 .filter(a => a && a.base64)
@@ -747,8 +774,10 @@ const NotesPanel = (() => {
                 API.authPayload({ objectInfo, attachments, rfc: State.config.rfc })
             );
             if (!data) throw new Error('SaveNote returned null');
-            UI.toast?.('Description updated', 'success');
-            await _getNotes();
+            if (!quiet) {
+                UI.toast?.('Description updated', 'success');
+                await _getNotes();
+            }
             return true;
         } catch (err) {
             console.error('NotesPanel._saveDescription:', err);
@@ -771,6 +800,9 @@ const NotesPanel = (() => {
         // init builds an instance and returns its handle; callers that need
         // to refresh later keep the returned object.
         init: _create,
+        // Ticket page's Save reads this to fold a pending description edit
+        // into the same save action (null when the editor is closed).
+        get descEdit() { return _descEditState; },
     };
 
 })();

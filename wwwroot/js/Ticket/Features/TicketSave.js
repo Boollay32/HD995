@@ -46,6 +46,9 @@ const Dirty = {
         this._baseline.forEach((val, el) => {
             if (el.isConnected && FieldHandlers._controlValue(el) !== val) dirty = true;
         });
+        // A pending description/attachment edit (ov-desc editor) dirties the
+        // form exactly like a field change; Save commits it (Save.execute).
+        if (!dirty && typeof NotesPanel !== 'undefined' && NotesPanel.descEdit?.isDirty()) dirty = true;
         this.set(dirty);
     },
 
@@ -302,6 +305,17 @@ const Save = {
         saveBtn.textContent = 'Saving…';
 
         try {
+            // Fold a pending description edit into this save: commit it first
+            // (same SaveNote path the inline editor used); abort the whole
+            // save if it fails so nothing half-applies. Failure is toasted by
+            // _saveDescription; the finally below restores the button from
+            // the still-dirty state.
+            const descEdit = (typeof NotesPanel !== 'undefined') ? NotesPanel.descEdit : null;
+            if (descEdit && descEdit.isDirty()) {
+                const ok = await descEdit.commit();
+                if (!ok) return;
+            }
+
             const data = await Save._post(payload);
 
             // Success
