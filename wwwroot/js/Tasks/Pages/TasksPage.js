@@ -50,8 +50,10 @@ class TaskPage extends PageBase {
         // "My open" view can match. Must run before _config() builds the filters.
         await this._resolveMyName();
         this.queue = new QueueView('#queue-mount', this._config());
-        // "My Tasks" vs "View Tasks": the nav sets MY_TICKETS to pick the default view.
-        this.queue.view = sessionStorage.getItem(STORAGE_KEYS.MY_TICKETS) === '0' ? 'all' : 'mine';
+        // Default to "mine". (An older nav set MY_TICKETS to pick the view;
+        // the current nav never writes it, so this was always 'mine' anyway.
+        // The in-page view toggle remains the way to switch.)
+        this.queue.view = 'mine';
         await this.queue.load();
     }
 

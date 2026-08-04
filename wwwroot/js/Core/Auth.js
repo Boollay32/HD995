@@ -101,14 +101,9 @@ const Auth = {
 
         UI.show('Visible-Button');
 
-        const assignedTechName = document.getElementById('assignedTechName');
-        if (assignedTechName) {
-            const myTickets = sessionStorage.getItem(STORAGE_KEYS.MY_TICKETS);
-            const authorityId = sessionStorage.getItem(STORAGE_KEYS.AUTHORITY_ID);
-            if (myTickets === '0' && authorityId === '151') {
-                UI.showObject(assignedTechName.parentElement);
-            }
-        }
+        // (Removed 2026-08 audit: an assignedTechName reveal gated on
+        // MY_TICKETS === '0', which nothing has written since the nav
+        // rewrite -- the branch could never run.)
     },
 
     // -------------------------  Limited User Perms  ------------------------- //

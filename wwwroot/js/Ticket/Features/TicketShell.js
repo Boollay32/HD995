@@ -239,77 +239,11 @@ const Collapse = {
     },
 };
 
-// -------------------------  Notification banner  ------------------------- //
-
-const NotifyBanner = {
-
-    _el: null,
-
-    show(message) {
-        NotifyBanner._remove();
-
-        const banner = document.createElement('div');
-        banner.className = 'td-notify-banner';
-        banner.id = 'notify-banner';
-        banner.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2.2"
-                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="12"/>
-                <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <span>${message}</span>
-            <button type="button" aria-label="Dismiss notification">Dismiss</button>
-        `;
-
-        banner.querySelector('button')
-            ?.addEventListener('click', NotifyBanner.dismiss);
-
-        // Insert above thread
-        const thread = Dom.thread();
-        thread?.parentElement?.insertBefore(banner, thread);
-
-        NotifyBanner._el = banner;
-
-    },
-
-    dismiss() {
-        // Persist as a false reply so the server clears Notify/NotifyTech;
-        // otherwise the banner returns on the next load. UI clears regardless.
-        if (typeof Save !== 'undefined') Save.markFalseReply?.();
-
-        NotifyBanner._remove();
-
-        // Clear notification session keys
-        sessionStorage.removeItem(STORAGE_KEYS.CURRENT_TICKET_NTFY);
-        sessionStorage.removeItem(STORAGE_KEYS.CURRENT_TICKET_NTFY_TECH);
-    },
-
-    _remove() {
-        NotifyBanner._el?.remove();
-        NotifyBanner._el = null;
-    },
-
-    check() {
-        const ntfy = sessionStorage.getItem(STORAGE_KEYS.CURRENT_TICKET_NTFY);
-        const ntfyTech = sessionStorage.getItem(STORAGE_KEYS.CURRENT_TICKET_NTFY_TECH);
-
-        if (ntfy === Session.ticketId) {
-            NotifyBanner.show('The client has replied to this ticket.');
-            return;
-        }
-
-        if (ntfyTech === Session.ticketId) {
-            NotifyBanner.show('A technician has replied to this ticket.');
-        }
-    },
-
-    bind() {
-        // The topbar FalseReply button was removed with the topbar (shell
-        // flip): the banner's own Dismiss button is the identical action.
-    },
-};
+// NotifyBanner removed (2026-08 audit): it read CURRENT_TICKET_NTFY /
+// CURRENT_TICKET_NTFY_TECH session keys that nothing ever wrote, so it
+// could never fire. Unread replies are surfaced by the tab pips
+// (TicketPips) and the server Notify flag is auto-cleared on open by
+// TicketLoader._clearNotificationIfMine.
 
 // Composer helpers used to live here (TicketComposer): a full duplicate of
 // what Components/Notes/NotesPanel.js's Composer.create() already does for

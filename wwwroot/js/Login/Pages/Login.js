@@ -53,11 +53,15 @@ let pinVerified = false;
 
 // Redirect into the app after both walls pass. FAIL-CLOSED: the Dashboard
 // is allow-listed to internal techs (1, 2); every other value -- clients,
-// RFC-only, null, or anything unexpected -- goes to its own home, with
-// TicketPage as the safe default. (The old form defaulted unknown values
-// TO the Dashboard: a gate that fails open.) Mirrors PageController.Dashboard.
-function enterApp() {
-    const level = sessionStorage.getItem("Admin");
+// RFC-only, null, errors, or anything unexpected -- goes to its own home,
+// with TicketPage as the safe default. Mirrors PageController.Dashboard.
+// Routes on the server-checked admin level (Auth.getAdminLevel; UserName is
+// in session by now, and this pre-warms the app's ADMIN_LEVEL cache). The
+// old gate read a sessionStorage "Admin" key that nothing ever wrote, so
+// every user -- admins included -- landed on TicketPage.
+async function enterApp() {
+    let level = null;
+    try { level = String(await Auth.getAdminLevel()); } catch (e) { /* fail closed */ }
     const destination = (level === "1" || level === "2") ? "Dashboard"
         : level === "4" ? "RFC"
         : "TicketPage";
