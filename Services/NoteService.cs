@@ -39,7 +39,12 @@ namespace HelpDeskNet8.Services
             // the messages pane previously skipped this entirely.)
             if (note.NoteID.HasValue && note.NoteID.Value != 0)
             {
-                var existing = (await _noteManager.GetNotes(user, note.TicketID ?? 0))
+                // RFC notes carry RFCID, not TicketID: read the matching
+                // note set or the lookup is always against ticket 0 and
+                // every RFC edit fails with "Note not found."
+                var existing = (request.RFC
+                        ? await _noteManager.GetRFCNotes(user, note.RFCID ?? 0)
+                        : await _noteManager.GetNotes(user, note.TicketID ?? 0))
                     .FirstOrDefault(n => n.NoteID == note.NoteID.Value);
                 if (existing == null)
                     return (false, "Note not found.", Enumerable.Empty<INote>());
@@ -72,7 +77,9 @@ namespace HelpDeskNet8.Services
                         new NotificationContext { NoteVisibleToClient = note.VisibleToClient });
             }
 
-            var notes = await _noteManager.GetNotes(user, note.TicketID ?? 0);
+            var notes = request.RFC
+                ? await _noteManager.GetRFCNotes(user, note.RFCID ?? 0)
+                : await _noteManager.GetNotes(user, note.TicketID ?? 0);
             return (true, null, notes);
         }
 
