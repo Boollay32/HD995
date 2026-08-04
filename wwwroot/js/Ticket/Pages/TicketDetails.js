@@ -175,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Layout depends on the ticket's request type, which we don't have yet.
     // Bind handlers now; resolve layout + restore tab after the fetch (load()).
     Events.bind();
-    NotifyBanner.check();
     TicketLoader.load();
 });
 
@@ -190,7 +189,6 @@ const Events = {
         FieldHandlers.bind();   // was missing — editing fields did nothing
         Tabs.init();
         Collapse.init();
-        NotifyBanner.bind();
         // TicketComposer.init() removed -- see the comment left in
         // TicketShell.js; NotesPanel.js's Composer.create() already covers
         // #msg-textarea and #note-textarea.

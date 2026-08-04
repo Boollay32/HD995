@@ -139,40 +139,7 @@ body {
   background: var(--scroll-thumb-hover);
 }
 /* .td-thread-empty now comes from NoteThread.css only (identical, plus max-height) */
-.td-notify-banner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  background: var(--td-warn-bg);
-  border: 1px solid var(--td-warn-2);
-  border-radius: 10px;
-  font-size: 0.71875rem;
-  font-weight: 600;
-  color: var(--td-warn);
-  animation: rise 0.25s ease both;
-  margin: 12px 16px 0;
-}
-.td-notify-banner svg {
-  flex-shrink: 0;
-}
-.td-notify-banner button {
-  margin-left: auto;
-  background: none;
-  border: none;
-  font-family: "Spline Sans", system-ui, sans-serif;
-  font-size: 0.71875rem;
-  font-weight: 700;
-  color: var(--td-warn);
-  cursor: pointer;
-  text-decoration: underline;
-  padding: 0;
-}
-.td-notify-banner button:hover {
-  /* brand-deep has no dark override and vanished on the dark amber banner;
-     td-warn-2 is the banner's own accent, themed both ways. */
-  color: var(--td-warn-2);
-}
+/* .td-notify-banner removed with NotifyBanner (2026-08 audit) */
 .td-scope-note {
   display: flex;
   align-items: center;

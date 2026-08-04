@@ -17,7 +17,6 @@ const STORAGE_KEYS = {
 
     // -------------------------  Tickets  ------------------------- //
 
-    MY_TICKETS: 'MyTickets',
     SEARCH_OR_TICKET: 'SearchOrTicket',
     REQUEST_TYPE: 'RequestType',
     TASK_ID: 'TaskID',
@@ -37,8 +36,6 @@ const STORAGE_KEYS = {
 
     // -------------------------  Notifications  ------------------------- //
 
-    CURRENT_TICKET_NTFY: 'CurrentTicketNtfy',
-    CURRENT_TICKET_NTFY_TECH: 'CurrentTicketNtfyTech',  // ← NEW: client has replied
     NEW_ASSIGNED_TECH: 'NewAssignedTech',
     OLD_ASSIGNED_TECH: 'OldAssignedTech',
 
