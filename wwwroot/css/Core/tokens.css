@@ -59,6 +59,7 @@ html[data-font="large"] { font-size: 125%; }
 /* Nav/footer theme vars (lifted from Queue.css so the chrome themes
    app-wide, not only on the list pages -- fixes the unthemed/white footer). */
 :root {
+    color-scheme: light;     /* native widgets (select popups etc.) follow theme */
     --panel: #F6EFE2;        /* Parchment: no pure white; text 11.48, muted 5.64 */
     --text: #33302C;
     --border: #D2BE9C;       /* stepped up against the deeper canvas */
@@ -79,6 +80,7 @@ html[data-font="large"] { font-size: 125%; }
     --info-bg: #E6F1FB;    /* traffic-light: soft blue tint */
 }
 html[data-theme="dark"] {
+    color-scheme: dark;
     --panel: #2B2724;        /* warm charcoal panel */
     --text: #E8E0D6;         /* warm off-white: 11.33 on panel */
     --border: #4A433C;           /* aligned to the (deleted) Queue.css dark value */
@@ -278,4 +280,11 @@ html[data-theme="dark"] {
     --bad-fg: #F09595;  --bad-bg: #501313;   /* red-200 on dark red */
     --neutral-fg: #B4B2A9; --neutral-bg: #2C2C2A;  /* soft grey dormant dark */
     --pri-urgent: #F0997B; --pri-high: #FAC775; --pri-normal: #C0DD97; --pri-low: #B4B2A9;
+}
+
+/* Native <select> popup lists: color-scheme (above) flips them per
+   theme; Chromium additionally honours these on the options. */
+option {
+    background: var(--panel);
+    color: var(--text);
 }
