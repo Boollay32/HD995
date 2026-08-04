@@ -1,4 +1,5 @@
 ﻿using HelpDeskNet8.Infrastructure;
+using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Tasks;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Requests;
