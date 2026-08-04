@@ -21,6 +21,7 @@ namespace HelpDeskNet8.Services
     public class NotificationService : INotificationService
     {
         private const string FromAddress = "govtech.helpdesk@govtech.co.uk";
+        private const bool SuppressEmail = true;
 
         private readonly ITicketManager _ticketManager;
         private readonly IMiscManager _miscManager;
@@ -82,12 +83,14 @@ namespace HelpDeskNet8.Services
                 // ticket. Rows are written in preview mode too (dev DB).
                 bool isTask = IsTaskEvent(type);
                 await WriteInAppRows(recipients, type, user,
-                    entityType: isTask ? (byte)2 : (byte)1,
-                    entityId: isTask ? (context?.TaskID ?? ticketId) : ticketId,
-                    ticketId: ticketId,
-                    message: subject);
+                 entityType: isTask ? (byte)2 : (byte)1,
+                 entityId: isTask ? (context?.TaskID ?? ticketId) : ticketId,
+                 ticketId: ticketId,
+                 message: subject);
 
                 string[] emails = recipients.Select(r => r.Email).ToArray();
+
+                if (SuppressEmail) return; 
 
                 if (_preview.Enabled)
                 {
@@ -143,9 +146,11 @@ namespace HelpDeskNet8.Services
                 // OriginatorID / AssignedTechID), so RFC events write in-app
                 // inbox rows exactly like ticket and task events.
                 await WriteInAppRows(recipients, type, user,
-                    entityType: 3, entityId: rfcId, ticketId: null, message: subject);
+                   entityType: 3, entityId: rfcId, ticketId: null, message: subject);
 
                 string[] emails = recipients.Select(r => r.Email).ToArray();
+
+                if (SuppressEmail) return;
 
                 if (_preview.Enabled)
                 {
@@ -154,6 +159,7 @@ namespace HelpDeskNet8.Services
                 }
 
                 await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
+
             }
             catch
             {

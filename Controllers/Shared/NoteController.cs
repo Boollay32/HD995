@@ -1,4 +1,5 @@
-﻿using HelpDeskNet8.Interfaces.Notes;
+﻿using HelpDeskNet8.Infrastructure;
+using HelpDeskNet8.Interfaces.Notes;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Requests;
 using Microsoft.AspNetCore.Mvc;
