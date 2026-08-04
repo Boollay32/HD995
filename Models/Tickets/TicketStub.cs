@@ -12,6 +12,7 @@ using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Services;
 using HelpDeskNet8.Utilities;
 using System.Data;
+using System.Linq;
 
 
 namespace HelpDeskNet8.Models.Tickets
@@ -80,7 +81,12 @@ namespace HelpDeskNet8.Models.Tickets
                         // queue-side filter/render that dereferences it). '2' = no
                         // active notification, matching NULL's real meaning.
                         Notify = reader["Notify"] is DBNull ? "2" : (string)reader["Notify"],
-                        TargetDate = reader["TargetDate"] as DateTime?
+                        // Not every ticket read returns TargetDate (the CR pool proc
+                        // removes it): reading a missing column throws, the catch
+                        // nulls the whole row, and the queue crashes downstream.
+                        TargetDate = Enumerable.Range(0, reader.FieldCount).Any(i => reader.GetName(i) == "TargetDate")
+                            ? reader["TargetDate"] as DateTime?
+                            : null
                     };
                 }
             }
