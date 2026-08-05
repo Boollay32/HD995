@@ -346,3 +346,60 @@ function IgnoreAlpha(e) {
     event.preventDefault();
 }
 
+// ---- Self-service password reset ------------------------------------- //
+// Username + PIN are verified server-side; on a match a temporary password
+// is EMAILED (never returned to the browser) and the forced-change flow
+// takes over at next login. The confirmation message is identical whether
+// or not the details matched (anti-enumeration - mirrors the server). The
+// PIN itself is never reset here; that remains a Govtech support action.
+const RESET_GENERIC_MSG = "If the details match an account, an email with a temporary password has been sent.";
+
+function ShowResetRequest() {
+    document.getElementById("Login-Container").classList.remove("active");
+    document.getElementById("ResetRequest-Container").classList.add("active");
+    document.getElementById("reset-uname").value = LoginForm?.uname?.value || "";
+    document.getElementById("reset-pin").value = "";
+}
+
+function ResetRequestBack() {
+    document.getElementById("reset-pin").value = "";
+    document.getElementById("ResetRequest-Container").classList.remove("active");
+    document.getElementById("Login-Container").classList.add("active");
+}
+
+async function RequestPasswordReset() {
+    const uname = document.getElementById("reset-uname").value.trim();
+    const pin = document.getElementById("reset-pin").value.trim();
+    if (!uname || !/^[0-9]{6}$/.test(pin)) {
+        BuildMessageBox("Please enter your username and your 6 digit PIN.");
+        return;
+    }
+    ToggleWaiting();
+    try {
+        await fetch("/api/Login/RequestPasswordReset", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userName: uname, pin: parseInt(pin, 10) })
+        });
+        BuildMessageBox(RESET_GENERIC_MSG);
+        ResetRequestBack();
+    } catch (error) {
+        console.error('RequestPasswordReset error:', error);
+        BuildMessageBox("Could not reach the server. Please try again.");
+    } finally {
+        ToggleWaiting();
+    }
+}
+
+(function () {
+    const wireReset = () => {
+        document.getElementById("forgot-open")?.addEventListener("click", ShowResetRequest);
+        document.getElementById("reset-back")?.addEventListener("click", ResetRequestBack);
+        document.getElementById("ResetRequest-Submit")?.addEventListener("click", RequestPasswordReset);
+        document.getElementById("reset-pin")?.addEventListener("keydown", e => {
+            if (e.key === "Enter") RequestPasswordReset();
+        });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireReset);
+    else wireReset();
+})();

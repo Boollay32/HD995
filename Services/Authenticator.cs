@@ -175,5 +175,43 @@ namespace HelpDeskNet8.Services
 
             return AuthResult.Failed("No response from authentication service.");
         }
+
+        public async Task<(int Code, string? TempPassword)> RequestPasswordReset(string username, int pin)
+        {
+            using (SqlCommand command = _connection.CreateCommand())
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "[dbo].[usp_Helpdesk_RequestPasswordReset]";
+                command.Parameters.Add(new SqlParameter("@UserName", SqlDbType.NVarChar) { Value = username });
+                // Int into the proc's nvarchar param: matches SecondWallAuth's
+                // convention exactly so the PIN hash input is formatted the same.
+                command.Parameters.Add(new SqlParameter("@UserPIN", SqlDbType.Int) { Value = pin });
+
+                await _connection.OpenAsync();
+                try
+                {
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            int code = (int)reader["ReturnCode"];
+                            string? temp = reader["TempPassword"] as string;
+                            return (code, code == 0 ? temp : null);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AppLogger.Error(nameof(Authenticator), ex);
+                }
+                finally
+                {
+                    if (_connection.State == ConnectionState.Open)
+                        await _connection.CloseAsync();
+                }
+            }
+
+            return (999, null);
+        }
     }
 }

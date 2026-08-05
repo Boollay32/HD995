@@ -14,4 +14,10 @@
         public int Pin { get; init; }
         public int UTC { get; init; }
     }
+
+    public class PasswordResetRequest
+    {
+        public string UserName { get; init; } = string.Empty;
+        public int Pin { get; init; }
+    }
 }
