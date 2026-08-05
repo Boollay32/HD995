@@ -23,7 +23,7 @@ const RQstatusColor = s => {
 // Done = hidden from the 'open' queue filters. Both Complete and Withdrawn
 // are terminal.
 const RQisDone = s => { const t = String(s || '').toLowerCase(); return t.indexOf('complete') !== -1 || t.indexOf('withdrawn') !== -1 || t.indexOf('cancel') !== -1 || t.indexOf('reject') !== -1; };
-const RQisOpen = r => !RQisDone(r.status);
+const RQisOpen = r => !RQisDone(r.status) && String(r.status || '').toLowerCase().indexOf('draft') === -1;
 const RQdate = iso => {
     if (!iso) return '—';
     const d = new Date(iso);
@@ -83,13 +83,12 @@ class RFCPage extends PageBase {
                 { id: 'mine',  label: 'My open',     filter: r => isMyRFC(r) && RQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => RQisOpen(r) },
                 { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && RQisOpen(r) },
-                { id: 'done',  label: 'Complete',    filter: r => r.status === 'Complete' },
+                { id: 'nonactive', label: 'Non Active', filter: r => !RQisOpen(r) },
             ],
 
             filters: [
                 { id: 'prio', label: 'Priority', field: 'priority' },
-                { id: 'stat', label: 'Status',   field: 'status',
-                  options: ['New', 'Draft', 'In Progress', 'Approved', 'Approved with condition', 'Complete', 'Rejected'] },
+                { id: 'stat', label: 'Status',   field: 'status' },
                 { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
             ],
 
