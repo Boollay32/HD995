@@ -109,12 +109,13 @@ class TaskPage extends PageBase {
             views: [
                 { id: 'mine',  label: 'My open',     filter: r => isMine(r) && KQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => KQisOpen(r) },
-                { id: 'wdn',   label: 'Withdrawn',   filter: r => r.status === 4 },
-                { id: 'cmp',   label: 'Complete',    filter: r => r.status === 3 },
+                // Complete (3), Withdrawn (4), Draft (5): the status dropdown
+                // narrows within this view (Draft was previously in NO view).
+                { id: 'nonactive', label: 'Non Active', filter: r => !KQisOpen(r) },
             ],
 
             filters: [
-                { id: 'stat', label: 'Status',   field: '_status', overridesView: true },
+                { id: 'stat', label: 'Status',   field: '_status' },
                 { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
             ],
 
