@@ -25,9 +25,9 @@ body {
     overflow-x: hidden;
     font-family: var(--font-sans);
     background:
-        radial-gradient(900px 500px at 15% -20%, #FCEAD6 0%, transparent 55%),
-        radial-gradient(700px 500px at 110% 120%, #F3E7D6 0%, transparent 50%),
-        linear-gradient(160deg, #FBF6EF 0%, #F7EFE4 60%, #F2E8D9 100%) !important;
+        radial-gradient(900px 500px at 15% -20%, #F6E3C8 0%, transparent 55%),
+        radial-gradient(700px 500px at 110% 120%, #EADAB9 0%, transparent 50%),
+        linear-gradient(160deg, #F4EBDB 0%, #EEE2CC 60%, #E9DCC2 100%) !important;
     background-attachment: fixed !important;
 }
 #nav, .footer, #Menu-Div { display: none !important; }
@@ -89,7 +89,7 @@ body {
 .brand { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 18px; }
 .brand-mark {
     width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
-    background: linear-gradient(150deg, #B5530E 0%, #964307 100%);
+    background: linear-gradient(150deg, var(--brand) 0%, var(--brand-deep) 100%);
     box-shadow: 0 6px 16px rgba(156,74,8,.32); color: #fff;
 }
 .brand-name { font-size: 0.84375rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
@@ -105,8 +105,8 @@ body {
     background: var(--paper-2); border: 1px solid var(--border-strong); border-radius: var(--r-md); outline: none;
     box-sizing: border-box; transition: border-color .15s, box-shadow .15s, background .15s;
 }
-.login-input::placeholder { color: #a8a299; }
-.login-input:focus { border-color: var(--brand); background: #fff; box-shadow: 0 0 0 3px var(--brand-pale); }
+.login-input::placeholder { color: var(--muted); opacity: .8; }
+.login-input:focus { border-color: var(--brand); background: var(--paper); box-shadow: 0 0 0 3px var(--brand-pale); }
 
 /* ---- hold-to-reveal password ---- */
 .login-input-wrap { position: relative; }
@@ -124,7 +124,7 @@ body {
 .accept {
     width: 100%; height: 46px; margin-top: 6px; border: none; cursor: pointer;
     font-family: var(--font-sans); font-size: 0.96875rem; font-weight: 700; color: #fff; border-radius: var(--r-md);
-    background: linear-gradient(150deg, #B5530E 0%, #964307 100%);
+    background: linear-gradient(150deg, var(--brand) 0%, var(--brand-deep) 100%);
     box-shadow: 0 6px 16px rgba(156,74,8,.30); transition: filter .15s, transform .05s, box-shadow .15s;
 }
 .accept:hover { filter: brightness(1.06); }
@@ -138,7 +138,7 @@ body {
     color: var(--ink); background: var(--paper-2); border: 1px solid var(--border-strong); border-radius: var(--r-md);
     outline: none; padding: 0; box-sizing: border-box; transition: border-color .15s, box-shadow .15s, background .15s;
 }
-#Pin-Boxes input:focus, #Pin-Boxes select:focus { border-color: var(--brand); background: #fff; box-shadow: 0 0 0 3px var(--brand-pale); }
+#Pin-Boxes input:focus, #Pin-Boxes select:focus { border-color: var(--brand); background: var(--paper); box-shadow: 0 0 0 3px var(--brand-pale); }
 #Pin-Boxes select.PIN-Tile {
     -webkit-appearance: none; appearance: none; cursor: pointer; background: var(--brand-pale);
     border-color: var(--brand-line); color: var(--brand-deep);
@@ -222,4 +222,22 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
     .login-help-bubble { transition: none; }
+}
+
+/* ---- dark mode (saved theme; Theme.js sets data-theme on login too) ----
+   tokens.css has no dark values for --paper/--paper-2/--ink/--brand-pale
+   (light-only tokens), so this page scopes its own, aligned to the dark
+   family: panel #2B2724 / row-hover #34302C / text #E8E0D6. */
+html[data-theme="dark"] {
+    --paper:   #2B2724;
+    --paper-2: #34302C;
+    --ink:      #E8E0D6;
+    --ink-soft: #C9C0B4;
+    --brand-pale: rgba(232, 99, 60, .16);
+}
+html[data-theme="dark"] body {
+    background:
+        radial-gradient(900px 500px at 15% -20%, #2B2520 0%, transparent 55%),
+        radial-gradient(700px 500px at 110% 120%, #262019 0%, transparent 50%),
+        linear-gradient(160deg, #211D1A 0%, #1E1B19 60%, #191613 100%) !important;
 }
