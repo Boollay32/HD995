@@ -15,13 +15,14 @@ const RQstatusColor = s => {
     const t = String(s || '').toLowerCase();
     if (t.indexOf('complete') !== -1) return ['var(--ok-fg)', 'var(--ok-bg)'];
     if (t.indexOf('withdrawn') !== -1 || t.indexOf('cancel') !== -1) return ['var(--neutral-fg)', 'var(--neutral-bg)'];
+    if (t.indexOf('reject') !== -1) return ['var(--danger-fg, var(--danger))', 'var(--danger-bg, var(--neutral-bg))'];
     if (t.indexOf('assigned') !== -1) return ['var(--warn-fg)', 'var(--warn-bg)'];
     if (t.indexOf('open') !== -1) return ['var(--info-fg)', 'var(--info-bg)'];
     return ['var(--neutral-fg)', 'var(--neutral-bg)'];
 };
 // Done = hidden from the 'open' queue filters. Both Complete and Withdrawn
 // are terminal.
-const RQisDone = s => { const t = String(s || '').toLowerCase(); return t.indexOf('complete') !== -1 || t.indexOf('withdrawn') !== -1 || t.indexOf('cancel') !== -1; };
+const RQisDone = s => { const t = String(s || '').toLowerCase(); return t.indexOf('complete') !== -1 || t.indexOf('withdrawn') !== -1 || t.indexOf('cancel') !== -1 || t.indexOf('reject') !== -1; };
 const RQisOpen = r => !RQisDone(r.status);
 const RQdate = iso => {
     if (!iso) return '—';
