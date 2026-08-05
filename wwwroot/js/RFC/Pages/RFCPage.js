@@ -82,11 +82,13 @@ class RFCPage extends PageBase {
                 { id: 'mine',  label: 'My open',     filter: r => isMyRFC(r) && RQisOpen(r) },
                 { id: 'all',   label: 'All open',    filter: r => RQisOpen(r) },
                 { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && RQisOpen(r) },
+                { id: 'done',  label: 'Complete',    filter: r => r.status === 'Complete' },
             ],
 
             filters: [
                 { id: 'prio', label: 'Priority', field: 'priority' },
-                { id: 'stat', label: 'Status',   field: 'status' },
+                { id: 'stat', label: 'Status',   field: 'status',
+                  options: ['New', 'Draft', 'In Progress', 'Approved', 'Approved with condition', 'Complete', 'Rejected'] },
                 { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
             ],
 
