@@ -5,7 +5,7 @@
 class ProjectsPage extends PageBase {
     constructor() {
         super();
-        this.statusFilter = null;   // null = active set (handled server-side default)
+        this.statusFilter = 2;      // default view: Active (2); null = All
         this.projects = [];
     }
 
