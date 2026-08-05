@@ -52,6 +52,11 @@ html[data-snow="off"] #snow-overlay { display: none; }
 .snowflake.near   { width: 4px; height: 4px; }
 .snowflake.medium { width: 3px; height: 3px; }
 .snowflake.far    { width: 2px; height: 2px; }
+/* Login full-page fall (#snow-overlay): larger flakes than the 56px nav
+   strip - same component and light/dark styling, only the size differs. */
+#snow-overlay .snowflake.near   { width: 6px; height: 6px; }
+#snow-overlay .snowflake.medium { width: 4.5px; height: 4.5px; }
+#snow-overlay .snowflake.far    { width: 3px; height: 3px; }
 
 @keyframes sparkle {
     0%, 100% { box-shadow: 0 0 3px rgba(255, 255, 255, 0.3); }
