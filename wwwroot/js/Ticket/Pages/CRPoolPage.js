@@ -15,9 +15,16 @@ const CRQ_STATUS_COLOR = {
     Pending:   ['var(--warn-fg)', 'var(--warn-bg)'],
     'On Hold': ['var(--neutral-fg)', 'var(--neutral-bg)'],
     Closed:    ['var(--accent-2)', 'var(--accent-2-bg)'],
-    Solved:    ['var(--ok-fg)', 'var(--ok-bg)'],
+    Resolved:  ['var(--ok-fg)', 'var(--ok-bg)'],
+    Cancelled: ['var(--neutral-fg)', 'var(--neutral-bg)'],
+    'CR Open':      ['var(--info-fg)', 'var(--info-bg)'],
+    'CR Assigned':  ['var(--warn-fg)', 'var(--warn-bg)'],
+    'CR Complete':  ['var(--ok-fg)', 'var(--ok-bg)'],
+    'CR Withdrawn': ['var(--neutral-fg)', 'var(--neutral-bg)'],
 };
-const CRQisOpen = r => !['Closed', 'Solved'].includes(r.status);
+// Terminal statuses (labels confirmed against tblStatus). Everything else is open.
+const CRQ_CLOSED = ['Closed', 'Cancelled', 'Resolved', 'CR Complete', 'CR Withdrawn'];
+const CRQisOpen = r => !CRQ_CLOSED.includes(r.status);
 const CRQdate = iso => { if (!iso) return '\u2014'; const d = new Date(iso); return isNaN(d) ? '\u2014' : d.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }); };
 const CRQago = iso => {
     if (!iso) return '\u2014';

@@ -12,9 +12,16 @@ const TQ_STATUS_COLOR = {
     Pending:   ['var(--warn-fg)', 'var(--warn-bg)'],
     'On Hold': ['var(--neutral-fg)', 'var(--neutral-bg)'],
     Closed:    ['var(--accent-2)', 'var(--accent-2-bg)'],
-    Solved:    ['var(--ok-fg)', 'var(--ok-bg)'],
+    Resolved:  ['var(--ok-fg)', 'var(--ok-bg)'],
+    Cancelled: ['var(--neutral-fg)', 'var(--neutral-bg)'],
+    'CR Open':      ['var(--info-fg)', 'var(--info-bg)'],
+    'CR Assigned':  ['var(--warn-fg)', 'var(--warn-bg)'],
+    'CR Complete':  ['var(--ok-fg)', 'var(--ok-bg)'],
+    'CR Withdrawn': ['var(--neutral-fg)', 'var(--neutral-bg)'],
 };
-const TQisOpen = r => !['Closed', 'Solved'].includes(r.status);
+// Terminal statuses (labels confirmed against tblStatus). Everything else is open.
+const TQ_CLOSED = ['Closed', 'Cancelled', 'Resolved', 'CR Complete', 'CR Withdrawn'];
+const TQisOpen = r => !TQ_CLOSED.includes(r.status);
 // The assigned tech has a client reply to answer: notify '0' (client
 // replied) and the ticket is assigned to the current user. myId is set
 // per-render in _config (sessionStorage UserID).
@@ -87,6 +94,7 @@ class IncidentPage extends PageBase {
             views: [
                 { id: 'all',   label: 'All open',     filter: r => TQisOpen(r) },
                 { id: 'reply', label: 'Needs reply', filter: r => r.notify === '0' && TQisOpen(r) },
+                { id: 'nonactive', label: 'Non Active', filter: r => !TQisOpen(r) },
             ],
 
             filters: [
