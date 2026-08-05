@@ -38,11 +38,12 @@
   color: var(--td-muted-2, var(--muted, #6a6a6a));
   text-decoration: none;
   cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 .td-attach-tile:hover {
-  border-color: var(--td-border-2, var(--border-strong, #b9b9b9));
-  color: var(--td-text, var(--text, #1c1c1c));
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
 }
 
 /* HD41 1a: canonical attachment ADD button -- the single definition shared
