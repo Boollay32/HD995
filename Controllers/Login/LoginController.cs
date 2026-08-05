@@ -10,10 +10,13 @@ namespace HelpDeskNet8.Controllers.Login
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class LoginController(IAuthenticator auth, INotificationManager notificationManager) : ControllerBase
+    public class LoginController(IAuthenticator auth, INotificationManager notificationManager,
+        IMiscManager miscManager, IMailPreviewSink mailPreview) : ControllerBase
     {
         private readonly IAuthenticator _authenticator = auth;
         private readonly INotificationManager _notificationManager = notificationManager;
+        private readonly IMiscManager _miscManager = miscManager;
+        private readonly IMailPreviewSink _mailPreview = mailPreview;
 
         [HttpPost]
         [EnableRateLimiting("login")]
@@ -57,6 +60,49 @@ namespace HelpDeskNet8.Controllers.Login
             }
 
             return result.IsSuccess ? Ok(result) : Unauthorized(result.Error);
+        }
+
+        // Self-service password reset. Username + PIN are the possession
+        // factor; the PIN itself is NEVER reset here (manual support action
+        // only). Anti-enumeration: the response is byte-identical whether or
+        // not the details matched, and the temp password is emailed - never
+        // returned to the browser. Wrong-PIN attempts are counted by the
+        // proc: 5 strikes locks the account.
+        private const string ResetFromAddress = "govtech.helpdesk@govtech.co.uk";
+
+        [HttpPost]
+        [EnableRateLimiting("login")]
+        [IgnoreAntiforgeryToken] // pre-auth login step (see PostLogin)
+        public async Task<IActionResult> RequestPasswordReset([FromBody] PasswordResetRequest request)
+        {
+            try
+            {
+                (int code, string? temp) = await _authenticator.RequestPasswordReset(
+                    request.UserName?.Trim() ?? string.Empty, request.Pin);
+
+                if (code == 0 && !string.IsNullOrEmpty(temp))
+                {
+                    string subject = "Govtech Helpdesk - your temporary password";
+                    string body =
+                        "<p>A password reset was requested for your Govtech Helpdesk account.</p>" +
+                        "<p>Your temporary password is: <b>" + temp + "</b></p>" +
+                        "<p>Sign in with it and you will be asked to choose a new password. " +
+                        "Your PIN has not changed.</p>" +
+                        "<p>If you did not request this, contact Govtech support immediately.</p>";
+
+                    if (_mailPreview.Enabled)
+                        _mailPreview.Add("PasswordReset", new[] { request.UserName }, subject, body);
+                    else
+                        await _miscManager.SendMailMessage(ResetFromAddress, new[] { request.UserName }, subject, body);
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(nameof(LoginController), ex);
+            }
+
+            // Always the same answer, matched or not.
+            return Ok(new { message = "If the details match an account, an email with a temporary password has been sent." });
         }
 
         [HttpPost]
