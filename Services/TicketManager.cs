@@ -290,6 +290,12 @@ namespace HelpDeskNet8.Services
                         return SaveResult.Created(newTicketID);
                     }
                 }
+                catch (SqlException ex) when (ex.Number >= 50000)
+                {
+                    // A proc-side rule blocked the save (RAISERROR), e.g. the
+                    // open-task completion gate. Surface its message verbatim.
+                    return SaveResult.Failed(ex.Message);
+                }
                 catch (Exception ex)
                 {
                     AppLogger.Error(nameof(TicketManager), ex);
