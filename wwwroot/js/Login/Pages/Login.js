@@ -121,7 +121,7 @@ async function Login(form, e) {
 
     } catch (error) {
         console.error('Login error:', error);
-        BuildMessageBox("Failed to Connect to server, please contact Govtech for assistance.", "Index");
+        BuildMessageBox("Failed to Connect to server, please contact Govtech for assistance.");
     } finally {
         LoginForm.psw.value = "";
         const pass1 = document.getElementById("pass1");
@@ -159,29 +159,29 @@ function HandleStatusLogin(status) {
 
         case LOGIN_STATUS.INVALID_CREDENTIALS:
         case LOGIN_STATUS.INVALID_CREDENTIALS_2:
-            BuildMessageBox("Username or password incorrect", "Index");
+            BuildMessageBox("Username or password incorrect");
             sessionStorage.setItem("Status", 1);
             return; // Fix: early return — don't show SecondWall on failure
 
         case LOGIN_STATUS.ACCOUNT_LOCKED_ATTEMPTS:
-            BuildMessageBox("No. of login attempts exceeds maximum - account locked for security purposes", "Index");
+            BuildMessageBox("No. of login attempts exceeds maximum - account locked for security purposes");
             document.getElementById("pass").value = "";
             sessionStorage.setItem("Status", 1);
             return;
 
         case LOGIN_STATUS.NO_DEFAULT_PASSWORD:
-            BuildMessageBox("User does not have a default password - please contact your system administrator", "Index");
+            BuildMessageBox("User does not have a default password - please contact your system administrator");
             sessionStorage.setItem("Status", 1);
             return;
 
         case LOGIN_STATUS.ACCOUNT_LOCKED:
-            BuildMessageBox("User locked - please contact your system administrator", "Index");
+            BuildMessageBox("User locked - please contact your system administrator");
             document.getElementById("pass").value = "";
             sessionStorage.setItem("Status", 1);
             return;
 
         default:
-            BuildMessageBox("An unexpected error occurred. Please try again.", "Index");
+            BuildMessageBox("An unexpected error occurred. Please try again.");
             sessionStorage.setItem("Status", 1);
             return;
     }
@@ -217,7 +217,12 @@ async function SecondWallAuth() {
             body: JSON.stringify({ email, pin: parseInt(pin), UTC })
         });
 
-        if (response.status === 401) { BuildMessageBox("Incorrect PIN. Please try again.", "Index"); return; }
+        if (response.status === 401) {
+            BuildMessageBox("Incorrect PIN. Please try again.");
+            pinBoxes.forEach(b => { b.value = ""; });
+            pinBoxes[0]?.focus();
+            return;
+        }
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
