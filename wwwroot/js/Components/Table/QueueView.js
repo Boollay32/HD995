@@ -225,10 +225,16 @@ class QueueView {
     }
 
     _refreshFilterOptions() {
+        // Normal filters offer only values present in the ACTIVE view's rows
+        // (dropdowns narrow within the chosen partition). overridesView
+        // filters and explicit options: lists keep the whole dataset.
+        const viewDef = this.cfg.views?.find(v => v.id === this.view);
         for (const f of this.cfg.filters ?? []) {
             const sel = this.$.filters.querySelector(`select[data-filter="${f.id}"]`);
             if (!sel) continue;
-            const opts = f.options ?? [...new Set(this.rows.map(r => r[f.field]).filter(Boolean))].sort();
+            const base = (!f.overridesView && viewDef?.filter)
+                ? this.rows.filter(viewDef.filter) : this.rows;
+            const opts = f.options ?? [...new Set(base.map(r => r[f.field]).filter(Boolean))].sort();
             const cur = this.filterValues[f.id] ?? '';
             sel.innerHTML = `<option value="">All</option>` +
                 opts.map(o => `<option value="${this._esc(o)}"${o === cur ? ' selected' : ''}>${this._esc(o)}</option>`).join('');
@@ -269,6 +275,16 @@ class QueueView {
         // "Complete" reveals tasks the open-only views would otherwise hide.
         const overrideView = (c.filters ?? []).some(f => f.overridesView && this.filterValues[f.id]);
         if (!overrideView && viewDef?.filter) list = list.filter(viewDef.filter);
+
+        // Prune filter values impossible in the current view (chosen under a
+        // different view) so switching buttons can't filter the list to nothing.
+        for (const f of c.filters ?? []) {
+            const val = this.filterValues[f.id];
+            if (val && !f.overridesView && !list.some(r => String(r[f.field] ?? '') === val)) {
+                delete this.filterValues[f.id];
+                this._syncFilterClear();
+            }
+        }
 
         for (const f of c.filters ?? []) {
             const val = this.filterValues[f.id];
