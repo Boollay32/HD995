@@ -161,7 +161,14 @@ namespace HelpDeskNet8.Controllers.Users
                 ["Authority"] = request.AuthorityId.ToString()
             };
 
-            return Ok(await _userManager.GetUsers(TypeCreator.Setup<Filter>(dict)));
+            // Clients only: internal accounts (AdminLevel 1/2/4) can live in
+            // client authorities but must never be assignable as the contacted
+            // client. AdminLevel rides the GetUsers result as a string tier;
+            // NULL/empty means no admin row, which the access check treats as
+            // client (0). Anything else is excluded -- fail closed.
+            var users = await _userManager.GetUsers(TypeCreator.Setup<Filter>(dict));
+            return Ok(users.Where(u =>
+                string.IsNullOrWhiteSpace(u.AdminLevel) || u.AdminLevel.Trim() == "0"));
         }
     }
 }
