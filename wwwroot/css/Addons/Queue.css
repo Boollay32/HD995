@@ -85,14 +85,38 @@
 }
 .qv-table-meta {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding: 2px 22px 0;
   flex-shrink: 0;
 }
+/* Count pill: .qv-filt visual language at a smaller scale, deliberately
+   non-interactive (no hover rule, default cursor). Number and label are
+   separate spans written by QueueView.render(). */
 .qv-count {
-  font-size: 0.78125rem;
-  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 9px;
+  padding: 0 10px;
+  height: 26px;
+  cursor: default;
+}
+.qv-count-n {
+  font-size: 0.8125rem;
   font-weight: 500;
+  color: var(--text);
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+.qv-count-l {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  line-height: 1;
 }
 .qv-action {
   display: inline-flex;
@@ -603,7 +627,7 @@
 .qv-search svg, .qv-count, .qv-vl, .qv-filt label, .qv-subj .s2,
 .qv-updated, .qv-pv-h, .qv-pv-tid, .qv-pv-close{ color:var(--muted); }
 .qv-search-input, .qv-filt select, .qv-subj .s1{ color:var(--text); }
-.qv-view, .qv-filt{ background:var(--panel); border-color:var(--border); }
+.qv-view, .qv-filt, .qv-count{ background:var(--panel); border-color:var(--border); }
 .qv-view:hover{ border-color:var(--accent); }
 .qv-view[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); }
 .qv-view[aria-pressed="true"] .qv-vc, .qv-view[aria-pressed="true"] .qv-vl{ color:var(--on-accent); }
