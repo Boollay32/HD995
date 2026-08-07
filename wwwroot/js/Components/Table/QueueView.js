@@ -321,7 +321,9 @@ class QueueView {
         this.$.thead.querySelectorAll('th.qv-sortable').forEach(th =>
             th.setAttribute('aria-sort', th.dataset.key === this.sortKey ? (this.sortDir > 0 ? 'ascending' : 'descending') : 'none'));
 
-        if (this.$.count) this.$.count.textContent = `${list.length} item${list.length === 1 ? '' : 's'}`;
+        if (this.$.count) this.$.count.innerHTML =
+            `<span class="qv-count-n">${list.length}</span>` +
+            `<span class="qv-count-l">item${list.length === 1 ? '' : 's'}</span>`;
         if (this.focusIdx >= list.length) this.focusIdx = Math.max(0, list.length - 1);
         this._syncSelection();
     }
