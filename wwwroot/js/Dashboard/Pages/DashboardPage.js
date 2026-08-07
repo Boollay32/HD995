@@ -36,10 +36,10 @@ class DashboardPage extends PageBase {
     async init() {
         if (!await this.checkAuth()) return;
 
-        // Belt-and-braces (HD60): the login destination, the nav menu, and
-        // the server route all already exclude clients/RFC-only users, but
-        // the page itself bounces them too, so no residual path (bfcache,
-        // stale tab, direct URL) ever shows a client the dashboard.
+        // Belt-and-braces (HD60): the login destination and the nav menu
+        // already exclude clients/RFC-only users, but the page itself
+        // bounces them too. This is the ONLY level gate on this route --
+        // the server serves the shell to anyone; data endpoints authenticate.
         const level = parseInt(await Auth.getAdminLevel(), 10);
         if (level !== 1 && level !== 2) {
             window.location.replace(level === 4 ? '/RFC' : '/TicketPage');

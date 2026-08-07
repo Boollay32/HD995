@@ -1,11 +1,8 @@
-﻿using HelpDeskNet8.Infrastructure;
-using HelpDeskNet8.Interfaces.Shared;
-using HelpDeskNet8.Interfaces.Users;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDeskNet8.Controllers.Shared
 {
-    public class PageController(IAuthenticator authenticator) : Controller
+    public class PageController : Controller
     {
         [Route("StatsPage")]
         public IActionResult StatsPage() => View("~/Views/Page/StatsPage.cshtml");
@@ -51,21 +48,14 @@ namespace HelpDeskNet8.Controllers.Shared
         public IActionResult TicketPage() => View("~/Views/Page/Ticket/TicketPage.cshtml");
 
         [Route("Dashboard")]
-        public async Task<IActionResult> Dashboard()
-        {
-            // Internal landing page. FAIL-CLOSED: the Dashboard is allow-listed
-            // to internal levels (StandardGovtech, Admin); every other level --
-            // client, RFC-only, or anything unexpected -- is bounced to its own
-            // home. The old form listed who to exclude and admitted the rest,
-            // which let odd/unknown levels straight in. Mirrors Login.js enterApp.
-            IUser user = this.GetAuthenticatedUser();
-            int level = user == null ? -1 : await authenticator.CheckAdmin(user);
-            if (level == Constants.AdminLevel.StandardGovtech || level == Constants.AdminLevel.Admin)
-            {
-                return View("~/Views/Page/Dashboard/Dashboard.cshtml");
-            }
-            return Redirect(level == Constants.AdminLevel.RfcOnly ? "/RFC" : "/TicketPage");
-        }
+        // Served unconditionally like every other page route. The previous
+        // server-side level gate was dead code: AuthenticateActionFilter only
+        // runs for actions with an AuthenticatedRequest parameter, so on this
+        // GET the user was always null and EVERYONE bounced to /TicketPage.
+        // Level gating lives in DashboardPage.js (Auth.getAdminLevel bounce);
+        // all dashboard data endpoints are authenticated + authority-scoped,
+        // so the bare shell exposes no data.
+        public IActionResult Dashboard() => View("~/Views/Page/Dashboard/Dashboard.cshtml");
 
         [Route("Incidents")]
         public IActionResult Incidents() => View("~/Views/Page/Ticket/IncidentsPage.cshtml");
