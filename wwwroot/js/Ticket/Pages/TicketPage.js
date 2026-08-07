@@ -109,10 +109,11 @@ class TicketPage extends PageBase {
             ],
 
             filters: [
-                { id: 'type', label: 'Type',     field: 'requestType' },
-                { id: 'prio', label: 'Priority', field: 'priority' },
-                { id: 'stat', label: 'Status',   field: 'status' },
-                { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
+                { id: 'type', label: 'Type',      field: 'requestType' },
+                { id: 'prio', label: 'Priority',  field: 'priority' },
+                { id: 'stat', label: 'Status',    field: 'status' },
+                { id: 'asg',  label: 'Assignee',  field: 'assignedTech' },
+                { id: 'auth', label: 'Authority', field: 'authority' },
             ],
 
             columns: [
