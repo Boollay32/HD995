@@ -108,8 +108,17 @@ namespace HelpDeskNet8.Controllers.Tickets
             }
 
             // Fix: redacted value restored
+            // Contact-client: the save runs AS the client (the swap below), with
+            // the agent as assigned tech. Capture the agent's identity first so
+            // the post-create notification can be sent as the true actor.
+            bool contactClientCreate = false;
+            int? actorUserId = null;
+            int? actorAuthorityId = null;
             if (request.ContactClientAuthorityId.HasValue && request.ContactClientUserId.HasValue)
             {
+                contactClientCreate = ticket.TicketID == null;
+                actorUserId = user.UserID;
+                actorAuthorityId = user.AuthorityID;
                 ticket.AssignedTechID = user.UserID;
                 user.UserID = request.ContactClientUserId.Value;
                 user.AuthorityID = request.ContactClientAuthorityId.Value;
@@ -161,6 +170,21 @@ namespace HelpDeskNet8.Controllers.Tickets
                     if (!techChanged && !statusChanged)
                         await _notificationService.Notify(ticket.TicketID.Value, NotificationType.TicketResponded, user);
                 }
+            }
+
+            // Contact-client CREATE: tell the client a ticket was raised on
+            // their behalf. Restore the agent's identity first -- the swap
+            // above made `user` the client for the save; notifying as the
+            // client would take the client-raised branch (triage inbox) AND
+            // strip the client as the supposed actor, silencing this email.
+            // UserEmail/UserLogin were never swapped, so only the two
+            // overwritten fields need restoring. TicketCreated + internal
+            // actor + client ticket resolves to the owner (the client) only.
+            if (contactClientCreate && result.ObjectID.HasValue)
+            {
+                user.UserID = actorUserId;
+                user.AuthorityID = actorAuthorityId;
+                await _notificationService.Notify(result.ObjectID.Value, NotificationType.TicketCreated, user);
             }
 
             return Ok(result);
