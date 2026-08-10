@@ -89,20 +89,5 @@ namespace HelpDeskNet8.Controllers.Shared
             return Ok(grouped);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SendMailMessage([FromBody] SendMailMessageRequest request)
-        {
-    IUser user = this.GetAuthenticatedUser();
-            if (user == null) return Unauthorized();
-
-            string[] recipients = request.To.Split(',');
-            var result = await _miscManager.SendMailMessage(request.From, recipients, request.Subject, request.Body);
-
-            if (result[0]?.ToString() == "Error")
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
     }
 }
