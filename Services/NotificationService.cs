@@ -360,8 +360,30 @@ namespace HelpDeskNet8.Services
                     // fall through to the Email column below
                 }
             }
-            // Email-column fallback: no reliable id, so no in-app row.
-            return new Recipient(null, ticket.Email ?? string.Empty);
+            // Email-column fallback. Recover the numeric id by matching the
+            // Email column against the user list (best-effort, same pattern
+            // as ResolveAssigneeByName) so the in-app row is written and the
+            // id-based actor self-strip applies; a failed match keeps the
+            // old email-only recipient rather than dropping them.
+            string fallbackEmail = ticket.Email ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(fallbackEmail))
+            {
+                try
+                {
+                    var users = await _userManager.GetUsers(new Filter());
+                    var match = users?.FirstOrDefault(u =>
+                        u != null && u.UserID.HasValue
+                        && !string.IsNullOrWhiteSpace(u.Email)
+                        && string.Equals(u.Email.Trim(), fallbackEmail.Trim(),
+                            System.StringComparison.OrdinalIgnoreCase));
+                    if (match != null) return new Recipient(match.UserID, fallbackEmail);
+                }
+                catch
+                {
+                    // best-effort only -- fall through to the email-only recipient
+                }
+            }
+            return new Recipient(null, fallbackEmail);
         }
 
         private async Task<Recipient> ResolveProjectOwner(ITicket ticket, IUser user)

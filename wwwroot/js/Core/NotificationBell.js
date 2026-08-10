@@ -15,8 +15,11 @@ const NotificationBell = {
     // Internal techs (1, 2) see every event type; clients (0) get the
     // bell with a server-scoped inbox (messages on their tickets +
     // status changes -- NotificationController filters). RFC-only (4)
-    // stays email-only.
-    ALLOW: new Set([0, 1, 2]),
+    // gets the bell too: NotifyRFC writes their rows (numeric ids), and
+    // with emails suppressed the bell is the only way they hear about
+    // RFC events at all. Server needs no change -- level 4 is not the
+    // Authority level, so GetNotifications returns their rows unfiltered.
+    ALLOW: new Set([0, 1, 2, 4]),
 
     // EntityType values from NotificationStub: 1 ticket, 2 task, 3 RFC.
     ENTITY: { TICKET: 1, TASK: 2, RFC: 3 },
