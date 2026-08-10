@@ -46,6 +46,16 @@ class CreateUser extends PageBase {
             ?.addEventListener('click', () => this.submitUser());
         Form.gateSubmit(this.formId, 'SubmitCreatedUser');
 
+        // The user type follows the chosen authority until the creator picks
+        // one themselves: Govtech (authority 151, same constant CreateTicket.js
+        // uses) defaults to Govtech User, everything else to Authority User.
+        const typeSelect = document.getElementById('AdminLevel');
+        typeSelect?.addEventListener('change', () => { this._typeTouched = true; });
+        document.getElementById('Authority')?.addEventListener('change', (e) => {
+            if (this._typeTouched || !typeSelect) return;
+            typeSelect.value = e.target.value === '151' ? '1' : '0';
+        });
+
     }
 
     // -------------------------  Submit  ------------------------- //
@@ -71,7 +81,8 @@ class CreateUser extends PageBase {
             const response = await API.post('User/CreateUser', API.authPayload(payload));
             if (!response) return;
 
-            this._handleCreateSuccess(response);
+            const typeWarning = await this._applyUserType(response);
+            this._handleCreateSuccess(response, typeWarning);
 
         } catch (error) {
             if (error.message !== 'Unauthorized') {
@@ -97,9 +108,36 @@ class CreateUser extends PageBase {
         };
     }
 
+    // -------------------------  User Type  ------------------------- //
+
+    // usp_Helpdesk_AddUser always creates an Authority User (level 0); a
+    // non-default choice is applied straight after through the existing
+    // User/ManageUser endpoint. Same payload shape as UserSave.js:
+    // unlockUser is OMITTED so @UnlockUser arrives NULL and the lock state
+    // is untouched (HD35). Runs only when the create actually succeeded
+    // (pin|tempPassword response). Returns a warning suffix for the
+    // success box when the type could not be set.
+    async _applyUserType(data) {
+        const raw = (typeof data === 'string') ? data.trim() : '';
+        const [pin, tempPass] = raw.split('|');
+        const created = /^\d+$/.test(pin) && !!tempPass;
+        const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
+        if (!created || adminLevelId === '0') return '';
+
+        // API.post returns null on failure (it does not throw).
+        const result = await API.post('User/ManageUser', API.authPayload({
+            userLogin: (document.getElementById('LoginName')?.value ?? '').trim(),
+            adminLevelId,
+            phone: (document.getElementById('PhoneNumber')?.value ?? '').trim()
+        }));
+        return result === null
+            ? "\n\nNote: the user was created but the user type could not be set. Set it from the user's details page."
+            : '';
+    }
+
     // -------------------------  Create Success  ------------------------- //
 
-    _handleCreateSuccess(data) {
+    _handleCreateSuccess(data, typeWarning = '') {
         const raw = (typeof data === 'string') ? data.trim() : '';
         // CreateUser returns pin|tempPassword (pipe-delimited); a response with
         // no pipe is a backend message (e.g. validation) and is shown as-is.
@@ -107,7 +145,7 @@ class CreateUser extends PageBase {
         const message = (/^\d+$/.test(pin) && tempPass)
             ? `User created.\n\nPIN: ${pin}\n\nTemporary password: ${tempPass}\n\nGive both to the new user. They'll be asked to set a new password the first time they log in.`
             : (raw || 'User created.');
-        BuildMessageBox(message, 'Users');
+        BuildMessageBox(message + typeWarning, 'Users');
     }
 }
 
