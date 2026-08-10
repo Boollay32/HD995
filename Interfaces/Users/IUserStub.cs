@@ -6,6 +6,7 @@
         string UserName { get; set; }
         string Authority { get; set; }
         string Phone { get; set; }
+        string Email { get; set; }
         int? Locked { get; set; }
         DateTime? LastLoginDate { get; set; }
         string AdminLevel { get; set; }
