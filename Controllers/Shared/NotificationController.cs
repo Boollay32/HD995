@@ -30,6 +30,11 @@ namespace HelpDeskNet8.Controllers.Shared
             {
                 var allowed = new[]
                 {
+                    // A ticket raised FOR the client (contact-client flow)
+                    // dual-writes a TicketCreated row to them -- it must
+                    // survive this filter or the one event written for
+                    // clients never reaches the one inbox clients have.
+                    (byte)NotificationType.TicketCreated,
                     (byte)NotificationType.NoteResponded,
                     (byte)NotificationType.TicketStatusChanged,
                     (byte)NotificationType.TicketAssigned,
