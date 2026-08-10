@@ -95,12 +95,11 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add<AuthenticateActionFilter>();
     // Enforce anti-forgery on all unsafe (POST/PUT/PATCH/DELETE) requests.
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-    if (builder.Environment.IsDevelopment())
-    {
-        // DEV ONLY: surface would-be email recipients via a response header
-        // instead of sending (local SMTP is unavailable). See MailPreviewSink.
-        options.Filters.Add<MailPreviewResultFilter>();
-    }
+    // Every environment: surface email recipients via a response header so
+    // the browser can show who an action notified. Whether the email was
+    // actually SENT is a separate switch ("Mail:SendEnabled") -- see
+    // MailPreviewSink.
+    options.Filters.Add<MailPreviewResultFilter>();
 });
 builder.Services.AddScoped<AuthenticateActionFilter>();
 

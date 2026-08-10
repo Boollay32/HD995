@@ -21,7 +21,8 @@ namespace HelpDeskNet8.Services
     public class NotificationService : INotificationService
     {
         private const string FromAddress = "govtech.helpdesk@govtech.co.uk";
-        private const bool SuppressEmail = true;
+        // Real sending is gated on _preview.SendEnabled ("Mail:SendEnabled",
+        // default false) -- replaces the old SuppressEmail compile-time const.
 
         private readonly ITicketManager _ticketManager;
         private readonly IMiscManager _miscManager;
@@ -90,17 +91,14 @@ namespace HelpDeskNet8.Services
 
                 string[] emails = recipients.Select(r => r.Email).ToArray();
 
-                // DEV: show the would-be recipients popup even though the
-                // real send is suppressed -- the preview IS the suppression
-                // (it returns before SendMailMessage). Production has the
-                // sink disabled, so SuppressEmail still guards the send.
-                if (_preview.Enabled)
-                {
-                    _preview.Add(PointLabel(type), emails, subject, body);
-                    return;
-                }
+                // Ticket path: the popup shows in every environment; the
+                // real send happens only when "Mail:SendEnabled" is true (live).
+                // Popup first, so a send failure can never hide who was meant
+                // to be notified.
+                _preview.Add(PointLabel(type), emails, subject, body, sent: _preview.SendEnabled);
 
-                if (SuppressEmail) return; 
+                if (!_preview.SendEnabled) return;
+
 
                 await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
             }
@@ -154,17 +152,14 @@ namespace HelpDeskNet8.Services
 
                 string[] emails = recipients.Select(r => r.Email).ToArray();
 
-                // DEV: show the would-be recipients popup even though the
-                // real send is suppressed -- the preview IS the suppression
-                // (it returns before SendMailMessage). Production has the
-                // sink disabled, so SuppressEmail still guards the send.
-                if (_preview.Enabled)
-                {
-                    _preview.Add(PointLabel(type), emails, subject, body);
-                    return;
-                }
+                // RFC path: the popup shows in every environment; the
+                // real send happens only when "Mail:SendEnabled" is true (live).
+                // Popup first, so a send failure can never hide who was meant
+                // to be notified.
+                _preview.Add(PointLabel(type), emails, subject, body, sent: _preview.SendEnabled);
 
-                if (SuppressEmail) return;
+                if (!_preview.SendEnabled) return;
+
 
                 await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
 

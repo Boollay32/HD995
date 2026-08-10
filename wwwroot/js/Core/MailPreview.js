@@ -1,7 +1,8 @@
-// MailPreview.js -- DEV ONLY. Shows the would-be email recipients for an action.
-// The server skips the real SMTP send in Development and reports recipients in
-// the 'X-Mail-Preview' response header; API.post calls MailPreview.show(header).
-// No-op when the header is absent (i.e. production, or actions that send no mail).
+// MailPreview.js -- shows who an action emailed (or would have emailed), in
+// EVERY environment. The server reports recipients in the X-Mail-Preview
+// response header with a per-entry `sent` flag: true when the real SMTP send
+// happened (live, Mail:SendEnabled), false when sending is disabled (dev /
+// test). API.post calls MailPreview.show(header); no-op when absent.
 (function () {
     'use strict';
 
@@ -71,8 +72,10 @@
 
         var head = document.createElement('div');
         head.className = 'mail-preview-head';
-        head.innerHTML = '<span class="tag">DEV</span>'
-            + '<span>Email not sent locally &mdash; would notify:</span>';
+        var anySent = entries.some(function (e) { return !!e.sent; });
+        head.innerHTML = anySent
+            ? '<span class="tag">SENT</span><span>Email sent &mdash; notified:</span>'
+            : '<span class="tag">NOT SENT</span><span>Email not sent &mdash; would notify:</span>';
         card.appendChild(head);
 
         var body = document.createElement('div');
