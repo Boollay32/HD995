@@ -90,13 +90,17 @@ namespace HelpDeskNet8.Services
 
                 string[] emails = recipients.Select(r => r.Email).ToArray();
 
-                if (SuppressEmail) return; 
-
+                // DEV: show the would-be recipients popup even though the
+                // real send is suppressed -- the preview IS the suppression
+                // (it returns before SendMailMessage). Production has the
+                // sink disabled, so SuppressEmail still guards the send.
                 if (_preview.Enabled)
                 {
                     _preview.Add(PointLabel(type), emails, subject, body);
                     return;
                 }
+
+                if (SuppressEmail) return; 
 
                 await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
             }
@@ -150,13 +154,17 @@ namespace HelpDeskNet8.Services
 
                 string[] emails = recipients.Select(r => r.Email).ToArray();
 
-                if (SuppressEmail) return;
-
+                // DEV: show the would-be recipients popup even though the
+                // real send is suppressed -- the preview IS the suppression
+                // (it returns before SendMailMessage). Production has the
+                // sink disabled, so SuppressEmail still guards the send.
                 if (_preview.Enabled)
                 {
                     _preview.Add(PointLabel(type), emails, subject, body);
                     return;
                 }
+
+                if (SuppressEmail) return;
 
                 await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
 
