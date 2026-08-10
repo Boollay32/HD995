@@ -90,8 +90,14 @@ namespace HelpDeskNet8.Controllers.Login
                         "Your PIN has not changed.</p>" +
                         "<p>If you did not request this, contact Govtech support immediately.</p>";
 
-                    if (_mailPreview.Enabled)
-                        _mailPreview.Add("PasswordReset", new[] { request.UserName }, subject, body);
+                    // Sending disabled (dev / test): the popup is the only way the
+                    // temp password reaches the tester -- acceptable, since it is
+                    // gated by the username+PIN check and the login rate limit.
+                    // Sending enabled (live): the email delivers and NO popup is
+                    // shown -- an on-screen popup would expose the temp password
+                    // and confirm the account exists, for no benefit.
+                    if (!_mailPreview.SendEnabled)
+                        _mailPreview.Add("PasswordReset", new[] { request.UserName }, subject, body, sent: false);
                     else
                         await _miscManager.SendMailMessage(ResetFromAddress, new[] { request.UserName }, subject, body);
                 }
