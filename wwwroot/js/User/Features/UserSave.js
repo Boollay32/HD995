@@ -1,4 +1,4 @@
-// =============================  UserSave.js  ============================= //
+﻿// =============================  UserSave.js  ============================= //
 // Write operations for the user detail page: update / manage / reset / delete.
 // Extracted from UserManager (Phase 6) into its own class so the orchestrator
 // stays focused on init + layout. Exposed as the global `userSave`, which the
@@ -55,9 +55,6 @@ class UserSave extends PageBase {
             const userLogin = this._requireLogin();
             if (!userLogin) return;
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
-
-            console.log('ManageUser payload:', { userLogin, adminLevelId, phone });
-            debugger; 
 
             await API.post('User/ManageUser', API.authPayload({
                 userLogin,

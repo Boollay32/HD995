@@ -113,6 +113,10 @@ const API = {
                 : await response.text();
         } catch (error) {
             console.error(`API error [${endpoint}]:`, error);
+            // HTTP errors (4xx/5xx) must surface to the caller — swallowing
+            // them here made every failed save show its success toast.
+            // Genuine network failures keep the legacy null return.
+            if (error.message?.startsWith('HTTP error')) throw error;
             return null;
         }
     },

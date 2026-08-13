@@ -28,15 +28,24 @@
     public class UpdateUserRequest : AuthenticatedRequest
     {
         public string UserLogin { get; set; }
-        public string Phone { get; set; }
+
+        // Nullable: with <Nullable>enable</Nullable> + [ApiController], a
+        // non-nullable string is implicitly [Required], so a missing field
+        // auto-400s before the action runs.
+        public string? Phone { get; set; }
     }
 
     public class ManageUserRequest : AuthenticatedRequest
     {
         public string UserLogin { get; set; }
-        public string UnlockUser { get; set; }
-        public string AdminLevelId { get; set; }
-        public string Phone { get; set; }
+
+        // UnlockUser is INTENTIONALLY omitted from the payload unless an
+        // unlock is requested (HD35: @UnlockUser must arrive NULL — the proc
+        // unlocks on any value). These must be nullable, or implicit-required
+        // validation rejects every role change / reactivate with a 400.
+        public string? UnlockUser { get; set; }
+        public string? AdminLevelId { get; set; }
+        public string? Phone { get; set; }
     }
 
     public class GetUserEmailAddressRequest : AuthenticatedRequest
