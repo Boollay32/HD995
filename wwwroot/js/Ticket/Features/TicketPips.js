@@ -10,7 +10,6 @@
 'use strict';
 
 const TicketPips = (() => {
-
     function _set(id, count) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -51,5 +50,4 @@ const TicketPips = (() => {
     }
 
     return { load, clear };
-
 })();

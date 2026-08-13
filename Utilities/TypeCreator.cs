@@ -56,5 +56,4 @@ public static class TypeCreator
             AppLogger.Error(nameof(TypeCreator), ex);
         }
     }
-
 }

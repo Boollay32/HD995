@@ -7,13 +7,9 @@ using HelpDeskNet8.Models.Tickets;
 using HelpDeskNet8.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using HelpDeskNet8.Controllers.Shared;
-using HelpDeskNet8.Controllers.Tasks;  
-using HelpDeskNet8.Controllers.Tickets;  
 
 namespace HelpDeskNet8.Controllers.Tickets
 {
-
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class TicketController(

@@ -26,7 +26,6 @@ class CreateTicket extends PageBase {
             await this._setupProjectLock();
             const preselectedType = this._filterRequestTypes();
             if (preselectedType) await this._onRequestTypeChange();
-
         } catch (error) {
             this.handleError('Error initializing create ticket');
         }
@@ -104,11 +103,11 @@ class CreateTicket extends PageBase {
         const MAIN_EXCLUDE = [...PROJECT_TYPES, '13', INCIDENT];  // main hides project types, retired 13, and incidents
 
         const allowed = (value) =>
-            incidentContext        ? value === INCIDENT
-            : poolContext          ? PROJECT_TYPES.includes(value)
-            : this._projectContext ? PROJECT_TYPES.includes(value)
-            : isGovtech            ? value === CONTACT_CLIENT
-            : !MAIN_EXCLUDE.includes(value) && value !== CONTACT_CLIENT;
+            incidentContext ? value === INCIDENT
+                : poolContext ? PROJECT_TYPES.includes(value)
+                    : this._projectContext ? PROJECT_TYPES.includes(value)
+                        : isGovtech ? value === CONTACT_CLIENT
+                            : !MAIN_EXCLUDE.includes(value) && value !== CONTACT_CLIENT;
 
         for (const option of Array.from(select.options)) {
             if (!allowed(option.value)) option.remove();
@@ -159,8 +158,6 @@ class CreateTicket extends PageBase {
             this._addFiles(e.target.files);
             e.target.value = '';
         });
-
-
     }
 
     async _onRequestTypeChange() {
@@ -223,7 +220,6 @@ class CreateTicket extends PageBase {
             if (!response) return;
 
             await this._handleCreateSuccess(response, note, contactClient);
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't create ticket");
@@ -323,4 +319,3 @@ const page = new CreateTicket();
 document.addEventListener('DOMContentLoaded', () => page.init());
 
 // -------------------------  Legacy Wrappers  ------------------------- //
-

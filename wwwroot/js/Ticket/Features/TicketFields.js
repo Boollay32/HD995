@@ -8,7 +8,6 @@
 // -------------------------  Topbar helpers  ------------------------- //
 
 const Topbar = {
-
     // Resolve a select's option label by value (the authoritative DB text).
     _optionText(selectId, value) {
         const sel = document.getElementById(selectId);
@@ -189,7 +188,6 @@ const Topbar = {
 // -------------------------  Details population  ------------------------- //
 
 const Fields = {
-
     populate(data) {
         // People
         Fields._setText('raisedby', data.raisedBy);
@@ -279,4 +277,3 @@ const Fields = {
         });
     },
 };
-

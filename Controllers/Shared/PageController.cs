@@ -48,13 +48,6 @@ namespace HelpDeskNet8.Controllers.Shared
         public IActionResult TicketPage() => View("~/Views/Page/Ticket/TicketPage.cshtml");
 
         [Route("Dashboard")]
-        // Served unconditionally like every other page route. The previous
-        // server-side level gate was dead code: AuthenticateActionFilter only
-        // runs for actions with an AuthenticatedRequest parameter, so on this
-        // GET the user was always null and EVERYONE bounced to /TicketPage.
-        // Level gating lives in DashboardPage.js (Auth.getAdminLevel bounce);
-        // all dashboard data endpoints are authenticated + authority-scoped,
-        // so the bare shell exposes no data.
         public IActionResult Dashboard() => View("~/Views/Page/Dashboard/Dashboard.cshtml");
 
         [Route("Incidents")]

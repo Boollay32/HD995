@@ -1,6 +1,5 @@
 ﻿using System.Data;
 
-
 namespace HelpDeskNet8.Models.Shared
 {
     public class DropdownListItem
@@ -24,7 +23,6 @@ namespace HelpDeskNet8.Models.Shared
                         Table = (string)reader["TableName"],
                         ID = (int)reader["ID"],
                         Name = (string)reader["Descr"],
-
                     };
                 }
             }

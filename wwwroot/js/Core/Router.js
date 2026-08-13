@@ -1,7 +1,6 @@
 ﻿// =============================  Router.js  ============================= //
 
 const Router = {
-
     _navigate(path) {
         UI.toggleWaiting();
         window.location.href = path;

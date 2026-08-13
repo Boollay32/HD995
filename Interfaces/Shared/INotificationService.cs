@@ -53,13 +53,17 @@ namespace HelpDeskNet8.Interfaces.Shared
         public bool? NoteVisibleToClient { get; set; }    // a reply's client visibility
         public string? TaskTitle { get; set; }
         public int? TaskID { get; set; }                  // the saved task -- in-app inbox rows
-                                                            // deep-link to it (drawer + editor)
+
+        // deep-link to it (drawer + editor)
         public int? OldTaskStatus { get; set; }
+
         public int? NewTaskStatus { get; set; }
         public int? TaskAssigneeID { get; set; }          // new assignee user id -- resolve email by this
-                                                            // first; it is reliable where the name is not
-                                                            // (see ResolveAssigneeEmailById)
+
+        // first; it is reliable where the name is not
+        // (see ResolveAssigneeEmailById)
         public string? TaskAssigneeName { get; set; }     // new assignee display name (fallback / wording)
+
         public string? OldTaskAssigneeName { get; set; }  // previous assignee, to word assign vs reassign
         public string? OldTechEmail { get; set; }         // previous ticket tech, to word assign vs reassign
         public bool? TechAlsoChanged { get; set; }         // a status save that also reassigned the tech

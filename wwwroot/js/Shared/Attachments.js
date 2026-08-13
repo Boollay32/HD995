@@ -17,7 +17,7 @@
     'use strict';
 
     function _name(it) { return (it && (it.name != null ? it.name : it.AttachmentName)) || 'file'; }
-    function _b64(it)  { return it ? (it.base64 != null ? it.base64 : (it.AttachmentByteArray != null ? it.AttachmentByteArray : null)) : null; }
+    function _b64(it) { return it ? (it.base64 != null ? it.base64 : (it.AttachmentByteArray != null ? it.AttachmentByteArray : null)) : null; }
     function _size(it) { return (it && it.size != null) ? it.size : null; }
 
     function _group(it, index, opts) {

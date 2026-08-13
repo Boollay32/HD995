@@ -16,7 +16,6 @@
 'use strict';
 
 class PaneShell {
-
     constructor({ left, right, storageKey }) {
         this._ids = { left, right };
         this._storageKey = storageKey;
@@ -29,7 +28,7 @@ class PaneShell {
         const ids = this._ids[side];
         return {
             pane: document.getElementById(ids.pane),
-            btn:  document.getElementById(ids.btn),
+            btn: document.getElementById(ids.btn),
             rail: ids.rail ? document.getElementById(ids.rail) : null,
         };
     }
@@ -156,7 +155,7 @@ class PaneShell {
         this._dividerEl.addEventListener('keydown', (e) => {
             if (this.collapsed.left || this.collapsed.right) return;
             const cur = this._currentPct();
-            if (e.key === 'ArrowLeft')  { this._setCols(Math.max(this._MINPCT, cur - 2)); this._persistCols(); e.preventDefault(); }
+            if (e.key === 'ArrowLeft') { this._setCols(Math.max(this._MINPCT, cur - 2)); this._persistCols(); e.preventDefault(); }
             if (e.key === 'ArrowRight') { this._setCols(Math.min(this._MAXPCT, cur + 2)); this._persistCols(); e.preventDefault(); }
         });
     }

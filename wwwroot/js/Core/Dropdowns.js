@@ -1,7 +1,6 @@
 ﻿// =============================  Dropdowns.js  ============================= //
 
 const Dropdowns = {
-
     // Some markup ids predate the proc column names; when a response key
     // has no directly-matching element, try its legacy alias.
     _ID_ALIASES: { assignedTechName: 'assignedtech', department: 'Department', status: 'rfcStatus' },
@@ -19,7 +18,6 @@ const Dropdowns = {
 
             if (!data) return;
             this._populate(data, group);
-
         } catch (error) {
             console.error('Dropdown load failed:', error);
         }
@@ -94,7 +92,6 @@ const Dropdowns = {
         el.appendChild(fragment);
     },
 
-
     // -------------------------  CR Filter  ------------------------- //
 
     _shouldSkipOption(text, tableName) {
@@ -108,9 +105,7 @@ const Dropdowns = {
         // Non-CR request — skip CR options
         return isCRRequest ? !isCROption : isCROption;
     }
-
 };
-
 
 // -------------------------  Global  ------------------------- //
 

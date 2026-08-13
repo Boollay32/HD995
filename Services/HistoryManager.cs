@@ -1,15 +1,14 @@
 ﻿using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Shared;
-using Microsoft.Data.SqlClient;
 using HelpDeskNet8.Utilities;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace HelpDeskNet8.Services
 {
     public class HistoryManager : List<HistoryListItem>, IHistory
     {
-
         private readonly IDbConnection _connection;
 
         public HistoryManager(IDbConnection connection)
@@ -33,7 +32,6 @@ namespace HelpDeskNet8.Services
                 {
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-
                         this.Clear();
 
                         while (await reader.ReadAsync())
@@ -59,6 +57,5 @@ namespace HelpDeskNet8.Services
 
             return this;
         }
-
     }
 }

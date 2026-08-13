@@ -1,4 +1,5 @@
 ﻿namespace HelpDeskNet8.Models.Projects
 {
-    public class ProjectList : List<ProjectStub> { }
+    public class ProjectList : List<ProjectStub>
+    { }
 }

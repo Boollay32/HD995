@@ -1,20 +1,17 @@
 ﻿using HelpDeskNet8.Interfaces.Attachments;
 using HelpDeskNet8.Utilities;
-using System;
 using System.Data;
-
 
 namespace HelpDeskNet8.Models.Attachments
 {
-
     public class AttachmentStub : IAttachment
-    {        
-        public int AttachmentID { get; set; }        
-        public int NoteID { get; set; }        
-        public int TaskID { get; set; }        
-        public String AttachmentByteArray { get; set; }        
-        public String AttachmentName { get; set; }        
-        public int AttachmentImageType { get; set; }        
+    {
+        public int AttachmentID { get; set; }
+        public int NoteID { get; set; }
+        public int TaskID { get; set; }
+        public String AttachmentByteArray { get; set; }
+        public String AttachmentName { get; set; }
+        public int AttachmentImageType { get; set; }
         public DateTime? AttachmentDate { get; set; }
 
         // Defensively convert the Attachment column to base64 regardless of how

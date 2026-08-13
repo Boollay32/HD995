@@ -1,17 +1,18 @@
 ﻿#region HEADER
+
 //  • GovtechHelpDesk
 //   └ GovtechHelpDesk.Services
 //    └ TicketManager.cs
-// 
+//
 // Created 17/08/2017 11:14
 // Updated 21/08/2017 17:34 by Sam (Sam)
+
 #endregion
 
 using HelpDeskNet8.Infrastructure;
 using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
-using HelpDeskNet8.Models;
 using HelpDeskNet8.Models.Shared;
 using HelpDeskNet8.Models.Tickets;
 using HelpDeskNet8.Utilities;
@@ -20,9 +21,8 @@ using System.Data;
 
 namespace HelpDeskNet8.Services
 {
-
     public class TicketManager : ITicketManager
-    {       
+    {
         private readonly IDbConnection _connection;
 
         public TicketManager(IDbConnection connection)
@@ -144,7 +144,6 @@ namespace HelpDeskNet8.Services
                     return ticket;
                 }
             }
-
             catch (Exception EX)
             {
                 await conn.CloseAsync();
@@ -212,8 +211,6 @@ namespace HelpDeskNet8.Services
                     // sending it caused "too many arguments specified". The
                     // update branch (usp_Helpdesk_UpdateTicket) still sends it.
                 }
-
-
 
                 // Shared parameters
                 command.Parameters.Add(new SqlParameter("@Subject", SqlDbType.NVarChar) { Value = ToSqlValue(ticket.Subject) });
@@ -325,4 +322,3 @@ namespace HelpDeskNet8.Services
         }
     }
 }
-

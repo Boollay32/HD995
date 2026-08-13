@@ -5,80 +5,87 @@
    ============================================================================ */
 
 #Main-Div.create-app {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: calc(100vh - 56px);
-  padding: 16px;
-  box-sizing: border-box;
-  background: var(--canvas);
-  font-family: var(--font-sans);
-  color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: calc(100vh - 56px);
+    padding: 16px;
+    box-sizing: border-box;
+    background: var(--canvas);
+    font-family: var(--font-sans);
+    color: var(--text);
 }
 
 /* ---- Header strip ---- */
 .ca-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  width: 100%;
-  max-width: 680px;
-  margin: 0 auto;
-  box-sizing: border-box;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
 }
 /* ---- Body: single panel ---- */
 .ca-body {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
 }
+
 .ca-panel {
-  width: 100%;
-  max-width: 680px;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
+    width: 100%;
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
 }
+
 .ca-panel-body {
-  flex: 1;
-  min-height: 0;
-  padding: 16px;
-  overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    padding: 16px;
+    overflow-y: auto;
 }
 
 /* ---- Field grid ---- */
 .ca-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 20px;
 }
+
 .create-app .Detail-Div {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
 }
-.create-app .Detail-Div.full {
-  grid-column: 1 / -1;
-}
+
+    .create-app .Detail-Div.full {
+        grid-column: 1 / -1;
+    }
 
 /* ---- Narrow screens: stack, give the page its scroll back ---- */
 @media (max-width: 760px) {
-  #Main-Div.create-app {
-    height: auto;
-    min-height: calc(100vh - 56px);
-  }
-  .ca-grid { grid-template-columns: 1fr; }
+    #Main-Div.create-app {
+        height: auto;
+        min-height: calc(100vh - 56px);
+    }
+
+    .ca-grid {
+        grid-template-columns: 1fr;
+    }
 }

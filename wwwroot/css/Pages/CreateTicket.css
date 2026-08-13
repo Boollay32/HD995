@@ -5,194 +5,220 @@
    ============================================================================ */
 
 #Main-Div.create-app {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: calc(100vh - 56px);
-  padding: 16px;
-  box-sizing: border-box;
-  background: var(--canvas);
-  font-family: var(--font-sans);
-  color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: calc(100vh - 56px);
+    padding: 16px;
+    box-sizing: border-box;
+    background: var(--canvas);
+    font-family: var(--font-sans);
+    color: var(--text);
 }
 
 /* ---- Header strip ---- */
 .ca-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
 }
 /* ---- Body: two panels ---- */
 .ca-body {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 0;
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 0;
 }
+
 .ca-panel {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
 }
+
 .ca-panel-body {
-  flex: 1;
-  min-height: 0;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    flex: 1;
+    min-height: 0;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 /* Custom-fields panel: an in-between surface (between white panel and the
    canvas page background) so it reads as a sub-section of the form. */
 .ca-panel--custom,
 .ca-panel--custom .ca-panel-head {
-  background: var(--row-hover);
+    background: var(--row-hover);
 }
-/* the ONLY scrollbar on the page */
-.ca-panel--custom .ca-panel-body {
-  overflow-y: auto;
-}
+    /* the ONLY scrollbar on the page */
+    .ca-panel--custom .ca-panel-body {
+        overflow-y: auto;
+    }
 
 /* ---- Fields (.Detail-Div structure kept for Form.validate + builder) ---- */
 .create-app .Detail-Div {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
+
 .create-app input[type="checkbox"].Value {
-  width: auto;
+    width: auto;
 }
+
 .create-app textarea.Value {
-  min-height: 96px;
-  max-height: 240px;
-  overflow-y: auto;
-  resize: none;
-  line-height: 1.5;
+    min-height: 96px;
+    max-height: 240px;
+    overflow-y: auto;
+    resize: none;
+    line-height: 1.5;
 }
+
 .create-app #Custom-fields textarea.Value {
-  min-height: 60px;
+    min-height: 60px;
 }
 
 /* ---- Attachments: drop target + chips ---- */
 .create-app #AttachBin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px;
-  font-size: 0.78125rem;
-  color: var(--muted);
-  border: 1.5px dashed var(--border);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: border-color .12s ease, color .12s ease, background .12s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    font-size: 0.78125rem;
+    color: var(--muted);
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color .12s ease, color .12s ease, background .12s ease;
 }
-.create-app #AttachBin:hover,
-.create-app #AttachBin.is-dragover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--row-hover);
-}
+
+    .create-app #AttachBin:hover,
+    .create-app #AttachBin.is-dragover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--row-hover);
+    }
+
 .create-app #ct-attachment-list {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 6px;
 }
+
 .ct-att-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 30px;
-  max-width: 30px;
-  height: 30px;
-  padding: 0;
-  justify-content: center;
-  overflow: hidden;
-  font-family: var(--font-sans);
-  font-size: 0.78125rem;
-  color: var(--text);
-  background: var(--row-hover);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: default;
-  transition: max-width 0.18s ease, background 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 30px;
+    max-width: 30px;
+    height: 30px;
+    padding: 0;
+    justify-content: center;
+    overflow: hidden;
+    font-family: var(--font-sans);
+    font-size: 0.78125rem;
+    color: var(--text);
+    background: var(--row-hover);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: default;
+    transition: max-width 0.18s ease, background 0.15s ease;
 }
+
 .ct-att-icon {
-  flex-shrink: 0;
-  display: inline-flex;
-  font-size: 0.8125rem;
-  line-height: 1;
+    flex-shrink: 0;
+    display: inline-flex;
+    font-size: 0.8125rem;
+    line-height: 1;
 }
+
 .ct-att-name {
-  max-width: 0;
-  opacity: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition: max-width 0.18s ease, opacity 0.12s ease;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: max-width 0.18s ease, opacity 0.12s ease;
 }
-.ct-att-chip > button { display: none; flex-shrink: 0; }
+
+.ct-att-chip > button {
+    display: none;
+    flex-shrink: 0;
+}
+
 .ct-att-chip:hover,
 .ct-att-chip:focus-within {
-  max-width: 280px;
-  padding: 0 8px;
-  justify-content: flex-start;
-  background: var(--panel);
+    max-width: 280px;
+    padding: 0 8px;
+    justify-content: flex-start;
+    background: var(--panel);
 }
-.ct-att-chip:hover .ct-att-name,
-.ct-att-chip:focus-within .ct-att-name {
-  max-width: 200px;
-  opacity: 1;
-}
-.ct-att-chip:hover > button,
-.ct-att-chip:focus-within > button { display: inline-flex; }
+
+    .ct-att-chip:hover .ct-att-name,
+    .ct-att-chip:focus-within .ct-att-name {
+        max-width: 200px;
+        opacity: 1;
+    }
+
+    .ct-att-chip:hover > button,
+    .ct-att-chip:focus-within > button {
+        display: inline-flex;
+    }
+
 @media (prefers-reduced-motion: reduce) {
-  .ct-att-chip,
-  .ct-att-chip .ct-att-name { transition: none; }
+    .ct-att-chip,
+    .ct-att-chip .ct-att-name {
+        transition: none;
+    }
 }
+
 .ct-att-remove {
-  border: none;
-  background: var(--row-hover);
-  color: var(--muted);
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 0.8125rem;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+    border: none;
+    background: var(--row-hover);
+    color: var(--muted);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
-.ct-att-remove:hover {
-  background: var(--danger);
-  color: var(--on-accent);
-}
+
+    .ct-att-remove:hover {
+        background: var(--danger);
+        color: var(--on-accent);
+    }
 
 /* ---- Narrow screens: stack and give the page its scroll back ---- */
 @media (max-width: 900px) {
-  #Main-Div.create-app {
-    height: auto;
-    min-height: calc(100vh - 56px);
-  }
-  .ca-body {
-    grid-template-columns: 1fr;
-  }
-  .ca-panel--custom .ca-panel-body {
-    overflow-y: visible;
-  }
+    #Main-Div.create-app {
+        height: auto;
+        min-height: calc(100vh - 56px);
+    }
+
+    .ca-body {
+        grid-template-columns: 1fr;
+    }
+
+    .ca-panel--custom .ca-panel-body {
+        overflow-y: visible;
+    }
 }
 
 /* Locked project field on the create-ticket form (arriving from a project) */
@@ -207,13 +233,19 @@
 }
 
 /* HD41 1a: attach button sizing is global now (.td-attach-btn in Attachments.css). */
-.ca-attach-row .td-attach-list { margin-top: 0; }
+.ca-attach-row .td-attach-list {
+    margin-top: 0;
+}
 /* Tile spacing halved for this page's attachment list only -- the
    shared .td-attach-list gap (Attachments.css) stays 16px/18px
    everywhere else it's used (messages, notes, tasks). */
-.create-app #ct-attachment-list .td-attach-list { gap: 8px 9px; }
+.create-app #ct-attachment-list .td-attach-list {
+    gap: 8px 9px;
+}
 
 /* Dark-mode calendar icon: date inputs can be injected dynamically via
    CustomFieldBuilder.js depending on request type, so this targets the
    type selector directly rather than a specific field id. */
-html[data-theme="dark"] .create-app input[type="date"] { color-scheme: dark; }
+html[data-theme="dark"] .create-app input[type="date"] {
+    color-scheme: dark;
+}

@@ -23,7 +23,6 @@ class CreateRFC extends PageBase {
 
             this._setupPageUI();
             this._setupEventListeners();
-
         } catch (error) {
             this.handleError('Error initializing create RFC');
         }
@@ -106,7 +105,6 @@ class CreateRFC extends PageBase {
             if (!response) return;
 
             await this._handleCreateSuccess(response, note);
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't create RFC");
@@ -158,7 +156,6 @@ class CreateRFC extends PageBase {
         // The description becomes the RFC's first note, now CARRYING the
         // attachments (previously null was passed and files were lost).
         await SaveOriginalNote(this.files, true, note, newRfcId);
-
 
         UI.flash?.(`${message} RFC ${newRfcId}`, 'success');
         Router.toRFC();

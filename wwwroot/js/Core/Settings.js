@@ -12,7 +12,7 @@ const Settings = {
     open: false,
 
     _panel() { return document.getElementById('qv-settings-panel'); },
-    _btn()   { return document.getElementById('qv-settings-btn'); },
+    _btn() { return document.getElementById('qv-settings-btn'); },
 
     show() {
         const p = this._panel(), b = this._btn();
@@ -39,28 +39,28 @@ const Settings = {
         wrap.id = 'qv-settings';
         wrap.innerHTML =
             '<button type="button" class="qv-settings-btn" id="qv-settings-btn" ' +
-                'aria-label="Settings" aria-expanded="false" aria-controls="qv-settings-panel">' +
-                this.GEAR + '</button>' +
+            'aria-label="Settings" aria-expanded="false" aria-controls="qv-settings-panel">' +
+            this.GEAR + '</button>' +
             '<div class="qv-settings-panel" id="qv-settings-panel" hidden>' +
-                '<div class="qv-set-title">Settings</div>' +
-                '<div class="qv-set-row">' +
-                    '<span class="qv-set-lbl">Dark mode</span>' +
-                    '<span class="qv-set-slot" data-set-slot="theme"></span>' +
-                '</div>' +
-                '<div class="qv-set-row">' +
-                    '<span class="qv-set-lbl">Text size</span>' +
-                    '<span class="qv-set-slot" data-set-slot="font"></span>' +
-                '</div>' +
-                '<div class="qv-set-row">' +
-                    '<span class="qv-set-lbl">Tab highlight' +
-                        '<small>focus outline when tabbing</small></span>' +
-                    '<span class="qv-set-slot" data-set-slot="tabfocus"></span>' +
-                '</div>' +
-                '<div class="qv-set-row">' +
-                    '<span class="qv-set-lbl">Snow' +
-                        '<small>festive flakes on the nav bar</small></span>' +
-                    '<span class="qv-set-slot" data-set-slot="snow"></span>' +
-                '</div>' +
+            '<div class="qv-set-title">Settings</div>' +
+            '<div class="qv-set-row">' +
+            '<span class="qv-set-lbl">Dark mode</span>' +
+            '<span class="qv-set-slot" data-set-slot="theme"></span>' +
+            '</div>' +
+            '<div class="qv-set-row">' +
+            '<span class="qv-set-lbl">Text size</span>' +
+            '<span class="qv-set-slot" data-set-slot="font"></span>' +
+            '</div>' +
+            '<div class="qv-set-row">' +
+            '<span class="qv-set-lbl">Tab highlight' +
+            '<small>focus outline when tabbing</small></span>' +
+            '<span class="qv-set-slot" data-set-slot="tabfocus"></span>' +
+            '</div>' +
+            '<div class="qv-set-row">' +
+            '<span class="qv-set-lbl">Snow' +
+            '<small>festive flakes on the nav bar</small></span>' +
+            '<span class="qv-set-slot" data-set-slot="snow"></span>' +
+            '</div>' +
             '</div>';
         bar.insertBefore(wrap, bar.firstChild);
 

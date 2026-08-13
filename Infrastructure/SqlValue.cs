@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HelpDeskNet8.Infrastructure
+﻿namespace HelpDeskNet8.Infrastructure
 {
     /// <summary>
     /// Helpers for producing ADO.NET parameter values.

@@ -2,201 +2,228 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 /* :focus-visible / .skip-link / reduced-motion now come from tokens.css only (theme-aware; this
    page used to shadow them with hardcoded, non-theme-aware colors). */
 html,
 body {
-  height: 100%;
-  overflow: hidden;
+    height: 100%;
+    overflow: hidden;
 }
+
 body {
-  font-family: "Spline Sans", system-ui, sans-serif;
-  background: var(--td-row);
-  color: var(--td-text);
-  font-size: 0.875rem;
-  line-height: 1.45;
-  -webkit-font-smoothing: antialiased;
+    font-family: "Spline Sans", system-ui, sans-serif;
+    background: var(--td-row);
+    color: var(--td-text);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
 }
+
 .hidden {
-  display: none !important;
+    display: none !important;
 }
+
 @keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }
 /* Author display:flex beats the UA [hidden] rule — hide explicitly, like
    .td-ws-inner[hidden] below. Without this, single-pane layouts (left-only /
    right-only) render both panes stacked in the one grid column. */
 .td-unread-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 20px;
-  background: var(--accent);
-  color: var(--on-accent);
-  font-family: "Spline Sans Mono", ui-monospace, monospace;
-  font-size: 0.65625rem;
-  font-weight: 700;
-  animation: rise 0.25s ease both;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 20px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: "Spline Sans Mono", ui-monospace, monospace;
+    font-size: 0.65625rem;
+    font-weight: 700;
+    animation: rise 0.25s ease both;
 }
+
 .td-pane--left.is-collapsed .td-pane-head,
 .td-pane--right.is-collapsed .td-pane-head {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 12px 0;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--td-border-2);
-  background: var(--td-surface);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 12px 0;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--td-border-2);
+    background: var(--td-surface);
 }
+
 .td-tab-pip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  border-radius: 20px;
-  background: var(--accent);
-  color: var(--on-accent);
-  font-family: "Spline Sans Mono", ui-monospace, monospace;
-  font-size: 0.625rem;
-  font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 20px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: "Spline Sans Mono", ui-monospace, monospace;
+    font-size: 0.625rem;
+    font-weight: 700;
 }
+
 .td-ws-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
 }
+
 .td-ws-inner {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px;
-  gap: 12px;
-  animation: rise 0.25s ease both;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scroll-thumb) transparent;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px;
+    gap: 12px;
+    animation: rise 0.25s ease both;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
 }
-.td-ws-inner::-webkit-scrollbar {
-  width: 8px;
-}
-.td-ws-inner::-webkit-scrollbar-track {
-  background: transparent;
-}
-.td-ws-inner::-webkit-scrollbar-thumb {
-  background: var(--scroll-thumb);
-  border-radius: 99px;
-}
-.td-ws-inner::-webkit-scrollbar-thumb:hover {
-  background: var(--scroll-thumb-hover);
-}
-.td-ws-inner[hidden] {
-  display: none;
-}
+
+    .td-ws-inner::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .td-ws-inner::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .td-ws-inner::-webkit-scrollbar-thumb {
+        background: var(--scroll-thumb);
+        border-radius: 99px;
+    }
+
+        .td-ws-inner::-webkit-scrollbar-thumb:hover {
+            background: var(--scroll-thumb-hover);
+        }
+
+    .td-ws-inner[hidden] {
+        display: none;
+    }
+
 .td-thread {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px 16px 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--scroll-thumb) transparent;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
 }
-.td-thread::-webkit-scrollbar {
-  width: 8px;
-}
-.td-thread::-webkit-scrollbar-track {
-  background: transparent;
-}
-.td-thread::-webkit-scrollbar-thumb {
-  background: var(--scroll-thumb);
-  border-radius: 99px;
-}
-.td-thread::-webkit-scrollbar-thumb:hover {
-  background: var(--scroll-thumb-hover);
-}
+
+    .td-thread::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .td-thread::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .td-thread::-webkit-scrollbar-thumb {
+        background: var(--scroll-thumb);
+        border-radius: 99px;
+    }
+
+        .td-thread::-webkit-scrollbar-thumb:hover {
+            background: var(--scroll-thumb-hover);
+        }
 /* .td-thread-empty now comes from NoteThread.css only (identical, plus max-height) */
 /* .td-notify-banner removed with NotifyBanner (2026-08 audit) */
 .td-scope-note {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: var(--td-warn-bg);
-  border: 1px solid var(--td-warn-2);
-  border-radius: 10px;
-  font-size: 0.71875rem;
-  font-weight: 600;
-  color: var(--td-warn);
-  flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--td-warn-bg);
+    border: 1px solid var(--td-warn-2);
+    border-radius: 10px;
+    font-size: 0.71875rem;
+    font-weight: 600;
+    color: var(--td-warn);
+    flex-shrink: 0;
 }
-/* HD36 1c: display:flex above beats the UA [hidden] rule, so the banner
+    /* HD36 1c: display:flex above beats the UA [hidden] rule, so the banner
    showed even with the `hidden` attribute -- and a client (whose scope
    config is null) then saw an internal-only reminder it could not dismiss.
    Guard it like .td-ws-inner[hidden] so `hidden` actually hides it. */
-.td-scope-note[hidden] {
-  display: none;
-}
-/* Scope-reminder text fills the row; the dismiss button is pinned to the right
+    .td-scope-note[hidden] {
+        display: none;
+    }
+    /* Scope-reminder text fills the row; the dismiss button is pinned to the right
    as a distinct, clickable target (HD34 1b -- it had no styling, so it was hard
    to hit). */
-.td-scope-note .td-scope-text { flex: 1; min-width: 0; }
+    .td-scope-note .td-scope-text {
+        flex: 1;
+        min-width: 0;
+    }
+
 .td-scope-dismiss {
-  flex-shrink: 0;
-  margin-left: auto;
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  line-height: 1;
-  color: var(--td-warn);
-  background: none;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  padding: 0;
+    flex-shrink: 0;
+    margin-left: auto;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--td-warn);
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 0;
 }
-.td-scope-dismiss:hover { background: var(--td-warn-2); color: var(--td-text); }
+
+    .td-scope-dismiss:hover {
+        background: var(--td-warn-2);
+        color: var(--td-text);
+    }
 /* .td-note-thread now comes from NoteThread.css only (identical) */
 .td-note-card.is-visible-to-client {
-  border-left: 3px solid var(--brand);
+    border-left: 3px solid var(--brand);
 }
+
 .td-note-visible-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.625rem;
-  font-weight: 700;
-  color: var(--brand);
-  background: var(--brand-pale);
-  padding: 3px 7px;
-  border-radius: 20px;
-  letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: var(--brand);
+    background: var(--brand-pale);
+    padding: 3px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
 }
 /* flex-direction/align-items match NoteThread.css's intended layout --
    kept explicit here too so it doesn't depend on file load order (this
@@ -209,103 +236,119 @@ body {
    composer sits above the thread, needing space below it, unlike
    NoteThread.css's default margin-top. */
 .td-note-compose {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 8px;
-  background: var(--panel);
-  border: 1px solid var(--border-strong);
-  border-radius: 14px;
-  padding: 8px 8px 8px 14px;
-  margin-bottom: 8px;
-  flex-shrink: 0;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 8px 8px 8px 14px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+
 .td-visibility-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  display: grid;
-  place-items: center;
-  color: var(--td-muted);
-  border: 1px solid var(--td-border);
-  background: none;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    color: var(--td-muted);
+    border: 1px solid var(--td-border);
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.td-visibility-btn:hover {
-  background: var(--td-border-2);
-  color: var(--td-text);
-}
-.td-visibility-btn[aria-pressed="true"] {
-  background: var(--brand-pale);
-  color: var(--brand);
-  border-color: var(--brand);
-}
+
+    .td-visibility-btn:hover {
+        background: var(--td-border-2);
+        color: var(--td-text);
+    }
+
+    .td-visibility-btn[aria-pressed="true"] {
+        background: var(--brand-pale);
+        color: var(--brand);
+        border-color: var(--brand);
+    }
+
 .td-field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: var(--td-panel);
-  border: 1px solid var(--td-border-2);
-  border-radius: 10px;
-  padding: 14px;
-  box-shadow: inset 0 1px 0 var(--lift-hl), 0 1px 2px rgba(20, 18, 15, 0.04), 0 6px 18px rgba(20, 18, 15, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--td-panel);
+    border: 1px solid var(--td-border-2);
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: inset 0 1px 0 var(--lift-hl), 0 1px 2px rgba(20, 18, 15, 0.04), 0 6px 18px rgba(20, 18, 15, 0.05);
 }
-/* HD43 Ticket-a: author display:flex above beats the UA [hidden] rule, so
+    /* HD43 Ticket-a: author display:flex above beats the UA [hidden] rule, so
    guard it explicitly -- when the Details empty-state shows, the empty
    custom-fields group must not render its box (matches .td-ws-inner[hidden]). */
-.td-field-group[hidden] { display: none; }
+    .td-field-group[hidden] {
+        display: none;
+    }
+
 .td-dl {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
+
 .td-field {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  align-items: center;
-  gap: 12px;
-  min-height: 32px;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: 12px;
+    min-height: 32px;
 }
-.td-field dt {
-  font-size: 0.71875rem;
-  font-weight: 600;
-  color: var(--td-muted);
-  white-space: nowrap;
-}
-.td-field dd {
-  min-width: 0;
-}
+
+    .td-field dt {
+        font-size: 0.71875rem;
+        font-weight: 600;
+        color: var(--td-muted);
+        white-space: nowrap;
+    }
+
+    .td-field dd {
+        min-width: 0;
+    }
+
 .td-form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.td-form-field label {
-  font-size: 0.71875rem;
-  font-weight: 700;
-  color: var(--td-muted-2);
-}
-.td-form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-@media (max-width: 860px) {
-  .td-form-row {
-    grid-template-columns: 1fr;
-  }
-}
-@media (max-width: 560px) {
-  .td-field {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 4px;
-  }
-  .td-field dt {
-    font-size: 0.65625rem;
-  }
+}
+
+    .td-form-field label {
+        font-size: 0.71875rem;
+        font-weight: 700;
+        color: var(--td-muted-2);
+    }
+
+.td-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 860px) {
+    .td-form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .td-field {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+        .td-field dt {
+            font-size: 0.65625rem;
+        }
 }
 
 /* Collapse: the shell is a grid, so a collapsed pane's width:48px alone
@@ -317,84 +360,124 @@ body {
    those rows to match the Classification / Dates field layout (dt/dd + select)
    so Additional Info reads consistently with the rest of the panel. */
 #CustomFields-Container .Detail-Div {
-  display: grid;
-  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
-  align-items: center;
-  gap: 10px 16px;
-  margin: 0;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--td-border-2, var(--border));
+    display: grid;
+    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+    align-items: center;
+    gap: 10px 16px;
+    margin: 0;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--td-border-2, var(--border));
 }
-#CustomFields-Container .Detail-Div:last-child { border-bottom: 0; }
-#CustomFields-Container .Detail-Div .left { margin: 0; }
-#CustomFields-Container .Detail-Div .left .Name {
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--td-muted, var(--muted));
-}
-#CustomFields-Container .Detail-Div .right { width: 100%; }
-/* Match the .td-select / .td-input look for the injected controls. */
-#CustomFields-Container .Detail-Div .Value {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 6px 10px;
-  font: inherit;
-  color: var(--td-text, var(--text));
-  background: var(--td-surface, var(--panel));
-  border: 1px solid var(--td-border-2, var(--border));
-  border-radius: 7px;
-}
-#CustomFields-Container .Detail-Div .Value:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--row-hover);
-}
-#CustomFields-Container .Detail-Div textarea.Value { min-height: 64px; resize: vertical; }
+
+    #CustomFields-Container .Detail-Div:last-child {
+        border-bottom: 0;
+    }
+
+    #CustomFields-Container .Detail-Div .left {
+        margin: 0;
+    }
+
+        #CustomFields-Container .Detail-Div .left .Name {
+            margin: 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--td-muted, var(--muted));
+        }
+
+    #CustomFields-Container .Detail-Div .right {
+        width: 100%;
+    }
+    /* Match the .td-select / .td-input look for the injected controls. */
+    #CustomFields-Container .Detail-Div .Value {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px 10px;
+        font: inherit;
+        color: var(--td-text, var(--text));
+        background: var(--td-surface, var(--panel));
+        border: 1px solid var(--td-border-2, var(--border));
+        border-radius: 7px;
+    }
+
+        #CustomFields-Container .Detail-Div .Value:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--row-hover);
+        }
+
+    #CustomFields-Container .Detail-Div textarea.Value {
+        min-height: 64px;
+        resize: vertical;
+    }
 
 /* save success: brief ring pulse on the Save button (point-of-action cue) */
 @keyframes save-ring {
-  0% { box-shadow: 0 0 0 0 var(--accent); }
-  100% { box-shadow: 0 0 0 10px transparent; }
+    0% {
+        box-shadow: 0 0 0 0 var(--accent);
+    }
+
+    100% {
+        box-shadow: 0 0 0 10px transparent;
+    }
 }
-.saved-flash { animation: save-ring 0.6s ease; }
+
+.saved-flash {
+    animation: save-ring 0.6s ease;
+}
 
 /* Group-1: details panel top padding + relocated ticket subject */
-#tabpanel-details { padding-top: 18px; }
+#tabpanel-details {
+    padding-top: 18px;
+}
+
 .td-details-subject {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  color: var(--td-text);
-  overflow-wrap: anywhere;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--td-text);
+    overflow-wrap: anywhere;
 }
 
 /* Group-2 step 2: task attachments use the standard chip + paperclip */
-.td-att-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.td-att-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
 
 /* 1d/1g: dropdown affordance on editable meta pills (status/priority/category).
    The pill is inline-flex with gap, so this chevron sits after the label. */
 
 /* 1c: labels on the collapsed slim overview summary */
 
-
 /* ===== HD38 ticket-details fixes ===== */
 
 /* #1 Notes-Compose flush to the bottom of the notes panel (was a gap from the
    tab panel's bottom padding sitting under the composer). */
-#TicketDetails-App #tabpanel-notes { padding-bottom: 0; }
-/* Mirrors RFCDetails.css's .rfc-notes-body .td-note-thread override:
+#TicketDetails-App #tabpanel-notes {
+    padding-bottom: 0;
+}
+    /* Mirrors RFCDetails.css's .rfc-notes-body .td-note-thread override:
    the shared 460px cap (NoteThread.css) stops the thread from filling
    available space on a tall viewport, leaving a gap above compose. */
-#TicketDetails-App #tabpanel-notes .td-note-thread { max-height: none; }
+    #TicketDetails-App #tabpanel-notes .td-note-thread {
+        max-height: none;
+    }
 
 /* #3 Activity tab scrollbar: make it visible and ~50% wider than the default
    8px workspace scrollbar. */
-#TicketDetails-App #tabpanel-activity { scrollbar-width: auto; }
-#TicketDetails-App #tabpanel-activity::-webkit-scrollbar { width: 12px; }
-#TicketDetails-App #tabpanel-activity::-webkit-scrollbar-thumb {
-  background: var(--scroll-thumb);
-  border-radius: 99px;
+#TicketDetails-App #tabpanel-activity {
+    scrollbar-width: auto;
 }
+
+    #TicketDetails-App #tabpanel-activity::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    #TicketDetails-App #tabpanel-activity::-webkit-scrollbar-thumb {
+        background: var(--scroll-thumb);
+        border-radius: 99px;
+    }

@@ -31,14 +31,13 @@ window.onload = function () {
     const peekBtn = document.getElementById("pass-peek");
     const passField = document.getElementById("pass");
     if (peekBtn && passField) {
-        const reveal  = () => { passField.type = "text";     peekBtn.classList.add("is-peeking"); };
+        const reveal = () => { passField.type = "text"; peekBtn.classList.add("is-peeking"); };
         const conceal = () => { passField.type = "password"; peekBtn.classList.remove("is-peeking"); };
         peekBtn.addEventListener("pointerdown", e => { e.preventDefault(); reveal(); });
         ["pointerup", "pointerleave", "pointercancel"].forEach(ev => peekBtn.addEventListener(ev, conceal));
         window.addEventListener("blur", conceal);
-    }    
+    }
 };
-
 
 // =============================  Login Functions  ============================= //
 
@@ -64,7 +63,7 @@ async function enterApp() {
     try { level = String(await Auth.getAdminLevel()); } catch (e) { /* fail closed */ }
     const destination = (level === "1" || level === "2") ? "Dashboard"
         : level === "4" ? "RFC"
-        : "TicketPage";
+            : "TicketPage";
     OkayButtonPress(destination);
 }
 
@@ -118,7 +117,6 @@ async function Login(form, e) {
 
         if (data.status === LOGIN_STATUS.DEFAULT_PASSWORD) defaultPassword = pass;
         HandleStatusLogin(data.status);
-
     } catch (error) {
         console.error('Login error:', error);
         BuildMessageBox("Failed to Connect to server, please contact Govtech for assistance.");
@@ -185,7 +183,7 @@ function HandleStatusLogin(status) {
             sessionStorage.setItem("Status", 1);
             return;
     }
-       
+
     document.getElementById("Login-Container").classList.remove("active");
     document.getElementById("SecondWall-Container").classList.add("active");
 }
@@ -211,9 +209,10 @@ async function SecondWallAuth() {
     try {
         const response = await fetch("/api/Login/SecondWallAuth", {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            // Fix: PIN + email in body — not headers
-            // Fix: typed properties — not array indexes
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
             body: JSON.stringify({ email, pin: parseInt(pin), UTC })
         });
 
@@ -242,7 +241,6 @@ async function SecondWallAuth() {
         } else {
             BuildMessageBox("Incorrect Credentials", "Index");
         }
-
     } catch (error) {
         console.error('SecondWallAuth error:', error);
         BuildMessageBox("Incorrect Credentials", "Index");
@@ -378,9 +376,13 @@ async function RequestPasswordReset() {
     try {
         await fetch("/api/Login/RequestPasswordReset", {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
             body: JSON.stringify({ userName: uname, pin: parseInt(pin, 10) })
         });
+
         BuildMessageBox(RESET_GENERIC_MSG);
         ResetRequestBack();
     } catch (error) {

@@ -19,7 +19,6 @@ class PageBase {
         this.filterType = filterType;
     }
 
-
     // -------------------------  Auth  ------------------------- //
 
     async checkAuth() {
@@ -31,8 +30,6 @@ class PageBase {
     }
 
     // -------------------------  Notifications  ------------------------- //
-
-
 
     // -------------------------  Navigation  ------------------------- //
 
@@ -149,7 +146,6 @@ class PageBase {
                 const el = this.createFilterField(field, allDropdowns);
                 if (el) container.appendChild(el);
             }
-
         } catch (error) {
             console.error('Filter build failed:', error);
             container.innerHTML = '<div class="filter-error">Failed to load filters</div>';

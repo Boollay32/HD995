@@ -7,7 +7,6 @@
 'use strict';
 
 class UserSave extends PageBase {
-
     constructor() {
         super();
     }
@@ -37,17 +36,14 @@ class UserSave extends PageBase {
 
             UI.flash?.('User has been updated', 'success');
             Router.toUserDetails();
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't update user.");
             }
         }
     }
-
     async manageUser() {
         try {
-            // HD40 7b: phone must be a valid format when provided.
             const phoneInput = document.getElementById('UserPhone');
             if (phoneInput && !Form.isValidPhone(phoneInput.value)) {
                 phoneInput.classList.add('field-invalid');
@@ -58,15 +54,10 @@ class UserSave extends PageBase {
             const phone = document.getElementById('UserPhone')?.value;
             const userLogin = this._requireLogin();
             if (!userLogin) return;
-            // ManageUserRequest declares these as C# strings; STJ rejects JSON
-            // numbers for string props (400), so send the raw select values.
-            //
-            // Lock state: the main Save must NOT touch it. usp_Helpdesk_UserManage
-            // unlocks on ANY @UnlockUser value (including 0) and only leaves the
-            // lock alone when @UnlockUser is NULL -- so we OMIT unlockUser here.
-            // (The controller now maps an absent value to NULL, not 0.) Only the
-            // dedicated Unlock button sends a value. HD35 locked-user fix.
             const adminLevelId = document.getElementById('AdminLevel')?.value || '0';
+
+            console.log('ManageUser payload:', { userLogin, adminLevelId, phone });
+            debugger; 
 
             await API.post('User/ManageUser', API.authPayload({
                 userLogin,
@@ -76,7 +67,6 @@ class UserSave extends PageBase {
 
             UI.flash?.('User has been updated', 'success');
             Router.toUserDetails();
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't manage user.");
@@ -113,7 +103,6 @@ class UserSave extends PageBase {
 
             UI.flash?.('User has been reactivated', 'success');
             Router.toUserPage();
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't reactivate user.");
@@ -144,7 +133,6 @@ class UserSave extends PageBase {
 
             UI.flash?.('User has been unlocked', 'success');
             Router.toUserDetails();
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't unlock user.");
@@ -178,11 +166,10 @@ class UserSave extends PageBase {
 
             const raw = (typeof data === 'string') ? data.trim() : String(data ?? '');
             const [pin, tempPass] = raw.split('|');
-            const msg = (/^\d+$/.test(pin) && tempPass)
+            const msg = (/^\d{1,20}$/.test(pin) && tempPass)
                 ? `Password and PIN reset.\n\nNew PIN: ${pin}\n\nTemporary password: ${tempPass}\n\nGive both to the user. They'll be asked to set a new password on next login.`
                 : `Reset ${data}`;
             MessageBox.show(msg, 'UserPage');
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't reset user.");
@@ -216,7 +203,6 @@ class UserSave extends PageBase {
 
             UI.flash?.(data, 'success');
             Router.toUserPage();
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't delete user.");

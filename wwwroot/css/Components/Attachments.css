@@ -10,41 +10,46 @@
    Loaded globally from _Layout so every page shares one definition.
    ==================================================================== */
 .td-attach-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 18px;
-  margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 18px;
+    margin-top: 8px;
 }
-/* The hidden attribute must actually hide: the display:flex author rule
+    /* The hidden attribute must actually hide: the display:flex author rule
    above otherwise overrides the UA [hidden] { display:none }, leaving
    "hidden" chip lists visible (seen as a duplicated attachment below the
    note editor). */
-.td-attach-list[hidden] { display: none; }
+    .td-attach-list[hidden] {
+        display: none;
+    }
+
 .td-attach {
-  position: relative;
-  display: inline-flex;
+    position: relative;
+    display: inline-flex;
 }
+
 .td-attach-tile {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  background: var(--td-surface, var(--row-hover, #f1f1f1));
-  border: 1px solid var(--td-border, var(--border, #d9d9d9));
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.0625rem;
-  line-height: 1;
-  color: var(--td-muted-2, var(--muted, #6a6a6a));
-  text-decoration: none;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--td-surface, var(--row-hover, #f1f1f1));
+    border: 1px solid var(--td-border, var(--border, #d9d9d9));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.0625rem;
+    line-height: 1;
+    color: var(--td-muted-2, var(--muted, #6a6a6a));
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-.td-attach-tile:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--on-accent);
-}
+
+    .td-attach-tile:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--on-accent);
+    }
 
 /* HD41 1a: canonical attachment ADD button -- the single definition shared
    by the note composer, note edit, task editor and create forms. Mirrors
@@ -52,92 +57,103 @@
    pins box-sizing so it renders 34px whether or not the host page carries
    a universal reset. Works for both <label> and <button> hosts. */
 .td-attach-btn {
-  box-sizing: border-box;
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  background: var(--td-surface, var(--row-hover, #f1f1f1));
-  border: 1px solid var(--td-border, var(--border, #d9d9d9));
-  display: grid;
-  place-items: center;
-  padding: 0;
-  flex-shrink: 0;
-  font: inherit;
-  appearance: none;
-  color: var(--td-muted-2, var(--muted, #6a6a6a));
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    box-sizing: border-box;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--td-surface, var(--row-hover, #f1f1f1));
+    border: 1px solid var(--td-border, var(--border, #d9d9d9));
+    display: grid;
+    place-items: center;
+    padding: 0;
+    flex-shrink: 0;
+    font: inherit;
+    appearance: none;
+    color: var(--td-muted-2, var(--muted, #6a6a6a));
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
-.td-attach-btn:hover {
-  border-color: var(--td-border-2, var(--border-strong, #b9b9b9));
-  color: var(--td-text, var(--text, #1c1c1c));
-}
+
+    .td-attach-btn:hover {
+        border-color: var(--td-border-2, var(--border-strong, #b9b9b9));
+        color: var(--td-text, var(--text, #1c1c1c));
+    }
+
 .td-attach-pop {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  /* HD37 1b: anchor the popup's LEFT edge to the tile (in line with the icon)
+    position: absolute;
+    bottom: calc(100% + 8px);
+    /* HD37 1b: anchor the popup's LEFT edge to the tile (in line with the icon)
      so it grows rightward into the pane instead of spilling off-screen left,
      and keep it HORIZONTAL on one line (nowrap -- the HD36 wrap made it go
      vertical). */
-  left: 0;
-  white-space: nowrap;
-  background: var(--td-text, #1c1c1c);
-  color: var(--td-panel, #ffffff);
-  font-size: 0.6875rem;
-  padding: 5px 9px;
-  border-radius: 7px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.12s ease;
-  z-index: 5;
+    left: 0;
+    white-space: nowrap;
+    background: var(--td-text, #1c1c1c);
+    color: var(--td-panel, #ffffff);
+    font-size: 0.6875rem;
+    padding: 5px 9px;
+    border-radius: 7px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s ease;
+    z-index: 5;
 }
-.td-attach-pop::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  /* Align the arrow with the tile (popup is now left-anchored). */
-  left: 16px;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: var(--td-text, #1c1c1c);
-}
+
+    .td-attach-pop::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        /* Align the arrow with the tile (popup is now left-anchored). */
+        left: 16px;
+        transform: translateX(-50%);
+        border: 5px solid transparent;
+        border-top-color: var(--td-text, #1c1c1c);
+    }
+
 .td-attach-pop-sz {
-  opacity: 0.6;
-  margin-left: 6px;
+    opacity: 0.6;
+    margin-left: 6px;
 }
+
 .td-attach:hover .td-attach-pop {
-  opacity: 1;
+    opacity: 1;
 }
+
 .td-attach-x {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  border: 1px solid var(--td-border-2, var(--border-strong, #b9b9b9));
-  background: var(--td-panel, #ffffff);
-  color: var(--td-muted, var(--muted, #6a6a6a));
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  opacity: 0;
-  transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
-  z-index: 6;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    border: 1px solid var(--td-border-2, var(--border-strong, #b9b9b9));
+    background: var(--td-panel, #ffffff);
+    color: var(--td-muted, var(--muted, #6a6a6a));
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+    z-index: 6;
 }
+
 .td-attach.is-removable:hover .td-attach-x {
-  opacity: 1;
+    opacity: 1;
 }
+
 .td-attach-x:hover {
-  background: #fbeaea;
-  color: #b3261e;
-  border-color: #b3261e;
+    background: #fbeaea;
+    color: #b3261e;
+    border-color: #b3261e;
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .td-attach-pop,
-  .td-attach-x,
-  .td-attach-btn,
-  .td-attach-tile { transition: none; }
+    .td-attach-pop,
+    .td-attach-x,
+    .td-attach-btn,
+    .td-attach-tile {
+        transition: none;
+    }
 }

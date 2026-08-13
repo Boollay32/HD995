@@ -16,7 +16,7 @@ namespace HelpDeskNet8.Controllers.Shared
         [HttpPost]
         public async Task<IActionResult> GetStats([FromBody] GetStatsRequest request)
         {
-    IUser user = this.GetAuthenticatedUser();
+            IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
             return Ok(await _reportsManager.GetStats(request.StatsId));

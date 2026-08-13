@@ -41,7 +41,7 @@ namespace HelpDeskNet8.Controllers.Shared
         [HttpPost]
         public async Task<IActionResult> GetFilterItems([FromBody] GetFilterItemsRequest request)
         {
-    IUser user = this.GetAuthenticatedUser();
+            IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
             var filterTable = await _miscManager.GetFilterItems(request.Group);
@@ -57,7 +57,7 @@ namespace HelpDeskNet8.Controllers.Shared
         [HttpPost]
         public async Task<IActionResult> GetDropDownList([FromBody] GetDropDownListRequest request)
         {
-    IUser user = this.GetAuthenticatedUser();
+            IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
 
             var dropdowns = await _dropDownManager.GetDropDowns(user, request.Filter, request.Group);
@@ -88,6 +88,5 @@ namespace HelpDeskNet8.Controllers.Shared
 
             return Ok(grouped);
         }
-
     }
 }

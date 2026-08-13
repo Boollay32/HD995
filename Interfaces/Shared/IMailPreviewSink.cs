@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace HelpDeskNet8.Interfaces.Shared
+﻿namespace HelpDeskNet8.Interfaces.Shared
 {
     // One email captured for the in-browser "who was notified" popup.
     // Sent records whether the real SMTP send also happened (live) or
@@ -21,7 +19,9 @@ namespace HelpDeskNet8.Interfaces.Shared
     {
         bool Enabled { get; }
         bool SendEnabled { get; }
+
         void Add(string point, string[] recipients, string subject, string body, bool sent);
+
         IReadOnlyList<MailPreviewEntry> Entries { get; }
     }
 }

@@ -7,7 +7,7 @@
 
 const PersistedToggle = {
     get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
-    set(key, v) { try { localStorage.setItem(key, v); } catch (e) {} },
+    set(key, v) { try { localStorage.setItem(key, v); } catch (e) { } },
 
     // Retries mountFn() every 50ms (up to 3s) until it both returns truthy
     // and doneSelector is present in the DOM, then stops.

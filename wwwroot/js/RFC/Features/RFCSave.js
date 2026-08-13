@@ -32,7 +32,6 @@ class RFCSave extends PageBase {
                 visibility,
                 autoSave
             });
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't Save RFC", 'RFCDetails');

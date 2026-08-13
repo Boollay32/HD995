@@ -1,9 +1,9 @@
-﻿using HelpDeskNet8.Interfaces.Shared;
+﻿using HelpDeskNet8.Infrastructure;
+using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Shared;
 using HelpDeskNet8.Models.Users;
 using HelpDeskNet8.Utilities;
-using HelpDeskNet8.Infrastructure;
 using Microsoft.Data.SqlClient;
 using System.Data;
 

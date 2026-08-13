@@ -8,15 +8,15 @@
 const TQ_PRIORITY_COLOR = { Urgent: 'var(--pri-urgent)', High: 'var(--pri-high)', Normal: 'var(--pri-normal)', Low: 'var(--pri-low)' };
 const TQ_PRIORITY_ORDER = { Urgent: 0, High: 1, Normal: 2, Low: 3 };
 const TQ_STATUS_COLOR = {
-    Open:      ['var(--info-fg)', 'var(--info-bg)'],
-    Pending:   ['var(--warn-fg)', 'var(--warn-bg)'],
+    Open: ['var(--info-fg)', 'var(--info-bg)'],
+    Pending: ['var(--warn-fg)', 'var(--warn-bg)'],
     'On Hold': ['var(--neutral-fg)', 'var(--neutral-bg)'],
-    Closed:    ['var(--accent-2)', 'var(--accent-2-bg)'],
-    Resolved:  ['var(--ok-fg)', 'var(--ok-bg)'],
+    Closed: ['var(--accent-2)', 'var(--accent-2-bg)'],
+    Resolved: ['var(--ok-fg)', 'var(--ok-bg)'],
     Cancelled: ['var(--neutral-fg)', 'var(--neutral-bg)'],
-    'CR Open':      ['var(--info-fg)', 'var(--info-bg)'],
-    'CR Assigned':  ['var(--warn-fg)', 'var(--warn-bg)'],
-    'CR Complete':  ['var(--ok-fg)', 'var(--ok-bg)'],
+    'CR Open': ['var(--info-fg)', 'var(--info-bg)'],
+    'CR Assigned': ['var(--warn-fg)', 'var(--warn-bg)'],
+    'CR Complete': ['var(--ok-fg)', 'var(--ok-bg)'],
     'CR Withdrawn': ['var(--neutral-fg)', 'var(--neutral-bg)'],
 };
 // Terminal statuses (labels confirmed against tblStatus). Everything else is open.
@@ -92,15 +92,15 @@ class IncidentPage extends PageBase {
             search: ['subject', 'userName', 'ticketID'],
 
             views: [
-                { id: 'all',   label: 'All open',     filter: r => TQisOpen(r) },
+                { id: 'all', label: 'All open', filter: r => TQisOpen(r) },
                 { id: 'reply', label: 'Needs reply', filter: r => r.notify === '0' && TQisOpen(r) },
                 { id: 'nonactive', label: 'Non Active', filter: r => !TQisOpen(r) },
             ],
 
             filters: [
-                { id: 'type', label: 'Type',     field: 'requestType' },
+                { id: 'type', label: 'Type', field: 'requestType' },
                 { id: 'prio', label: 'Priority', field: 'priority' },
-                { id: 'stat', label: 'Status',   field: 'status' },
+                { id: 'stat', label: 'Status', field: 'status' },
             ],
 
             columns: [

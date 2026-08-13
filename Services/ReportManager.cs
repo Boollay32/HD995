@@ -1,7 +1,7 @@
 ﻿using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Models.Shared;
-using Microsoft.Data.SqlClient;
 using HelpDeskNet8.Utilities;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace HelpDeskNet8.Services

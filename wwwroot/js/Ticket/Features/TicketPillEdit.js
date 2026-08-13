@@ -7,9 +7,9 @@
     'use strict';
 
     var PAIRS = [
-        { pill: 'meta-status',   select: 'status',   led: true,  cls: 'statusClass',   lbl: 'statusLabel' },
+        { pill: 'meta-status', select: 'status', led: true, cls: 'statusClass', lbl: 'statusLabel' },
         { pill: 'meta-priority', select: 'priority', led: false, cls: 'priorityClass', lbl: 'priorityLabel' },
-        { pill: 'meta-category', select: 'category', led: false, cls: null,            lbl: null }
+        { pill: 'meta-category', select: 'category', led: false, cls: null, lbl: null }
     ];
 
     function _close() {

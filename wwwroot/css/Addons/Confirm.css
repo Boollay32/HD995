@@ -15,9 +15,9 @@
     transition: background 0.16s ease;
 }
 
-.cf-overlay.is-visible {
-    background: rgba(29, 28, 26, 0.44);
-}
+    .cf-overlay.is-visible {
+        background: rgba(29, 28, 26, 0.44);
+    }
 
 .cf-dialog {
     width: 100%;
@@ -101,10 +101,10 @@
     transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
-.cf-btn:focus-visible {
-    outline: 2px solid var(--brand);
-    outline-offset: 2px;
-}
+    .cf-btn:focus-visible {
+        outline: 2px solid var(--brand);
+        outline-offset: 2px;
+    }
 
 .cf-btn-ghost {
     background: transparent;
@@ -112,41 +112,49 @@
     color: var(--muted);
 }
 
-.cf-btn-ghost:hover {
-    background: var(--row-hover);
-    color: var(--text);
-}
+    .cf-btn-ghost:hover {
+        background: var(--row-hover);
+        color: var(--text);
+    }
 
 .cf-btn-quiet {
     background: var(--row-hover);
     color: var(--muted);
 }
 
-.cf-btn-quiet:hover {
-    background: var(--border);
-    color: var(--text);
-}
+    .cf-btn-quiet:hover {
+        background: var(--border);
+        color: var(--text);
+    }
 
 .cf-btn-primary {
     background: var(--accent);
     color: var(--on-accent);
 }
 
-.cf-btn-primary:hover {
-    background: var(--accent-strong);
-}
+    .cf-btn-primary:hover {
+        background: var(--accent-strong);
+    }
 
 .cf-btn-danger {
     background: #B42318;
     color: #FFFFFF;
 }
 
-.cf-btn-danger:hover {
-    background: #8E1B12;
-}
+    .cf-btn-danger:hover {
+        background: #8E1B12;
+    }
 
 @media (max-width: 480px) {
-    .cf-msg { padding-left: 0; }
-    .cf-actions, .cf-actions-3 { flex-wrap: wrap; }
-    .cf-btn { flex: 1 1 auto; }
+    .cf-msg {
+        padding-left: 0;
+    }
+
+    .cf-actions, .cf-actions-3 {
+        flex-wrap: wrap;
+    }
+
+    .cf-btn {
+        flex: 1 1 auto;
+    }
 }

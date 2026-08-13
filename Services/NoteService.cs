@@ -6,7 +6,6 @@ using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Attachments;
-using HelpDeskNet8.Models.Shared;
 using HelpDeskNet8.Requests;
 
 namespace HelpDeskNet8.Services

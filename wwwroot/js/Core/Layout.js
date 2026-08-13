@@ -1,7 +1,6 @@
 ﻿// =============================  Layout.js  ============================= //
 
 const Layout = {
-
     // -------------------------  Screen Display  ------------------------- //
 
     displayScreen() {
@@ -148,9 +147,6 @@ function UTCWorkAround() { return Layout.getUTCOffset(); }
 function ChooseSeason() { Layout.chooseSeason(); }
 function MakeDropDownsEditable() { Layout.makeDropdownsEditable(); }
 function SetCurrentAssignedTech(fieldId) { Layout.setCurrentAssignedTech(fieldId); }
-
-
-
 
 // Render an array of uniform row objects into #Table (dynamic columns from the row keys).
 function CreateDynamicTable(data) {

@@ -18,44 +18,43 @@ namespace HelpDeskNet8.Models.Shared
         public int? Important { get; set; }
         public int? CreateDate { get; set; }
         public int? RequiredByDate { get; set; }
-        
-        public int? CompletionDate { get; set; }
-        
-        public DateTime? DateFrom { get; set; }
-        
-        public DateTime? DateTo { get; set; }
-        
-        public int? UserID { get; set; }
-        
-        public string UserFirstName { get; set; }
-        
-        public string UserLastName { get; set; }
-        
-        public int? Authority { get; set; }
-        
-        public int? DepartmentID { get; set; }
-        
-        public int? Locked { get; set; }
-        
-        public int? Deactivated { get; set; }
-        
-        public string UserEmail { get; set; }
-        
-        public string UserSecondaryEmail { get; set; }
-        
-        public string UserName { get; set; }
-        
-        public string UserPhone { get; set; }
-        
-        public string UserLogin { get; set; }
-        
-        public string AuthenticationToken { get; set; }
-        
-        public DateTime ExpiryTime { get; set; }
-        
-        public string Subject { get; set; }
-        
-        public int? WebCaptureReleaseID { get; set; }
 
+        public int? CompletionDate { get; set; }
+
+        public DateTime? DateFrom { get; set; }
+
+        public DateTime? DateTo { get; set; }
+
+        public int? UserID { get; set; }
+
+        public string UserFirstName { get; set; }
+
+        public string UserLastName { get; set; }
+
+        public int? Authority { get; set; }
+
+        public int? DepartmentID { get; set; }
+
+        public int? Locked { get; set; }
+
+        public int? Deactivated { get; set; }
+
+        public string UserEmail { get; set; }
+
+        public string UserSecondaryEmail { get; set; }
+
+        public string UserName { get; set; }
+
+        public string UserPhone { get; set; }
+
+        public string UserLogin { get; set; }
+
+        public string AuthenticationToken { get; set; }
+
+        public DateTime ExpiryTime { get; set; }
+
+        public string Subject { get; set; }
+
+        public int? WebCaptureReleaseID { get; set; }
     }
 }

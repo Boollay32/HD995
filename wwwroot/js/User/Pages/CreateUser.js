@@ -23,7 +23,6 @@ class CreateUser extends PageBase {
 
             this._setupPageUI();
             this._setupEventListeners();
-
         } catch (error) {
             this.handleError('Error initializing create user');
         }
@@ -55,7 +54,6 @@ class CreateUser extends PageBase {
             if (this._typeTouched || !typeSelect) return;
             typeSelect.value = e.target.value === '151' ? '1' : '0';
         });
-
     }
 
     // -------------------------  Submit  ------------------------- //
@@ -83,7 +81,6 @@ class CreateUser extends PageBase {
 
             const typeWarning = await this._applyUserType(response);
             this._handleCreateSuccess(response, typeWarning);
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't create user");
@@ -99,12 +96,12 @@ class CreateUser extends PageBase {
     _collectFormData() {
         const val = id => (document.getElementById(id)?.value ?? '').trim();
         return {
-            userLogin:   val('LoginName'),
-            firstName:   val('FirstName'),
-            lastName:    val('SecondName'),
-            phone:       val('PhoneNumber'),
+            userLogin: val('LoginName'),
+            firstName: val('FirstName'),
+            lastName: val('SecondName'),
+            phone: val('PhoneNumber'),
             authorityId: parseInt(document.getElementById('Authority')?.value, 10) || 0,
-            department:  parseInt(document.getElementById('Department')?.value, 10) || 0
+            department: parseInt(document.getElementById('Department')?.value, 10) || 0
         };
     }
 

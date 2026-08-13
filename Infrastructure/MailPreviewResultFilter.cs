@@ -1,9 +1,7 @@
-﻿using System;
+﻿using HelpDeskNet8.Interfaces.Shared;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using HelpDeskNet8.Interfaces.Shared;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace HelpDeskNet8.Infrastructure
 {

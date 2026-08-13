@@ -16,6 +16,14 @@
 // come from Snow.css via the depth classes; motion and opacity come from
 // this loop.
 
+// Cryptographically secure random float in [0, 1) — satisfies scanner
+// requirements. Functionally equivalent to Math.random() for visual use.
+function secureRandom() {
+    const arr = new Uint32Array(1);
+    crypto.getRandomValues(arr);
+    return arr[0] / (0xFFFFFFFF + 1);
+}
+
 class SnowEffect {
     constructor(options = {}) {
         this.navbarOnly = options.navbarOnly !== false;
@@ -35,42 +43,40 @@ class SnowEffect {
         this.container.id = this.navbarOnly ? 'navbar-snow' : 'snow-overlay';
         document.body.appendChild(this.container);
 
-        // Mode-tuned motion. Full-page opacity ceilings are lower so a whole
-        // screen of snow still reads as subtle.
         const nav = this.navbarOnly;
         const SPEED = nav ? { near: 12, medium: 8.5, far: 5.5 }
-                          : { near: 26, medium: 18,  far: 12 };   // px/s fall
-        const MAXO  = nav ? { near: 0.95, medium: 0.8,  far: 0.6 }
-                          : { near: 0.85, medium: 0.65, far: 0.45 };
-        const LEAD = nav ? 8 : 10;              // spawn height above the frame
+            : { near: 26, medium: 18, far: 12 };
+        const MAXO = nav ? { near: 0.95, medium: 0.8, far: 0.6 }
+            : { near: 0.85, medium: 0.65, far: 0.45 };
+        const LEAD = nav ? 8 : 10;
         const H = nav ? 56 : Math.max(400, window.innerHeight || 800);
         this._geom = {
             TRAVEL: nav ? 62 : H + 2 * LEAD,
             LEAD,
-            FADE_IN_END:    nav ? 10 : 24,
+            FADE_IN_END: nav ? 10 : 24,
             FADE_OUT_START: nav ? 38 : H - 70,
-            FADE_OUT_END:   nav ? 52 : H - 20
+            FADE_OUT_END: nav ? 52 : H - 20
         };
 
         this._flakes = [];
         for (let i = 0; i < this.count; i++) {
-            const r = Math.random();
+            const r = secureRandom();
             const depth = r < 0.3 ? 'near' : r < 0.7 ? 'medium' : 'far';
             const el = document.createElement('div');
-            el.className = 'snowflake ' + depth + (Math.random() < 0.2 ? ' sparkle' : '');
-            el.style.left = (Math.random() * 100) + '%';
+            el.className = 'snowflake ' + depth + (secureRandom() < 0.2 ? ' sparkle' : '');
+            el.style.left = (secureRandom() * 100) + '%';
             el.style.opacity = '0';                        // no first-frame flash
             this.container.appendChild(el);
             this._flakes.push({
                 el,
-                speed: SPEED[depth] * (0.85 + Math.random() * 0.3),
-                phase: Math.random() * this._geom.TRAVEL,
-                drift: nav ? 0.9 + Math.random() * 0.7
-                           : 4 + Math.random() * 3,        // px/s rightward wind
-                swayAmp: nav ? 0.8 + Math.random() * 1.2
-                             : 1.2 + Math.random() * 2,
-                swayHz: 0.15 + Math.random() * 0.2,
-                swayOff: Math.random() * 6.283,
+                speed: SPEED[depth] * (0.85 + secureRandom() * 0.3),
+                phase: secureRandom() * this._geom.TRAVEL,
+                drift: nav ? 0.9 + secureRandom() * 0.7
+                    : 4 + secureRandom() * 3,
+                swayAmp: nav ? 0.8 + secureRandom() * 1.2
+                    : 1.2 + secureRandom() * 2,
+                swayHz: 0.15 + secureRandom() * 0.2,
+                swayOff: secureRandom() * 6.283,
                 max: MAXO[depth]
             });
         }
@@ -80,17 +86,15 @@ class SnowEffect {
     }
 
     _tick(ts) {
-        if (!this.container) return;                       // stopped mid-flight
+        if (!this.container) return;
         if (this._t0 === null) this._t0 = ts;
         const t = (ts - this._t0) / 1000;
         const g = this._geom;
         for (const f of this._flakes) {
             const cyc = (t * f.speed + f.phase) % g.TRAVEL;
             const y = cyc - g.LEAD;
-            // Wind: steady rightward drift over this fall's elapsed time plus
-            // a faint sway; resets with the cycle while opacity is 0.
             const x = (cyc / f.speed) * f.drift
-                    + Math.sin(t * f.swayHz * 6.283 + f.swayOff) * f.swayAmp;
+                + Math.sin(t * f.swayHz * 6.283 + f.swayOff) * f.swayAmp;
             let o;
             if (y < g.FADE_IN_END) o = Math.max(0, (y + g.LEAD) / (g.FADE_IN_END + g.LEAD));
             else if (y > g.FADE_OUT_START) o = Math.max(0, 1 - (y - g.FADE_OUT_START) / (g.FADE_OUT_END - g.FADE_OUT_START));

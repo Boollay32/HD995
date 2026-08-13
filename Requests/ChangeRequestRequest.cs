@@ -20,6 +20,7 @@
         // base property permanently stuck at its default (0) -- which
         // silently broke the session check on every RFC save.
         public int RFCId { get; set; }
+
         public string ObjectInfo { get; set; }
         public string Attachment { get; set; }
     }

@@ -9,216 +9,229 @@
    z-order: scrim 60 < rail 65 < drawer 70 < task overlay 100 (TicketOverlay.css). */
 
 .td-body-row {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
+
 .td-app .td-shell {
-  min-width: 0;
+    min-width: 0;
 }
 
 /* ---- Rail (left edge) ---- */
 .td-railbar {
-  flex: 0 0 46px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 10px;
-  background: var(--td-panel);
-  border-right: 1px solid var(--td-border);
-  position: relative;
-  z-index: 65;
-}
-.td-railbar[hidden] {
-  display: none;
+    flex: 0 0 46px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    background: var(--td-panel);
+    border-right: 1px solid var(--td-border);
+    position: relative;
+    z-index: 65;
 }
 
+    .td-railbar[hidden] {
+        display: none;
+    }
+
 .td-railtabs {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
-.td-railtabs [role="tab"] {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: none;
-  color: var(--td-muted);
-  cursor: pointer;
-}
-.td-railtabs [role="tab"]:hover {
-  background: var(--row-hover);
-  color: var(--td-text);
-}
-.td-railtabs [role="tab"][aria-selected="true"] {
-  background: var(--row-hover);
-  border-color: var(--td-border);
-  color: var(--accent);
-}
-.td-railtabs [role="tab"][hidden] {
-  display: none;
-}
-/* Icon-only rail: visually hide the label (accessible name + title tooltip
+
+    .td-railtabs [role="tab"] {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        background: none;
+        color: var(--td-muted);
+        cursor: pointer;
+    }
+
+        .td-railtabs [role="tab"]:hover {
+            background: var(--row-hover);
+            color: var(--td-text);
+        }
+
+        .td-railtabs [role="tab"][aria-selected="true"] {
+            background: var(--row-hover);
+            border-color: var(--td-border);
+            color: var(--accent);
+        }
+
+        .td-railtabs [role="tab"][hidden] {
+            display: none;
+        }
+    /* Icon-only rail: visually hide the label (accessible name + title tooltip
    remain). */
-.td-railtabs .td-railtab-lbl {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-.td-railtabs .td-tab-pip {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-}
+    .td-railtabs .td-railtab-lbl {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .td-railtabs .td-tab-pip {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+    }
 
 /* ---- Scrim ---- */
 .td-drawer-scrim {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  background: rgba(20, 18, 15, 0.45);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(20, 18, 15, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
 }
-.td-drawer-scrim.is-open {
-  opacity: 1;
-  pointer-events: auto;
-}
+
+    .td-drawer-scrim.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
 
 /* ---- Drawer (slides in from the left) ---- */
 .td-drawer {
-  position: fixed;
-  top: 0;
-  left: 46px;
-  bottom: 0;
-  width: 50%;
-  min-width: 360px;
-  z-index: 70;
-  display: flex;
-  flex-direction: column;
-  /* Surface tone, not panel: the drawer covers td-panel panes, so it
+    position: fixed;
+    top: 0;
+    left: 46px;
+    bottom: 0;
+    width: 50%;
+    min-width: 360px;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    /* Surface tone, not panel: the drawer covers td-panel panes, so it
      needs its own shade to read as a separate layer (both themes). */
-  background: var(--td-surface);
-  border-right: 1px solid var(--td-border);
-  transform: translateX(calc(-100% - 46px));
-  visibility: hidden;
-  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
-              visibility 0s linear 0.28s;
-}
-.td-drawer.is-open {
-  transform: none;
-  visibility: visible;
-  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: var(--td-surface);
+    border-right: 1px solid var(--td-border);
+    transform: translateX(calc(-100% - 46px));
+    visibility: hidden;
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.28s;
 }
 
+    .td-drawer.is-open {
+        transform: none;
+        visibility: visible;
+        transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
 .td-drawer-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--td-border);
-  background: var(--td-surface);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--td-border);
+    background: var(--td-surface);
 }
+
 .td-drawer-title {
-  flex: 1;
-  margin: 0;
-  font-size: 0.9375rem;
-  font-weight: 600;
+    flex: 1;
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
 }
+
 .td-drawer-close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: none;
-  color: var(--td-muted);
-  cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: none;
+    color: var(--td-muted);
+    cursor: pointer;
 }
-.td-drawer-close:hover {
-  background: var(--row-hover);
-  color: var(--td-text);
-}
+
+    .td-drawer-close:hover {
+        background: var(--row-hover);
+        color: var(--td-text);
+    }
 
 /* ---- Contextual save bar ---- */
 /* Appears only while dirty (TicketDrawer.syncDirty): its presence is the
    "unsaved changes" signal. Save mirrors the overview-header button (same
    handler / shared dirty state); Discard restores the post-load baseline. */
 .td-drawer-savebar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  flex-shrink: 0;
-  border-top: 1px solid var(--td-border);
-  background: var(--td-surface);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    flex-shrink: 0;
+    border-top: 1px solid var(--td-border);
+    background: var(--td-surface);
 }
-.td-drawer-savebar[hidden] {
-  display: none;
-}
+
+    .td-drawer-savebar[hidden] {
+        display: none;
+    }
+
 .td-drawer-savebar-text {
-  flex: 1;
-  font-size: 0.8125rem;
-  color: var(--td-muted);
+    flex: 1;
+    font-size: 0.8125rem;
+    color: var(--td-muted);
 }
 
 /* Generic scrolling drawer body for pages without their own scroll wrapper
    (the ticket page uses .td-ws-body; RFC's .rfc-ws carries its own flex). */
 .td-drawer-body {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 /* ---- Overview header (replaces the global topbar) ---- */
 /* Shares .td-pane-head for the 46px height so it lines up with the sibling
    pane head; back / ID / Save keep their PaneShell.css classes. */
 .td-app .td-ov-header {
-  gap: 10px;
-  padding: 0 12px 0 10px;
+    gap: 10px;
+    padding: 0 12px 0 10px;
 }
 
 /* Hero title: the page's subject leads the overview body (the old "Title"
    caption is gone -- the treatment makes it redundant). */
 .td-app .td-overview > .td-details-subject {
-  font-size: 1.125rem;
-  line-height: 1.3;
-  padding: 12px 16px 2px;
-  /* Now an h1 on both pages: neutralise UA heading defaults and unify the
+    font-size: 1.125rem;
+    line-height: 1.3;
+    padding: 12px 16px 2px;
+    /* Now an h1 on both pages: neutralise UA heading defaults and unify the
      weight (was label 400 on RFC, h2 700 on Ticket). */
-  margin: 0;
-  font-weight: 600;
+    margin: 0;
+    font-weight: 600;
 }
 
 /* Pills row under the title: the relocated topbar meta. Same ids/classes, so
    the pill render paths (Topbar.renderPill / RFCPillEdit) are untouched; wrapping replaces the old
    viewport media rule that hid the pills outright at narrow widths. */
 .td-app .td-ov-pills {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 10px 14px;
-  margin: 0 16px;
-  padding: 6px 0 12px;
-  border-bottom: 1px solid var(--td-border-2);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px 14px;
+    margin: 0 16px;
+    padding: 6px 0 12px;
+    border-bottom: 1px solid var(--td-border-2);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .td-drawer,
-  .td-drawer-scrim {
-    transition: none;
-  }
+    .td-drawer,
+    .td-drawer-scrim {
+        transition: none;
+    }
 }

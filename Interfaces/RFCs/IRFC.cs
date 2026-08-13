@@ -26,6 +26,7 @@
         DateTime? CompletedDate { get; set; }
         string ApprovedBy { get; set; }
         DateTime? ApprovalDate { get; set; }
+
         IRFC GetChanges();
     }
 }

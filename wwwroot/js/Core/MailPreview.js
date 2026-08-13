@@ -117,10 +117,7 @@
                 row.appendChild(sub);
             }
 
-            // Sent (live): compact receipt only -- who + subject. The body
-            // iframe renders solely when the email was NOT sent, where the
-            // popup is the only way to inspect the content at all.
-            if (en.body && !en.sent) {
+            if (en.body) {
                 var frame = document.createElement('iframe');
                 frame.className = 'mail-preview-frame';
                 frame.setAttribute('sandbox', '');

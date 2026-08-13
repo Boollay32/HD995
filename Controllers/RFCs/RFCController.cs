@@ -48,7 +48,7 @@ namespace HelpDeskNet8.Controllers
         [HttpPost]
         public async Task<IActionResult> GetRFCDetail([FromBody] GetRFCDetailRequest request)
         {
-    IUser user = this.GetAuthenticatedUser();
+            IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
             if (!await IsInternal(user)) return StatusCode(403);
 
@@ -59,7 +59,7 @@ namespace HelpDeskNet8.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveRFC([FromBody] SaveRFCRequest request)
         {
-    IUser user = this.GetAuthenticatedUser();
+            IUser user = this.GetAuthenticatedUser();
             if (user == null) return Unauthorized();
             if (!await IsInternal(user)) return StatusCode(403);
 

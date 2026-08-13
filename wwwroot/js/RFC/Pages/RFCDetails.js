@@ -1,7 +1,6 @@
 // =============================  RFCDetails.js  ============================= //
 
 class RFCDetails extends PageBase {
-
     constructor() {
         super();
         this.rfcId = sessionStorage.getItem(STORAGE_KEYS.RFC_ID)
@@ -32,8 +31,6 @@ class RFCDetails extends PageBase {
         // "RFC #123"). HD34 4c.
         if (rfcIdEl) rfcIdEl.innerText = '#' + this.rfcId;
     }
-
-
 
     // -------------------------  Load Data  ------------------------- //
 
@@ -127,7 +124,7 @@ class RFCDetails extends PageBase {
         // Pane collapse + draggable split -- shared PaneShell component
         // (same slider as Ticket Details; hard-clamped to 30/70).
         const shell = new PaneShell({
-            left:  { pane: 'pane-left',  btn: 'collapse-left',  rail: 'rail-left'  },
+            left: { pane: 'pane-left', btn: 'collapse-left', rail: 'rail-left' },
             right: { pane: 'pane-right', btn: 'collapse-right', rail: 'rail-right' },
             storageKey: STORAGE_KEYS.RFC_PANES_COLLAPSED,
         });

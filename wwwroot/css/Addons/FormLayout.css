@@ -2,58 +2,67 @@
 /* Colours */
 /* Font sizes */
 #History {
-  max-height: 400px;
-  overflow-x: hidden;
+    max-height: 400px;
+    overflow-x: hidden;
 }
-#History .HistoryDiv {
-  max-height: 340px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-#History .HistoryDiv .History-Div {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  width: 98%;
-  margin: 5px auto;
-  background-color: var(--row-hover);
-  border-bottom: 3px solid var(--accent);
-  border-radius: 6px;
-  padding: 8px 12px;
-  gap: 12px;
-}
-#History .HistoryDiv .History-Div label {
-  font-size: 0.875rem;
-  font-family: var(--font-sans);
-  color: var(--text);
-}
+
+    #History .HistoryDiv {
+        max-height: 340px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+        #History .HistoryDiv .History-Div {
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            width: 98%;
+            margin: 5px auto;
+            background-color: var(--row-hover);
+            border-bottom: 3px solid var(--accent);
+            border-radius: 6px;
+            padding: 8px 12px;
+            gap: 12px;
+        }
+
+            #History .HistoryDiv .History-Div label {
+                font-size: 0.875rem;
+                font-family: var(--font-sans);
+                color: var(--text);
+            }
+
 #Notes {
-  max-height: 560px;
-  overflow-x: hidden;
+    max-height: 560px;
+    overflow-x: hidden;
 }
-#Notes .Note-Div {
-  margin-top: 10px;
-  max-height: 450px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
+
+    #Notes .Note-Div {
+        margin-top: 10px;
+        max-height: 450px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
 #Tasks {
-  max-height: 390px;
-  overflow-x: hidden;
+    max-height: 390px;
+    overflow-x: hidden;
 }
-#Tasks .Task-Div {
-  max-height: 330px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
+
+    #Tasks .Task-Div {
+        max-height: 330px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
 @media screen and (max-width: 1240px) {
-  #Main-Body {
-    background-image: none !important;
-    background-color: var(--panel) !important;
-  }
+    #Main-Body {
+        background-image: none !important;
+        background-color: var(--panel) !important;
+    }
 }
+
 @media screen and (max-width: 1000px) {
-  form {
-    width: 98% !important;
-  }
+    form {
+        width: 98% !important;
+    }
 }

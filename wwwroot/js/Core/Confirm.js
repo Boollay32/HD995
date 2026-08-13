@@ -14,7 +14,6 @@
 'use strict';
 
 const Confirm = (() => {
-
     let _open = null; // { overlay, resolve, safeValue } — only one at a time
 
     // -------------------------  Build / teardown  ------------------------- //
@@ -158,5 +157,4 @@ const Confirm = (() => {
     }
 
     return { ask, guard };
-
 })();

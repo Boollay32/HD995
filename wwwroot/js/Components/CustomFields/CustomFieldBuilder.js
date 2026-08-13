@@ -1,7 +1,6 @@
 ﻿// =============================  CustomFieldBuilder.js  ============================= //
 
 class CustomFieldBuilder {
-
     constructor() {
         this.fieldTypeHandlers = {
             'Select': config => this._createSelectField(config),

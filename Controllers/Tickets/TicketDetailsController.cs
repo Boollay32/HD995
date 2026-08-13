@@ -1,17 +1,10 @@
-﻿using HelpDeskNet8.Controllers.Shared;
-using System.Linq;
-using HelpDeskNet8.Controllers.Tasks;
-using HelpDeskNet8.Infrastructure;
+﻿using HelpDeskNet8.Infrastructure;
 using HelpDeskNet8.Interfaces.Attachments;
 using HelpDeskNet8.Interfaces.Notes;
 using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Tasks;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
-using HelpDeskNet8.Models.Attachments;
-using HelpDeskNet8.Models.Notes;
-using HelpDeskNet8.Models.Shared;
-using HelpDeskNet8.Models.Tasks;
 using HelpDeskNet8.Requests;
 using Microsoft.AspNetCore.Mvc;
 

@@ -22,7 +22,6 @@
 'use strict';
 
 class DashboardPage extends PageBase {
-
     constructor() {
         super();
         this.tickets = [];
@@ -238,9 +237,9 @@ class DashboardPage extends PageBase {
         // no-deadline items last, most recently updated first.
         const score = it =>
             it.dl.overdue ? 0 :
-            it.dl.cls === 'red' ? 1 :
-            it.reply ? 2 :
-            it.dl.cls === 'amber' ? 3 : 4;
+                it.dl.cls === 'red' ? 1 :
+                    it.reply ? 2 :
+                        it.dl.cls === 'amber' ? 3 : 4;
         items.sort((a, b) => {
             const s = score(a) - score(b);
             if (s !== 0) return s;
@@ -383,12 +382,12 @@ class DashboardPage extends PageBase {
         }
         el.innerHTML = items.map(it =>
             `<button type="button" class="dash-row${it.dl.overdue ? ' is-overdue' : ''}" ${this._navAttrs(it.nav)}>` +
-                (it.reply ? '<span class="dash-reply-dot" title="Client replied \u2014 your reply needed"></span>' : '') +
-                this._icon(it.kind) +
-                `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
-                `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
-                `<span class="dash-status">${Format.escapeHtml(it.status)}</span>` +
-                this._chip(it.dl) +
+            (it.reply ? '<span class="dash-reply-dot" title="Client replied \u2014 your reply needed"></span>' : '') +
+            this._icon(it.kind) +
+            `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
+            `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
+            `<span class="dash-status">${Format.escapeHtml(it.status)}</span>` +
+            this._chip(it.dl) +
             '</button>').join('');
     }
 
@@ -406,16 +405,16 @@ class DashboardPage extends PageBase {
             const idleTxt = idle == null ? '' : idle === 0 ? 'active today' : `idle ${idle}d`;
             return `<button type="button" class="dash-proj" ${this._navAttrs({ kind: 'project', projectId: p.projectID })}>` +
                 '<span class="dash-proj-top">' +
-                    `<span class="dash-title">${Format.escapeHtml(p.projectName || '')}</span>` +
-                    this._chip(dl) +
+                `<span class="dash-title">${Format.escapeHtml(p.projectName || '')}</span>` +
+                this._chip(dl) +
                 '</span>' +
                 `<span class="dash-bar"><span class="dash-bar-fill${dl.cls === 'red' || dl.cls === 'amber' ? ' is-' + dl.cls : ''}" style="width:${pct}%"></span></span>` +
                 '<span class="dash-proj-meta">' +
-                    `<span class="mono">${Number(p.doneTaskCount) || 0}/${Number(p.taskCount) || 0}</span> tasks` +
-                    ` \u00b7 <span class="mono">${Number(p.openTicketCount) || 0}</span> open tickets` +
-                    (idleTxt ? `<span class="dash-proj-idle${idle >= 5 ? ' is-amber' : ''}">${idleTxt}</span>` : '') +
+                `<span class="mono">${Number(p.doneTaskCount) || 0}/${Number(p.taskCount) || 0}</span> tasks` +
+                ` \u00b7 <span class="mono">${Number(p.openTicketCount) || 0}</span> open tickets` +
+                (idleTxt ? `<span class="dash-proj-idle${idle >= 5 ? ' is-amber' : ''}">${idleTxt}</span>` : '') +
                 '</span>' +
-            '</button>';
+                '</button>';
         }).join('');
     }
 
@@ -444,12 +443,12 @@ class DashboardPage extends PageBase {
             : it.idle === 0 ? ' \u00b7 updated today' : ` \u00b7 last update ${it.idle}d ago`;
         return `<button type="button" class="dash-slip-row${s.tone === 'amber' ? ' is-amber' : ''}" ${this._navAttrs(it.nav)}>` +
             '<span class="dash-slip-top">' +
-                `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
-                `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
-                `<span class="dash-slip-chip mono is-${s.tone}">${Format.escapeHtml(s.chip)}</span>` +
+            `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
+            `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
+            `<span class="dash-slip-chip mono is-${s.tone}">${Format.escapeHtml(s.chip)}</span>` +
             '</span>' +
             `<span class="dash-slip-meta">with ${Format.escapeHtml(it.withWho)} \u00b7 ${due}${upd}</span>` +
-        '</button>';
+            '</button>';
     }
 
     _renderRaised(raised) {
@@ -477,10 +476,10 @@ class DashboardPage extends PageBase {
             if (slipping.length) html += `<p class="dash-ontrack-head">On track \u00b7 ${onTrack.length}</p>`;
             html += onTrack.map(it =>
                 `<button type="button" class="dash-row dash-row--slim" ${this._navAttrs(it.nav)}>` +
-                    `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
-                    `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
-                    `<span class="dash-with">with ${Format.escapeHtml(it.withWho)}</span>` +
-                    `<span class="dash-chip dash-chip--neutral mono">${it.idle === 0 ? 'updated today' : it.dl.cls !== 'none' && it.dl.label ? Format.escapeHtml(it.dl.label) : 'on track'}</span>` +
+                `<span class="dash-ref mono">${Format.escapeHtml(it.ref)}</span>` +
+                `<span class="dash-title">${Format.escapeHtml(it.title)}</span>` +
+                `<span class="dash-with">with ${Format.escapeHtml(it.withWho)}</span>` +
+                `<span class="dash-chip dash-chip--neutral mono">${it.idle === 0 ? 'updated today' : it.dl.cls !== 'none' && it.dl.label ? Format.escapeHtml(it.dl.label) : 'on track'}</span>` +
                 '</button>').join('');
         }
         el.innerHTML = html;

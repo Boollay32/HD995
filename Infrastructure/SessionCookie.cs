@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace HelpDeskNet8.Infrastructure
+﻿namespace HelpDeskNet8.Infrastructure
 {
     /// <summary>
     /// Single source of truth for the session-token cookie (name + options).
