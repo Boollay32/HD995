@@ -9,90 +9,108 @@
 
 /* ---- Editable field input ---- */
 .td-app .td-input {
-  width: 100%;
-  box-sizing: border-box;
-  font-family: "Spline Sans", system-ui, sans-serif;
-  font-size: 0.8125rem;
-  color: var(--td-text);
-  background: var(--td-surface);
-  border: 1px solid var(--td-border);
-  border-radius: 6px;
-  padding: 6px 10px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: "Spline Sans", system-ui, sans-serif;
+    font-size: 0.8125rem;
+    color: var(--td-text);
+    background: var(--td-surface);
+    border: 1px solid var(--td-border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    outline: none;
 }
-.td-app .td-input:focus {
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-pale);
-}
-.td-app .td-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+
+    .td-app .td-input:focus {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px var(--brand-pale);
+    }
+
+    .td-app .td-input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 /* HD43 Ticket-d: native date input renders its calendar-picker indicator
    (and popup) per the page color-scheme; default light makes the glyph
    black and invisible on the dark input. Opt date inputs into dark native
    rendering so the icon shows. */
-html[data-theme="dark"] .td-app input[type="date"] { color-scheme: dark; }
+html[data-theme="dark"] .td-app input[type="date"] {
+    color-scheme: dark;
+}
 
 /* ---- Read-only field value ---- */
 .td-app .Field-Value {
-  font-size: 0.84375rem;
-  color: var(--td-text);
-  font-weight: 500;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 0.84375rem;
+    color: var(--td-text);
+    font-weight: 500;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* ---- Editable Status/Priority pill affordance ---- */
-.td-app .td-meta-pill--editable { cursor: pointer; }
-.td-app .td-meta-pill--editable:hover { filter: brightness(0.96); }
-.td-app .td-meta-pill--editable:focus-visible {
-  outline: 2px solid var(--brand);
-  outline-offset: 1px;
+.td-app .td-meta-pill--editable {
+    cursor: pointer;
 }
-.td-app .td-meta-pill--editable::after {
-  content: "";
-  width: 0;
-  height: 0;
-  border-left: 3.5px solid transparent;
-  border-right: 3.5px solid transparent;
-  border-top: 4.5px solid currentColor;
-  opacity: 0.5;
-}
+
+    .td-app .td-meta-pill--editable:hover {
+        filter: brightness(0.96);
+    }
+
+    .td-app .td-meta-pill--editable:focus-visible {
+        outline: 2px solid var(--brand);
+        outline-offset: 1px;
+    }
+
+    .td-app .td-meta-pill--editable::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 3.5px solid transparent;
+        border-right: 3.5px solid transparent;
+        border-top: 4.5px solid currentColor;
+        opacity: 0.5;
+    }
 
 /* ---- Pill chooser popover ----
    Appended to the app root and position:fixed, so it is NOT scoped to .td-app
    (it may sit outside that subtree in the layout). Shared by both detail pages. */
 .td-pill-pop {
-  position: fixed;
-  z-index: 1000;
-  min-width: 150px;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  background: var(--td-panel);
-  border: 1px solid var(--td-border);
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    position: fixed;
+    z-index: 1000;
+    min-width: 150px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--td-panel);
+    border: 1px solid var(--td-border);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
-.td-pill-pop-item {
-  text-align: left;
-  font: inherit;
-  font-size: 0.8125rem;
-  color: var(--td-text);
-  background: none;
-  border: none;
-  border-radius: 7px;
-  padding: 7px 10px;
-  cursor: pointer;
-}
-.td-pill-pop-item:hover { background: var(--td-surface); }
-.td-pill-pop-item.is-current { font-weight: 600; color: var(--brand); }
 
+.td-pill-pop-item {
+    text-align: left;
+    font: inherit;
+    font-size: 0.8125rem;
+    color: var(--td-text);
+    background: none;
+    border: none;
+    border-radius: 7px;
+    padding: 7px 10px;
+    cursor: pointer;
+}
+
+    .td-pill-pop-item:hover {
+        background: var(--td-surface);
+    }
+
+    .td-pill-pop-item.is-current {
+        font-weight: 600;
+        color: var(--brand);
+    }
 
 /* ---- Overview panel (HD33 4b stage 2) ----
    The .td-ov-* overview rules that were byte-identical across both
@@ -101,93 +119,108 @@ html[data-theme="dark"] .td-app input[type="date"] { color-scheme: dark; }
    colour/border), and sharing only its :hover/svg children would let
    the page-specific ID-scoped base override them. Those stay per-page. */
 .td-app .td-overview {
-  flex-shrink: 0;
-  background: var(--td-panel);
-}
-.td-app .td-ov-body {
-  padding: 5px 16px 11px;
-}
-.td-app .td-ov-group + .td-ov-group {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--td-border);
-}
-.td-app .td-ov-grp-head {
-  margin: 0 0 5px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--td-muted);
-}
-.td-app .td-ov-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 7px 20px;
-}
-.td-app .td-ov-cell {
-  min-width: 0;
-}
-.td-app .td-ov-lbl {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 1px;
-  font-size: 0.84375rem;
-  color: var(--td-muted);
-}
-.td-app .td-ov-val {
-  font-size: 0.84375rem;
-  color: var(--td-text);
-}
-.td-app .td-ov-cell .td-select, .td-ov-cell .td-input {
-  width: 100%;
-  margin-top: 1px;
-}
-.td-app .td-ov-timeline {
-  display: flex;
-  align-items: flex-start;
-}
-.td-app .td-ov-node {
-  flex: 1 1 0;
-  min-width: 0;
-}
-.td-app .td-ov-arrow {
-  flex: 0 0 auto;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  color: var(--td-muted);
-}
-.td-app .td-ov-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--td-border);
-  flex: 0 0 auto;
-}
-.td-app .td-ov-slim {
-  display: none;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 9px 18px;
-  font-size: 0.8125rem;
-  color: var(--td-text);
-}
-.td-app .td-ov-slim .td-ov-sep {
-  color: var(--td-muted);
-}
-.td-app .td-ov-slim-lbl {
-  color: var(--td-muted);
-  font-weight: 600;
-  margin-right: 1px;
-}
-.td-app .td-overview > .td-details-subject {
-  padding: 9px 16px 3px;
+    flex-shrink: 0;
+    background: var(--td-panel);
 }
 
+.td-app .td-ov-body {
+    padding: 5px 16px 11px;
+}
+
+.td-app .td-ov-group + .td-ov-group {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--td-border);
+}
+
+.td-app .td-ov-grp-head {
+    margin: 0 0 5px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--td-muted);
+}
+
+.td-app .td-ov-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 7px 20px;
+}
+
+.td-app .td-ov-cell {
+    min-width: 0;
+}
+
+.td-app .td-ov-lbl {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 1px;
+    font-size: 0.84375rem;
+    color: var(--td-muted);
+}
+
+.td-app .td-ov-val {
+    font-size: 0.84375rem;
+    color: var(--td-text);
+}
+
+.td-app .td-ov-cell .td-select, .td-ov-cell .td-input {
+    width: 100%;
+    margin-top: 1px;
+}
+
+.td-app .td-ov-timeline {
+    display: flex;
+    align-items: flex-start;
+}
+
+.td-app .td-ov-node {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.td-app .td-ov-arrow {
+    flex: 0 0 auto;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    color: var(--td-muted);
+}
+
+.td-app .td-ov-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--td-border);
+    flex: 0 0 auto;
+}
+
+.td-app .td-ov-slim {
+    display: none;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 9px 18px;
+    font-size: 0.8125rem;
+    color: var(--td-text);
+}
+
+    .td-app .td-ov-slim .td-ov-sep {
+        color: var(--td-muted);
+    }
+
+.td-app .td-ov-slim-lbl {
+    color: var(--td-muted);
+    font-weight: 600;
+    margin-right: 1px;
+}
+
+.td-app .td-overview > .td-details-subject {
+    padding: 9px 16px 3px;
+}
 
 /* ---- Thin gap below the overview / collapsed slim bar (HD34 1c) ----
    .td-app is transparent over the textured page background (the same backdrop
@@ -197,7 +230,7 @@ html[data-theme="dark"] .td-app input[type="date"] { color-scheme: dark; }
    lives inside .td-overview, so this one rule covers both states. Shared by both
    detail pages. */
 .td-app .td-overview {
-  margin-bottom: 6px;
+    margin-bottom: 6px;
 }
 
 /* ============================================================================
@@ -206,84 +239,116 @@ html[data-theme="dark"] .td-app input[type="date"] { color-scheme: dark; }
    Option-A layout below -- header-panel weld, shell inset, overview rounded
    bottom + gap -- now applies cleanly to BOTH detail pages from here. */
 .td-app .td-header-panel {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  margin: 10px 10px 0;
-  border: 1px solid var(--td-border);
-  border-radius: 12px 12px 0 0;
-  overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 10px 0;
+    border: 1px solid var(--td-border);
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
 }
-.td-app .td-shell { margin: 0 10px; }
+
+.td-app .td-shell {
+    margin: 0 10px;
+}
+
 .td-app .td-overview {
-  position: relative;
-  margin-bottom: 8px;
-  border-bottom: none;
-  border-radius: 0 0 12px 12px;
+    position: relative;
+    margin-bottom: 8px;
+    border-bottom: none;
+    border-radius: 0 0 12px 12px;
 }
-.td-app .td-subject-lbl { padding: 10px 16px 0; font-size: 0.75rem; }
+
+.td-app .td-subject-lbl {
+    padding: 10px 16px 0;
+    font-size: 0.75rem;
+}
+
 .td-app .td-overview > #ov-collapse {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  z-index: 2;
-  height: 30px;
-  width: 30px;
-  padding: 0;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    z-index: 2;
+    height: 30px;
+    width: 30px;
+    padding: 0;
 }
-.td-app .td-overview > #ov-collapse svg { margin: 0; }
-.td-app .td-overview > .td-details-subject { padding-right: 44px; }
-.td-app .td-overview.is-collapsed > .td-ov-slim { padding-right: 50px; }
+
+    .td-app .td-overview > #ov-collapse svg {
+        margin: 0;
+    }
+
+.td-app .td-overview > .td-details-subject {
+    padding-right: 44px;
+}
+
+.td-app .td-overview.is-collapsed > .td-ov-slim {
+    padding-right: 50px;
+}
+
 .td-app .td-ov-head .td-btn-primary,
 .td-app .td-ov-collapse {
-  height: 30px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 8px;
-  box-sizing: border-box;
-  cursor: pointer;
+    height: 30px;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
 }
+
 .td-app .td-ov-collapse {
-  color: var(--td-muted-2);
-  background: none;
-  border: 1px solid var(--td-border);
-  transition: background 0.15s ease, color 0.15s ease;
+    color: var(--td-muted-2);
+    background: none;
+    border: 1px solid var(--td-border);
+    transition: background 0.15s ease, color 0.15s ease;
 }
-.td-app .td-ov-collapse:hover {
-  background: var(--td-panel);
-  color: var(--td-text);
+
+    .td-app .td-ov-collapse:hover {
+        background: var(--td-panel);
+        color: var(--td-text);
+    }
+
+    .td-app .td-ov-collapse svg {
+        transition: transform 0.18s ease;
+    }
+
+    .td-app .td-ov-collapse[aria-expanded="false"] svg {
+        transform: rotate(180deg);
+    }
+
+.td-app .td-overview.is-collapsed .td-ov-body {
+    display: none;
 }
-.td-app .td-ov-collapse svg { transition: transform 0.18s ease; }
-.td-app .td-ov-collapse[aria-expanded="false"] svg {
-  transform: rotate(180deg);
+
+.td-app .td-overview.is-collapsed .td-ov-slim {
+    display: flex;
 }
-.td-app .td-overview.is-collapsed .td-ov-body { display: none; }
-.td-app .td-overview.is-collapsed .td-ov-slim { display: flex; }
 
 /* ============================================================================
    HD39 unify (Stage 2): shared topbar tint + Save button, lifted from the
    per-page #TicketDetails-App / #RFCDetails-App copies (identical on both). */
 .td-app .td-topbar {
-  background: var(--td-surface);
-  padding: 7px 16px;
-  min-height: 50px;
+    background: var(--td-surface);
+    padding: 7px 16px;
+    min-height: 50px;
 }
+
 .td-app .td-topbar-actions .td-btn-primary {
-  height: 30px;
-  padding: 0 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 8px;
-  box-sizing: border-box;
-  cursor: pointer;
+    height: 30px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
 }
 
 /* ============================================================================
@@ -291,85 +356,99 @@ html[data-theme="dark"] .td-app input[type="date"] { color-scheme: dark; }
    row -- the ticket's canonical set. RFC's ported copy was a stale subset, so RFC
    gains the tab :hover, the [hidden] guard and the tab transition. */
 .td-app .td-ws-tabs {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 12px 0;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--td-border-2);
-  background: var(--td-surface);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 12px 0;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--td-border-2);
+    background: var(--td-surface);
 }
-.td-app .td-ws-tabs [role="tab"] {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: "Spline Sans", system-ui, sans-serif;
-  font-size: 0.71875rem;
-  font-weight: 600;
-  color: var(--td-muted);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 7px 10px 9px;
-  cursor: pointer;
-  border-radius: 6px 6px 0 0;
-  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-  position: relative;
-}
-/* [hidden] guard: inline-flex above beats the UA [hidden] rule, so a tab
+
+    .td-app .td-ws-tabs [role="tab"] {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: "Spline Sans", system-ui, sans-serif;
+        font-size: 0.71875rem;
+        font-weight: 600;
+        color: var(--td-muted);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        padding: 7px 10px 9px;
+        cursor: pointer;
+        border-radius: 6px 6px 0 0;
+        transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+        position: relative;
+    }
+        /* [hidden] guard: inline-flex above beats the UA [hidden] rule, so a tab
    hidden by JS (e.g. Notes tab on project/incident tickets, where notes
    live in the left pane) would still show. Hide it explicitly. */
-.td-app .td-ws-tabs [role="tab"][hidden] {
-  display: none;
-}
-.td-app .td-ws-tabs [role="tab"] svg {
-  flex-shrink: 0;
-}
-.td-app .td-ws-tabs [role="tab"]:hover {
-  color: var(--td-text);
-  background: var(--td-border-2);
-}
-.td-app .td-ws-tabs [role="tab"][aria-selected="true"] {
-  color: var(--brand);
-  border-bottom-color: var(--brand);
-  background: var(--td-panel);
-}
+        .td-app .td-ws-tabs [role="tab"][hidden] {
+            display: none;
+        }
+
+        .td-app .td-ws-tabs [role="tab"] svg {
+            flex-shrink: 0;
+        }
+
+        .td-app .td-ws-tabs [role="tab"]:hover {
+            color: var(--td-text);
+            background: var(--td-border-2);
+        }
+
+        .td-app .td-ws-tabs [role="tab"][aria-selected="true"] {
+            color: var(--brand);
+            border-bottom-color: var(--brand);
+            background: var(--td-panel);
+        }
+
 .td-app .td-select {
-  width: 100%;
-  box-sizing: border-box;
-  font-family: "Spline Sans", system-ui, sans-serif;
-  font-size: 0.8125rem;
-  color: var(--td-text);
-  background: var(--td-surface);
-  border: 1px solid var(--td-border);
-  border-radius: 6px;
-  padding: 6px 10px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236A655C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 30px;
-  cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: "Spline Sans", system-ui, sans-serif;
+    font-size: 0.8125rem;
+    color: var(--td-text);
+    background: var(--td-surface);
+    border: 1px solid var(--td-border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236A655C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    cursor: pointer;
 }
-.td-app .td-select:focus {
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-pale);
+
+    .td-app .td-select:focus {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px var(--brand-pale);
+    }
+
+    .td-app .td-select:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.td-app .td-pane-head--ws .td-pane-title {
+    flex: 0 0 auto;
 }
-.td-app .td-select:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.td-app .td-pane-head--ws .td-pane-title { flex: 0 0 auto; }
+
 .td-app .td-pane-head--ws .td-ws-tabs {
-  flex: 1 1 auto;
-  min-width: 0;
-  align-self: stretch;
-  align-items: flex-end;
-  padding: 0;
-  border-bottom: none;
-  background: none;
-  overflow-x: auto;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: stretch;
+    align-items: flex-end;
+    padding: 0;
+    border-bottom: none;
+    background: none;
+    overflow-x: auto;
 }
-.td-app .td-pane-head--ws .td-collapse-btn { flex: 0 0 auto; }
+
+.td-app .td-pane-head--ws .td-collapse-btn {
+    flex: 0 0 auto;
+}

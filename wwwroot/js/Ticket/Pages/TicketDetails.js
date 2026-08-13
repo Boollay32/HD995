@@ -28,7 +28,6 @@ const Session = {
     get isInternal() { return INTERNAL_REQUEST_TYPES.includes(Session.requestTypeId); }
 };
 
-
 // -------------------------  State  ------------------------- //
 
 const State = {
@@ -43,7 +42,6 @@ const State = {
     // PaneLayout.resolve; consumed by TicketLoader (tabs + field lockdown).
     clientView: false,
 };
-
 
 // -------------------------  DOM refs  ------------------------- //
 
@@ -93,7 +91,6 @@ const Dom = {
 // -------------------------  Layout init  ------------------------- //
 
 const PaneLayout = {
-
     resolve(adminLevel) {
         const isAdmin = adminLevel >= 1;
         const { isInternal } = Session;
@@ -177,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
     Events.bind();
     TicketLoader.load();
 });
-
 
 // -------------------------  Events (master bind)  ------------------------- //
 

@@ -79,17 +79,17 @@ class QueueView {
           <aside class="qv-preview" aria-label="Preview" aria-hidden="true" hidden></aside>`;
 
         this.$ = {
-            search:   this.root.querySelector('.qv-search-input'),
+            search: this.root.querySelector('.qv-search-input'),
             searchClear: this.root.querySelector('.qv-search-clear'),
-            count:    this.root.querySelector('.qv-count'),
-            action:   this.root.querySelector('.qv-action'),
-            views:    this.root.querySelector('.qv-views'),
-            filters:  this.root.querySelector('.qv-filters'),
-            bulkbar:  this.root.querySelector('.qv-bulkbar'),
-            thead:    this.root.querySelector('thead'),
-            tbody:    this.root.querySelector('tbody'),
-            overlay:  this.root.querySelector('.qv-overlay'),
-            preview:  this.root.querySelector('.qv-preview'),
+            count: this.root.querySelector('.qv-count'),
+            action: this.root.querySelector('.qv-action'),
+            views: this.root.querySelector('.qv-views'),
+            filters: this.root.querySelector('.qv-filters'),
+            bulkbar: this.root.querySelector('.qv-bulkbar'),
+            thead: this.root.querySelector('thead'),
+            tbody: this.root.querySelector('tbody'),
+            overlay: this.root.querySelector('.qv-overlay'),
+            preview: this.root.querySelector('.qv-preview'),
         };
 
         this._buildHead();
@@ -365,9 +365,9 @@ class QueueView {
         const at = cur < 0 ? this.focusIdx : cur;
         switch (e.key) {
             case 'ArrowDown': case 'j': e.preventDefault(); focus(at + 1); break;
-            case 'ArrowUp':   case 'k': e.preventDefault(); focus(at - 1); break;
+            case 'ArrowUp': case 'k': e.preventDefault(); focus(at - 1); break;
             case 'Home': e.preventDefault(); focus(0); break;
-            case 'End':  e.preventDefault(); focus(rows.length - 1); break;
+            case 'End': e.preventDefault(); focus(rows.length - 1); break;
             case 'Enter': e.preventDefault(); this._open(rows[at].dataset.id); break;
             case ' ': {
                 if (!this.cfg.bulk?.length) return;
@@ -430,7 +430,7 @@ class QueueView {
         }
         this.$.tbody.innerHTML = rows;
     }
-    _renderError()   { this.$.tbody.innerHTML = `<tr class="qv-empty"><td colspan="99">Couldn't load. Please try again.</td></tr>`; }
+    _renderError() { this.$.tbody.innerHTML = `<tr class="qv-empty"><td colspan="99">Couldn't load. Please try again.</td></tr>`; }
     _esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 }
 

@@ -2,7 +2,6 @@
 using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Requests;
-using HelpDeskNet8.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDeskNet8.Controllers.Shared
@@ -13,7 +12,7 @@ namespace HelpDeskNet8.Controllers.Shared
     {
         private readonly IHistory _historyManager = historyM;
         private readonly IAuthenticator _authenticator = auth;
-                
+
         [HttpPost]
         public async Task<IActionResult> GetHistory([FromBody] GetHistoryRequest request)
         {

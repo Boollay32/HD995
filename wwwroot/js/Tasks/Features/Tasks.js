@@ -16,10 +16,9 @@
 'use strict';
 
 const Tasks = (() => {
-
     // -------------------------  Constants  ------------------------- //
 
-    const DONE = 3;        // Complete
+    const DONE = 3;
     const WITHDRAWN = 4;
 
     // Status display constants live in TaskPopulation (loaded first).
@@ -31,10 +30,10 @@ const Tasks = (() => {
     const State = {
         ticketId: null,
         tasks: [],
-        techs: [],          // [{ id, name }]
+        techs: [],
         isLoading: false,
         isSaving: false,
-        openId: null,       // taskID currently expanded, or NEW_ID, or null
+        openId: null,
         dirty: false,
         guardsHooked: false,
     };
@@ -102,7 +101,6 @@ const Tasks = (() => {
             .slice(0, 5);
     }
 
-
     // -------------------------  Init  ------------------------- //
 
     function init(ticketId) {
@@ -127,8 +125,8 @@ const Tasks = (() => {
                 })
             );
             // The 'Task' dropdown group returns the tech list under the proc's
-        // column name 'assignedTechName' (old key kept as a fallback).
-        const raw = data?.assignedTechName ?? data?.assignedTech;
+            // column name 'assignedTechName' (old key kept as a fallback).
+            const raw = data?.assignedTechName ?? data?.assignedTech;
             if (Array.isArray(raw)) {
                 State.techs = raw
                     .map(it => ({ id: String(it.id ?? it.value ?? ''), name: it.name ?? it.text ?? '' }))
@@ -199,9 +197,9 @@ const Tasks = (() => {
         // their status/required-date ordering above them.
         const closedRank = t => {
             const s = H.statusOf(t);
-            if (s === 4) return 2;   // Withdrawn -- very bottom
-            if (s === 3) return 1;   // Complete -- below open
-            return 0;                // open
+            if (s === 4) return 2;
+            if (s === 3) return 1;
+            return 0;
         };
         const sorted = [...State.tasks].sort((a, b) => {
             const ar = closedRank(a), br = closedRank(b);
@@ -285,7 +283,7 @@ const Tasks = (() => {
 
         const editor = document.createElement('div');
         editor.className = 'td-task-editor';
-        editor.innerHTML = _editorHtml(task, isNew);
+        editor.innerHTML = DOMPurify.sanitize(_editorHtml(task, isNew));
         host.appendChild(editor);
 
         _bindEditor(editor, task, isNew);
@@ -324,9 +322,9 @@ const Tasks = (() => {
                     <label class="td-ed-label">Title</label>
                 </div>
                 ${isNew
-                    ? `<input type="text" class="td-ed-input" data-fld="title" maxlength="200"
+                ? `<input type="text" class="td-ed-input" data-fld="title" maxlength="200"
                        value="${H.esc(task.title || '')}" placeholder="Task title">`
-                    : `<div class="td-ed-title-static">${H.esc(task.title || '')}</div>
+                : `<div class="td-ed-title-static">${H.esc(task.title || '')}</div>
                        <input type="hidden" data-fld="title" value="${H.esc(task.title || '')}">`}
             </div>
             <div class="td-ed-grid">
@@ -644,7 +642,6 @@ const Tasks = (() => {
         }
     }
 
-
     // -------------------------  Delete  ------------------------- //
 
     async function _deleteTask(taskId) {
@@ -771,5 +768,4 @@ const Tasks = (() => {
         refresh: _getTasks,
         reload: _reload,
     };
-
 })();

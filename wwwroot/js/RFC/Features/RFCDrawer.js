@@ -10,7 +10,6 @@
 'use strict';
 
 window.RFCDrawer = createDetailDrawer({
-
     activeName: () => 'details',
 
     // Dirty proxy: RFCDetails' delegated refresh drives #Save-Button's

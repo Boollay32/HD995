@@ -80,16 +80,16 @@ class RFCPage extends PageBase {
             action: { label: '+ New RFC', onClick: () => Router.toCreateRFC() },
 
             views: [
-                { id: 'mine',  label: 'My open',     filter: r => isMyRFC(r) && RQisOpen(r) },
-                { id: 'all',   label: 'All open',    filter: r => RQisOpen(r) },
-                { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && RQisOpen(r) },
+                { id: 'mine', label: 'My open', filter: r => isMyRFC(r) && RQisOpen(r) },
+                { id: 'all', label: 'All open', filter: r => RQisOpen(r) },
+                { id: 'unass', label: 'Unassigned', filter: r => !r.assignedTech && RQisOpen(r) },
                 { id: 'nonactive', label: 'Non Active', filter: r => !RQisOpen(r) },
             ],
 
             filters: [
                 { id: 'prio', label: 'Priority', field: 'priority' },
-                { id: 'stat', label: 'Status',   field: 'status' },
-                { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
+                { id: 'stat', label: 'Status', field: 'status' },
+                { id: 'asg', label: 'Assignee', field: 'assignedTech' },
             ],
 
             columns: [

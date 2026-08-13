@@ -1,8 +1,16 @@
 /* Font-size scale: Small=100% (default), Medium, Large. Sets the
    root font-size so every rem-based size scales together. */
-html { font-size: 100%; }
-html[data-font="medium"] { font-size: 112%; }
-html[data-font="large"] { font-size: 125%; }
+html {
+    font-size: 100%;
+}
+
+    html[data-font="medium"] {
+        font-size: 112%;
+    }
+
+    html[data-font="large"] {
+        font-size: 125%;
+    }
 
 /* =============================================================
    Design tokens — canonical brand palette (orange / white / gray).
@@ -16,32 +24,27 @@ html[data-font="large"] { font-size: 125%; }
     /* Brand — warm orange (Civic Warmth). #E8633C is the friendly brand
        hue for DECORATIVE fills only (logo, avatars, progress) -- it does NOT
        pass AA with text, so anything carrying text uses --accent below. */
-    --brand:        #E8633C;
+    --brand: #E8633C;
     --brand-strong: #C2640F;
-    --brand-deep:   #944D18;     /* orange AS TEXT (links/nav): 4.77 canvas / 5.51 panel (Parchment) */
-    --brand-pale:   #FDEFE0;
-    --brand-line:   #F6D7BC;
-
+    --brand-deep: #944D18; /* orange AS TEXT (links/nav): 4.77 canvas / 5.51 panel (Parchment) */
+    --brand-pale: #FDEFE0;
+    --brand-line: #F6D7BC;
     /* Ink / text (warm) */
-    --ink:      #33302C;
+    --ink: #33302C;
     --ink-soft: #55504A;
-    --muted:    #675D50;         /* AA on Parchment: 5.64 panel / 4.88 canvas / 6.14 paper */
-
+    --muted: #675D50; /* AA on Parchment: 5.64 panel / 4.88 canvas / 6.14 paper */
     /* Surfaces / lines (Parchment: no pure white anywhere) */
-    --paper:   #FBF6EC;
+    --paper: #FBF6EC;
     --paper-2: #EFE5D2;
-    --line:    #E4D6BE;
-    --line-2:  #CBB795;
-
+    --line: #E4D6BE;
+    --line-2: #CBB795;
     /* Status */
-    --ok:    #3B6D11;            /* traffic-light green, AA on ok-bg */
-    --warn:  #854F0B;            /* traffic-light amber, AA on warn-bg */
-    --danger:#A32D2D;            /* traffic-light red */
-
+    --ok: #3B6D11; /* traffic-light green, AA on ok-bg */
+    --warn: #854F0B; /* traffic-light amber, AA on warn-bg */
+    --danger: #A32D2D; /* traffic-light red */
     /* Type */
     --font-sans: "Spline Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
     /* Radii / shadow. Surface depth is the standard treatment: a 1px inset
        top highlight (light "from above") plus a soft warm drop shadow.
        --surface-lift is the reusable pair; --shadow-sm folds the same inset
@@ -59,50 +62,51 @@ html[data-font="large"] { font-size: 125%; }
 /* Nav/footer theme vars (lifted from Queue.css so the chrome themes
    app-wide, not only on the list pages -- fixes the unthemed/white footer). */
 :root {
-    color-scheme: light;     /* native widgets (select popups etc.) follow theme */
-    --panel: #F6EFE2;        /* Parchment: no pure white; text 11.48, muted 5.64 */
+    color-scheme: light; /* native widgets (select popups etc.) follow theme */
+    --panel: #F6EFE2; /* Parchment: no pure white; text 11.48, muted 5.64 */
     --text: #33302C;
-    --border: #D2BE9C;       /* stepped up against the deeper canvas */
+    --border: #D2BE9C; /* stepped up against the deeper canvas */
     --row-hover: #EDE2CE;
     --chip-bg: #E8DAC4;
-    --canvas: #EBDFC7;       /* deepened so lifted panels separate clearly */
-    --accent: #B5530E;           /* button orange: AA 4.99 with white text */
-    --accent-strong: #964307;    /* hover: 6.77 with white text */
-    --on-accent: #FFFFFF;        /* text on accent-filled controls */
-    --accent-2: #266A5F;         /* teal companion, AA on accent-2-bg: 5.19 */
+    --canvas: #EBDFC7; /* deepened so lifted panels separate clearly */
+    --accent: #B5530E; /* button orange: AA 4.99 with white text */
+    --accent-strong: #964307; /* hover: 6.77 with white text */
+    --on-accent: #FFFFFF; /* text on accent-filled controls */
+    --accent-2: #266A5F; /* teal companion, AA on accent-2-bg: 5.19 */
     --accent-2-strong: #225F56;
-    --accent-2-bg: #D7EDE9;      /* teal tint for 'open' pills (text #1F5249: 7.28) */
-    --border-strong: #927B5C;    /* form-control borders: 3.05 canvas / 3.52 panel (3:1 AA) */
+    --accent-2-bg: #D7EDE9; /* teal tint for 'open' pills (text #1F5249: 7.28) */
+    --border-strong: #927B5C; /* form-control borders: 3.05 canvas / 3.52 panel (3:1 AA) */
     --info: #1D4ED8;
-    --ok-bg: #EAF3DE;      /* traffic-light: soft green tint */
-    --warn-bg: #FAEEDA;    /* traffic-light: soft amber tint */
-    --danger-bg: #FCEBEB;  /* traffic-light: soft red tint */
-    --info-bg: #E6F1FB;    /* traffic-light: soft blue tint */
+    --ok-bg: #EAF3DE; /* traffic-light: soft green tint */
+    --warn-bg: #FAEEDA; /* traffic-light: soft amber tint */
+    --danger-bg: #FCEBEB; /* traffic-light: soft red tint */
+    --info-bg: #E6F1FB; /* traffic-light: soft blue tint */
 }
+
 html[data-theme="dark"] {
     color-scheme: dark;
-    --panel: #2B2724;        /* warm charcoal panel */
-    --text: #E8E0D6;         /* warm off-white: 11.33 on panel */
-    --border: #4A433C;           /* aligned to the (deleted) Queue.css dark value */
+    --panel: #2B2724; /* warm charcoal panel */
+    --text: #E8E0D6; /* warm off-white: 11.33 on panel */
+    --border: #4A433C; /* aligned to the (deleted) Queue.css dark value */
     --row-hover: #34302C;
     --chip-bg: #3D362C;
-    --canvas: #1E1B19;       /* darker warm canvas: sections lift */
-    --accent: #F0843A;           /* bright orange; dark text on it: 6.39 */
+    --canvas: #1E1B19; /* darker warm canvas: sections lift */
+    --accent: #F0843A; /* bright orange; dark text on it: 6.39 */
     --accent-strong: #FF9A55;
-    --on-accent: #2A1B0E;        /* dark text on the bright accent */
-    --accent-2: #5FCDBC;         /* teal on dark: 7.72 as text on panel */
+    --on-accent: #2A1B0E; /* dark text on the bright accent */
+    --accent-2: #5FCDBC; /* teal on dark: 7.72 as text on panel */
     --accent-2-strong: #7FD6C5;
-    --accent-2-bg: #234640;      /* teal tint (text #7FD6C5: 6.10) */
-    --border-strong: #7D7468;    /* form-control borders: 3.22 on panel */
-    --muted: #A89C8E;            /* 5.51 on panel */
-    --ok: #97C459;             /* traffic-light green on dark */
-    --warn: #EF9F27;           /* traffic-light amber on dark */
-    --danger: #E24B4A;         /* traffic-light red on dark */
+    --accent-2-bg: #234640; /* teal tint (text #7FD6C5: 6.10) */
+    --border-strong: #7D7468; /* form-control borders: 3.22 on panel */
+    --muted: #A89C8E; /* 5.51 on panel */
+    --ok: #97C459; /* traffic-light green on dark */
+    --warn: #EF9F27; /* traffic-light amber on dark */
+    --danger: #E24B4A; /* traffic-light red on dark */
     --info: #88A7F2;
-    --ok-bg: #173404;      /* dark green tint */
-    --warn-bg: #412402;    /* dark amber tint */
-    --danger-bg: #501313;  /* dark red tint */
-    --info-bg: #042C53;    /* dark blue tint */
+    --ok-bg: #173404; /* dark green tint */
+    --warn-bg: #412402; /* dark amber tint */
+    --danger-bg: #501313; /* dark red tint */
+    --info-bg: #042C53; /* dark blue tint */
 }
 
 /* =============================================================
@@ -115,6 +119,7 @@ html[data-theme="dark"] {
     --scroll-thumb: #BCC3CB;
     --scroll-thumb-hover: #97A2AC;
 }
+
 html[data-theme="dark"] {
     --scroll-thumb: #4C5560;
     --scroll-thumb-hover: #5F6A77;
@@ -145,19 +150,23 @@ html[data-theme="dark"] {
     width: 10px;
     height: 10px;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
     background: var(--scroll-thumb);
     border-radius: 8px;
-    border: 2px solid transparent;   /* inset look against any surface */
+    border: 2px solid transparent; /* inset look against any surface */
     background-clip: padding-box;
 }
-::-webkit-scrollbar-thumb:hover {
-    background: var(--scroll-thumb-hover);
-    background-clip: padding-box;
-}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--scroll-thumb-hover);
+        background-clip: padding-box;
+    }
+
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
@@ -192,9 +201,10 @@ html[data-theme="dark"] {
     text-decoration: none;
     transition: top .12s ease;
 }
-.skip-link:focus {
-    top: 0;
-}
+
+    .skip-link:focus {
+        top: 0;
+    }
 
 /* Keyboard focus is always visible. Several component sheets remove the
    default outline; this deliberately wins for keyboard (focus-visible)
@@ -212,6 +222,7 @@ html[data-theme="dark"] {
         transition-duration: .01ms !important;
         scroll-behavior: auto !important;
     }
+
     .snowflake, #Snow, .snow {
         display: none !important;
     }
@@ -229,17 +240,19 @@ textarea.field-invalid {
     border-color: var(--danger) !important;
     box-shadow: 0 0 0 3px var(--danger-bg);
 }
+
 .ca-btn-primary.is-incomplete,
 .accept.is-incomplete {
     background: var(--row-hover);
     border-color: var(--border-strong);
     color: var(--muted);
 }
-.ca-btn-primary.is-incomplete:hover,
-.accept.is-incomplete:hover {
-    background: var(--row-hover);
-    color: var(--muted);
-}
+
+    .ca-btn-primary.is-incomplete:hover,
+    .accept.is-incomplete:hover {
+        background: var(--row-hover);
+        color: var(--muted);
+    }
 
 /* ===== Tab highlight (keyboard focus outline) ===== */
 /* OFF by default: the focus rings show only when the user enables them in
@@ -259,27 +272,40 @@ html:not([data-tabfocus="on"]) :focus-visible:is(#_, *) {
     --header-bg: #FBF6EF;
     --scrim: rgba(38,28,18,.30);
     --accent-soft: #FDEFE0;
-    --badge-fg: #4A443C; --badge-bg: #EDE4D6;
-    --info-fg: #0C447C;      /* blue-800 on info-bg */
-    --warn-fg: #633806;      /* amber-800 on warn-bg */
-    --ok-fg: #27500A;        /* green-800 on ok-bg */
-    --bad-fg: #791F1F;  --bad-bg: #FCEBEB;   /* red-800 on red tint */
-    --neutral-fg: #444441; --neutral-bg: #F1EFE8;  /* soft grey dormant */
-    --pri-urgent: #E24B4A; --pri-high: #EF9F27; --pri-normal: #97C459; --pri-low: #B4B2A9;
+    --badge-fg: #4A443C;
+    --badge-bg: #EDE4D6;
+    --info-fg: #0C447C; /* blue-800 on info-bg */
+    --warn-fg: #633806; /* amber-800 on warn-bg */
+    --ok-fg: #27500A; /* green-800 on ok-bg */
+    --bad-fg: #791F1F;
+    --bad-bg: #FCEBEB; /* red-800 on red tint */
+    --neutral-fg: #444441;
+    --neutral-bg: #F1EFE8; /* soft grey dormant */
+    --pri-urgent: #E24B4A;
+    --pri-high: #EF9F27;
+    --pri-normal: #97C459;
+    --pri-low: #B4B2A9;
 }
+
 html[data-theme="dark"] {
     --bg: var(--canvas);
     --row-border: #3A342E;
     --header-bg: #211E1B;
     --scrim: rgba(9,6,3,.6);
     --accent-soft: #3A2C1C;
-    --badge-fg: #C5BBAD; --badge-bg: #3A342E;
-    --info-fg: #85B7EB;      /* blue-200 on dark blue */
-    --warn-fg: #FAC775;      /* amber-100 on dark amber */
-    --ok-fg: #C0DD97;        /* green-100 on dark green */
-    --bad-fg: #F09595;  --bad-bg: #501313;   /* red-200 on dark red */
-    --neutral-fg: #B4B2A9; --neutral-bg: #2C2C2A;  /* soft grey dormant dark */
-    --pri-urgent: #F0997B; --pri-high: #FAC775; --pri-normal: #C0DD97; --pri-low: #B4B2A9;
+    --badge-fg: #C5BBAD;
+    --badge-bg: #3A342E;
+    --info-fg: #85B7EB; /* blue-200 on dark blue */
+    --warn-fg: #FAC775; /* amber-100 on dark amber */
+    --ok-fg: #C0DD97; /* green-100 on dark green */
+    --bad-fg: #F09595;
+    --bad-bg: #501313; /* red-200 on dark red */
+    --neutral-fg: #B4B2A9;
+    --neutral-bg: #2C2C2A; /* soft grey dormant dark */
+    --pri-urgent: #F0997B;
+    --pri-high: #FAC775;
+    --pri-normal: #C0DD97;
+    --pri-low: #B4B2A9;
 }
 
 /* Native <select> popup lists: color-scheme (above) flips them per

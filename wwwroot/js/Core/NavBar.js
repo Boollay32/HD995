@@ -1,7 +1,6 @@
 ﻿// =============================  NavBar.js  ============================= //
 
 const NavBar = {
-
     // -------------------------  Init  ------------------------- //
 
     init() {
@@ -19,8 +18,6 @@ const NavBar = {
             'IncidentsMenu': () => NavBar.incidents(),
             'Logout-button': () => NavBar.startLogout(),
         };
-
-
 
         nav.addEventListener('click', (e) => {
             const id = e.target.closest('a')?.id;
@@ -54,7 +51,6 @@ const NavBar = {
     tasks() {
         Router.toTasksPage();
     },
-
 
     // -------------------------  Display  ------------------------- //
 

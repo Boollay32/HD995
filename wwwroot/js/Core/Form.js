@@ -1,7 +1,6 @@
 ﻿// =============================  Form.js  ============================= //
 
 const Form = {
-
     // -------------------------  Get Values  ------------------------- //
 
     getValues(elements, data = {}) {
@@ -13,14 +12,12 @@ const Form = {
 
             if (el.nodeName === 'SELECT') {
                 value = el.selectedIndex >= 0 ? el[el.selectedIndex].value : 0;
-
             } else if (el.attributes?.checkbox) {
                 for (let i = 0; i < el.children.length; i++) {
                     if (el.childNodes[i].childNodes[0].checked) {
                         value += `${i + 1}-`;
                     }
                 }
-
             } else if (el.nodeName === 'INPUT' || el.nodeName === 'TEXTAREA') {
                 if (el.type === 'checkbox') {
                     value = el.checked ? 1 : 0;
@@ -29,7 +26,6 @@ const Form = {
                 } else {
                     value = el.value;
                 }
-
             } else if (el.nodeName === 'LABEL') {
                 value = el.innerText;
             }

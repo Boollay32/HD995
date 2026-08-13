@@ -7,7 +7,6 @@
 'use strict';
 
 const TaskPopulation = {
-
     // -------------------------  Status display  ------------------------- //
 
     STATUS: [

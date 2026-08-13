@@ -8,8 +8,8 @@
     'use strict';
 
     var PAIRS = [
-        { pill: 'meta-status',   select: 'rfcStatus' },
-        { pill: 'meta-priority', select: 'priority'  }
+        { pill: 'meta-status', select: 'rfcStatus' },
+        { pill: 'meta-priority', select: 'priority' }
     ];
 
     // Map an option's label to the colour class PaneShell.css provides

@@ -1,9 +1,9 @@
-﻿using HelpDeskNet8.Requests;
-using HelpDeskNet8.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
-using HelpDeskNet8.Interfaces.Users;
+﻿using HelpDeskNet8.Infrastructure;
 using HelpDeskNet8.Interfaces.Attachments;
 using HelpDeskNet8.Interfaces.Shared;
+using HelpDeskNet8.Interfaces.Users;
+using HelpDeskNet8.Requests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDeskNet8.Controllers.Tickets
 {
@@ -13,7 +13,7 @@ namespace HelpDeskNet8.Controllers.Tickets
     {
         private readonly IAttachmentManager _attachmentManager = attachmentM;
         private readonly IAuthenticator _authenticator = auth;
-              
+
         [HttpPost]
         public async Task<IActionResult> GetAttachmentsNotes([FromBody] GetAttachmentsNotesRequest request)
         {

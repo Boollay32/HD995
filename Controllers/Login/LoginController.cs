@@ -3,6 +3,7 @@ using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Shared;
 using HelpDeskNet8.Requests;
+using HelpDeskNet8.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -72,13 +73,17 @@ namespace HelpDeskNet8.Controllers.Login
 
         [HttpPost]
         [EnableRateLimiting("login")]
-        [IgnoreAntiforgeryToken] // pre-auth login step (see PostLogin)
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> RequestPasswordReset([FromBody] PasswordResetRequest request)
         {
             try
             {
-                (int code, string? temp) = await _authenticator.RequestPasswordReset(
-                    request.UserName?.Trim() ?? string.Empty, request.Pin);
+                string userName = request.UserName?.Trim() ?? string.Empty;
+
+                if (string.IsNullOrEmpty(userName) || !IsValidEmail(userName))
+                    return Ok(new { message = "If the details match an account, an email with a temporary password has been sent." });
+
+                (int code, string? temp) = await _authenticator.RequestPasswordReset(userName, request.Pin);
 
                 if (code == 0 && !string.IsNullOrEmpty(temp))
                 {
@@ -90,16 +95,10 @@ namespace HelpDeskNet8.Controllers.Login
                         "Your PIN has not changed.</p>" +
                         "<p>If you did not request this, contact Govtech support immediately.</p>";
 
-                    // Sending disabled (dev / test): the popup is the only way the
-                    // temp password reaches the tester -- acceptable, since it is
-                    // gated by the username+PIN check and the login rate limit.
-                    // Sending enabled (live): the email delivers and NO popup is
-                    // shown -- an on-screen popup would expose the temp password
-                    // and confirm the account exists, for no benefit.
                     if (!_mailPreview.SendEnabled)
-                        _mailPreview.Add("PasswordReset", new[] { request.UserName }, subject, body, sent: false);
+                        _mailPreview.Add("PasswordReset", [userName], subject, body, sent: false);
                     else
-                        await _miscManager.SendMailMessage(ResetFromAddress, new[] { request.UserName }, subject, body);
+                        await _miscManager.SendMailMessage(ResetFromAddress, [userName], subject, body);
                 }
             }
             catch (Exception ex)
@@ -111,11 +110,16 @@ namespace HelpDeskNet8.Controllers.Login
             return Ok(new { message = "If the details match an account, an email with a temporary password has been sent." });
         }
 
-        [HttpPost]
-        public IActionResult Logout([FromBody] AuthenticatedRequest request)
+        private static bool IsValidEmail(string email)
         {
-            // Cookie-only logout: clear the session cookie. The DB session row
-            // expires on its own, and the cleared httpOnly cookie prevents reuse.
+            try { return new System.Net.Mail.MailAddress(email).Address == email; }
+            catch { return false; }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
+        {
             SessionCookie.Delete(Response);
             return Ok();
         }

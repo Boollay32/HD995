@@ -11,15 +11,15 @@
 const CRQ_PRIORITY_COLOR = { Urgent: 'var(--pri-urgent)', High: 'var(--pri-high)', Normal: 'var(--pri-normal)', Low: 'var(--pri-low)' };
 const CRQ_PRIORITY_ORDER = { Urgent: 0, High: 1, Normal: 2, Low: 3 };
 const CRQ_STATUS_COLOR = {
-    Open:      ['var(--info-fg)', 'var(--info-bg)'],
-    Pending:   ['var(--warn-fg)', 'var(--warn-bg)'],
+    Open: ['var(--info-fg)', 'var(--info-bg)'],
+    Pending: ['var(--warn-fg)', 'var(--warn-bg)'],
     'On Hold': ['var(--neutral-fg)', 'var(--neutral-bg)'],
-    Closed:    ['var(--accent-2)', 'var(--accent-2-bg)'],
-    Resolved:  ['var(--ok-fg)', 'var(--ok-bg)'],
+    Closed: ['var(--accent-2)', 'var(--accent-2-bg)'],
+    Resolved: ['var(--ok-fg)', 'var(--ok-bg)'],
     Cancelled: ['var(--neutral-fg)', 'var(--neutral-bg)'],
-    'CR Open':      ['var(--info-fg)', 'var(--info-bg)'],
-    'CR Assigned':  ['var(--warn-fg)', 'var(--warn-bg)'],
-    'CR Complete':  ['var(--ok-fg)', 'var(--ok-bg)'],
+    'CR Open': ['var(--info-fg)', 'var(--info-bg)'],
+    'CR Assigned': ['var(--warn-fg)', 'var(--warn-bg)'],
+    'CR Complete': ['var(--ok-fg)', 'var(--ok-bg)'],
     'CR Withdrawn': ['var(--neutral-fg)', 'var(--neutral-bg)'],
 };
 // Terminal statuses (labels confirmed against tblStatus). Everything else is open.
@@ -135,13 +135,13 @@ class CRPoolPage extends PageBase {
 
             views: [
                 { id: 'open', label: 'Open', filter: r => CRQisOpen(r) },
-                { id: 'all',  label: 'All',  filter: () => true },
+                { id: 'all', label: 'All', filter: () => true },
             ],
 
             filters: [
-                { id: 'type', label: 'Type',     field: 'requestType' },
+                { id: 'type', label: 'Type', field: 'requestType' },
                 { id: 'prio', label: 'Priority', field: 'priority' },
-                { id: 'stat', label: 'Status',   field: 'status' },
+                { id: 'stat', label: 'Status', field: 'status' },
             ],
 
             ...(isAdmin && projectLabels.length ? {

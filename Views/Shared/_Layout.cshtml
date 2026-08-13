@@ -32,7 +32,12 @@
         @RenderSection("AddCSSToHead", required: false)
     }
 
-    @* -------------------------  External Libraries  ------------------------- *@
+@* -------------------------  External Libraries  ------------------------- *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"
+        integrity="sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+        nonce="@(Context.Items["csp-nonce"] as string)"></script>
 
     @* -------------------------  Core JS  ------------------------- *@
     <script src="~/js/Core/STORAGE_KEYS.js" asp-append-version="true"></script>
@@ -59,7 +64,7 @@
     <script src="~/js/Core/Snow.js" asp-append-version="true"></script>
     <script src="~/js/Core/NotificationBell.js" asp-append-version="true"></script>
     <script src="~/js/Core/TabFocus.js" asp-append-version="true"></script>
-
+   
     @* -------------------------  Components  ------------------------- *@
     <script src="~/js/Components/Table/QueueView.js" asp-append-version="true"></script>
     <script src="~/js/Components/History/History.js" asp-append-version="true"></script>

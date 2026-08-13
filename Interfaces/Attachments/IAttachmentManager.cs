@@ -7,6 +7,5 @@ namespace HelpDeskNet8.Interfaces.Attachments
         Task<IEnumerable<IAttachment>> GetAttachmentsNotes(IUser user, int TicketID, int RFC);
 
         Task<IEnumerable<IAttachment>> GetAttachmentsTasks(IUser user, int TicketID);
-
     }
 }

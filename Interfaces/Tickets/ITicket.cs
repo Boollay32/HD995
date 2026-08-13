@@ -61,6 +61,7 @@
         DateTime? IncidentStartDate { get; set; }
         DateTime? TargetDate { get; set; }
         DateTime? CompleteDate { get; set; }
+
         ITicket GetChanges();                      // ← removed ITicketManager + IUser params
     }
 }

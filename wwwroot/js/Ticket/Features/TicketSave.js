@@ -8,7 +8,6 @@
 // -------------------------  Dirty tracking  ------------------------- //
 
 const Dirty = {
-
     set(isDirty) {
         State.isDirty = isDirty;
         // Mirror into the drawer's contextual save bar (TicketDrawer.js).
@@ -80,7 +79,6 @@ const Dirty = {
 // -------------------------  Field change handlers  ------------------------- //
 
 const FieldHandlers = {
-
     _controlValue(el) {
         return el.type === 'checkbox' ? el.checked : el.value;
     },
@@ -168,7 +166,6 @@ const FieldHandlers = {
         const catEl = document.getElementById('category');
         catEl?.addEventListener('change', FieldHandlers._onCategoryChange);
 
-
         // Priority
         const priorityEl = document.getElementById('priority');
         priorityEl?.addEventListener('change', FieldHandlers._onChange);
@@ -202,7 +199,6 @@ const FieldHandlers = {
 // -------------------------  Save  ------------------------- //
 
 const Save = {
-
     _buildPayload() {
         const data = State.ticketData;
         if (!data) return null;
@@ -288,7 +284,6 @@ const Save = {
 
     // Email the ticket's watchers after a save. Ported from the old
 
-
     async execute() {
         const saveBtn = Dom.saveBtn();
         if (!saveBtn) return;
@@ -342,7 +337,6 @@ const Save = {
             // Refresh so the saved values (status, assignee, activity, etc.)
             // are re-fetched from the server, not just reflected in place.
             setTimeout(() => window.location.reload(), 600);
-
         } catch (err) {
             console.error('Save.execute:', err);
             UI.toast?.('Failed to save ticket', 'error');
@@ -374,4 +368,3 @@ const Save = {
         Dom.saveBtn()?.addEventListener('click', Save.execute);
     },
 };
-

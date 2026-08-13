@@ -43,7 +43,6 @@ class StatsPage extends PageBase {
         // Fix: download button wired here — not onclick=""
         document.getElementById('Download-Table-Button')
             ?.addEventListener('click', () => this._triggerDownload());
-
     }
 
     // -------------------------  Stats  ------------------------- //
@@ -59,7 +58,6 @@ class StatsPage extends PageBase {
 
             CreateDynamicTable(data, 'Stats', null, null);
             this._createCSV(data, reportName);
-
         } catch (error) {
             if (error.message !== 'Unauthorized') {
                 this.handleError("Error: Couldn't load stats.");

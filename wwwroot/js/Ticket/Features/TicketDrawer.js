@@ -11,7 +11,6 @@
 'use strict';
 
 window.TicketDrawer = createDetailDrawer({
-
     activeName: () => State.activeTab,
     isDirty: () => State.isDirty,
 

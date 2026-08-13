@@ -11,7 +11,6 @@
 //     handler) are now wired to UserSave.
 
 class UserManager extends PageBase {
-
     constructor() {
         super();
         this.userLogin = sessionStorage.getItem(STORAGE_KEYS.USER_ID);
@@ -89,7 +88,7 @@ class UserManager extends PageBase {
         const isAdmin = this.adminId === 2;
 
         if (isAdmin) {
-            UI.showById('ResetUser-Button,DeleteUser-Button');
+            UI.showById('ResetUser-Button,DeleteUser-Button,UpdateUser-Button');
             UI.enableById('UserPhone,AdminLevel');
             this._setDeleteButtonLabel();
             this._setupUnlockButton();
@@ -98,6 +97,7 @@ class UserManager extends PageBase {
             UI.hideById('ResetUser-Button,DeleteUser-Button,UpdateUser-Button');
             UI.disableById('UserPhone,AdminLevel');
         }
+
     }
 
     // The account can only be UNLOCKED from the UI (the UserManage proc has

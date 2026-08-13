@@ -16,6 +16,7 @@
     gap: 12px;
     margin-bottom: 6px;
 }
+
 .pjd-back {
     display: grid;
     place-items: center;
@@ -29,8 +30,17 @@
     flex-shrink: 0;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.pjd-back:hover { background: var(--row-hover); color: var(--text); border-color: var(--border-strong); }
-.pjd-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+    .pjd-back:hover {
+        background: var(--row-hover);
+        color: var(--text);
+        border-color: var(--border-strong);
+    }
+
+    .pjd-back:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+    }
 
 .pjd-name {
     margin: 0; /* now an h1 */
@@ -39,6 +49,7 @@
     color: var(--text);
     line-height: 1.25;
 }
+
 .pjd-badges {
     display: flex;
     gap: 8px;
@@ -55,37 +66,47 @@
     /* HD36 4a: match the ticket overview panel's floating-panel look. */
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
+
 .pjd-desc {
     color: var(--text);
     font-size: 0.875rem;
     line-height: 1.55;
     margin: 0 0 14px;
 }
+
 .pjd-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 0 24px;
 }
-.pjd-grid .pjd-field {
-    padding: 10px 0;
-    /* HD39: separator below each field (was border-top, which doubled the
+
+    .pjd-grid .pjd-field {
+        padding: 10px 0;
+        /* HD39: separator below each field (was border-top, which doubled the
        desc-block's full-width line directly above the first row). */
-    border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+.pjd-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
-.pjd-field { display: flex; flex-direction: column; gap: 3px; }
-.pjd-field dt {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0;
-}
-.pjd-field dd {
-    margin: 0;
-    font-size: 0.875rem;
-    color: var(--text);
-}
+
+    .pjd-field dt {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0;
+    }
+
+    .pjd-field dd {
+        margin: 0;
+        font-size: 0.875rem;
+        color: var(--text);
+    }
 
 /* Tickets section */
 .pjd-tickets-head {
@@ -95,13 +116,18 @@
     gap: 12px;
     margin-bottom: 10px;
 }
-.pjd-tickets-head h2 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text);
+
+    .pjd-tickets-head h2 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+.pjd-tickets-count {
+    font-size: 0.8125rem;
+    color: var(--muted);
 }
-.pjd-tickets-count { font-size: 0.8125rem; color: var(--muted); }
 
 .pjd-tickets-empty {
     display: none;
@@ -117,40 +143,67 @@
     border-radius: 12px;
     overflow: hidden;
 }
+
 .pjd-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8125rem;
 }
-.pjd-table thead th {
-    text-align: left;
-    padding: 9px 14px;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
-    background: var(--row-hover);
-    border-bottom: 1px solid var(--border);
-}
+
+    .pjd-table thead th {
+        text-align: left;
+        padding: 9px 14px;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+        background: var(--row-hover);
+        border-bottom: 1px solid var(--border);
+    }
+
 .pjd-trow {
     cursor: pointer;
     transition: background 0.12s ease;
 }
-.pjd-trow td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-    vertical-align: middle;
-}
-.pjd-trow:last-child td { border-bottom: 0; }
-.pjd-trow:hover { background: var(--row-hover); }
-.pjd-trow:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.pjd-trow.is-closed td { color: var(--muted); }
-.pjd-trow.is-closed .pjd-tsubj { text-decoration: line-through; }
 
-.pjd-tid { color: var(--muted); white-space: nowrap; }
-.pjd-tsubj { font-weight: 500; }
+    .pjd-trow td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    .pjd-trow:last-child td {
+        border-bottom: 0;
+    }
+
+    .pjd-trow:hover {
+        background: var(--row-hover);
+    }
+
+    .pjd-trow:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: -2px;
+    }
+
+    .pjd-trow.is-closed td {
+        color: var(--muted);
+    }
+
+    .pjd-trow.is-closed .pjd-tsubj {
+        text-decoration: line-through;
+    }
+
+.pjd-tid {
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.pjd-tsubj {
+    font-weight: 500;
+}
+
 .pjd-tstatus {
     font-size: 0.75rem;
     color: var(--muted);
@@ -160,26 +213,53 @@
     border-radius: 999px;
     white-space: nowrap;
 }
-.pjd-tdate { color: var(--muted); white-space: nowrap; }
+
+.pjd-tdate {
+    color: var(--muted);
+    white-space: nowrap;
+}
 
 @media (max-width: 620px) {
-    .pjd-app { padding: 14px 14px 30px; }
-    .pjd-ttype, .pjd-ttech { display: none; }
+    .pjd-app {
+        padding: 14px 14px 30px;
+    }
+
+    .pjd-ttype, .pjd-ttech {
+        display: none;
+    }
+
     .pjd-table thead th.pjd-h-type,
-    .pjd-table thead th.pjd-h-tech { display: none; }
+    .pjd-table thead th.pjd-h-tech {
+        display: none;
+    }
 }
 
 /* Edit-project button (admin only) */
 .pjd-edit-btn {
-    font-size: 0.8125rem; font-weight: 600; color: var(--accent);
-    background: var(--row-hover); border: 1px solid var(--border);
-    padding: 6px 14px; border-radius: 8px; cursor: pointer; margin-left: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--row-hover);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: 8px;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.pjd-edit-btn:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+
+    .pjd-edit-btn:hover {
+        background: var(--accent);
+        color: var(--on-accent);
+        border-color: var(--accent);
+    }
 
 /* Field-label captions (project name + description) */
-.pjd-name-block { display: flex; flex-direction: column; }
+.pjd-name-block {
+    display: flex;
+    flex-direction: column;
+}
+
 .pjd-cap {
     display: block;
     font-size: 0.6875rem;
@@ -191,14 +271,21 @@
 }
 /* HD37 4a: separators between grouped items, matching the ticket overview
    (.td-ov-group + .td-ov-group border-top). */
-.pjd-desc-block { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
-.pjd-desc-block .pjd-desc { margin: 0; }
+.pjd-desc-block {
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+    .pjd-desc-block .pjd-desc {
+        margin: 0;
+    }
 
 /* Add-ticket-to-project button */
 .pjd-newticket-btn {
     font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--on-accent);   /* dark mode: dark text on the bright accent */
+    color: var(--on-accent); /* dark mode: dark text on the bright accent */
     background: var(--accent);
     border: 1px solid var(--accent);
     padding: 6px 14px;
@@ -206,14 +293,22 @@
     cursor: pointer;
     transition: filter 0.15s ease;
 }
-.pjd-newticket-btn:hover { filter: brightness(0.95); }
-.pjd-newticket-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .pjd-newticket-btn:hover {
+        filter: brightness(0.95);
+    }
+
+    .pjd-newticket-btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
 
 .pjd-tickets-actions {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 .pjd-status-filter {
     font-size: 0.8125rem;
     color: var(--text);
@@ -223,7 +318,11 @@
     padding: 5px 10px;
     cursor: pointer;
 }
-.pjd-status-filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .pjd-status-filter:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
 
 /* -------------------------  CR pool (assign / unassign)  ------------------------- */
 /* "Add from pool" is a secondary action next to "+ New ticket": outline style. */
@@ -231,7 +330,12 @@
     color: var(--accent);
     background: transparent;
 }
-.pjd-pool-btn:hover { background: var(--accent); color: var(--on-accent); filter: none; }
+
+    .pjd-pool-btn:hover {
+        background: var(--accent);
+        color: var(--on-accent);
+        filter: none;
+    }
 
 .pjd-pool-picker {
     border: 1px solid var(--border);
@@ -241,7 +345,13 @@
     max-height: 260px;
     overflow-y: auto;
 }
-.pjd-pool-empty { margin: 8px; font-size: 0.8125rem; color: var(--muted); }
+
+.pjd-pool-empty {
+    margin: 8px;
+    font-size: 0.8125rem;
+    color: var(--muted);
+}
+
 .pjd-pool-row {
     display: flex;
     align-items: center;
@@ -250,10 +360,30 @@
     border-radius: 8px;
     font-size: 0.8125rem;
 }
-.pjd-pool-row:hover { background: var(--line); }
-.pjd-pool-id { color: var(--muted); flex: 0 0 auto; }
-.pjd-pool-subj { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pjd-pool-type { flex: 0 0 auto; color: var(--muted); font-size: 0.75rem; }
+
+    .pjd-pool-row:hover {
+        background: var(--line);
+    }
+
+.pjd-pool-id {
+    color: var(--muted);
+    flex: 0 0 auto;
+}
+
+.pjd-pool-subj {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pjd-pool-type {
+    flex: 0 0 auto;
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
 .pjd-pool-add,
 .pjd-unassign {
     font-size: 0.75rem;
@@ -265,10 +395,32 @@
     border-radius: 6px;
     cursor: pointer;
 }
-.pjd-pool-add:hover,
-.pjd-unassign:hover { border-color: var(--accent); }
-.pjd-pool-add:disabled,
-.pjd-unassign:disabled { opacity: 0.5; cursor: default; }
-.pjd-h-act { width: 1%; }
-.pjd-tact { text-align: right; white-space: nowrap; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    .pjd-pool-add:hover,
+    .pjd-unassign:hover {
+        border-color: var(--accent);
+    }
+
+    .pjd-pool-add:disabled,
+    .pjd-unassign:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+
+.pjd-h-act {
+    width: 1%;
+}
+
+.pjd-tact {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}

@@ -1,10 +1,10 @@
-﻿using HelpDeskNet8.Interfaces.RFCs;
+﻿using HelpDeskNet8.Infrastructure;
+using HelpDeskNet8.Interfaces.RFCs;
 using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Models.RFCs;
 using HelpDeskNet8.Models.Shared;
-using HelpDeskNet8.Infrastructure;
-using Microsoft.Data.SqlClient;
 using HelpDeskNet8.Utilities;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace HelpDeskNet8.Services

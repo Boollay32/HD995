@@ -1,7 +1,6 @@
 ﻿// =============================  UI.js  ============================= //
 
 const UI = {
-
     // -------------------------  Constants  ------------------------- //
 
     _detailHeightOffset: 180,
@@ -151,7 +150,6 @@ const UI = {
     },
 
     // -------------------------  Detail Window  ------------------------- //
-
 
     setDetailWindowSize() {
         const height = window.innerHeight - this._detailHeightOffset;

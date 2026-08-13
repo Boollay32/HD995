@@ -7,7 +7,7 @@ namespace HelpDeskNet8.Interfaces.Users
         Task<IEnumerable<IUserStub>> GetUsers(IFilter filter);
 
         Task<IUser> GetUserDetail(int UserID);
-        
+
         Task<string> CreateUser(String UserLogin, String FName, String SName, String Phone, Int32 Authority, Int32 Department, int UTC);
 
         Task<string> DeleteUser(string AdminUser, string userLogin);

@@ -1,12 +1,9 @@
 ﻿using System.Data;
 
-
 namespace HelpDeskNet8.Models.Shared
 {
-
     public class ReportListItem
     {
-
         public int TicketID { get; set; }
 
         public int? UserID { get; set; }
@@ -24,7 +21,6 @@ namespace HelpDeskNet8.Models.Shared
         public int? NoteID { get; set; }
 
         public string Details { get; set; }
-
 
         internal static ReportListItem FromReader(IDataReader reader)
         {

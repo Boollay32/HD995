@@ -1,7 +1,6 @@
 ﻿// =============================  Cookie.js  ============================= //
 
 class CookieConsent {
-
     constructor(options = {}) {
         this.options = {
             message: "We use cookies to improve your experience. Please turn on cookies or the HelpDesk won't work.",

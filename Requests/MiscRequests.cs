@@ -1,6 +1,4 @@
-﻿using HelpDeskNet8.Requests;
-
-namespace HelpDeskNet8.Requests
+﻿namespace HelpDeskNet8.Requests
 {
     public class GetFilterItemsRequest : AuthenticatedRequest
     {
@@ -12,5 +10,4 @@ namespace HelpDeskNet8.Requests
         public int Filter { get; set; }
         public string Group { get; set; }
     }
-
 }

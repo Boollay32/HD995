@@ -1,24 +1,22 @@
 ﻿#region HEADER
+
 //  • GovtechHelpDesk
 //   └ GovtechHelpDesk.Services
 //    └ User.cs
-// 
+//
 // Created 16/08/2017 12:34
 // Updated 21/08/2017 17:34 by Sam (Sam)
+
 #endregion
 
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Utilities;
 using System.Data;
 
-
 namespace HelpDeskNet8.Models.Users
 {
-
     public class User : IUser
     {
-
-
         public int? UserID { get; set; }
 
         public int? AuthorityID { get; set; }
@@ -40,7 +38,6 @@ namespace HelpDeskNet8.Models.Users
         public string UserName { get; set; }
 
         public string UserPhone { get; set; }
-
 
         public string AdminLevel { get; set; }
 

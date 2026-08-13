@@ -1,11 +1,9 @@
 ﻿using HelpDeskNet8.Infrastructure;
-using HelpDeskNet8.Interfaces.Shared;
+using HelpDeskNet8.Interfaces.Projects;
 using HelpDeskNet8.Interfaces.RFCs;
-using System.Linq;
-using System.Collections.Generic;
+using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
-using HelpDeskNet8.Interfaces.Projects;
 using HelpDeskNet8.Models.Shared;
 
 namespace HelpDeskNet8.Services
@@ -99,7 +97,6 @@ namespace HelpDeskNet8.Services
 
                 if (!_preview.SendEnabled) return;
 
-
                 await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
             }
             catch
@@ -131,6 +128,7 @@ namespace HelpDeskNet8.Services
                     case NotificationType.RFCAssigned:
                         people.Add(new Recipient(rfc.AssignedTechID, rfc.AssignedTechEmail));
                         break;
+
                     case NotificationType.RFCResponded:
                     case NotificationType.RFCStatusChanged:
                         people.Add(new Recipient(rfc.OriginatorID, rfc.OriginatorEmail));
@@ -160,9 +158,7 @@ namespace HelpDeskNet8.Services
 
                 if (!_preview.SendEnabled) return;
 
-
                 await _miscManager.SendMailMessage(FromAddress, emails, subject, body);
-
             }
             catch
             {
@@ -509,41 +505,41 @@ namespace HelpDeskNet8.Services
                         new List<string> { ticketLine });
 
                 case NotificationType.TicketAssigned:
-                {
-                    string headline = !string.IsNullOrWhiteSpace(ctx?.OldTechEmail)
-                        ? $"{actor} reassigned ticket #{id} from {ctx.OldTechEmail} to {tech}."
-                        : $"{actor} assigned ticket #{id} to {tech}.";
-                    return ($"Ticket #{id} assigned",
-                        headline,
-                        new List<string> { ticketLine, $"Priority: {priority} \u00b7 Status: {status}" });
-                }
+                    {
+                        string headline = !string.IsNullOrWhiteSpace(ctx?.OldTechEmail)
+                            ? $"{actor} reassigned ticket #{id} from {ctx.OldTechEmail} to {tech}."
+                            : $"{actor} assigned ticket #{id} to {tech}.";
+                        return ($"Ticket #{id} assigned",
+                            headline,
+                            new List<string> { ticketLine, $"Priority: {priority} \u00b7 Status: {status}" });
+                    }
 
                 case NotificationType.TicketStatusChanged:
-                {
-                    string headline; string subject;
-                    if (IsClosingStatus(newS))
                     {
-                        headline = $"{actor} has {ClosureVerb(newS)} ticket #{id}.";
-                        subject = $"Ticket #{id} {ClosureVerb(newS)}";
+                        string headline; string subject;
+                        if (IsClosingStatus(newS))
+                        {
+                            headline = $"{actor} has {ClosureVerb(newS)} ticket #{id}.";
+                            subject = $"Ticket #{id} {ClosureVerb(newS)}";
+                        }
+                        else
+                        {
+                            headline = $"{actor} changed the status of ticket #{id}.";
+                            subject = $"Ticket #{id} is now {newS}";
+                        }
+                        return (subject, headline,
+                            new List<string> { ticketLine, $"Status: {oldS} \u2192 {newS}", $"Assigned to: {tech}" });
                     }
-                    else
-                    {
-                        headline = $"{actor} changed the status of ticket #{id}.";
-                        subject = $"Ticket #{id} is now {newS}";
-                    }
-                    return (subject, headline,
-                        new List<string> { ticketLine, $"Status: {oldS} \u2192 {newS}", $"Assigned to: {tech}" });
-                }
 
                 case NotificationType.TaskCreated:
-                {
-                    string headline = !string.IsNullOrWhiteSpace(ctx?.TaskAssigneeName)
-                        ? $"{actor} created the task \"{tt}\" on ticket #{id} and assigned it to {ctx.TaskAssigneeName}."
-                        : $"{actor} created the task \"{tt}\" on ticket #{id}.";
-                    return ($"New task on ticket #{id}",
-                        headline,
-                        new List<string> { $"Task: {tt} \u00b7 Status: {TaskStatusLabel(ctx?.NewTaskStatus)}", ticketLine });
-                }
+                    {
+                        string headline = !string.IsNullOrWhiteSpace(ctx?.TaskAssigneeName)
+                            ? $"{actor} created the task \"{tt}\" on ticket #{id} and assigned it to {ctx.TaskAssigneeName}."
+                            : $"{actor} created the task \"{tt}\" on ticket #{id}.";
+                        return ($"New task on ticket #{id}",
+                            headline,
+                            new List<string> { $"Task: {tt} \u00b7 Status: {TaskStatusLabel(ctx?.NewTaskStatus)}", ticketLine });
+                    }
 
                 case NotificationType.TaskUpdated:
                     return ($"Task updated on ticket #{id}",
@@ -551,38 +547,38 @@ namespace HelpDeskNet8.Services
                         new List<string> { $"Task: {tt} \u00b7 Status: {TaskStatusLabel(ctx?.NewTaskStatus)}", ticketLine });
 
                 case NotificationType.TaskStatusChanged:
-                {
-                    string oldL = TaskStatusLabel(ctx?.OldTaskStatus);
-                    string newL = TaskStatusLabel(ctx?.NewTaskStatus);
-                    string headline; string subject;
-                    if (IsClosingStatus(newL))
                     {
-                        headline = $"{actor} has {ClosureVerb(newL)} the task \"{tt}\" on ticket #{id}.";
-                        subject = $"Task {ClosureVerb(newL)} on ticket #{id}";
+                        string oldL = TaskStatusLabel(ctx?.OldTaskStatus);
+                        string newL = TaskStatusLabel(ctx?.NewTaskStatus);
+                        string headline; string subject;
+                        if (IsClosingStatus(newL))
+                        {
+                            headline = $"{actor} has {ClosureVerb(newL)} the task \"{tt}\" on ticket #{id}.";
+                            subject = $"Task {ClosureVerb(newL)} on ticket #{id}";
+                        }
+                        else
+                        {
+                            headline = $"{actor} changed the status of the task \"{tt}\" on ticket #{id}.";
+                            subject = $"Task status changed on ticket #{id}";
+                        }
+                        return (subject, headline,
+                            new List<string> { $"Task: {tt}", $"Status: {oldL} \u2192 {newL}", ticketLine });
                     }
-                    else
-                    {
-                        headline = $"{actor} changed the status of the task \"{tt}\" on ticket #{id}.";
-                        subject = $"Task status changed on ticket #{id}";
-                    }
-                    return (subject, headline,
-                        new List<string> { $"Task: {tt}", $"Status: {oldL} \u2192 {newL}", ticketLine });
-                }
 
                 case NotificationType.TaskAssigned:
-                {
-                    string assignee = string.IsNullOrWhiteSpace(ctx?.TaskAssigneeName) ? "(unassigned)" : ctx.TaskAssigneeName;
-                    bool isReassignment = !string.IsNullOrWhiteSpace(ctx?.OldTaskAssigneeName);
-                    string headline = isReassignment
-                        ? $"{actor} reassigned the task \"{tt}\" from {ctx.OldTaskAssigneeName} to {assignee}."
-                        : $"{actor} assigned the task \"{tt}\" on ticket #{id} to {assignee}.";
-                    string subject = isReassignment
-                        ? "A task has been reassigned to you"
-                        : "New task has been assigned to you";
-                    return (subject,
-                        headline,
-                        new List<string> { $"Task: {tt} \u00b7 Status: {TaskStatusLabel(ctx?.NewTaskStatus)}", ticketLine });
-                }
+                    {
+                        string assignee = string.IsNullOrWhiteSpace(ctx?.TaskAssigneeName) ? "(unassigned)" : ctx.TaskAssigneeName;
+                        bool isReassignment = !string.IsNullOrWhiteSpace(ctx?.OldTaskAssigneeName);
+                        string headline = isReassignment
+                            ? $"{actor} reassigned the task \"{tt}\" from {ctx.OldTaskAssigneeName} to {assignee}."
+                            : $"{actor} assigned the task \"{tt}\" on ticket #{id} to {assignee}.";
+                        string subject = isReassignment
+                            ? "A task has been reassigned to you"
+                            : "New task has been assigned to you";
+                        return (subject,
+                            headline,
+                            new List<string> { $"Task: {tt} \u00b7 Status: {TaskStatusLabel(ctx?.NewTaskStatus)}", ticketLine });
+                    }
 
                 default:
                     return ($"Notification \u2014 ticket #{id}", $"Ticket #{id} has an update.", new List<string> { ticketLine });
@@ -614,20 +610,20 @@ namespace HelpDeskNet8.Services
                         new List<string> { rfcLine, $"Status: {status}" });
 
                 case NotificationType.RFCStatusChanged:
-                {
-                    string headline; string subject;
-                    if (IsClosingStatus(newS))
                     {
-                        headline = $"{actor} has {ClosureVerb(newS)} RFC #{id}.";
-                        subject = $"RFC #{id} {ClosureVerb(newS)}";
+                        string headline; string subject;
+                        if (IsClosingStatus(newS))
+                        {
+                            headline = $"{actor} has {ClosureVerb(newS)} RFC #{id}.";
+                            subject = $"RFC #{id} {ClosureVerb(newS)}";
+                        }
+                        else
+                        {
+                            headline = $"{actor} changed the status of RFC #{id}.";
+                            subject = $"RFC #{id} is now {newS}";
+                        }
+                        return (subject, headline, new List<string> { rfcLine, $"Status: {oldS} \u2192 {newS}" });
                     }
-                    else
-                    {
-                        headline = $"{actor} changed the status of RFC #{id}.";
-                        subject = $"RFC #{id} is now {newS}";
-                    }
-                    return (subject, headline, new List<string> { rfcLine, $"Status: {oldS} \u2192 {newS}" });
-                }
 
                 default:
                     return ($"Notification \u2014 RFC #{id}", $"RFC #{id} has an update.", new List<string> { rfcLine });

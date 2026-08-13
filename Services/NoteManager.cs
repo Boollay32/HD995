@@ -1,7 +1,7 @@
-﻿using HelpDeskNet8.Interfaces.Attachments;
+﻿using HelpDeskNet8.Infrastructure;
+using HelpDeskNet8.Interfaces.Attachments;
 using HelpDeskNet8.Interfaces.Notes;
 using HelpDeskNet8.Interfaces.Users;
-using HelpDeskNet8.Infrastructure;
 using HelpDeskNet8.Models.Notes;
 using HelpDeskNet8.Utilities;
 using Microsoft.Data.SqlClient;

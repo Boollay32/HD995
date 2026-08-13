@@ -1,25 +1,26 @@
 ﻿#region HEADER
+
 //  • GovtechHelpDesk
 //   └ GovtechHelpDesk.Services
 //    └ TicketManager.cs
-// 
+//
 // Created 17/08/2017 11:14
 // Updated 21/08/2017 17:34 by Sam (Sam)
+
 #endregion
 
 using HelpDeskNet8.Interfaces.Shared;
-using HelpDeskNet8.Interfaces.Users;
-using Microsoft.Data.SqlClient;
 using HelpDeskNet8.Utilities;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Net.Mail;
-
 
 namespace HelpDeskNet8.Services
 {
     public class MiscManager : IMiscManager
     {
         private readonly IDbConnection _connection;
+
         public MiscManager(IDbConnection connection)
         {
             _connection = connection;
@@ -27,7 +28,6 @@ namespace HelpDeskNet8.Services
 
         public async Task<DataTable> GetFilterItems(String Group)
         {
-
             DataTable FilterTable = new DataTable();
             var conn = (SqlConnection)_connection;
             try
@@ -100,7 +100,6 @@ namespace HelpDeskNet8.Services
                 await mSmtpClient.SendMailAsync(mMailMessage);
                 Result.Add("Success");
                 Result.Add("Email Sent");
-
             }
             catch (Exception EX) { Exeption = EX; }
             {
@@ -116,6 +115,5 @@ namespace HelpDeskNet8.Services
 
             return Result;
         }
-
     }
 }

@@ -9,7 +9,6 @@
 'use strict';
 
 const Activity = (() => {
-
     // -------------------------  DOM refs  ------------------------- //
 
     const Dom = {
@@ -26,7 +25,6 @@ const Activity = (() => {
     // -------------------------  Helpers  ------------------------- //
 
     const Helpers = {
-
         formatDateTime(raw) {
             if (!raw) return '';
             const d = new Date(raw);
@@ -75,7 +73,6 @@ const Activity = (() => {
             );
 
             _render();
-
         } catch (err) {
             console.error('Activity._getActivity:', err);
             _renderMessage('Failed to load activity.');
@@ -226,7 +223,6 @@ const Activity = (() => {
         init,
         refresh: _getActivity,
     };
-
 })();
 
 if (typeof window !== 'undefined') {

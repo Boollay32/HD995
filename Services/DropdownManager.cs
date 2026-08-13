@@ -1,22 +1,20 @@
 ﻿using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Models.Shared;
-using Microsoft.Data.SqlClient;
 using HelpDeskNet8.Utilities;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace HelpDeskNet8.Services
 {
     public class DropdownManager : List<DropdownListItem>, IDropdowns
     {
-
         private readonly IDbConnection _connection;
 
         public DropdownManager(IDbConnection connection)
         {
             _connection = connection;
         }
-
 
         public async Task<IEnumerable<DropdownListItem>> GetDropDowns(IUser user, int Filter, string Group)
         {
@@ -49,7 +47,6 @@ namespace HelpDeskNet8.Services
                     {
                         AppLogger.Error(nameof(DropdownManager), ex);
                     }
-
                 }
                 await conn.CloseAsync();
             }
@@ -59,7 +56,6 @@ namespace HelpDeskNet8.Services
 
         public async Task<DataTable> GetCustomFields(IUser user, int requestID)
         {
-
             DataTable CustomFieldsTable = new DataTable();
             var conn = (SqlConnection)_connection;
             try
@@ -89,4 +85,3 @@ namespace HelpDeskNet8.Services
         }
     }
 }
-

@@ -1,7 +1,6 @@
 ﻿// =============================  Auth.js  ============================= //
 
 const Auth = {
-
     // -------------------------  Keep Alive  ------------------------- //
 
     _isMessageBoxVisible() {
@@ -34,7 +33,6 @@ const Auth = {
     },
 
     // -------------------------  Authenticate  ------------------------- //
-
 
     async authenticateUser() {
         const userName = sessionStorage.getItem(STORAGE_KEYS.USER_NAME);

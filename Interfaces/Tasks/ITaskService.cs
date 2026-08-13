@@ -1,6 +1,4 @@
-﻿using HelpDeskNet8.Infrastructure;
-using HelpDeskNet8.Interfaces.Shared;
-using HelpDeskNet8.Interfaces.Tasks;
+﻿using HelpDeskNet8.Interfaces.Shared;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Requests;
 
@@ -13,6 +11,7 @@ namespace HelpDeskNet8.Interfaces.Tasks
     public interface ITaskService
     {
         Task<IEnumerable<ITask>> GetTasks(IUser user, IFilter filter);
+
         Task<IEnumerable<ITask>> GetTaskDetail(IUser user, int taskId);
 
         // Returns the refreshed (ticket-scoped) task list on success, or error.

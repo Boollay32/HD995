@@ -2,7 +2,6 @@
 
 namespace HelpDeskNet8.Interfaces.RFCs
 {
-
     public interface IRFCManager
     {
         Task<IEnumerable<IRFCStub>> GetRFCs(int? CRUserID, IFilter IF);

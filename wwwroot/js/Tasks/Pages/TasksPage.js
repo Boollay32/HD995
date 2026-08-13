@@ -9,11 +9,11 @@
 // 4 Withdrawn, 5 Draft. "Open" work is New or In Progress.
 const KQ_STATUS = { 1: 'New', 2: 'In Progress', 3: 'Complete', 4: 'Withdrawn', 5: 'Draft' };
 const KQ_STATUS_COLOR = {
-    'New':         ['var(--info-fg)', 'var(--info-bg)'],
+    'New': ['var(--info-fg)', 'var(--info-bg)'],
     'In Progress': ['var(--warn-fg)', 'var(--warn-bg)'],
-    'Complete':    ['var(--ok-fg)', 'var(--ok-bg)'],
-    'Withdrawn':   ['var(--bad-fg)', 'var(--bad-bg)'],
-    'Draft':       ['var(--neutral-fg)', 'var(--neutral-bg)'],
+    'Complete': ['var(--ok-fg)', 'var(--ok-bg)'],
+    'Withdrawn': ['var(--bad-fg)', 'var(--bad-bg)'],
+    'Draft': ['var(--neutral-fg)', 'var(--neutral-bg)'],
 };
 const KQ_OPEN = new Set([1, 2]);
 const KQlabel = s => KQ_STATUS[s] ?? 'Other';
@@ -107,16 +107,16 @@ class TaskPage extends PageBase {
             search: ['title', 'assignedTech', 'taskID', 'ticketID'],
 
             views: [
-                { id: 'mine',  label: 'My open',     filter: r => isMine(r) && KQisOpen(r) },
-                { id: 'all',   label: 'All open',    filter: r => KQisOpen(r) },
+                { id: 'mine', label: 'My open', filter: r => isMine(r) && KQisOpen(r) },
+                { id: 'all', label: 'All open', filter: r => KQisOpen(r) },
                 // Complete (3), Withdrawn (4), Draft (5): the status dropdown
                 // narrows within this view (Draft was previously in NO view).
                 { id: 'nonactive', label: 'Non Active', filter: r => !KQisOpen(r) },
             ],
 
             filters: [
-                { id: 'stat', label: 'Status',   field: '_status' },
-                { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
+                { id: 'stat', label: 'Status', field: '_status' },
+                { id: 'asg', label: 'Assignee', field: 'assignedTech' },
             ],
 
             columns: [

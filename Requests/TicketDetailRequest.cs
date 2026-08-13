@@ -1,6 +1,4 @@
-﻿using HelpDeskNet8.Requests;
-
-namespace HelpDeskNet8.Requests
+﻿namespace HelpDeskNet8.Requests
 {
     public class GetTicketsRequest : AuthenticatedRequest
     {
@@ -27,7 +25,7 @@ namespace HelpDeskNet8.Requests
         public int? ContactClientAuthorityId { get; set; }
         public int? ContactClientUserId { get; set; }
     }
-    
+
     public class ChangeCustomFieldsRequest : AuthenticatedRequest
     {
         public int RequestId { get; set; }

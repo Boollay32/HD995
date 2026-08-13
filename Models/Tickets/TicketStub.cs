@@ -1,27 +1,23 @@
 ﻿#region HEADER
+
 //  • GovtechHelpDesk
 //   └ GovtechHelpDesk.Services
 //    └ Ticket.cs
-// 
+//
 // Created 16/08/2017 12:34
 // Updated 21/08/2017 17:34 by Sam (Sam)
+
 #endregion
 
-using HelpDeskNet8.Infrastructure;
 using HelpDeskNet8.Interfaces.Tickets;
-using HelpDeskNet8.Services;
 using HelpDeskNet8.Utilities;
 using System.Data;
-using System.Linq;
-
 
 namespace HelpDeskNet8.Models.Tickets
 {
-
     //[KnownType(typeof(IEnumerable<TicketStub>))]
     public class TicketStub : ITicketStub
     {
-
         public int? TicketID { get; set; }
 
         public DateTime? Created { get; set; }
@@ -91,13 +87,11 @@ namespace HelpDeskNet8.Models.Tickets
                 }
             }
             catch (Exception ex)
-{
+            {
                 AppLogger.Error(nameof(TicketStub), ex);
             }
 
             return newTicketStub;
         }
-
     }
-
 }

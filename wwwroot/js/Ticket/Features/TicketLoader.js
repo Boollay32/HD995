@@ -8,7 +8,6 @@
 // -------------------------  Ticket loader  ------------------------- //
 
 const TicketLoader = {
-
     async load() {
         const ticketId = Session.ticketId;
         if (!ticketId) return;
@@ -46,7 +45,7 @@ const TicketLoader = {
             // [hidden]); Details stays the active tab.
             if (State.clientView) {
                 ['tab-tasks', 'tab-notes', 'tab-activity',
-                 'tabpanel-tasks', 'tabpanel-notes', 'tabpanel-activity']
+                    'tabpanel-tasks', 'tabpanel-notes', 'tabpanel-activity']
                     .forEach(function (id) {
                         document.getElementById(id)?.setAttribute('hidden', '');
                     });
@@ -86,12 +85,10 @@ const TicketLoader = {
             if (typeof TicketPips !== 'undefined' && !State.clientView) {
                 TicketPips.load(ticketId);
             }
-
         } catch (err) {
             console.error('TicketLoader.load:', err);
         }
     },
-
 
     async _fetch(ticketId) {
         const data = await API.post(
@@ -194,7 +191,6 @@ const TicketLoader = {
                 .catch(err => console.error('Custom-field dropdown load:', err));
         }
     }
-
 };
 
 // -------------------------  Notes-on-left (project / incident)  ------------------------- //
@@ -203,7 +199,6 @@ const TicketLoader = {
 // tab is dropped. prepare() does the DOM swap before layout/tab restore; init()
 // starts the panel after the fetch (skipping the client Messages pane + the right-tab Notes).
 const NotesLeft = {
-
     prepare() {
         // Project/incident tickets reuse the Messages dock as an internal
         // Notes pane (one shared td-composer-dock; NotesPanel is a singleton,
@@ -254,9 +249,7 @@ const NotesLeft = {
             },
         });
     },
-
 };
-
 
 // Internal Notes tab (Workspace): the SAME shared NotesPanel as the messages
 // pane, config-driven -- internal-only (client-visible notes live in the
@@ -264,7 +257,6 @@ const NotesLeft = {
 // internal). This replaces the retired standalone Notes.js so there is one
 // note editor, not two that drift.
 const NotesTab = {
-
     init(ticketId) {
         if (typeof NotesPanel === 'undefined') return;
         NotesPanel.init({
@@ -289,9 +281,7 @@ const NotesTab = {
             },
         });
     },
-
 };
-
 
 // Client-ticket left pane: the shared NotesPanel in messages mode -- GetNotes
 // filtered to client-visible items, the earliest pinned as the overview
@@ -299,7 +289,6 @@ const NotesTab = {
 // messages and notes share one component. The Govtech-only scope banner is
 // passed (and thus shown) only at adminLevel >= 1.
 const MessagesLeft = {
-
     init(ticketId, adminLevel) {
         if (typeof NotesPanel === 'undefined') return;
         NotesPanel.init({
@@ -327,5 +316,4 @@ const MessagesLeft = {
             },
         });
     },
-
 };

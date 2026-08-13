@@ -21,7 +21,6 @@
 'use strict';
 
 const Composer = (() => {
-
     const DEFAULT_CHAR_LIMIT = 2000;
     const MAX_FILE_SIZE_MB = 10;
     const MAX_FILE_SIZE_B = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -154,7 +153,7 @@ const Composer = (() => {
     function create(cfg) {
         const textarea = byId(cfg.textarea);
         const sendBtn = byId(cfg.sendBtn);
-        if (!textarea || !sendBtn) return { clear() {}, files: () => [] };
+        if (!textarea || !sendBtn) return { clear() { }, files: () => [] };
 
         const charLimit = cfg.charLimit ?? DEFAULT_CHAR_LIMIT;
         const enableAttachments = cfg.enableAttachments !== false;
@@ -311,7 +310,6 @@ const Composer = (() => {
     }
 
     return { create, encode, download, fetchNoteAttachments, fetchTaskAttachments };
-
 })();
 
 // ---------------------------------------------------------------------------

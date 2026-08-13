@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using HelpDeskNet8.Interfaces.Shared;
-using Microsoft.Extensions.Configuration;
+﻿using HelpDeskNet8.Interfaces.Shared;
 
 namespace HelpDeskNet8.Services
 {

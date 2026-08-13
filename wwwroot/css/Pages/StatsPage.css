@@ -4,187 +4,227 @@
    ============================================================================ */
 
 #Main-Div.stats-app {
-  display: flex;
-  gap: 16px;
-  align-items: stretch;
-  height: calc(100vh - 56px);
-  padding: 16px;
-  box-sizing: border-box;
-  background: var(--canvas);
-  font-family: var(--font-sans);
-  color: var(--text);
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    height: calc(100vh - 56px);
+    padding: 16px;
+    box-sizing: border-box;
+    background: var(--canvas);
+    font-family: var(--font-sans);
+    color: var(--text);
 }
 
 /* ---- Reports rail ---- */
 .st-side {
-  flex: 0 0 232px;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
+    flex: 0 0 232px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
 }
+
 .st-side-head {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
 }
-.st-side-head h2 {
-  margin: 0;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+
+    .st-side-head h2 {
+        margin: 0;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+
 .st-side-list {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
 }
+
 .st-report-btn {
-  appearance: none;
-  text-align: left;
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--text);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 9px 11px;
-  cursor: pointer;
-  transition: background .12s ease, border-color .12s ease, color .12s ease;
+    appearance: none;
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 11px;
+    cursor: pointer;
+    transition: background .12s ease, border-color .12s ease, color .12s ease;
 }
-.st-report-btn:hover {
-  background: var(--row-hover);
-  border-color: var(--accent);
-}
-.st-report-btn.is-active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--on-accent);
-}
+
+    .st-report-btn:hover {
+        background: var(--row-hover);
+        border-color: var(--accent);
+    }
+
+    .st-report-btn.is-active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--on-accent);
+    }
+
 .st-side-foot {
-  padding: 12px;
-  border-top: 1px solid var(--border);
+    padding: 12px;
+    border-top: 1px solid var(--border);
 }
+
 #Download-Table-Button {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--on-accent);
-  background: var(--accent);
-  border: none;
-  border-radius: 9px;
-  padding: 9px 11px;
-  cursor: pointer;
-  transition: background .12s ease, opacity .12s ease;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--on-accent);
+    background: var(--accent);
+    border: none;
+    border-radius: 9px;
+    padding: 9px 11px;
+    cursor: pointer;
+    transition: background .12s ease, opacity .12s ease;
 }
-#Download-Table-Button:hover { background: var(--accent-strong); }
-#Download-Table-Button:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
+
+    #Download-Table-Button:hover {
+        background: var(--accent-strong);
+    }
+
+    #Download-Table-Button:disabled {
+        opacity: .45;
+        cursor: not-allowed;
+    }
 
 /* ---- Results panel ---- */
 .st-main {
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
 }
+
 .st-main-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
 }
-.st-main-head h1 {
-  margin: 0;
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
+
+    .st-main-head h1 {
+        margin: 0;
+        font-size: 0.9375rem;
+        font-weight: 600;
+    }
+
 .st-count {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
 }
 
 #Table-Div-Outer {
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
 }
+
 #Table-Div-Inner {
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-  overflow: auto;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
 }
+
 #Table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8125rem;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
 }
-#Table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: var(--panel);
-  color: var(--muted);
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.6875rem;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-#Table tbody td {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-#Table tbody tr:hover { background: var(--row-hover); }
+
+    #Table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: var(--panel);
+        color: var(--muted);
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.6875rem;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+    }
+
+    #Table tbody td {
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+    }
+
+    #Table tbody tr:hover {
+        background: var(--row-hover);
+    }
 
 /* ---- Empty state ---- */
 .st-empty {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--muted);
-  font-size: 0.84375rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 0.84375rem;
 }
-.st-empty[hidden] { display: none; }
-.st-empty p { margin: 0; }
+
+    .st-empty[hidden] {
+        display: none;
+    }
+
+    .st-empty p {
+        margin: 0;
+    }
 
 /* ---- Narrow screens ---- */
 @media (max-width: 760px) {
-  #Main-Div.stats-app { flex-direction: column; height: auto; }
-  .st-side { flex: 1 1 auto; }
-  .st-side-list { max-height: 40vh; }
-  .st-main { min-height: 60vh; }
+    #Main-Div.stats-app {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .st-side {
+        flex: 1 1 auto;
+    }
+
+    .st-side-list {
+        max-height: 40vh;
+    }
+
+    .st-main {
+        min-height: 60vh;
+    }
 }

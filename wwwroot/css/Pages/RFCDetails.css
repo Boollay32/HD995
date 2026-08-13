@@ -10,63 +10,70 @@
 
 /* ---- Overview strip: compact read-only meta ---- */
 .dform .rfc-overview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 30px;
-  padding: 2px 0 14px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 30px;
+    padding: 2px 0 14px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
 }
+
 .dform .rfc-ov-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
 }
+
 .dform .rfc-ov-label {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
 }
+
 .dform .rfc-overview .rfc-ov-value {
-  font-family: var(--font-sans);
-  font-size: 0.84375rem;
-  color: var(--text);
-  line-height: 1.4;
-  word-break: break-word;
-  padding: 0;
+    font-family: var(--font-sans);
+    font-size: 0.84375rem;
+    color: var(--text);
+    line-height: 1.4;
+    word-break: break-word;
+    padding: 0;
 }
 
 /* ---- Paired rows: two label-left fields sharing one line ---- */
 .dform .rfc-pair {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 30px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 30px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
 }
+
 .dform .rfc-pair-field {
-  flex: 1 1 230px;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: 120px minmax(0, 1fr);
-  align-items: center;
-  gap: 0 14px;
+    flex: 1 1 230px;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    align-items: center;
+    gap: 0 14px;
 }
+
 .dform .rfc-pair-field--narrow {
-  grid-template-columns: 56px minmax(0, 1fr);
+    grid-template-columns: 56px minmax(0, 1fr);
 }
+
 .dform .rfc-pair-label {
-  font-family: var(--font-sans);
-  font-size: 0.78125rem;
-  font-weight: 600;
-  color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: 0.78125rem;
+    font-weight: 600;
+    color: var(--muted);
 }
+
 .dform .rfc-pair-control.Value {
-  width: 100%;
+    width: 100%;
 }
 
 /* ============================================================================
@@ -76,33 +83,36 @@
 
 /* Notes pane: thread scrolls, composer pinned beneath it */
 .rfc-notes-body {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 12px 14px 10px;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 14px 10px;
 }
-.rfc-notes-body .td-note-thread {
-  flex: 1;
-  min-height: 0;
-  max-height: none;   /* override the base 460px cap so the
+
+    .rfc-notes-body .td-note-thread {
+        flex: 1;
+        min-height: 0;
+        max-height: none; /* override the base 460px cap so the
                          thread fills the column and the
                          add-note bar sits at the bottom */
-  overflow-y: auto;
-}
+        overflow-y: auto;
+    }
 /* Composer dock/footer/order chrome now comes entirely from the shared
    TicketComposer.css (RFCNotes-Compose is a .td-composer-dock, same as
    the ticket Messages tab). Only this page-specific cap survives: RFC's
    note textarea stays taller than the ticket message composer's default. */
-#rfc-note-textarea { max-height: 500px; }
+#rfc-note-textarea {
+    max-height: 500px;
+}
 
 /* Workspace pane: the form scrolls within the pane */
 .rfc-ws {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-  padding: 14px 18px 18px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    padding: 14px 18px 18px;
 }
 
 /* ============================================================================
@@ -110,70 +120,77 @@
    Description spanning both columns. Read-only one-line Title.
    ============================================================================ */
 .dform .rfc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px 24px;
-  padding: 2px 0 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 24px;
+    padding: 2px 0 4px;
 }
+
 .dform .rfc-cell {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
 }
+
 .dform .rfc-cell--full {
-  grid-column: 1 / -1;
+    grid-column: 1 / -1;
 }
+
 .dform .rfc-cell-label {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
 }
+
 .dform .rfc-cell-value {
-  font-family: var(--font-sans);
-  font-size: 0.84375rem;
-  color: var(--text);
-  line-height: 1.4;
-  padding: 2px 0 4px 10px;
-  margin-left: 2px;
-  border-left: 2px solid var(--border);
-  word-break: break-word;
+    font-family: var(--font-sans);
+    font-size: 0.84375rem;
+    color: var(--text);
+    line-height: 1.4;
+    padding: 2px 0 4px 10px;
+    margin-left: 2px;
+    border-left: 2px solid var(--border);
+    word-break: break-word;
 }
 /* Title: forced to a single line with ellipsis. */
 .dform .rfc-title-1line {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 .dform .rfc-cell-control {
-  width: 100%;
-  box-sizing: border-box;
-  background: var(--row-hover);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  padding: 3px 5px;
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  line-height: 1.4;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--row-hover);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 3px 5px;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.dform .rfc-cell-control:focus {
-  outline: none;
-  border-color: var(--accent);
-}
+
+    .dform .rfc-cell-control:focus {
+        outline: none;
+        border-color: var(--accent);
+    }
+
 .dform textarea.rfc-desc {
-  min-height: 92px;
-  resize: vertical;
+    min-height: 92px;
+    resize: vertical;
 }
 
 /* HD44-b: Extended Information textareas start at half height and grow to fit
    (UI.adjustTextAreas on load + autoGrow on input). */
 #Extended-Information textarea.Value {
-  min-height: 44px;
+    min-height: 44px;
 }
 /* Item 2: RFC detail inputs inherited DetailForm's .dform input.Value sizing
    (9px 11px, --border-strong / --row-hover). Pull them back to the ticket
@@ -182,15 +199,17 @@
 #RFCDetails-App .dform input.Value,
 #RFCDetails-App .dform select.Value,
 #RFCDetails-App .dform textarea.Value {
-  padding: 6px 10px;
-  border: 1px solid var(--td-border);
-  background: var(--td-surface);
-  border-radius: 6px;
-}
-@media (max-width: 640px) {
-  .dform .rfc-grid { grid-template-columns: 1fr; }
+    padding: 6px 10px;
+    border: 1px solid var(--td-border);
+    background: var(--td-surface);
+    border-radius: 6px;
 }
 
+@media (max-width: 640px) {
+    .dform .rfc-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
 /* ==========================================================
    HD-RFC overhaul -- ticket overview/panel styling, re-scoped
@@ -200,24 +219,25 @@
 /* ===== RFC overhaul S2: base control styles (ported from TicketDetails.css,
    which the RFC page does not load) + overview description, scoped. ===== */
 #RFCDetails-App .rfc-ov-desc {
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 1px;
-  min-height: 62px;
-  resize: none;
-  font-family: "Spline Sans", system-ui, sans-serif;
-  font-size: 0.8125rem;
-  color: var(--td-text);
-  background: var(--td-surface);
-  border: 1px solid var(--td-border);
-  border-radius: 6px;
-  padding: 7px 10px;
-  outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 1px;
+    min-height: 62px;
+    resize: none;
+    font-family: "Spline Sans", system-ui, sans-serif;
+    font-size: 0.8125rem;
+    color: var(--td-text);
+    background: var(--td-surface);
+    border: 1px solid var(--td-border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    outline: none;
 }
-#RFCDetails-App .rfc-ov-desc:focus {
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-pale);
-}
+
+    #RFCDetails-App .rfc-ov-desc:focus {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px var(--brand-pale);
+    }
 
 /* Pill popover -- ported from TicketDetails.css so the editable Status/
    Priority pills on RFC details have a styled chooser (the RFC page does
@@ -230,7 +250,10 @@
    info tokens (light + dark aware), matching the project chip / status-open.
    :empty keeps a date-less pill invisible (no coloured blob). */
 #RFCDetails-App #meta-target {
-  background: var(--td-info-bg);
-  color: var(--td-info);
+    background: var(--td-info-bg);
+    color: var(--td-info);
 }
-#RFCDetails-App #meta-target:empty { display: none; }
+
+    #RFCDetails-App #meta-target:empty {
+        display: none;
+    }

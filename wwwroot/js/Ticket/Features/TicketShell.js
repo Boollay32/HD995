@@ -8,7 +8,6 @@
 // -------------------------  Tabs  ------------------------- //
 
 const Tabs = {
-
     activate(name) {
         State.activeTab = name;
 
@@ -177,11 +176,9 @@ const Tabs = {
     },
 };
 
-
 // -------------------------  Back button  ------------------------- //
 
 const BackButton = {
-
     bind() {
         Dom.backBtn()?.addEventListener('click', () => {
             if (!Dirty.guard()) return;
@@ -213,19 +210,17 @@ const UnloadGuard = {
     },
 };
 
-
 // -------------------------  Collapse  ------------------------- //
 // Thin adapter over the shared PaneShell component (Components/Shell/
 // PaneShell.js), which now owns the collapse behaviour. State.collapsed is
 // kept as a live reference to the shell's state object.
 
 const Collapse = {
-
     _shell: null,
 
     init() {
         Collapse._shell = new PaneShell({
-            left:  { pane: 'pane-left',  btn: 'collapse-left',  rail: 'rail-left'  },
+            left: { pane: 'pane-left', btn: 'collapse-left', rail: 'rail-left' },
             right: { pane: 'pane-right', btn: 'collapse-right', rail: 'rail-right' },
             storageKey: STORAGE_KEYS.TD_PANES_COLLAPSED,
         });
@@ -252,4 +247,3 @@ const Collapse = {
 // this one's never-fixed "Enter submits" handler silently overrode the
 // shared Composer.js fix (RFC, which never loaded this file, was
 // unaffected). Removed rather than patched a second time.
-

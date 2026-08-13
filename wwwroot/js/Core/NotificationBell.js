@@ -11,7 +11,6 @@
 'use strict';
 
 const NotificationBell = {
-
     // Internal techs (1, 2) see every event type; clients (0) get the
     // bell with a server-scoped inbox (messages on their tickets +
     // status changes -- NotificationController filters). RFC-only (4)
@@ -33,9 +32,9 @@ const NotificationBell = {
 
     _items: [],
 
-    _wrap()  { return document.getElementById('qv-bell'); },
+    _wrap() { return document.getElementById('qv-bell'); },
     _panel() { return document.getElementById('qv-bell-panel'); },
-    _btn()   { return document.getElementById('qv-bell-btn'); },
+    _btn() { return document.getElementById('qv-bell-btn'); },
     _badge() { return document.getElementById('qv-bell-badge'); },
 
     _gateStarted: false,
@@ -70,16 +69,16 @@ const NotificationBell = {
         wrap.id = 'qv-bell';
         wrap.innerHTML =
             '<button type="button" class="qv-bell-btn" id="qv-bell-btn" ' +
-                'aria-label="Notifications" aria-expanded="false" aria-controls="qv-bell-panel">' +
-                NotificationBell.BELL +
-                '<span class="qv-bell-badge mono hidden" id="qv-bell-badge"></span>' +
+            'aria-label="Notifications" aria-expanded="false" aria-controls="qv-bell-panel">' +
+            NotificationBell.BELL +
+            '<span class="qv-bell-badge mono hidden" id="qv-bell-badge"></span>' +
             '</button>' +
             '<div class="qv-bell-panel" id="qv-bell-panel" hidden>' +
-                '<div class="qv-bell-head">' +
-                    '<span>Notifications</span>' +
-                    '<button type="button" class="qv-bell-markall" id="qv-bell-markall">Mark all read</button>' +
-                '</div>' +
-                '<div class="qv-bell-list" id="qv-bell-list"></div>' +
+            '<div class="qv-bell-head">' +
+            '<span>Notifications</span>' +
+            '<button type="button" class="qv-bell-markall" id="qv-bell-markall">Mark all read</button>' +
+            '</div>' +
+            '<div class="qv-bell-list" id="qv-bell-list"></div>' +
             '</div>';
 
         bar.insertBefore(wrap,
@@ -168,11 +167,11 @@ const NotificationBell = {
         }
         list.innerHTML = NotificationBell._items.map(n =>
             `<button type="button" class="qv-bell-row${n.readDate ? ' is-read' : ''}" ` +
-                `data-id="${Number(n.notificationID)}" data-entity="${Number(n.entityType)}" ` +
-                `data-eid="${Number(n.entityID)}" data-ticket="${n.ticketID != null ? Number(n.ticketID) : ''}">` +
-                `<span class="qv-bell-msg">${Format.escapeHtml(n.message || '')}</span>` +
-                `<span class="qv-bell-when">${NotificationBell._ago(n.created)}${n.readDate ? ' \u00b7 read' : ''}</span>` +
-                (n.readDate ? '' : '<span class="qv-bell-dot" aria-hidden="true"></span>') +
+            `data-id="${Number(n.notificationID)}" data-entity="${Number(n.entityType)}" ` +
+            `data-eid="${Number(n.entityID)}" data-ticket="${n.ticketID != null ? Number(n.ticketID) : ''}">` +
+            `<span class="qv-bell-msg">${Format.escapeHtml(n.message || '')}</span>` +
+            `<span class="qv-bell-when">${NotificationBell._ago(n.created)}${n.readDate ? ' \u00b7 read' : ''}</span>` +
+            (n.readDate ? '' : '<span class="qv-bell-dot" aria-hidden="true"></span>') +
             '</button>').join('');
     },
 
@@ -180,7 +179,7 @@ const NotificationBell = {
 
     _markAll() {
         // Fire-and-forget; reflect locally without waiting.
-        API.post('Notification/MarkRead', API.authPayload({ notificationID: null })).catch(() => {});
+        API.post('Notification/MarkRead', API.authPayload({ notificationID: null })).catch(() => { });
         NotificationBell._items.forEach(n => { if (!n.readDate) n.readDate = new Date().toISOString(); });
         NotificationBell._render(0);
     },
@@ -190,7 +189,7 @@ const NotificationBell = {
         if (!row) return;
 
         const id = Number(row.dataset.id);
-        if (id) API.post('Notification/MarkRead', API.authPayload({ notificationID: id })).catch(() => {});
+        if (id) API.post('Notification/MarkRead', API.authPayload({ notificationID: id })).catch(() => { });
 
         const entity = Number(row.dataset.entity);
         const eid = Number(row.dataset.eid);

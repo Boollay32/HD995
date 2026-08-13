@@ -1,9 +1,9 @@
 using HelpDeskNet8.Infrastructure;
+using HelpDeskNet8.Interfaces.Shared;
+using HelpDeskNet8.Interfaces.Users;
+using HelpDeskNet8.Models.Shared;
 using HelpDeskNet8.Requests;
 using Microsoft.AspNetCore.Mvc;
-using HelpDeskNet8.Models.Shared;
-using HelpDeskNet8.Interfaces.Users;
-using HelpDeskNet8.Interfaces.Shared;
 
 namespace HelpDeskNet8.Controllers.Users
 {

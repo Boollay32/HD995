@@ -7,7 +7,6 @@
 'use strict';
 
 const Format = (() => {
-
     function formatTime(raw) {
         if (!raw) return '';
         const d = new Date(raw);
@@ -91,5 +90,4 @@ const Format = (() => {
         formatTime, formatDate, formatDateTime, formatDateLabel,
         dateKey, initials, escapeHtml, fileIcon, fileSizeLabel,
     };
-
 })();

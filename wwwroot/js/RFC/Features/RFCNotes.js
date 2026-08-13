@@ -8,7 +8,6 @@
 'use strict';
 
 const RFCNotes = (() => {
-
     let _handle = null;
 
     function init(rfcId) {
@@ -39,5 +38,4 @@ const RFCNotes = (() => {
         // factory now; there is no singleton NotesPanel.refresh).
         refresh: () => _handle && _handle.refresh(),
     };
-
 })();
