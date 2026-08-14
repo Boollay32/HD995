@@ -50,9 +50,34 @@
         if (o) o.remove();
     }
 
+    // Sent (live) receipts surface as a passing toast -- the send already
+    // happened, so there is nothing to inspect and no reason to block the
+    // flow behind a modal. The popup remains for batches containing any
+    // UNSENT entry (dev / test, password reset): there the popup is the only
+    // way to see who would have been mailed and to inspect the body.
+    function _toastReceipt(entries) {
+        var recips = [];
+        entries.forEach(function (en) {
+            (en.recipients || []).filter(Boolean).forEach(function (r) {
+                if (recips.indexOf(r) === -1) recips.push(r);
+            });
+        });
+        var who = recips.length === 0 ? 'recipients'
+            : recips.length <= 3 ? recips.join(', ')
+            : recips.slice(0, 3).join(', ') + ' +' + (recips.length - 3) + ' more';
+        var subject = entries.length === 1 ? (entries[0].subject || '') : '';
+        UI.toast('Email sent to ' + who + (subject ? ' \u2014 ' + subject : ''), 'success');
+    }
+
     function show(payload) {
         var entries = Array.isArray(payload) ? payload : _decode(payload);
         if (!entries || entries.length === 0) return Promise.resolve();
+
+        var allSent = entries.every(function (e) { return !!e.sent; });
+        if (allSent && window.UI && typeof UI.toast === 'function') {
+            _toastReceipt(entries);
+            return Promise.resolve();
+        }
 
         _styles();
         _close();
