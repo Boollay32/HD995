@@ -36,14 +36,18 @@ class RFCPopulator {
 
         if (field.tagName === 'SELECT') {
             this._handleSelectField(field, value);
-        } else if (field.tagName === 'LABEL') {
-            // Read-only display fields (e.g. Title, originator) show via text.
-            // Date-valued labels (e.g. changeRequestCreateDate) arrive as ISO;
-            // render them human-readable rather than showing the raw timestamp.
-            field.innerText = this._formatDisplayDate(value);
-        } else {
-            // input + textarea both expose .value; dates handled in _handleInputField
+        } else if (field.tagName === 'INPUT' || field.tagName === 'TEXTAREA') {
+            // Only real form controls expose a rendered .value; dates are
+            // handled in _handleInputField.
             this._handleInputField(field, value);
+        } else {
+            // Everything else (LABEL, SPAN, DIV, ...) is a read-only display
+            // field (e.g. Title, originator, originatorEmail) and shows via
+            // text. Setting .value on a SPAN rendered nothing -- that left
+            // the header originator/email/created fields blank (HD44).
+            // Date-valued fields (e.g. changeRequestCreateDate) arrive as
+            // ISO; render them human-readable, other strings pass through.
+            field.innerText = this._formatDisplayDate(value);
         }
     }
 
