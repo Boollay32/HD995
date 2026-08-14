@@ -41,6 +41,9 @@ namespace HelpDeskNet8.Interfaces.Shared
 
         // An RFC's status changed.
         RFCStatusChanged,
+
+        // A note was added on the RFC detail page.
+        RFCNoteAdded,
     }
 
     // Optional change-context a caller passes alongside an event so the service

@@ -62,12 +62,17 @@ namespace HelpDeskNet8.Services
             if (!result.IsSuccess)
                 return (false, result.Error, Enumerable.Empty<INote>());
 
-            // Notify on a ticket reply. RFC notes are internal-only (no
-            // routing). New notes only -- editing an existing note is not a
-            // reply. The OPENING note (IsOriginal) is the creation description:
-            // it notifies the helpdesk of a new ticket, not the originator.
+            // Notify on a new note only -- editing an existing note is not a
+            // reply. The OPENING ticket note (IsOriginal) is the creation
+            // description: it notifies the helpdesk of a new ticket, not the
+            // originator. An RFC note notifies the RFC's originator and
+            // assigned tech (minus the author) via the RFC route.
             bool isNewNote = !(note.NoteID.HasValue && note.NoteID.Value != 0);
-            if (!request.RFC && isNewNote)
+            if (request.RFC && isNewNote)
+            {
+                await _notificationService.NotifyRFC(note.RFCID ?? 0, NotificationType.RFCNoteAdded, user);
+            }
+            else if (!request.RFC && isNewNote)
             {
                 if (request.IsOriginal)
                     await _notificationService.Notify(note.TicketID ?? 0, NotificationType.TicketCreated, user);

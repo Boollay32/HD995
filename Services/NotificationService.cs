@@ -131,6 +131,7 @@ namespace HelpDeskNet8.Services
 
                     case NotificationType.RFCResponded:
                     case NotificationType.RFCStatusChanged:
+                    case NotificationType.RFCNoteAdded:
                         people.Add(new Recipient(rfc.OriginatorID, rfc.OriginatorEmail));
                         people.Add(new Recipient(rfc.AssignedTechID, rfc.AssignedTechEmail));
                         break;
@@ -468,6 +469,7 @@ namespace HelpDeskNet8.Services
                 NotificationType.RFCResponded => "RFC updated",
                 NotificationType.RFCAssigned => "RFC assigned",
                 NotificationType.RFCStatusChanged => "RFC status changed",
+                NotificationType.RFCNoteAdded => "RFC note added",
                 _ => "Notification",
             };
         }
@@ -618,6 +620,11 @@ namespace HelpDeskNet8.Services
                 case NotificationType.RFCResponded:
                     return ($"RFC #{id} updated: {title}",
                         $"{actor} updated RFC #{id}.",
+                        new List<string> { rfcLine, $"Status: {status}" });
+
+                case NotificationType.RFCNoteAdded:
+                    return ($"RFC #{id}: new note \u2014 {title}",
+                        $"{actor} added a note to RFC #{id}.",
                         new List<string> { rfcLine, $"Status: {status}" });
 
                 case NotificationType.RFCStatusChanged:
