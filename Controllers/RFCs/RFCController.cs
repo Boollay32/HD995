@@ -79,13 +79,18 @@ namespace HelpDeskNet8.Controllers
             IRFC rfc = new RFC();
             PopulateObject(rfc, rfcBuild);
 
-            // Capture the RFC's current status before the save so a status move can
-            // be told from a plain update for the notification.
+            // Capture the RFC's current status AND assignee before the save so a
+            // status move / reassignment can be told from a plain update for the
+            // notification.
             string oldRfcStatus = null;
+            int? oldRfcTechId = null;
+            string oldRfcTechEmail = null;
             if (rfc.ChangeRequestID != 0)
             {
                 IRFC beforeRfc = await _changeRequestManager.GetRFCDetail(rfc.ChangeRequestID);
                 oldRfcStatus = beforeRfc?.Status;
+                oldRfcTechId = beforeRfc?.AssignedTechID;
+                oldRfcTechEmail = beforeRfc?.AssignedTechEmail;
             }
 
             List<object> result = rfc.ChangeRequestID != 0
@@ -112,11 +117,21 @@ namespace HelpDeskNet8.Controllers
                     IRFC savedRfc = await _changeRequestManager.GetRFCDetail(savedRfcId);
                     string newRfcStatus = savedRfc?.Status ?? rfc.Status;
                     bool rfcStatusChanged = !string.Equals(oldRfcStatus ?? "", newRfcStatus ?? "", System.StringComparison.OrdinalIgnoreCase);
-                    NotificationType rfcType = rfcStatusChanged
-                        ? NotificationType.RFCStatusChanged
-                        : NotificationType.RFCResponded;
-                    await _notificationService.NotifyRFC(savedRfcId, rfcType, user,
-                        new NotificationContext { OldStatus = oldRfcStatus, NewStatus = newRfcStatus });
+
+                    // A reassignment and a status change are distinct events
+                    // (mirrors the ticket save): notify the new tech they were
+                    // assigned, and separately notify a status move. A plain
+                    // update fires only when neither changed.
+                    bool rfcTechChanged = savedRfc != null && oldRfcTechId != savedRfc.AssignedTechID;
+                    if (rfcTechChanged)
+                        await _notificationService.NotifyRFC(savedRfcId, NotificationType.RFCAssigned, user,
+                            new NotificationContext { OldTechEmail = oldRfcTechEmail });
+                    if (rfcStatusChanged)
+                        await _notificationService.NotifyRFC(savedRfcId, NotificationType.RFCStatusChanged, user,
+                            new NotificationContext { OldStatus = oldRfcStatus, NewStatus = newRfcStatus, TechAlsoChanged = rfcTechChanged });
+                    if (!rfcTechChanged && !rfcStatusChanged)
+                        await _notificationService.NotifyRFC(savedRfcId, NotificationType.RFCResponded, user,
+                            new NotificationContext { OldStatus = oldRfcStatus, NewStatus = newRfcStatus });
                 }
             }
 

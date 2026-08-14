@@ -600,9 +600,20 @@ namespace HelpDeskNet8.Services
             switch (type)
             {
                 case NotificationType.RFCAssigned:
+                {
+                    // Create passes no context ("raised and assigned"); an
+                    // update reassignment carries ctx (with OldTechEmail when
+                    // there was a previous assignee) and must say assigned,
+                    // not raised.
+                    string headline = ctx == null
+                        ? $"{actor} raised RFC #{id} and assigned it to {tech}."
+                        : !string.IsNullOrWhiteSpace(ctx.OldTechEmail)
+                            ? $"{actor} reassigned RFC #{id} from {ctx.OldTechEmail} to {tech}."
+                            : $"{actor} assigned RFC #{id} to {tech}.";
                     return ($"RFC #{id} assigned: {title}",
-                        $"{actor} raised RFC #{id} and assigned it to {tech}.",
+                        headline,
                         new List<string> { rfcLine, $"Status: {status}" });
+                }
 
                 case NotificationType.RFCResponded:
                     return ($"RFC #{id} updated: {title}",
