@@ -65,12 +65,15 @@ class RFCPage extends PageBase {
     }
 
     _config() {
-        // "My open": RFC rows have no numeric assignee/originator ID, so
-        // match by normalised display name against both the raw login and
-        // the resolved display name (UserName here is a login credential).
+        // "My open" prefers the unique ids (assignedTechID / createdByID)
+        // when the proc returns them; the display-name compare is only a
+        // fallback for rows without them, since display names are not unique.
         const norm = s => (s ?? '').trim().toLowerCase();
         const myNameKeys = new Set([norm(this.username), norm(this.displayName)].filter(Boolean));
-        const isMyRFC = r => myNameKeys.has(norm(r.assignedTech)) || myNameKeys.has(norm(r.createdBy));
+        const myId = Number(sessionStorage.getItem(STORAGE_KEYS.USER_ID));
+        const idMatch = v => (v ?? null) !== null && !Number.isNaN(myId) && Number(v) === myId;
+        const mineByKey = (id, name) => (id ?? null) !== null ? idMatch(id) : myNameKeys.has(norm(name));
+        const isMyRFC = r => mineByKey(r.assignedTechID, r.assignedTech) || mineByKey(r.createdByID, r.createdBy);
         return {
             title: 'RFC',
             fetch: () => this._fetch(),

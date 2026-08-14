@@ -32,6 +32,10 @@ namespace HelpDeskNet8.Models.Tickets
 
         public string UserName { get; set; }
 
+        // Unique originator key for the "My open" filter; null when the
+        // proc does not (yet) return an id column for the client.
+        public int? UserID { get; set; }
+
         public string StatusDesc { get; set; }
 
         public string Status { get; set; }
@@ -46,6 +50,16 @@ namespace HelpDeskNet8.Models.Tickets
         public string Notify { get; set; }
 
         public DateTime? TargetDate { get; set; }
+
+        // Tolerant optional-int read: the queue procs may not (yet) return
+        // these columns; absence means null rather than a thrown row.
+        private static int? TicketColInt(IDataReader reader, string name)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+                if (string.Equals(reader.GetName(i), name, StringComparison.OrdinalIgnoreCase))
+                    return reader[i] == DBNull.Value ? (int?)null : Convert.ToInt32(reader[i]);
+            return null;
+        }
 
         internal static TicketStub FromReader(IDataReader reader)
         {
@@ -64,6 +78,7 @@ namespace HelpDeskNet8.Models.Tickets
                         Subject = (string)reader["TicketSubject"],
                         Notes = (string)reader["Notes"],
                         UserName = (string)reader["Client"],
+                        UserID = TicketColInt(reader, "UserID") ?? TicketColInt(reader, "ClientID"),
                         Status = (string)reader["StatusDesc"],
                         AssignedTech = reader["Assigned Tech"] is DBNull ? String.Empty : (string)reader["Assigned Tech"],
                         AssignedTechID = reader["AssignedTechID"] as int?,

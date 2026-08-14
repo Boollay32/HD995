@@ -62,8 +62,9 @@ class DashboardPage extends PageBase {
         if (Number.isNaN(this.myId)) this.myId = null;
         this.myLogin = norm(sessionStorage.getItem(STORAGE_KEYS.USER_NAME));
         const display = sessionStorage.getItem(STORAGE_KEYS.DISPLAY_NAME) || '';
-        // Assignee matching for tasks/RFCs is by display name (rows carry no
-        // numeric assignee id) -- match either identifier, as TasksPage does.
+        // Assignee/creator matching prefers the unique row ids when the
+        // procs return them; the display-name keys are only a fallback,
+        // since display names are not unique.
         this.mineKeys = new Set([this.myLogin, norm(display)].filter(Boolean));
 
         const hour = new Date().getHours();
@@ -74,6 +75,14 @@ class DashboardPage extends PageBase {
     }
 
     _isMine(name) { return this.mineKeys.has((name ?? '').trim().toLowerCase()); }
+
+    // Prefer the unique id when the row carries one; fall back to the name.
+    _mineByKey(id, name) {
+        if ((id ?? null) !== null) return this.myId != null && Number(id) === this.myId;
+        return this._isMine(name);
+    }
+    _isMineAssignee(r) { return this._mineByKey(r.assignedTechID, r.assignedTech); }
+    _isMineCreator(r) { return this._mineByKey(r.createdByID, r.createdBy); }
 
     // -------------------------  Load  ------------------------- //
 
@@ -209,7 +218,7 @@ class DashboardPage extends PageBase {
                 nav: { kind: 'ticket', ticketId: r.ticketID },
             }));
 
-        this.tasks.filter(r => this._taskOpen(r) && this._isMine(r.assignedTech))
+        this.tasks.filter(r => this._taskOpen(r) && this._isMineAssignee(r))
             .forEach(r => items.push({
                 kind: 'task',
                 ref: `T-${r.taskID}`,
@@ -221,7 +230,7 @@ class DashboardPage extends PageBase {
                 nav: { kind: 'task', ticketId: r.ticketID, taskId: r.taskID },
             }));
 
-        this.rfcs.filter(r => this._rfcOpen(r) && this._isMine(r.assignedTech))
+        this.rfcs.filter(r => this._rfcOpen(r) && this._isMineAssignee(r))
             .forEach(r => items.push({
                 kind: 'rfc',
                 ref: `RFC-${r.rfcID}`,
@@ -284,7 +293,7 @@ class DashboardPage extends PageBase {
 
         this.tasks.filter(r => this._taskOpen(r)
             && this.myId != null && Number(r.userID) === this.myId
-            && !this._isMine(r.assignedTech))
+            && !this._isMineAssignee(r))
             .forEach(r => raised.push({
                 ref: `T-${r.taskID}`,
                 title: r.title || '',
@@ -295,7 +304,7 @@ class DashboardPage extends PageBase {
             }));
 
         this.rfcs.filter(r => this._rfcOpen(r)
-            && this._isMine(r.createdBy) && !this._isMine(r.assignedTech))
+            && this._isMineCreator(r) && !this._isMineAssignee(r))
             .forEach(r => raised.push({
                 ref: `RFC-${r.rfcID}`,
                 title: r.title || '',

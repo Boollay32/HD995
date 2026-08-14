@@ -15,6 +15,9 @@ namespace HelpDeskNet8.Models.Tasks
         public string Description { get; set; } = string.Empty;
         public string ProgressLog { get; set; } = string.Empty;
         public string AssignedTech { get; set; } = string.Empty;
+        // Unique assignee key for the "My open" filters; null when the
+        // proc does not (yet) return an id column for the assignee.
+        public int? AssignedTechID { get; set; }
         public int? Status { get; set; }
         public bool? Important { get; set; }
         public DateTime? RequiredDate { get; set; }
@@ -45,6 +48,7 @@ namespace HelpDeskNet8.Models.Tasks
                     Title = Col("Title") as string ?? string.Empty,
                     Description = Col("Description") as string ?? string.Empty,
                     AssignedTech = Col("AssignedTech") as string ?? string.Empty,
+                    AssignedTechID = ToInt(Col("AssignedTechID") ?? Col("AssignedToUserID")),
                     Status = ToInt(Col("Status") ?? Col("StatusID")),
                     Important = Col("Important") is object importantValue ? Convert.ToInt32(importantValue) == 1 : (bool?)null,
                     RequiredDate = Col("RequiredByDate") as DateTime?,

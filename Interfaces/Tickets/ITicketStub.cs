@@ -8,6 +8,7 @@
         string RequestType { get; set; }
         string Notes { get; set; }
         string UserName { get; set; }
+        int? UserID { get; set; }
         string StatusDesc { get; set; }
         string Status { get; set; }
         string AssignedTech { get; set; }

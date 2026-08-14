@@ -6,8 +6,10 @@
         String Title { get; set; }
         String Status { get; set; }
         String CreatedBy { get; set; }
+        int? CreatedByID { get; set; }
         DateTime? Created { get; set; }
         String AssignedTech { get; set; }
+        int? AssignedTechID { get; set; }
         DateTime? TargetDate { get; set; }
 
         //DateTime? Completed { get; set; }
