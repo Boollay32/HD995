@@ -231,6 +231,11 @@ UI.toast = function (message, type = 'info') {
 
     const el = document.createElement('div');
     el.className = `ui-toast ui-toast--${type}`;
+    // Carry-over metadata: if the page navigates away before this toast has
+    // had a fair time on screen, pagehide re-stashes it as a flash so it
+    // reappears on the next page (see UI._armToastCarry).
+    el._toastMeta = { message, type, shownAt: Date.now() };
+    UI._armToastCarry();
     el.setAttribute('role', type === 'error' ? 'alert' : 'status');
     el.setAttribute('tabindex', '-1');
     el.textContent = message;
@@ -292,11 +297,21 @@ UI.toast = function (message, type = 'info') {
     arm();
 };
 
-// Cross-navigation flash: stash a message now, surface it as a toast on the
-// next page load. Used by create flows that navigate to a list. Drained in
+// Cross-navigation flash: stash messages now, surface them as toasts on the
+// next page load. A QUEUE, not a single slot, so a save receipt and a mail
+// receipt raised in the same action both survive the navigation. Drained in
 // the DOMContentLoaded handler below.
 UI.flash = function (message, type = 'info') {
-    try { sessionStorage.setItem('ui-flash', JSON.stringify({ message, type })); } catch (_) {}
+    try {
+        const raw = sessionStorage.getItem('ui-flash');
+        let list = [];
+        if (raw) {
+            const data = JSON.parse(raw);
+            list = Array.isArray(data) ? data : (data && data.message ? [data] : []);
+        }
+        list.push({ message, type });
+        sessionStorage.setItem('ui-flash', JSON.stringify(list));
+    } catch (_) {}
 };
 
 UI._drainFlash = function () {
@@ -305,7 +320,27 @@ UI._drainFlash = function () {
     if (!raw) return;
     try { sessionStorage.removeItem('ui-flash'); } catch (_) {}
     let data; try { data = JSON.parse(raw); } catch (_) { return; }
-    if (data && data.message) UI.toast(data.message, data.type || 'info');
+    const list = Array.isArray(data) ? data : (data && data.message ? [data] : []);
+    list.forEach(f => { if (f && f.message) UI.toast(f.message, f.type || 'info'); });
+};
+
+// If the page unloads while a toast is still young (< MIN_READ_MS on
+// screen), re-stash it as a flash so the next page shows it again -- a
+// toast raised just before a navigation was otherwise wiped instantly.
+UI._toastCarryArmed = false;
+UI._armToastCarry = function () {
+    if (UI._toastCarryArmed) return;
+    UI._toastCarryArmed = true;
+    const MIN_READ_MS = 4000;
+    window.addEventListener('pagehide', () => {
+        const host = document.getElementById('ui-toast-host');
+        if (!host) return;
+        host.querySelectorAll('.ui-toast').forEach(el => {
+            const m = el._toastMeta;
+            if (m && (Date.now() - m.shownAt) < MIN_READ_MS)
+                UI.flash(m.message, m.type);
+        });
+    });
 };
 
 UI._ensureToastStyles = function () {
