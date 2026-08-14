@@ -95,10 +95,13 @@ class TaskPage extends PageBase {
     }
 
     _config() {
-        // "My open" matches the assignee (a display name) against both our login and
-        // our resolved name, so it works whichever identifier the proc returns.
+        // "My open" matches the assignee (a display name) against our login,
+        // our stored display name (set at sign-in), and the dropdown-resolved
+        // name -- whichever identifier the proc returns. The stored display
+        // name means this works even when the dropdown resolution fails.
         const norm = s => (s ?? '').trim().toLowerCase();
-        const mineKeys = new Set([norm(this.username), norm(this.myName)].filter(Boolean));
+        const mineKeys = new Set(
+            [norm(this.username), norm(this.displayName), norm(this.myName)].filter(Boolean));
         const isMine = r => mineKeys.has(norm(r.assignedTech));
         return {
             title: 'Tasks',

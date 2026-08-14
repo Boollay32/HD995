@@ -91,7 +91,11 @@ class UserPage extends PageBase {
     }
 
     _open(row) {
-        sessionStorage.setItem(STORAGE_KEYS.USER_ID, row.userID);
+        // The VIEWED user's id -- its own key. This previously overwrote
+        // STORAGE_KEYS.USER_ID (the LOGGED-IN user's id), poisoning every
+        // 'my' comparison (Tasks/Tickets 'My open', dashboard, notes) with
+        // the last-viewed user's identity until the next login.
+        sessionStorage.setItem(STORAGE_KEYS.VIEW_USER_ID, row.userID);
         // Store the ops key only when the row HAS an email; otherwise CLEAR
         // it. Storing a missing value wrote the literal string "undefined"
         // (the "undefined could not be reset" bug), and merely skipping

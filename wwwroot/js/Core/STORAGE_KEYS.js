@@ -57,6 +57,7 @@ const STORAGE_KEYS = {
     // -------------------------  User  ------------------------- //
 
     VIEW_USER_LOGIN: 'ViewUserLogin',
+    VIEW_USER_ID: 'ViewUserID',
 };
 
 // -------------------------  Global  ------------------------- //
