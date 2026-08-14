@@ -95,15 +95,11 @@ class TaskPage extends PageBase {
     }
 
     _config() {
-        // "My open" prefers the unique assignedTechID when the proc returns
-        // one; the name compare (login + resolved display name) is only a
-        // fallback for rows without it, since display names are not unique.
+        // "My open" matches the assignee (a display name) against both our login and
+        // our resolved name, so it works whichever identifier the proc returns.
         const norm = s => (s ?? '').trim().toLowerCase();
         const mineKeys = new Set([norm(this.username), norm(this.myName)].filter(Boolean));
-        const myIdNum = Number(sessionStorage.getItem(STORAGE_KEYS.USER_ID));
-        const isMine = r => (r.assignedTechID ?? null) !== null
-            ? (!Number.isNaN(myIdNum) && Number(r.assignedTechID) === myIdNum)
-            : mineKeys.has(norm(r.assignedTech));
+        const isMine = r => mineKeys.has(norm(r.assignedTech));
         return {
             title: 'Tasks',
             fetch: () => this._fetch(),

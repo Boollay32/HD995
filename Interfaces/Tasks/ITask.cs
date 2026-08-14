@@ -11,7 +11,6 @@ namespace HelpDeskNet8.Interfaces.Tasks
         string Description { get; set; }
         string ProgressLog { get; set; }
         string AssignedTech { get; set; }
-        int? AssignedTechID { get; set; }
         int? Status { get; set; }
         bool? Important { get; set; }
         DateTime? RequiredDate { get; set; }

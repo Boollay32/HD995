@@ -83,17 +83,14 @@ class TicketPage extends PageBase {
     // ---- Config consumed by QueueView ----
     _config() {
         // "My open": assignee compares by numeric ID (AssignedTechID is
-        // reliable). Originator prefers the unique userID when the proc
-        // returns one; the display-name compare is only a fallback for rows
-        // without it, since display names are not unique.
+        // reliable); originator compares by normalised display name, since
+        // UserName here is a login credential, not the joined display name
+        // the queue's userName/assignedTech columns hold.
         const norm = s => (s ?? '').trim().toLowerCase();
         const myNameKeys = new Set([norm(this.username), norm(this.displayName)].filter(Boolean));
-        const isMyOriginator = r => (r.userID ?? null) !== null
-            ? (TQ_MY_ID != null && Number(r.userID) === TQ_MY_ID)
-            : myNameKeys.has(norm(r.userName));
         const isMyTicket = r =>
             (TQ_MY_ID != null && Number(r.assignedTechID) === TQ_MY_ID) ||
-            isMyOriginator(r);
+            myNameKeys.has(norm(r.userName));
         const myId = Number(sessionStorage.getItem(STORAGE_KEYS.USER_ID));
         TQ_MY_ID = Number.isNaN(myId) ? null : myId;
         return {
