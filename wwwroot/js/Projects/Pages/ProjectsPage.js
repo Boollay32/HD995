@@ -7,6 +7,7 @@ class ProjectsPage extends PageBase {
         super();
         this.statusFilter = 2;      // default view: Active (2); null = All
         this.projects = [];
+        this.searchQuery = '';      // live search over the loaded set
     }
 
     async init() {
@@ -15,6 +16,7 @@ class ProjectsPage extends PageBase {
             SetActivePage('ProjectsMenu');
             if (typeof UserPermissions === 'function') UserPermissions();
             this._wireFilters();
+            this._wireSearch();
             document.getElementById('pj-pool')
                 ?.addEventListener('click', () => Router.toCRPoolPage());
             await this._setupNew();
@@ -35,6 +37,23 @@ class ProjectsPage extends PageBase {
                 btn.classList.add('is-active');
                 this._load();
             }));
+    }
+
+    _wireSearch() {
+        const input = document.getElementById('pj-search');
+        const wrap = document.getElementById('pj-search-wrap');
+        const clear = document.getElementById('pj-search-clear');
+        if (!input) return;
+        const apply = () => {
+            this.searchQuery = input.value.trim();
+            wrap?.classList.toggle('has-value', this.searchQuery.length > 0);
+            this._render();
+        };
+        input.addEventListener('input', apply);
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Escape') { input.value = ''; apply(); }
+        });
+        clear?.addEventListener('click', () => { input.value = ''; input.focus(); apply(); });
     }
 
     async _setupNew() {
@@ -74,26 +93,45 @@ class ProjectsPage extends PageBase {
         const grid = document.getElementById('pj-grid');
         if (!grid) return;
 
-        if (!this.projects.length) {
-            grid.innerHTML = `<p class="pj-empty">No projects to show.</p>`;
+        // Live search over the loaded (status-filtered) set: name, owner, type.
+        const q = this.searchQuery;
+        const norm = s => String(s ?? '').trim().toLowerCase();
+        const rows = !q ? this.projects : this.projects.filter(p =>
+            [p.projectName, p.ownerName, p.projectType].some(v => norm(v).includes(norm(q))));
+
+        const countEl = document.getElementById('pj-result-count');
+        if (countEl) {
+            countEl.textContent = q
+                ? `${rows.length} of ${this.projects.length} project${this.projects.length === 1 ? '' : 's'} match “${q}”`
+                : '';
+        }
+
+        if (!rows.length) {
+            grid.innerHTML = q
+                ? `<p class="pj-empty">No projects match “${this._esc(q)}”. <button type="button" id="pj-clear-inline">Clear search</button></p>`
+                : `<p class="pj-empty">No projects to show.</p>`;
+            document.getElementById('pj-clear-inline')?.addEventListener('click', () => {
+                const input = document.getElementById('pj-search');
+                if (input) { input.value = ''; input.dispatchEvent(new Event('input')); input.focus(); }
+            });
             return;
         }
 
-        grid.innerHTML = this.projects.map(p => this._card(p)).join('');
+        grid.innerHTML = rows.map(p => this._card(p)).join('');
         grid.querySelectorAll('.pj-card[data-id]').forEach(card =>
             card.addEventListener('click', () => this._open(parseInt(card.dataset.id, 10))));
     }
 
     _card(p) {
         const pct = Number.isFinite(p.completionPct) ? p.completionPct : 0;
-        const type = this._esc(p.projectType ?? '');
+        const type = this._hl(p.projectType ?? '');
         const typeClass = this._typeClass(p.projectType);
-        const name = this._esc(p.projectName ?? '');
+        const name = this._hl(p.projectName ?? '');
         const target = p.targetDate ? this._fmtDate(p.targetDate) : 'No target date';
         const tickets = p.ticketCount ?? 0;
         const openTickets = p.openTicketCount ?? 0;
         const tasks = p.taskCount ?? 0;
-        const owner = this._esc(p.ownerName ?? '');
+        const owner = this._hl(p.ownerName ?? '');
         const status = this._esc(p.status ?? '');
         const statusClass = this._statusClass(p.status);
 
@@ -154,6 +192,19 @@ class ProjectsPage extends PageBase {
         if (isNaN(d)) return '';
         return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
     }
+    // Escape, and wrap the first case-insensitive occurrence of the current
+    // search query in <mark> so cards show why they matched.
+    _hl(s) {
+        const text = String(s ?? '');
+        const q = this.searchQuery;
+        if (!q) return this._esc(text);
+        const i = text.toLowerCase().indexOf(q.toLowerCase());
+        if (i === -1) return this._esc(text);
+        return this._esc(text.slice(0, i))
+            + '<mark>' + this._esc(text.slice(i, i + q.length)) + '</mark>'
+            + this._esc(text.slice(i + q.length));
+    }
+
     _esc(s) {
         return String(s).replace(/[&<>"']/g, c =>
             ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

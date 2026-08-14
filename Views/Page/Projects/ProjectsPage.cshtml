@@ -19,6 +19,12 @@
             <button type="button" id="pj-new" class="pj-new-btn" style="display:none">+ New project</button>
             <button type="button" id="pj-pool" class="pj-pool-btn">CR Pool</button>
         </div>
+        <div class="pj-search" id="pj-search-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><line x1="16.5" y1="16.5" x2="21" y2="21" /></svg>
+            <input id="pj-search" type="search" placeholder="Search projects&hellip;"
+                   aria-label="Search projects by name, owner or type" autocomplete="off" />
+            <button type="button" class="pj-search-clear" id="pj-search-clear" aria-label="Clear search">&times;</button>
+        </div>
         <nav class="pj-filters" aria-label="Filter projects by status">
             <button class="pj-filter" type="button" data-status="">All</button>
             <button class="pj-filter is-active" type="button" data-status="2">Active</button>
@@ -28,6 +34,8 @@
             <button class="pj-filter" type="button" data-status="4">Withdrawn</button>
         </nav>
     </header>
+
+    <div class="pj-result-count" id="pj-result-count" aria-live="polite"></div>
 
     <section id="pj-grid" class="pj-grid" aria-label="Projects"></section>
 
