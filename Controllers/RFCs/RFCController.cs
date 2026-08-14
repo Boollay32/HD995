@@ -104,12 +104,19 @@ namespace HelpDeskNet8.Controllers
                 }
                 else
                 {
-                    bool rfcStatusChanged = !string.Equals(oldRfcStatus ?? "", rfc.Status ?? "", System.StringComparison.OrdinalIgnoreCase);
+                    // rfc.Status here is the SUBMITTED dropdown VALUE (a numeric
+                    // id); oldRfcStatus is the joined description. Comparing them
+                    // made every save read as a status change, and the id leaked
+                    // into the email ("RFC #12 is now 3"). Re-read the saved RFC
+                    // so both the comparison and the email use the description.
+                    IRFC savedRfc = await _changeRequestManager.GetRFCDetail(savedRfcId);
+                    string newRfcStatus = savedRfc?.Status ?? rfc.Status;
+                    bool rfcStatusChanged = !string.Equals(oldRfcStatus ?? "", newRfcStatus ?? "", System.StringComparison.OrdinalIgnoreCase);
                     NotificationType rfcType = rfcStatusChanged
                         ? NotificationType.RFCStatusChanged
                         : NotificationType.RFCResponded;
                     await _notificationService.NotifyRFC(savedRfcId, rfcType, user,
-                        new NotificationContext { OldStatus = oldRfcStatus, NewStatus = rfc.Status });
+                        new NotificationContext { OldStatus = oldRfcStatus, NewStatus = newRfcStatus });
                 }
             }
 

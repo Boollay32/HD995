@@ -479,7 +479,7 @@ namespace HelpDeskNet8.Services
         {
             string actor = string.IsNullOrWhiteSpace(user?.UserName) ? "A user" : user.UserName;
             string title = string.IsNullOrWhiteSpace(ticket?.Subject) ? "(no subject)" : ticket.Subject;
-            string priority = string.IsNullOrWhiteSpace(ticket?.Priority) ? "\u2014" : ticket.Priority;
+            string priority = TicketPriorityLabel(ticket?.Priority);
             string status = TicketStatusLabel(ticket?.Status);
             string tech = string.IsNullOrWhiteSpace(ticket?.AssignedTechEmail) ? "Unassigned" : ticket.AssignedTechEmail;
             string oldS = string.IsNullOrWhiteSpace(ctx?.OldStatus) ? "(unknown)" : TicketStatusLabel(ctx.OldStatus);
@@ -661,6 +661,21 @@ namespace HelpDeskNet8.Services
         // Map the numeric ticket status id to its label (the wire value is the
         // id, e.g. "5"). A value already a label, or an unknown id, is returned
         // unchanged.
+        // The detail proc returns PriorityID; emails must show the label the
+        // dropdown displays, not its value (mirrors TicketFields.js).
+        private static string TicketPriorityLabel(string? priority)
+        {
+            string p = (priority ?? "").Trim();
+            if (p.Length == 0) return "\u2014";
+            return p switch
+            {
+                "1" => "Low",
+                "2" => "Medium",
+                "3" => "High",
+                _ => p,
+            };
+        }
+
         private static string TicketStatusLabel(string? status)
         {
             string s = (status ?? "").Trim();
