@@ -1,6 +1,4 @@
-﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -80,7 +78,6 @@
         @RenderSection("AddJSToHead", required: false)
     }
 
-    <script nonce="@(Context.Items["csp-nonce"] as string)">@Html.Raw(JavaScriptSnippet.ScriptBody)</script>
 </head>
 
 <body id="Main-Body">

@@ -8,7 +8,6 @@ using HelpDeskNet8.Interfaces.Tasks;
 using HelpDeskNet8.Interfaces.Tickets;
 using HelpDeskNet8.Interfaces.Users;
 using HelpDeskNet8.Services;
-using Microsoft.ApplicationInsights.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.RateLimiting;
@@ -42,8 +41,6 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<INotificationManager, NotificationManager>();
 builder.Services.AddScoped<IMailPreviewSink, MailPreviewSink>();
 
-builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.AddSingleton<JavaScriptSnippet>();
 
 // Health checks (observability 2.2): GET /healthz reports the process is up
 // AND that the database is reachable (SELECT 1). Used by uptime monitors and
@@ -191,9 +188,9 @@ app.Use(async (context, next) =>
         "encrypted-media=(), geolocation=(), gyroscope=(), magnetometer=(), " +
         "microphone=(), midi=(), payment=(), usb=()";
 
-    // Per-request CSP nonce: lets the one remaining inline script (the
-    // Application Insights snippet) execute without 'unsafe-inline'. Exposed
-    // via HttpContext.Items so _Layout can stamp nonce="..." on that <script>.
+    // Per-request CSP nonce: lets nonce-tagged scripts (e.g. the DOMPurify
+    // CDN tag in _Layout) run without 'unsafe-inline'/'unsafe-eval'.
+    // Exposed via HttpContext.Items so views can stamp nonce="..." on them.
     var nonceBytes = new byte[16];
     System.Security.Cryptography.RandomNumberGenerator.Fill(nonceBytes);
     var cspNonce = Convert.ToBase64String(nonceBytes);
